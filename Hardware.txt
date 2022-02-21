@@ -1,0 +1,61 @@
+Nut, bolts & washers
+
+Bolts
+8x M3 x 8mm socket cap, PCB & Pan Motor
+4x M3 x 16mm socket cap, Tilt Motor
+12x M3 x 30mm socket cap, Base -> Base Topper & Side -> Upper
+2x M3 x 45mm socket cap, Side -> Upper -> Inner Upper -> Inner Lower
+
+8x M3 x 12mm CounterSink, Tripod / Slider mount
+
+1x M8 x 50mm, Camera Mount (Pulley side)
+1x M8 x 30mm, Camera Mount (Support side)
+
+
+Nuts
+32x M3 Nyloc,		Base x16, inner Lower x12 (x8 inner, 4x PCB), upper side mounts x4 (x2 per side)
+
+2x M8 (8mm) Nyloc Dome Cap nut, Camera Mount ends
+1x 3/8 UNC Nyloc nut, Tripod Mount
+4x M5 Nyloc nut, Slider Mount
+
+Home made washers from 304 Stainless Steel Round Tubing 10mm OD 0.8mm Wall Thickness.
+Cut in to 2mm or 3mm lengths. 4 Washers needed.
+https://www.amazon.co.uk/gp/product/B081GHZV9D/
+
+Washers
+12x M3,8x Motors, 4x Side mounts
+3x M8, Camera mount (2x Pulley side, 1x Support side)
+
+
+Bearings
+
+4x F688ZZ - Flanged Radial Ball Bearings 8mm ID x 16mm OD x 5mm Depth
+https://www.amazon.co.uk/gp/product/B078RFZVWQ/
+
+1x 6824ZZ  - Metal Shielded Thin Section Deep Groove Ball Bearing 120x150x20mm
+https://simplybearings.co.uk/shop/product_info.php?products_id=170416
+
+
+Pulleys
+
+1x 120 tooth GT2 - Belt Width 6mm, Bore Dia 8mm (Tilt)
+https://www.amazon.co.uk/gp/product/B09DS9PJ55/
+
+1x 16 tooth GT2 - Belt Width 6mm, Bore Dia 5mm (Tilt)
+https://www.amazon.co.uk/gp/product/B07SX1N19C/
+
+1x 36 teeth GT2 - Belt Width 6mm or 10mm (depends on belt), Bore Dia 5mm (Pan)
+https://www.amazon.co.uk/gp/product/B07L5JQV8G/
+
+1x 36 teeth GT2 - Belt Width 6mm, Bore Dia 5mm (Slider)
+https://www.amazon.co.uk/gp/product/B07L5JQV8G/
+
+
+Belts
+
+1x GT2 6mm width, 350mm (Tilt)
+1x GT2 6mm or 10mm width, 580mm (Pan)
+
+
+
