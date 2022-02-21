@@ -1,5 +1,3 @@
-Nut, bolts & washers
-
 Bolts
 8x M3 x 8mm socket cap, PCB & Pan Motor
 4x M3 x 16mm socket cap, Tilt Motor
@@ -10,6 +8,8 @@ Bolts
 
 1x M8 x 50mm, Camera Mount (Pulley side)
 1x M8 x 30mm, Camera Mount (Support side)
+
+SMALLRIG Quick Release 1/4" Thumb Screw
 
 
 Nuts
@@ -29,7 +29,6 @@ Washers
 
 
 Bearings
-
 4x F688ZZ - Flanged Radial Ball Bearings 8mm ID x 16mm OD x 5mm Depth
 https://www.amazon.co.uk/gp/product/B078RFZVWQ/
 
@@ -38,7 +37,6 @@ https://simplybearings.co.uk/shop/product_info.php?products_id=170416
 
 
 Pulleys
-
 1x 120 tooth GT2 - Belt Width 6mm, Bore Dia 8mm (Tilt)
 https://www.amazon.co.uk/gp/product/B09DS9PJ55/
 
