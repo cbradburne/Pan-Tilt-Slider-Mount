@@ -1,0 +1,70 @@
+https://colab.research.google.com/
+
+
+	Run:
+
+rm -rf sample_data
+
+
+
+	Then drag these files into "Files":
+
+AndroidManifest.tmpl.xml
+buildozer.spec
+device_filter.xml
+
+	And PTSApp.py file - rename file to main.py
+
+
+	Then run:
+
+!pip install buildozer
+
+
+
+
+!pip install cython==0.29.27
+
+
+
+
+!sudo apt-get install -y \
+    python3-pip \
+    build-essential \
+    git \
+    python3 \
+    python3-dev \
+    ffmpeg \
+    libsdl2-dev \
+    libsdl2-image-dev \
+    libsdl2-mixer-dev \
+    libsdl2-ttf-dev \
+    libportmidi-dev \
+    libswscale-dev \
+    libavformat-dev \
+    libavcodec-dev \
+    zlib1g-dev
+
+
+
+
+!sudo apt-get install -y \
+    libgstreamer1.0 \
+    gstreamer1.0-plugins-base \
+    gstreamer1.0-plugins-good
+
+
+
+
+!buildozer -v android debug
+
+
+
+	To recompile, first run this command:
+
+!buildozer android clean
+
+	Then:
+
+!buildozer -v android debug
+

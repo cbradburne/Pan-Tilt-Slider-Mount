@@ -1,0 +1,211 @@
+Absolute Moves:
+    			Pan	-	p(degrees)
+    			Tilt	-	t(degrees)
+    			Slider	-	x(millimeters)
+
+Relative Moves:
+    			Pan	-	P(degrees)
+    			Tilt	-	T(degrees)
+    			Slider	-	X(millimeters)
+
+Positions:
+    			Set	-	M(1-6)
+    			Go To	-	m(1-6)
+    			Clear	-	Y
+
+Set Speeds:
+    			Pan	-	s(º/s)
+    			Tilt	-	S(º/s)
+    			Slider	-	a(mm/s)
+
+Set Acceleration:
+    			Pan	-	q(steps/s²)
+    			Tilt	-	Q(steps/s²)
+    			Slider	-	w(steps/s²)
+
+Set Manual Move Acceleration Factor (1 = 100% of set axis acceleration):
+    			Pan	-	e
+    			Tilt	-	E
+    			Slider	-	D
+
+Slider Speed Settings:
+    Set Button Press Increments		-      	d(mm/s)
+    Set Slider MIN Speed limit    	-       f(mm/s)
+    Set Slider MAX Speed Limit    	-       F(mm/s)
+
+View Full Report        			-		R
+View Position Report    			-		r
+View Keyframes Report				-		k
+
+Save EEPROM             			-		U
+
+Stop Recording						-		g
+Start Recording						-		G
+
+
+
+
+To send to mount via PCTeensy - Teensyduino serial monitor, ??command for cam 1, !?command for cam 2, @?command for cam3.
+
+
+
+
+PS4 Camera Mount Commands:
+    D-Pad:
+        	UP              		-       	m1      	-       	Go To Position 1
+        	Left            		-       	m2      	-       	Go To Position 2
+        	Right           		-       	m3      	-       	Go To Position 3
+        	Down            		-       	m4      	-       	Go To Position 4
+
+        	Square + UP     		-       	M1      	-       	Set Position 1
+        	Square + Left   		-       	M2      	-       	Set Position 2
+        	Square + Right  		-       	M3      	-       	Set Position 3
+        	Square + Down   		-       	M4      	-       	Set Position 4
+
+        	Share           		-       	Y       	-       	Clear All Positions
+
+        	L1              		-       	b       	-       	Decrease Slider Speed
+        	R1              		-       	B       	-       	Increase Slider Speed
+        	L1 + L3         		-			c       	-       	Min Slider Speed
+        	R1 + R3         		-			C       	-       	Max Slider Speed
+
+        	L2                      -   		-			-			Move Slider Left
+        	R2                      -  			-			-			Move Slider Right
+        	Right Analog Stick      -      		-			-			Pan & Tilt
+
+
+
+PS4 LANC Commands:
+        	Option              	- 			-			-      		Auto Focus Toggle
+        	PS Button           	- 			-			-      		Take Photo
+        	TouchPad Button     	- 			-			-      		Record Toggle
+        	Left Stick Y UP     	- 			Z1-7		-      		Zoom In
+        	Left Stick Y DOWN   	- 			z1-7		-      		Zoom Out
+
+
+Example of settings:
+Pan set speed     : 20.00°/s
+Tilt set speed    : 20.00°/s
+Slider set speed  : 60.00mm/s
+
+Pan Accel         : 500.00 steps/s²
+Tilt Accel        : 500.00 steps/s²
+Slider Accel      : 1000.00 steps/s²
+
+Pan Joy accel factor    : 4.00
+Tilt Joy accel factor   : 4.00
+Slider Joy accel factor : 10.00
+
+Slider increments       : 20.00mm/s
+Slider (min)            : 20.00mm/s
+Slider (max)            : 200.00mm/s
+
+?s20
+?S20
+?a60
+?q500
+?Q500
+?w1000
+?e4
+?E4
+?D10
+?d20
+?f20
+?F200
+?U
+
+
+Commands from Teensy:
+#Z	-	Location 1 stored
+#X	-	Location 2 stored
+#C	-	Location 3 stored
+#V	-	Location 4 stored
+#B	-	Location 5 stored
+#N	-	Location 6 stored
+
+#z	-	At position 1
+#x	-	At position 2
+#c	-	At position 3
+#v	-	At position 4
+#b	-	At position 5
+#n	-	At position 6
+
+#A	-	Moving to position 1
+#S	-	Moving to position 2
+#D	-	Moving to position 3
+#F	-	Moving to position 4
+#G	-	Moving to position 5
+#H	-	Moving to position 6
+
+#I	-	Zoom In
+#I	-	Zoom Out
+#o	-	Stop Zoom
+
+#O	-	Toggle Recording
+#p	-	Is Not Recording
+#P	-	Is Recording
+
+#s	-	Moved away from any saved location
+#a	-	Clear all LEDs
+
+#$	-	End of text transmission
+
+#d	-	Default Speeds Restored
+^(0-7)	-	Slider Speed
+#q	-	Set Slider Speed to max
+#u	-	Set Slider Speed to min
+
+
+Commands to Teensy:
+?	-	Instruction is a Command
+
+	p	-	Pan to absolute degrees
+	t	-	Tilt to absolute degrees
+	x	-	Slider to absolute millimeters
+
+	P	-	Pan relative number of degrees
+	T	-	Tilt relative number of degrees	
+	X	-	Slider relative number of millimeters
+
+	s	-	Set pan speed
+	S	-	Set tilt speed
+	a	-	Set slider speed
+
+	B	-	Increase slider speed by saved "SET_INC_SLIDER_SPEED" amount
+	b	-	Decrease slider speed by saved "SET_INC_SLIDER_SPEED" amount
+	C	-	Set slider speed to saved "SET_MAX_SLIDER_SPEED" amount
+	c	-	Set slider speed to saved "SET_MIN_SLIDER_SPEED" amount
+
+	d	-	Set slider speed increment amount in millimeters
+	F	-	Set slider maximum speed
+	f	-	Set slider minimum speed
+
+	l	-	Restore all speeds to saved EEPROM values
+
+	q	-	Set pan acceleration in steps per second per second
+	Q	-	Set tilt acceleration in steps per second per second
+	w	-	Set slider acceleration in steps per second per second
+
+	e	-	Set pan joystick acceleration factor (1 = 100%)
+	E	-	Set tilt joystick acceleration factor (1 = 100%)
+	D	-	Set slider joystick acceleration factor (1 = 100%)
+
+	R	-	Report system stats
+	r	-	Report current position
+	k	-	Report current saved keyframes
+	W	-	Report saved state for all keyframes (resets LEDs on external devices)
+	Y	-	Clear all keyframes
+	U	-	Saves current settings to EEPROM
+
+	h	-	Sets current position to local zero
+
+	M(1-6)	-	Store current position in keyframe nubmer
+	m(1-6)	-	Move to position stored in keyframe nubmer
+
+	Z	-	Zoom in camera via connected LANC
+	z	-	Zoom out camera via connected LANC
+	N	-	Stop camera from zooming via connected LANC
+
+	u	-	Toggle current recording state of camera via LANC
+	G	-	Camera is recording (sent from LANC to Teensy)
+	g	-	Camera is not recording (sent from LANC to Teensy)
