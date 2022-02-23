@@ -2974,7 +2974,7 @@ class KivyPTS(MDApp):
                     serialLoop = False
                 received_msg = self.serial_port.readline(self.serial_port.in_waiting)
                 if received_msg:
-                    msg = bytes(received_msg).decode('utf8')
+                    msg = bytes(received_msg).decode('utf8', "ignore")
                     self.readSerial(msg)
             except:
                 self.on_stop()

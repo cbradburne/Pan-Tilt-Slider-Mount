@@ -23,7 +23,7 @@ device_filter.xml
 
 
 
-!pip install cython==0.29.27
+!pip install cython==0.29.28
 
 
 

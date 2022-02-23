@@ -2744,7 +2744,7 @@ class KivyPTS(MDApp):
             self.whichCamSerial1()
             self.sendSerial('&!')
         else :
-            self.root.ids.txtInput_read.text += "Serial connection failed.\n(Port open, thread = none)\n"
+            self.root.ids.txtInput_read.text += "Serial connection failed.\n"
             self.root.ids.scroll_view.scroll_y = 0
             self.serial_port.close()
         return
@@ -2783,12 +2783,12 @@ class KivyPTS(MDApp):
                 self.read_thread = threading.Thread(target = self.read_msg_thread)
                 serialLoop = True
                 self.read_thread.start()
-                self.root.ids.txtInput_read.text += "Serial connection made 2.\n"
+                self.root.ids.txtInput_read.text += "Serial connection made.\n"
                 self.root.ids.scroll_view.scroll_y = 0
                 self.whichCamSerial1()
                 self.sendSerial('&!')
             else :
-                self.root.ids.txtInput_read.text += "Serial connection failed.\n(Port open, thread = none)\n" + str(self.read_thread)
+                self.root.ids.txtInput_read.text += "Serial connection failed.\n" + str(self.read_thread)
                 self.root.ids.scroll_view.scroll_y = 0
                 self.serial_port.close()
             return
@@ -2842,12 +2842,12 @@ class KivyPTS(MDApp):
             self.read_thread = threading.Thread(target = self.read_msg_thread)
             serialLoop = True
             self.read_thread.start()
-            self.root.ids.txtInput_read.text += "Serial connection made 3.\n"
+            self.root.ids.txtInput_read.text += "Serial connection made.\n"
             self.root.ids.scroll_view.scroll_y = 0
             self.whichCamSerial1()
             self.sendSerial('&!')
         else :
-            self.root.ids.txtInput_read.text += "Serial connection failed.\n(Port open, thread = none)\n"
+            self.root.ids.txtInput_read.text += "Serial connection failed.\n"
             self.root.ids.scroll_view.scroll_y = 0
     
     def btnReport(self):
@@ -2967,7 +2967,7 @@ class KivyPTS(MDApp):
                     serialLoop = False
                 received_msg = self.serial_port.readline(self.serial_port.in_waiting)
                 if received_msg:
-                    msg = bytes(received_msg).decode('utf8')
+                    msg = bytes(received_msg).decode('utf8', "ignore")
                     self.readSerial(msg)
             except:
                 self.on_stop()

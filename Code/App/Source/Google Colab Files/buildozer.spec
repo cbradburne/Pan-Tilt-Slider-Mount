@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = KivyPTS
+title = PTSApp
 
 # (str) Package name
-package.name = kivypts
+package.name = ptsapp
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.kivypts
+package.domain = org.ptsapp
 
 # (str) Source code where the main.py live
 source.dir = .
