@@ -90,28 +90,28 @@ Slider set speed  : 60.00mm/s
 
 Pan Accel         : 500.00 steps/s²
 Tilt Accel        : 500.00 steps/s²
-Slider Accel      : 1000.00 steps/s²
+Slider Accel      : 2000.00 steps/s²
 
-Pan Joy accel factor    : 4.00
-Tilt Joy accel factor   : 4.00
+Pan Joy accel factor    : 50.00
+Tilt Joy accel factor   : 50.00
 Slider Joy accel factor : 10.00
 
-Slider increments       : 20.00mm/s
-Slider (min)            : 20.00mm/s
-Slider (max)            : 200.00mm/s
+Slider increments       : 10.00mm/s
+Slider (min)            : 10.00mm/s
+Slider (max)            : 150.00mm/s
 
 ?s20
 ?S20
 ?a60
 ?q500
 ?Q500
-?w1000
-?e4
-?E4
+?w2000
+?e50
+?E50
 ?D10
-?d20
-?f20
-?F200
+?d10
+?f10
+?F150
 ?U
 
 
