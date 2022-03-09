@@ -1,7 +1,7 @@
 Bolts
-8x M3 x 8mm socket cap, PCB & Pan Motor
+8x M3 x 8mm socket cap, PCB x4 || Pan Motor x4
 4x M3 x 16mm socket cap, Tilt Motor
-12x M3 x 30mm socket cap, Base -> Base Topper & Side -> Upper
+18x M3 x 30mm socket cap, Base -> Base Topper x8 || Upper -> Inner Lower x6 || Sides -> Upper x4
 2x M3 x 45mm socket cap, Side -> Upper -> Inner Upper -> Inner Lower
 
 8x M3 x 12mm CounterSink, Tripod / Slider mount
