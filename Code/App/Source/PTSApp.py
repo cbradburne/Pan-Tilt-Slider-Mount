@@ -2636,8 +2636,8 @@ class PTSApp(MDApp):
                 usb_device_list = list_ports.comports()
                 self.device_name_list = [port.device for port in usb_device_list]
 
-            usb_port = 'usbmodemzzz'
-            usb_port2 = 'usb/00zzz'
+            usb_port = 'usbmodem'
+            usb_port2 = 'usb/00'
             
             if (usb_port in '\t'.join(self.device_name_list)):
                 try:
