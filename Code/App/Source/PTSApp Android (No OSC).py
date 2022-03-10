@@ -507,13 +507,6 @@ MDScreen:
         markup: True
         text: 'Serial Text Commands:\\ns(int) = Pan   speed (º/s)\\nS(int) = Tilt  speed (º/s)\\na(int) = Slide speed (mm/s)\\n\\nq(float) = Pan   accel\\nQ(float) = Tilt  accel\\nw(float) = Slide accel\\n\\ne(int) = Joystick pan   accel factor (1 = 100%)\\nE(int) = Joystick tilt  accel factor (1 = 100%)\\nD(int) = Joystick slide accel factor (1 = 100%)\\n\\nd(int) = Slide speed increments\\nf(int) = Slide min speed limit\\nF(int) = Slide max speed limit\\n\\nU = Save to EEPROM\\n'
 
-
-    FloatLayout:
-        TextInput:
-            id: textInput
-            pos: (app.xDiv*122), (app.yDiv*61)
-            size: (app.xDiv*10), (app.yDiv*3)
-            size_hint: None, None
     
     
     ScrollView:
@@ -530,6 +523,13 @@ MDScreen:
             size_hint: None, None
             height: max(self.parent.height, self.minimum_height)
 
+
+    FloatLayout:
+        TextInput:
+            id: textInput
+            pos: (app.xDiv*122), (app.yDiv*61)
+            size: (app.xDiv*10), (app.yDiv*3)
+            size_hint: None, None
 
 
 
@@ -2664,7 +2664,7 @@ class KivyPTS(MDApp):
                     button = Button(text=btnText, size_hint_y=None, height='60dp')
                     button.bind(on_release=self.on_btn_device_release)
                     self.uiDict['box_list'].add_widget(button)
-                self.root.ids.scanDD.pos = (((xDivSet*120)-(xDivSet*(longestSerial/2))), ((yDivSet*65) - ((yDivSet*7.4) * len(usb_device_list))))
+                self.root.ids.scanDD.pos = (((xDivSet*110)-(xDivSet*(longestSerial/2))), ((yDivSet*65) - ((yDivSet*7.4) * len(usb_device_list))))
                 if platform == "win32" or platform == "Windows" or platform == "win":
                     self.root.ids.box_list.size = (((xDivSet*(longestSerial*1.4))), 0)
                 elif platform == "android":

@@ -509,13 +509,6 @@ MDScreen:
         text: 'OSC Server Port: 6503\\nOSC Client Port: 1337\\n\\nSerial Text Commands:\\ns(int) = Pan   speed (º/s)\\nS(int) = Tilt  speed (º/s)\\na(int) = Slide speed (mm/s)\\n\\nq(float) = Pan   accel\\nQ(float) = Tilt  accel\\nw(float) = Slide accel\\n\\ne(int) = Joystick pan   accel factor (1 = 100%)\\nE(int) = Joystick tilt  accel factor (1 = 100%)\\nD(int) = Joystick slide accel factor (1 = 100%)\\n\\nd(int) = Slide speed increments\\nf(int) = Slide min speed limit\\nF(int) = Slide max speed limit\\n\\nU = Save to EEPROM\\n'
     
 
-    FloatLayout:
-        TextInput:
-            id: textInput
-            pos: (app.xDiv*122), (app.yDiv*61)
-            size: (app.xDiv*10), (app.yDiv*3)
-            size_hint: None, None
-
 
     ScrollView:
         id: scanDD
@@ -533,6 +526,13 @@ MDScreen:
 
 
 
+
+    FloatLayout:
+        TextInput:
+            id: textInput
+            pos: (app.xDiv*122), (app.yDiv*61)
+            size: (app.xDiv*10), (app.yDiv*3)
+            size_hint: None, None
 
 
 
@@ -1815,7 +1815,7 @@ class EventLoopWorker(EventDispatcher):
                 yield from self._default_pulse
 
 
-class KivyPTS(MDApp):
+class PTSApp(MDApp):
 
     xDiv = NumericProperty(xDivSet)        # 10 / 1340
     yDiv = NumericProperty(yDivSet)        # 10 / 703
@@ -1839,7 +1839,7 @@ class KivyPTS(MDApp):
         #base_path = Path(__file__).parent
         #image_path = (base_path / "./PTSApp-Icon.png").resolve()
         #self.icon = os.path.join(image_path)
-        super(KivyPTS, self).__init__(*args, **kwargs)
+        super(PTSApp, self).__init__(*args, **kwargs)
         self.event_loop_worker = None
 
     def build(self):
@@ -2636,8 +2636,8 @@ class KivyPTS(MDApp):
                 usb_device_list = list_ports.comports()
                 self.device_name_list = [port.device for port in usb_device_list]
 
-            usb_port = 'usbmodem'
-            usb_port2 = 'usb/00'
+            usb_port = 'usbmodemzzz'
+            usb_port2 = 'usb/00zzz'
             
             if (usb_port in '\t'.join(self.device_name_list)):
                 try:
@@ -2659,7 +2659,7 @@ class KivyPTS(MDApp):
                     button = Button(text=btnText, size_hint_y=None, height='60dp')
                     button.bind(on_release=self.on_btn_device_release)
                     self.uiDict['box_list'].add_widget(button)
-                self.root.ids.scanDD.pos = (((xDivSet*120)-(xDivSet*(longestSerial/2))), ((yDivSet*65) - ((yDivSet*7.4) * len(usb_device_list))))
+                self.root.ids.scanDD.pos = (((xDivSet*110)-(xDivSet*(longestSerial/2))), ((yDivSet*65) - ((yDivSet*7.4) * len(usb_device_list))))
                 if platform == "win32" or platform == "Windows" or platform == "win":
                     self.root.ids.box_list.size = (((xDivSet*(longestSerial*1.4))), 0)
                 else:
@@ -2739,12 +2739,12 @@ class KivyPTS(MDApp):
             self.read_thread = threading.Thread(target = self.read_msg_thread)
             serialLoop = True
             self.read_thread.start()
-            self.root.ids.txtInput_read.text += "Serial connection made 1.\n"
+            self.root.ids.txtInput_read.text += "Serial connection made (auto).\n"
             self.root.ids.scroll_view.scroll_y = 0
             self.whichCamSerial1()
             self.sendSerial('&!')
         else :
-            self.root.ids.txtInput_read.text += "Serial connection failed.\n"
+            self.root.ids.txtInput_read.text += "Serial connection failed.\n(Port open, thread = none)\n"
             self.root.ids.scroll_view.scroll_y = 0
             self.serial_port.close()
         return
@@ -2783,12 +2783,12 @@ class KivyPTS(MDApp):
                 self.read_thread = threading.Thread(target = self.read_msg_thread)
                 serialLoop = True
                 self.read_thread.start()
-                self.root.ids.txtInput_read.text += "Serial connection made.\n"
+                self.root.ids.txtInput_read.text += "Serial connection made 2.\n"
                 self.root.ids.scroll_view.scroll_y = 0
                 self.whichCamSerial1()
                 self.sendSerial('&!')
             else :
-                self.root.ids.txtInput_read.text += "Serial connection failed.\n" + str(self.read_thread)
+                self.root.ids.txtInput_read.text += "Serial connection failed.\n(Port open, thread = none)\n" + str(self.read_thread)
                 self.root.ids.scroll_view.scroll_y = 0
                 self.serial_port.close()
             return
@@ -2842,12 +2842,12 @@ class KivyPTS(MDApp):
             self.read_thread = threading.Thread(target = self.read_msg_thread)
             serialLoop = True
             self.read_thread.start()
-            self.root.ids.txtInput_read.text += "Serial connection made.\n"
+            self.root.ids.txtInput_read.text += "Serial connection made (selection).\n"
             self.root.ids.scroll_view.scroll_y = 0
             self.whichCamSerial1()
             self.sendSerial('&!')
         else :
-            self.root.ids.txtInput_read.text += "Serial connection failed.\n"
+            self.root.ids.txtInput_read.text += "Serial connection failed.\n(Port open, thread = none)\n"
             self.root.ids.scroll_view.scroll_y = 0
     
     def btnReport(self):
@@ -5153,4 +5153,4 @@ class KivyPTS(MDApp):
 
 
 if __name__ == '__main__':
-    KivyPTS().run()
+    PTSApp().run()
