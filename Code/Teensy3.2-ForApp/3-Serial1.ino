@@ -114,7 +114,6 @@ void Serial1Data() {
     }
 
     else if (c == 4) {
-      //String readSerial1 = Serial1.readStringUntil('\n');
       delay(1);
       while (Serial1.available() < 7) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
@@ -133,6 +132,9 @@ void Serial1Data() {
       delay(1);
       while (Serial1.available() > 0) {
         inData1 += Serial1.readStringUntil('\n');
+        if (inData1 == "#$\r") {
+          break;
+        }
         Serial.println(inData1);
         inData1 = "";
         delay(2);

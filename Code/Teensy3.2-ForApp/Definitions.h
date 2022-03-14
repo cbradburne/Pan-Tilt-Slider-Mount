@@ -11,14 +11,15 @@ String inData2;
 String inData3;
 String inData4;
 
+String inData1Temp;
+String inData2Temp;
+String inData3Temp;
+String inData4Temp;
+
 int speed1 = 20;                         //  Pan & Tilt speed settings
 int speed2 = 10;
 int speed3 = 5;
 int speed4 = 1;
-
-//String readSerial1;
-//String readSerial2;
-//String readSerial3;
 
 int whichSerialCam = 1;
 

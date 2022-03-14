@@ -76,6 +76,10 @@
 
 #define INSTRUCTION_SET_ZERO_POS 'h'
 
+#define INSTRUCTION_IS_CAM_DELAY 'j'
+
+#define INSTRUCTION_IS_RUN_CAM 'J'
+
 #define INSTRUCTION_DIRECT_MOVE 'm'
 #define INSTRUCTION_SETPOS 'M'
 
@@ -100,7 +104,7 @@
 #define EEPROM_ADDRESS_TILT_JOY_ACCEL 80
 #define EEPROM_ADDRESS_SLIDER_JOY_ACCEL 88
 
-#define VERSION_NUMBER "Version: 8.1\n21 Oct 2021"
+#define VERSION_NUMBER "Version: 8.2\n21 Mar 2022"
 
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
@@ -182,6 +186,17 @@ bool isManualMove = false;
 unsigned long previousMillisMoveCheck = 0;
 unsigned long currentMillisMoveCheck = 0;
 long moveCheckInterval = 1000;
+
+int camDlyNo = 0;
+unsigned long previousTime;
+
+int dlyPos = 0;
+
+int dlyPos1Time = 0;
+int dlyPos2Time = 0;
+int dlyPos3Time = 0;
+int dlyPos4Time = 0;
+int dlyPos5Time = 0;
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

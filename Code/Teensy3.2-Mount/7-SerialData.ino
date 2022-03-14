@@ -83,18 +83,31 @@ void SerialData(void) {
     else if (instruction == INSTRUCTION_IS_COMMAND) {
       delay(2);                                                 //wait to make sure all data in the Serial1 message has arived
       instruction = Serial.read();
-      memset(&stringText[0], 0, sizeof(stringText));            //clear the array
-      while (Serial.available()) {                              //set elemetns of stringText to the Serial1 values sent
-        char digit = Serial.read();                             //read in a char
-        strncat(stringText, &digit, 1);                         //add digit to the end of the array
+      if (instruction == INSTRUCTION_IS_CAM_DELAY) {
+        delay(2);
+        dlyPos = Serial.read();
+        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
+        while (Serial.available()) {                              //set elemetns of stringText to the Serial1 values sent
+          char digit = Serial.read();                             //read in a char
+          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        }
+        SerialFlush();                                            //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
       }
-      SerialFlush();                                            //Clear any excess data in the Serial1 buffer
-      SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
-      SerialCommandValueFloat = atof(stringText);              //converts stringText to a float
-      if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-        delay(100);                                             //wait to make sure all data in the Serial1 message has arived
-        SerialFlush();                                          //Clear any excess data in the Serial1 buffer
-        return;
+      else {
+        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
+        while (Serial.available()) {                              //set elemetns of stringText to the Serial1 values sent
+          char digit = Serial.read();                             //read in a char
+          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        }
+        SerialFlush();                                            //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);              //converts stringText to a float
+        if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                             //wait to make sure all data in the Serial1 message has arived
+          SerialFlush();                                          //Clear any excess data in the Serial1 buffer
+          return;
+        }
       }
     }
     else {
@@ -181,18 +194,31 @@ void SerialData(void) {
     else if (instruction == INSTRUCTION_IS_COMMAND) {
       delay(2);                                                 //wait to make sure all data in the Serial2 message has arived
       instruction = Serial2.read();
-      memset(&stringText[0], 0, sizeof(stringText));            //clear the array
-      while (Serial2.available()) {                             //set elemetns of stringText to the Serial2 values sent
-        char digit = Serial2.read();                            //read in a char
-        strncat(stringText, &digit, 1);                         //add digit to the end of the array
+      if (instruction == INSTRUCTION_IS_CAM_DELAY) {
+        delay(2);
+        dlyPos = Serial2.read();
+        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
+        while (Serial2.available()) {                             //set elemetns of stringText to the Serial2 values sent
+          char digit = Serial2.read();                            //read in a char
+          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        }
+        Serial2Flush();                                           //Clear any excess data in the Serial2 buffer
+        SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
       }
-      Serial2Flush();                                           //Clear any excess data in the Serial2 buffer
-      SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
-      SerialCommandValueFloat = atof(stringText);              //converts stringText to a float
-      if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-        delay(100);                                             //wait to make sure all data in the Serial2 message has arived
-        Serial1Flush();                                         //Clear any excess data in the Serial2 buffer
-        return;
+      else {
+        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
+        while (Serial2.available()) {                             //set elemetns of stringText to the Serial2 values sent
+          char digit = Serial2.read();                            //read in a char
+          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        }
+        Serial2Flush();                                           //Clear any excess data in the Serial2 buffer
+        SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);              //converts stringText to a float
+        if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                             //wait to make sure all data in the Serial2 message has arived
+          Serial1Flush();                                         //Clear any excess data in the Serial2 buffer
+          return;
+        }
       }
     }
     else {
@@ -279,18 +305,31 @@ void SerialData(void) {
     else if (instruction == INSTRUCTION_IS_COMMAND) {
       delay(2);                                                 //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
-      memset(&stringText[0], 0, sizeof(stringText));            //clear the array
-      while (Serial1.available()) {                             //set elemetns of stringText to the Serial1 values sent
-        char digit = Serial1.read();                            //read in a char
-        strncat(stringText, &digit, 1);                         //add digit to the end of the array
+      if (instruction == INSTRUCTION_IS_CAM_DELAY) {
+        delay(2);
+        dlyPos = Serial1.read();
+        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
+        while (Serial1.available()) {                             //set elemetns of stringText to the Serial1 values sent
+          char digit = Serial1.read();                            //read in a char
+          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        }
+        Serial1Flush();                                           //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
       }
-      Serial1Flush();                                           //Clear any excess data in the Serial1 buffer
-      SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
-      SerialCommandValueFloat = atof(stringText);              //converts stringText to a float
-      if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-        delay(100);                                             //wait to make sure all data in the Serial1 message has arived
-        Serial1Flush();                                         //Clear any excess data in the Serial1 buffer
-        return;
+      else {
+        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
+        while (Serial1.available()) {                             //set elemetns of stringText to the Serial1 values sent
+          char digit = Serial1.read();                            //read in a char
+          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        }
+        Serial1Flush();                                           //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);              //converts stringText to a float
+        if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                             //wait to make sure all data in the Serial1 message has arived
+          Serial1Flush();                                         //Clear any excess data in the Serial1 buffer
+          return;
+        }
       }
     }
     else {
@@ -377,18 +416,31 @@ void SerialData(void) {
     else if (instruction == INSTRUCTION_IS_COMMAND) {
       delay(2);                                                 //wait to make sure all data in the Serial3 message has arived
       instruction = Serial3.read();
-      memset(&stringText[0], 0, sizeof(stringText));            //clear the array
-      while (Serial3.available()) {                             //set elemetns of stringText to the Serial3 values sent
-        char digit = Serial3.read();                            //read in a char
-        strncat(stringText, &digit, 1);                         //add digit to the end of the array
+      if (instruction == INSTRUCTION_IS_CAM_DELAY) {
+        delay(2);
+        dlyPos = Serial3.read();
+        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
+        while (Serial3.available()) {                             //set elemetns of stringText to the Serial3 values sent
+          char digit = Serial3.read();                            //read in a char
+          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        }
+        Serial3Flush();                                           //Clear any excess data in the Serial3 buffer
+        SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
       }
-      Serial3Flush();                                           //Clear any excess data in the Serial3 buffer
-      SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
-      SerialCommandValueFloat = atof(stringText);              //converts stringText to a float
-      if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-        delay(100);                                             //wait to make sure all data in the Serial3 message has arived
-        Serial1Flush();                                         //Clear any excess data in the Serial3 buffer
-        return;
+      else {
+        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
+        while (Serial3.available()) {                             //set elemetns of stringText to the Serial3 values sent
+          char digit = Serial3.read();                            //read in a char
+          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        }
+        Serial3Flush();                                           //Clear any excess data in the Serial3 buffer
+        SerialCommandValueInt = atoi(stringText);                //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);              //converts stringText to a float
+        if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                             //wait to make sure all data in the Serial3 message has arived
+          Serial1Flush();                                         //Clear any excess data in the Serial3 buffer
+          return;
+        }
       }
     }
     else {
@@ -410,6 +462,103 @@ void SerialData(void) {
   }
 
   switch (instruction) {
+    case INSTRUCTION_IS_CAM_DELAY: {
+        if (dlyPos == 49) {
+          dlyPos1Time = SerialCommandValueInt;
+          Serial1.print("Delay berfore 2nd position set: ");
+          Serial1.print(SerialCommandValueInt);
+          Serial1.println("ms");
+        }
+        else if (dlyPos == 50) {
+          dlyPos2Time = SerialCommandValueInt;
+          Serial1.print("Delay berfore 3rd position set: ");
+          Serial1.print(SerialCommandValueInt);
+          Serial1.println("ms");
+        }
+        else if (dlyPos == 51) {
+          dlyPos3Time = SerialCommandValueInt;
+          Serial1.print("Delay berfore 4th position set: ");
+          Serial1.print(SerialCommandValueInt);
+          Serial1.println("ms");
+        }
+        else if (dlyPos == 52) {
+          dlyPos4Time = SerialCommandValueInt;
+          Serial1.print("Delay berfore 5th position set: ");
+          Serial1.print(SerialCommandValueInt);
+          Serial1.println("ms");
+        }
+        else if (dlyPos == 53) {
+          dlyPos5Time = SerialCommandValueInt;
+          Serial1.print("Delay berfore 6th position set: ");
+          Serial1.print(SerialCommandValueInt);
+          Serial1.println("ms");
+        }
+      }
+      break;
+    case INSTRUCTION_IS_RUN_CAM: {
+        Serial1.println("Run array of moves.");
+        Serial1.println("#$");
+        if (pos1set) {
+          moveToIndex(1);
+          timeElapsed = 0;
+          if (pos2set) {
+            Serial1.print("Delay until next move: ");
+            Serial1.print(dlyPos1Time);
+            Serial1.println("ms");
+            previousTime = dlyPos1Time + timeElapsed;
+            while (timeElapsed < previousTime) {
+              delay(2);
+            }
+            moveToIndex(2);
+            timeElapsed = 0;
+          }
+          if (pos3set) {
+            Serial1.print("Delay until next move: ");
+            Serial1.print(dlyPos2Time);
+            Serial1.println("ms");
+            previousTime = dlyPos2Time + timeElapsed;
+            while (timeElapsed < previousTime) {
+              delay(2);
+            }
+            moveToIndex(3);
+            timeElapsed = 0;
+          }
+          if (pos4set) {
+            Serial1.print("Delay until next move: ");
+            Serial1.print(dlyPos3Time);
+            Serial1.println("ms");
+            previousTime = dlyPos3Time + timeElapsed;
+            while (timeElapsed < previousTime) {
+              delay(2);
+            }
+            moveToIndex(4);
+            timeElapsed = 0;
+          }
+          if (pos5set) {
+            Serial1.print("Delay until next move: ");
+            Serial1.print(dlyPos4Time);
+            Serial1.println("ms");
+            previousTime = dlyPos4Time + timeElapsed;
+            while (timeElapsed < previousTime) {
+              delay(2);
+            }
+            moveToIndex(5);
+            timeElapsed = 0;
+          }
+          if (pos6set) {
+            Serial1.print("Delay until next move: ");
+            Serial1.print(dlyPos5Time);
+            Serial1.println("ms");
+            previousTime = dlyPos5Time + timeElapsed;
+            while (timeElapsed < previousTime) {
+              delay(2);
+            }
+            moveToIndex(6);
+            timeElapsed = 0;
+          }
+        }
+      }
+      break;
     case INSTRUCTION_DIRECT_MOVE: {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           moveToIndex(SerialCommandValueInt);
@@ -678,7 +827,7 @@ void SerialData(void) {
         tilt_set_speed = SerialCommandValueFloat;
         tilt_def_speed = tilt_set_speed;                                                      //  set default speeds
         stepper_tilt.setMaxSpeed(tiltDegreesToSteps(tilt_set_speed));
-        
+
         Serial.print(instruction);
         Serial.println(pan_set_speed);
         if (pan_set_speed >= 20) {
