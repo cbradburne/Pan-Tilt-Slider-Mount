@@ -465,33 +465,33 @@ void SerialData(void) {
     case INSTRUCTION_IS_CAM_DELAY: {
         if (dlyPos == 49) {
           dlyPos1Time = SerialCommandValueInt;
-          Serial1.print("Delay berfore 2nd position set: ");
+          Serial1.print("Delay before 2nd position set: ");
           Serial1.print(SerialCommandValueInt);
-          Serial1.println("ms");
+          Serial1.println("ms\n");
         }
         else if (dlyPos == 50) {
           dlyPos2Time = SerialCommandValueInt;
-          Serial1.print("Delay berfore 3rd position set: ");
+          Serial1.print("Delay before 3rd position set: ");
           Serial1.print(SerialCommandValueInt);
-          Serial1.println("ms");
+          Serial1.println("ms\n");
         }
         else if (dlyPos == 51) {
           dlyPos3Time = SerialCommandValueInt;
-          Serial1.print("Delay berfore 4th position set: ");
+          Serial1.print("Delay before 4th position set: ");
           Serial1.print(SerialCommandValueInt);
-          Serial1.println("ms");
+          Serial1.println("ms\n");
         }
         else if (dlyPos == 52) {
           dlyPos4Time = SerialCommandValueInt;
-          Serial1.print("Delay berfore 5th position set: ");
+          Serial1.print("Delay before 5th position set: ");
           Serial1.print(SerialCommandValueInt);
-          Serial1.println("ms");
+          Serial1.println("ms\n");
         }
         else if (dlyPos == 53) {
           dlyPos5Time = SerialCommandValueInt;
-          Serial1.print("Delay berfore 6th position set: ");
+          Serial1.print("Delay before 6th position set: ");
           Serial1.print(SerialCommandValueInt);
-          Serial1.println("ms");
+          Serial1.println("ms\n");
         }
       }
       break;
