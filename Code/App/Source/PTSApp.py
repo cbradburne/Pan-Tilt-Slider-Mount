@@ -1851,6 +1851,7 @@ class PTSApp(MDApp):
         Window.bind(on_touch_up = self.on_touch_up)
         Window.bind(on_request_close = self.stopping)
         Window.bind(on_key_down = self.keyDown)
+        Window.bind(on_key_up = self.keyUp)
         #listener = Listener(on_press = self.on_press, on_release=self.on_release)
         #listener.start()
         Clock.schedule_interval(self.flash, 1.0)
@@ -1923,6 +1924,28 @@ class PTSApp(MDApp):
 
     def clearTextInput(self, dt):
         self.root.ids.textInput.text = ""
+
+    def keyUp(self, instance, keyboard, keycode):
+        global axisX
+        global axisY
+        global axisZ
+        
+        if self.root.ids.textInput.focus == False:              #   a= 4, s= 22, d=7, w= 26, ,=54, .=55
+            #print(keycode)
+            if keycode == 4:
+                axisX = 0
+            if keycode == 7:
+                axisX = 0
+            if keycode == 26:
+                axisY = 0
+            if keycode == 22:
+                axisY = 0
+            if keycode == 54:
+                axisZ = 0
+            if keycode == 55:
+                axisZ = 0
+
+            self.doJoyMoves(1)
 
     def showPorts(self, dt):
         #self.root.ids.OSCSend.text = "OSC Server Port: " + str(srvPort)
