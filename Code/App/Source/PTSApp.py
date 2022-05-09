@@ -1872,17 +1872,17 @@ class PTSApp(MDApp):
         
         if self.root.ids.textInput.focus == False:              #   a= 4, s= 22, d=7, w= 26, ,=54, .=55
             #print(keycode)
-            if keycode == 4:
+            if keycode == 4: #a - left
                 axisX = -255
-            if keycode == 7:
+            if keycode == 7: #d - right
                 axisX = 255
-            if keycode == 26:
-                axisY = -255
-            if keycode == 22:
+            if keycode == 26: #w - up
                 axisY = 255
-            if keycode == 54:
+            if keycode == 22: #s - down
+                axisY = -255
+            if keycode == 54: #, - slide left
                 axisZ = -255
-            if keycode == 55:
+            if keycode == 55: #. - slide right
                 axisZ = 255
 
             self.doJoyMoves(1)
