@@ -2616,18 +2616,27 @@ class PTSApp(MDApp):
         if SetPosToggle:
             self.setPos(3)
             self.sendSerial('&.')
+        else:
+            self.root.ids.txtInput_read.text += "[color=#FFFFFF]To record, press \"Set Pos\" first.\n[/color]"
+            self.root.ids.scroll_view.scroll_y = 0
 
     def sendCam2RecordToggle(self):
         global SetPosToggle
         if SetPosToggle:
             self.setPos(3)
             self.sendSerial('&l')
+        else:
+            self.root.ids.txtInput_read.text += "[color=#FFFFFF]To record, press \"Set Pos\" first.\n[/color]"
+            self.root.ids.scroll_view.scroll_y = 0
 
     def sendCam3RecordToggle(self):
         global SetPosToggle
         if SetPosToggle:
             self.setPos(3)
             self.sendSerial('&o')
+        else:
+            self.root.ids.txtInput_read.text += "[color=#FFFFFF]To record, press \"Set Pos\" first.\n[/color]"
+            self.root.ids.scroll_view.scroll_y = 0
 
     def sendCam1RecordToggleOSC(self):
         self.sendSerial('&.')
