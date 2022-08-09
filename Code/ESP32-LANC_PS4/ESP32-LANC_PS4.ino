@@ -12,7 +12,7 @@
   https://www.hackster.io/abdularbi17/how-to-install-esp32-board-in-arduino-ide-1cd571
 
   NOTE: Thanks to YouTuber kingjust627, it's been noted that ESP32 DevKitC is incompatible with the code.
-  ALSO, you need to install version 1.0.4 of the ESP32 library in the Arduino board manager.
+  The PS4-ESP library is from https://github.com/AzSaSiN/PS4-esp32 this library works with ESP32 boards library 2.0.4+
 
   You'll need to get your DualShock4's Bluetooth MAC Address.
   To get the MAC address use the program "SixaxisPairTool", https://dancingpixelstudios.com/sixaxis-controller/sixaxispairtool/.
@@ -39,15 +39,17 @@
   Set Slider to Max Speed                           -       R1 + R3
   Set Slider to Min Speed                           -       L1 + L3
 
-  First element                                     -       D-Pad UP
-  Last element                                      -       D-Pad DOWN
-  Step back                                         -       D-Pad LEFT
-  Step forwards                                     -       D-Pad RIGHT
+  Move to Pos 1                                     -       D-Pad UP
+  Move to Pos 2                                     -       D-Pad LEFT
+  Move to Pos 3                                     -       D-Pad RIGHT
+  Move to Pos 4                                     -       D-Pad DOWN
 
-  Execute moves array                               -       Triangle
-  Edit current position                             -       Circle
-  Save current position as new keyframe             -       Cross
-  Clear Array                                       -       Square
+  -                                                 -       Triangle
+  -                                                 -       Circle
+  -                                                 -       Cross
+  Set Pos                                           -       Square (+ D-Pad)
+
+  Clear Array                                       -       Share Button
 
   LANC Commands:
     Record Toggle                                   -       TouchPad Button
@@ -251,7 +253,7 @@ void setup()
 }
 
 void PS4connect() {
-  PS4.begin("8c:85:90:c1:00:43");                             // **** insert your DualShock4 MAC address here ****
+  PS4.begin("e8:9e:b4:a9:3b:74");                             // **** insert your DualShock4 MAC address here ****
 }
 
 void loop() {

@@ -102,6 +102,17 @@ void initPanTilt(void) {
   Serial1.println("-");
   Serial1.println("#$");
 
+  upsideDown = digitalRead(PIN_SW1);
+  slideReverse = digitalRead(PIN_SW2);
+
+  if (upsideDown) {
+    stepper_pan.setInverseRotation(true);
+    stepper_tilt.setInverseRotation(true);
+  }
+
+  if (slideReverse) {
+    stepper_slider.setInverseRotation(true);
+  }
 }
 
 

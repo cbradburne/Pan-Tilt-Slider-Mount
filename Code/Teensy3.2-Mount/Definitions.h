@@ -108,6 +108,8 @@
 
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
+bool upsideDown = false;
+bool slideReverse = false;
 
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
