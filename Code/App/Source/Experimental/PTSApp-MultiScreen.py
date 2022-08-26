@@ -5,6 +5,7 @@
 #KivyMD
 #git clone https://github.com/kivymd/KivyMD.git --depth 1
 #cd KivyMD
+#/Library/Frameworks/Python.framework/Versions/3.9/bin/python3 -m pip install --upgrade pip
 #pip install .
 #
 #Other
@@ -2073,24 +2074,28 @@ WindowManager:
                 pos: (app.xDiv*12), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput1SPP
                 pos: (app.xDiv*12), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
                 
             TextInput:
                 id: textInput1SPS
                 pos: (app.xDiv*12), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput1DLY
                 pos: (app.xDiv*12), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2099,24 +2104,28 @@ WindowManager:
                 pos: (app.xDiv*37), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput2SPP
                 pos: (app.xDiv*37), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput2SPS
                 pos: (app.xDiv*37), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput2DLY
                 pos: (app.xDiv*37), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2127,24 +2136,28 @@ WindowManager:
                 pos: (app.xDiv*62), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput3SPP
                 pos: (app.xDiv*62), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput3SPS
                 pos: (app.xDiv*62), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput3DLY
                 pos: (app.xDiv*62), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2155,24 +2168,28 @@ WindowManager:
                 pos: (app.xDiv*87), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput4SPP
                 pos: (app.xDiv*87), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput4SPS
                 pos: (app.xDiv*87), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput4DLY
                 pos: (app.xDiv*87), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2182,24 +2199,28 @@ WindowManager:
                 pos: (app.xDiv*112), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput5SPP
                 pos: (app.xDiv*112), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput5SPS
                 pos: (app.xDiv*112), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput5DLY
                 pos: (app.xDiv*112), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2853,24 +2874,28 @@ WindowManager:
                 pos: (app.xDiv*12), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput1SPP
                 pos: (app.xDiv*12), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput1SPS
                 pos: (app.xDiv*12), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput1DLY
                 pos: (app.xDiv*12), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2880,24 +2905,28 @@ WindowManager:
                 pos: (app.xDiv*37), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput2SPP
                 pos: (app.xDiv*37), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
                 
             TextInput:
                 id: textInput2SPS
                 pos: (app.xDiv*37), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput2DLY
                 pos: (app.xDiv*37), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2908,24 +2937,28 @@ WindowManager:
                 pos: (app.xDiv*62), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput3SPP
                 pos: (app.xDiv*62), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput3SPS
                 pos: (app.xDiv*62), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput3DLY
                 pos: (app.xDiv*62), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2936,24 +2969,28 @@ WindowManager:
                 pos: (app.xDiv*87), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput4SPP
                 pos: (app.xDiv*87), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput4SPS
                 pos: (app.xDiv*87), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput4DLY
                 pos: (app.xDiv*87), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -2963,24 +3000,28 @@ WindowManager:
                 pos: (app.xDiv*112), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput5SPP
                 pos: (app.xDiv*112), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput5SPS
                 pos: (app.xDiv*112), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput5DLY
                 pos: (app.xDiv*112), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -3640,24 +3681,28 @@ WindowManager:
                 pos: (app.xDiv*12), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput1SPP
                 pos: (app.xDiv*12), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput1SPS
                 pos: (app.xDiv*12), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput1DLY
                 pos: (app.xDiv*12), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -3666,24 +3711,28 @@ WindowManager:
                 pos: (app.xDiv*37), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput2SPP
                 pos: (app.xDiv*37), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput2SPS
                 pos: (app.xDiv*37), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput2DLY
                 pos: (app.xDiv*37), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -3694,24 +3743,28 @@ WindowManager:
                 pos: (app.xDiv*62), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput3SPP
                 pos: (app.xDiv*62), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput3SPS
                 pos: (app.xDiv*62), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput3DLY
                 pos: (app.xDiv*62), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -3722,24 +3775,28 @@ WindowManager:
                 pos: (app.xDiv*87), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput4SPP
                 pos: (app.xDiv*87), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput4SPS
                 pos: (app.xDiv*87), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput4DLY
                 pos: (app.xDiv*87), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -3749,24 +3806,28 @@ WindowManager:
                 pos: (app.xDiv*112), (app.yDiv*18)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Acceleration'
 
             TextInput:
                 id: textInput5SPP
                 pos: (app.xDiv*112), (app.yDiv*14)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'PT Speed'
 
             TextInput:
                 id: textInput5SPS
                 pos: (app.xDiv*112), (app.yDiv*10)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Slider Speed'
 
             TextInput:
                 id: textInput5DLY
                 pos: (app.xDiv*112), (app.yDiv*6)
                 size: (app.xDiv*10), (app.yDiv*3)
                 size_hint: None, None
+                hint_text: 'Delay'
 
 
 
@@ -4365,7 +4426,7 @@ class PTSApp(MDApp):
                 self.root.get_screen('3rdcam').ids.scroll_view.scroll_y = 0
 
             elif self.root.get_screen('1stcam').ids.textInput1ACC.focus == True:
-                temp = "??"
+                temp = "??K1"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput1ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4379,7 +4440,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput1SPP.focus == True:
-                temp = "??"
+                temp = "??i1"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput1SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4393,7 +4454,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput1SPS.focus == True:
-                temp = "??"
+                temp = "??I1"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput1SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4422,7 +4483,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('1stcam').ids.textInput2ACC.focus == True:
-                temp = "??"
+                temp = "??K2"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput2ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4436,7 +4497,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput2SPP.focus == True:
-                temp = "??"
+                temp = "??i2"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput2SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4450,7 +4511,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput2SPS.focus == True:
-                temp = "??"
+                temp = "??I2"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput2SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4479,7 +4540,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('1stcam').ids.textInput3ACC.focus == True:
-                temp = "??"
+                temp = "??K3"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput3ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4493,7 +4554,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput3SPP.focus == True:
-                temp = "??"
+                temp = "??i3"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput3SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4507,7 +4568,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput3SPS.focus == True:
-                temp = "??"
+                temp = "??I3"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput3SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4536,7 +4597,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('1stcam').ids.textInput4ACC.focus == True:
-                temp = "??"
+                temp = "??K4"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput4ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4550,7 +4611,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput4SPP.focus == True:
-                temp = "??"
+                temp = "??i4"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput4SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4564,7 +4625,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput4SPS.focus == True:
-                temp = "??"
+                temp = "??I4"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput4SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4593,7 +4654,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('1stcam').ids.textInput5ACC.focus == True:
-                temp = "??"
+                temp = "??K5"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput5ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4607,7 +4668,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput5SPP.focus == True:
-                temp = "??"
+                temp = "??i5"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput5SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4621,7 +4682,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('1stcam').ids.textInput5SPS.focus == True:
-                temp = "??"
+                temp = "??I5"
                 tempInput = (self.root.get_screen('1stcam').ids.textInput5SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4652,7 +4713,7 @@ class PTSApp(MDApp):
 
 
             elif self.root.get_screen('2ndcam').ids.textInput1ACC.focus == True:
-                temp = "!?"
+                temp = "!?K1"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput1ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4666,7 +4727,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput1SPP.focus == True:
-                temp = "!?"
+                temp = "!?i1"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput1SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4680,7 +4741,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput1SPS.focus == True:
-                temp = "!?"
+                temp = "!?I1"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput1SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4709,7 +4770,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('2ndcam').ids.textInput2ACC.focus == True:
-                temp = "!?"
+                temp = "!?K2"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput2ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4723,7 +4784,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput2SPP.focus == True:
-                temp = "!?"
+                temp = "!?i2"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput2SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4737,7 +4798,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput2SPS.focus == True:
-                temp = "!?"
+                temp = "!?I2"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput2SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4766,7 +4827,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('2ndcam').ids.textInput3ACC.focus == True:
-                temp = "!?"
+                temp = "!?K3"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput3ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4780,7 +4841,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput3SPP.focus == True:
-                temp = "!?"
+                temp = "!?i3"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput3SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4794,7 +4855,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput3SPS.focus == True:
-                temp = "!?"
+                temp = "!?I3"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput3SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4823,7 +4884,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('2ndcam').ids.textInput4ACC.focus == True:
-                temp = "!?"
+                temp = "!?K4"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput4ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4837,7 +4898,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput4SPP.focus == True:
-                temp = "!?"
+                temp = "!?i4"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput4SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4851,7 +4912,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput4SPS.focus == True:
-                temp = "!?"
+                temp = "!?I4"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput4SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4880,7 +4941,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('2ndcam').ids.textInput5ACC.focus == True:
-                temp = "!?"
+                temp = "!?K5"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput5ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4894,7 +4955,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput5SPP.focus == True:
-                temp = "!?"
+                temp = "!?i5"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput5SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4908,7 +4969,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('2ndcam').ids.textInput5SPS.focus == True:
-                temp = "!?"
+                temp = "!?I5"
                 tempInput = (self.root.get_screen('2ndcam').ids.textInput5SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4941,7 +5002,7 @@ class PTSApp(MDApp):
 
 
             elif self.root.get_screen('3rdcam').ids.textInput1ACC.focus == True:
-                temp = "@?"
+                temp = "@?K1"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput1ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4955,7 +5016,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput1SPP.focus == True:
-                temp = "@?"
+                temp = "@?i1"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput1SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4969,7 +5030,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput1SPS.focus == True:
-                temp = "@?"
+                temp = "@?I1"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput1SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -4998,7 +5059,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('3rdcam').ids.textInput2ACC.focus == True:
-                temp = "@?"
+                temp = "@?K2"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput2ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5012,7 +5073,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput2SPP.focus == True:
-                temp = "@?"
+                temp = "@?i2"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput2SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5026,7 +5087,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput2SPS.focus == True:
-                temp = "@?"
+                temp = "@?I2"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput2SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5055,7 +5116,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('3rdcam').ids.textInput3ACC.focus == True:
-                temp = "@?"
+                temp = "@?K3"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput3ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5069,7 +5130,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput3SPP.focus == True:
-                temp = "@?"
+                temp = "@?i3"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput3SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5083,7 +5144,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput3SPS.focus == True:
-                temp = "@?"
+                temp = "@?I3"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput3SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5112,7 +5173,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('3rdcam').ids.textInput4ACC.focus == True:
-                temp = "@?"
+                temp = "@?K4"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput4ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5126,7 +5187,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput4SPP.focus == True:
-                temp = "@?"
+                temp = "@?i4"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput4SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5140,7 +5201,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput4SPS.focus == True:
-                temp = "@?"
+                temp = "@?I4"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput4SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5169,7 +5230,7 @@ class PTSApp(MDApp):
                     Clock.schedule_once(self.clearTextInput, 0)
 
             elif self.root.get_screen('3rdcam').ids.textInput5ACC.focus == True:
-                temp = "@?"
+                temp = "@?K5"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput5ACC.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5183,7 +5244,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput5SPP.focus == True:
-                temp = "@?"
+                temp = "@?i5"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput5SPP.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
@@ -5197,7 +5258,7 @@ class PTSApp(MDApp):
                     self.root.get_screen('main').ids.scroll_view.scroll_y = 0
                     Clock.schedule_once(self.clearTextInput, 0)
             elif self.root.get_screen('3rdcam').ids.textInput5SPS.focus == True:
-                temp = "@?"
+                temp = "@?I5"
                 tempInput = (self.root.get_screen('3rdcam').ids.textInput5SPS.text)
                 temp += tempInput
                 if self.serial_port and self.serial_port.is_open:
