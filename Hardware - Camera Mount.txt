@@ -1,13 +1,13 @@
 Bolts
-8x M3 x 8mm socket cap, PCB x4 || Pan Motor x4
-4x M3 x 16mm socket cap, Tilt Motor
+ 8x M3 x 8mm socket cap, PCB x4 || Pan Motor x4
+ 4x M3 x 16mm socket cap, Tilt Motor
 18x M3 x 30mm socket cap, Base -> Base Topper x8 || Upper -> Inner Lower x6 || Sides -> Upper x4
-2x M3 x 45mm socket cap, Side -> Upper -> Inner Upper -> Inner Lower
+ 2x M3 x 45mm socket cap, Side -> Upper -> Inner Upper -> Inner Lower
 
-8x M3 x 12mm CounterSink, Tripod / Slider mount
+ 8x M3 x 12mm CounterSink, Tripod / Slider mount
 
-1x M8 x 50mm, Camera Mount (Pulley side)
-1x M8 x 30mm, Camera Mount (Support side)
+ 1x M8 x 50mm, Camera Mount (Pulley side)
+ 1x M8 x 30mm, Camera Mount (Support side)
 
 SMALLRIG Quick Release 1/4" Thumb Screw
 
@@ -25,7 +25,7 @@ https://www.amazon.co.uk/gp/product/B081GHZV9D/
 
 Washers
 12x M3,8x Motors, 4x Side mounts
-8x M8, Camera mount (3x Pulley side, 3x Support side, 2x spares)
+ 8x M8, Camera mount (3x Pulley side, 3x Support side, 2x spares)
 
 
 Bearings
