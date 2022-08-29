@@ -5768,10 +5768,22 @@ class PTSApp(MDApp):
             mousePTClick = False
             self.root.get_screen('main').ids.PTJoyDot.pos = (self.screen.width, self.screen.height)
             self.root.get_screen('main').ids.PTJoyDotPress.pos = ((xDivSet*18), (yDivSet*49))
+            self.root.get_screen('1stcam').ids.PTJoyDot.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('1stcam').ids.PTJoyDotPress.pos = ((xDivSet*18), (yDivSet*49))
+            self.root.get_screen('2ndcam').ids.PTJoyDot.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('2ndcam').ids.PTJoyDotPress.pos = ((xDivSet*18), (yDivSet*49))
+            self.root.get_screen('3rdcam').ids.PTJoyDot.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('3rdcam').ids.PTJoyDotPress.pos = ((xDivSet*18), (yDivSet*49))
         if mouseSlClick and not sliderKeyPressed:
             mouseSlClick = False
             self.root.get_screen('main').ids.SlJoyDot.pos = (self.screen.width, self.screen.height)
             self.root.get_screen('main').ids.SlJoyDotPress.pos = ((xDivSet*18), (yDivSet*27))
+            self.root.get_screen('1stcam').ids.SlJoyDot.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('1stcam').ids.SlJoyDotPress.pos = ((xDivSet*18), (yDivSet*27))
+            self.root.get_screen('2ndcam').ids.SlJoyDot.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('2ndcam').ids.SlJoyDotPress.pos = ((xDivSet*18), (yDivSet*27))
+            self.root.get_screen('3rdcam').ids.SlJoyDot.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('3rdcam').ids.SlJoyDotPress.pos = ((xDivSet*18), (yDivSet*27))
 
         if cam1isZooming:
             self.sendCam1ZoomStop()
@@ -5820,6 +5832,12 @@ class PTSApp(MDApp):
             
             self.root.get_screen('main').ids.PTJoyDotPress.pos = (self.screen.width, self.screen.height)
             self.root.get_screen('main').ids.PTJoyDot.pos = ((abs_coord_x - (xDivSet*2)), (abs_coord_y - (yDivSet*2)))
+            self.root.get_screen('1stcam').ids.PTJoyDotPress.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('1stcam').ids.PTJoyDot.pos = ((abs_coord_x - (xDivSet*2)), (abs_coord_y - (yDivSet*2)))
+            self.root.get_screen('2ndcam').ids.PTJoyDotPress.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('2ndcam').ids.PTJoyDot.pos = ((abs_coord_x - (xDivSet*2)), (abs_coord_y - (yDivSet*2)))
+            self.root.get_screen('3rdcam').ids.PTJoyDotPress.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('3rdcam').ids.PTJoyDot.pos = ((abs_coord_x - (xDivSet*2)), (abs_coord_y - (yDivSet*2)))
 
             axisX = int(self.scale((abs_coord_x), (PTXMin, PTXMax), (-255,255)))
             axisY = int(self.scale((abs_coord_y), (PTYMin, PTYMax), (-255,255)))
@@ -5837,6 +5855,12 @@ class PTSApp(MDApp):
 
             self.root.get_screen('main').ids.SlJoyDotPress.pos = (self.screen.width, self.screen.height)
             self.root.get_screen('main').ids.SlJoyDot.pos = ((abs_coord_x - (xDivSet*2)), SlY)
+            self.root.get_screen('1stcam').ids.SlJoyDotPress.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('1stcam').ids.SlJoyDot.pos = ((abs_coord_x - (xDivSet*2)), SlY)
+            self.root.get_screen('2ndcam').ids.SlJoyDotPress.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('2ndcam').ids.SlJoyDot.pos = ((abs_coord_x - (xDivSet*2)), SlY)
+            self.root.get_screen('3rdcam').ids.SlJoyDotPress.pos = (self.screen.width, self.screen.height)
+            self.root.get_screen('3rdcam').ids.SlJoyDot.pos = ((abs_coord_x - (xDivSet*2)), SlY)
 
             axisZ = int(self.scale((abs_coord_x), (SlXMin, SlXMax), (-255,255)))
             self.doJoyMoves(1)
