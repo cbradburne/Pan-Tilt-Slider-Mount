@@ -752,35 +752,36 @@ void SerialData(void) {
         useKeyframeSpeeds = true;
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           if (keyframe_array[0].isRecorded == 1) {
-            Serial.println(String("Starting Sequence Move"));
-            moveToIndex(0);
-          }
-          if (keyframe_array[1].isRecorded == 1) {
-            Serial.println(String("Delay before move: ") + keyframe_array[1].runDelay + String("ms"));
-            delay(keyframe_array[1].runDelay);
+            Serial1.println(String("Starting Sequence Move"));
             moveToIndex(1);
           }
-          if (keyframe_array[2].isRecorded == 1) {
-            Serial.println(String("Delay before move: ") + keyframe_array[2].runDelay + String("ms"));
-            delay(keyframe_array[2].runDelay);
+          if (keyframe_array[1].isRecorded == 1) {
+            Serial1.println(String("Delay before move: ") + keyframe_array[1].runDelay + String("ms"));
+            delay(keyframe_array[1].runDelay);
             moveToIndex(2);
           }
-          if (keyframe_array[3].isRecorded == 1) {
-            Serial.println(String("Delay before move: ") + keyframe_array[3].runDelay + String("ms"));
-            delay(keyframe_array[3].runDelay);
+          if (keyframe_array[2].isRecorded == 1) {
+            Serial1.println(String("Delay before move: ") + keyframe_array[2].runDelay + String("ms"));
+            delay(keyframe_array[2].runDelay);
             moveToIndex(3);
           }
-          if (keyframe_array[4].isRecorded == 1) {
-            Serial.println(String("Delay before move: ") + keyframe_array[4].runDelay + String("ms"));
-            delay(keyframe_array[4].runDelay);
+          if (keyframe_array[3].isRecorded == 1) {
+            Serial1.println(String("Delay before move: ") + keyframe_array[3].runDelay + String("ms"));
+            delay(keyframe_array[3].runDelay);
             moveToIndex(4);
           }
-          if (keyframe_array[5].isRecorded == 1) {
-            Serial.println(String("Delay before move: ") + keyframe_array[5].runDelay + String("ms"));
-            delay(keyframe_array[5].runDelay);
+          if (keyframe_array[4].isRecorded == 1) {
+            Serial1.println(String("Delay before move: ") + keyframe_array[4].runDelay + String("ms"));
+            delay(keyframe_array[4].runDelay);
             moveToIndex(5);
           }
-          Serial.println(String("End of moves."));
+          if (keyframe_array[5].isRecorded == 1) {
+            Serial1.println(String("Delay before move: ") + keyframe_array[5].runDelay + String("ms"));
+            delay(keyframe_array[5].runDelay);
+            moveToIndex(6);
+          }
+          Serial1.println(String("End of moves."));
+          Serial1.println("#$");
         }
         useKeyframeSpeeds = false;
       }
