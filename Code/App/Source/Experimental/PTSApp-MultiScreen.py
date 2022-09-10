@@ -18,10 +18,10 @@
 
 #python3 -m pip install pyinstaller
 #macOS
-#pyinstaller --onefile --windowed --icon PTSApp-Icon.icns --osx-bundle-identifier 'com.bradders' --name PTSApp PTSApp.py
+#pyinstaller --onefile --windowed --icon PTSApp-Icon.icns --osx-bundle-identifier 'com.bradders' --name PTSApp-Multi PTSApp-MultiScreen.py
 #
 #Windows
-#pyinstaller --onefile --windowed --icon="PTSApp-Icon.ico" PTSApp.py
+#pyinstaller --onefile --windowed --icon="PTSApp-Icon.ico" PTSApp-MultiScreen.py
 
 import asyncio
 import threading
