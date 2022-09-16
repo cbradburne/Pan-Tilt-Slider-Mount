@@ -681,3 +681,39 @@ void pid() {
     sliderEnd = false;
   }
 }
+
+void RunMoves() {
+  useKeyframeSpeeds = true;
+  if (keyframe_array[0].isRecorded == 1) {
+    Serial1.println(String("Starting Sequence Move"));
+    moveToIndex(1);
+  }
+  if (keyframe_array[1].isRecorded == 1) {
+    Serial1.println(String("Delay before move: ") + keyframe_array[1].runDelay + String("ms"));
+    delay(keyframe_array[1].runDelay);
+    moveToIndex(2);
+  }
+  if (keyframe_array[2].isRecorded == 1) {
+    Serial1.println(String("Delay before move: ") + keyframe_array[2].runDelay + String("ms"));
+    delay(keyframe_array[2].runDelay);
+    moveToIndex(3);
+  }
+  if (keyframe_array[3].isRecorded == 1) {
+    Serial1.println(String("Delay before move: ") + keyframe_array[3].runDelay + String("ms"));
+    delay(keyframe_array[3].runDelay);
+    moveToIndex(4);
+  }
+  if (keyframe_array[4].isRecorded == 1) {
+    Serial1.println(String("Delay before move: ") + keyframe_array[4].runDelay + String("ms"));
+    delay(keyframe_array[4].runDelay);
+    moveToIndex(5);
+  }
+  if (keyframe_array[5].isRecorded == 1) {
+    Serial1.println(String("Delay before move: ") + keyframe_array[5].runDelay + String("ms"));
+    delay(keyframe_array[5].runDelay);
+    moveToIndex(6);
+  }
+  Serial1.println(String("End of moves."));
+  Serial1.println("#$");
+  useKeyframeSpeeds = false;
+}

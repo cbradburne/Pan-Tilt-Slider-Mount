@@ -190,10 +190,6 @@ void mainLoop(void) {
       Serial1.println("STOPPED");
     }
   }
-
-  //if (runCamLoop) {
-    //
-  //}
 }
 
 

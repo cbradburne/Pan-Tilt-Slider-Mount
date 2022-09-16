@@ -260,6 +260,7 @@ int dlyPos5Time = 0;
 
 bool isLastRunMove = false;
 bool runCamLoop = false;
+bool runCamLoopMoves = false;
 int counter = 1;
 int targetTimer = 3000;
 static unsigned lastTick = 0;

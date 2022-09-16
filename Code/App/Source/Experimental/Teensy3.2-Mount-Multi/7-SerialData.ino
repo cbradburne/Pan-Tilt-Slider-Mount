@@ -737,10 +737,6 @@ void SerialData(void) {
           isLastRunMove = false;
           counter = 1;
 
-          //rotate_stepperP.rotateAsync(stepper_pan);
-          //rotate_stepperT.rotateAsync(stepper_tilt);
-          //rotate_stepperS.rotateAsync(stepper_slider);
-
           while (runCamLoop) {
             PIDmove();
           }
@@ -749,41 +745,14 @@ void SerialData(void) {
       }
       break;
     case INSTRUCTION_IS_RUN_CAM_MOVES: {
-        useKeyframeSpeeds = true;
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
-          if (keyframe_array[0].isRecorded == 1) {
-            Serial1.println(String("Starting Sequence Move"));
-            moveToIndex(1);
+          runCamLoopMoves = true;
+          counter = 1;
+
+          while (runCamLoopMoves) {
+            RunMoves();
           }
-          if (keyframe_array[1].isRecorded == 1) {
-            Serial1.println(String("Delay before move: ") + keyframe_array[1].runDelay + String("ms"));
-            delay(keyframe_array[1].runDelay);
-            moveToIndex(2);
-          }
-          if (keyframe_array[2].isRecorded == 1) {
-            Serial1.println(String("Delay before move: ") + keyframe_array[2].runDelay + String("ms"));
-            delay(keyframe_array[2].runDelay);
-            moveToIndex(3);
-          }
-          if (keyframe_array[3].isRecorded == 1) {
-            Serial1.println(String("Delay before move: ") + keyframe_array[3].runDelay + String("ms"));
-            delay(keyframe_array[3].runDelay);
-            moveToIndex(4);
-          }
-          if (keyframe_array[4].isRecorded == 1) {
-            Serial1.println(String("Delay before move: ") + keyframe_array[4].runDelay + String("ms"));
-            delay(keyframe_array[4].runDelay);
-            moveToIndex(5);
-          }
-          if (keyframe_array[5].isRecorded == 1) {
-            Serial1.println(String("Delay before move: ") + keyframe_array[5].runDelay + String("ms"));
-            delay(keyframe_array[5].runDelay);
-            moveToIndex(6);
-          }
-          Serial1.println(String("End of moves."));
-          Serial1.println("#$");
         }
-        useKeyframeSpeeds = false;
       }
       break;
     case INSTRUCTION_DIRECT_MOVE: {
