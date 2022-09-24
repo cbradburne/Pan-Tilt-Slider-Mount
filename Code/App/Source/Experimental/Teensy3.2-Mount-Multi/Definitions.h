@@ -76,13 +76,13 @@
 
 #define INSTRUCTION_SET_ZERO_POS 'h'
 
-
 #define INSTRUCTION_IS_CAM_ACCEL 'K'
 #define INSTRUCTION_IS_CAM_SPEEDPT 'i'
 #define INSTRUCTION_IS_CAM_SPEEDSl 'I'
 #define INSTRUCTION_IS_CAM_DELAY 'j'
 
 #define INSTRUCTION_IS_RUN_CAM 'J'
+#define INSTRUCTION_IS_RUN_CAM_MOVES 'L'
 
 #define INSTRUCTION_DIRECT_MOVE 'm'
 #define INSTRUCTION_SETPOS 'M'
@@ -108,7 +108,63 @@
 #define EEPROM_ADDRESS_TILT_JOY_ACCEL 80
 #define EEPROM_ADDRESS_SLIDER_JOY_ACCEL 88
 
-#define VERSION_NUMBER "Version: 8.2\n21 Mar 2022"
+#define VERSION_NUMBER "Version: 8.5\n8 Sept 2022"
+
+/*
+ * a
+ * 
+ * b
+ * B
+ * c
+ * C
+ * d
+ * D
+ * e
+ * E
+ * f
+ * F
+ * g
+ * G
+ * 
+ * 
+ * i
+ * I
+ * j
+ * J
+ * k
+ * K
+ * l
+ * L
+ * m
+ * M
+ * 
+ * N
+ * 
+ * 
+ * p
+ * P
+ * q
+ * Q
+ * r
+ * R
+ * s
+ * S
+ * t
+ * T
+ * 
+ * U
+ * v
+ * V
+ * w
+ * W
+ * x
+ * X
+ * 
+ * 
+ * z
+ * Z
+ * 
+ */
 
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
@@ -204,6 +260,7 @@ int dlyPos5Time = 0;
 
 bool isLastRunMove = false;
 bool runCamLoop = false;
+bool runCamLoopMoves = false;
 int counter = 1;
 int targetTimer = 3000;
 static unsigned lastTick = 0;

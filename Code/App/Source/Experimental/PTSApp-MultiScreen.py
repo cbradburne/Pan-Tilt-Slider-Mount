@@ -18,10 +18,10 @@
 
 #python3 -m pip install pyinstaller
 #macOS
-#pyinstaller --onefile --windowed --icon PTSApp-Icon.icns --osx-bundle-identifier 'com.bradders' --name PTSApp PTSApp.py
+#pyinstaller --onefile --windowed --icon PTSApp-Icon.icns --osx-bundle-identifier 'com.bradders' --name PTSApp-Multi PTSApp-MultiScreen.py
 #
 #Windows
-#pyinstaller --onefile --windowed --icon="PTSApp-Icon.ico" PTSApp.py
+#pyinstaller --onefile --windowed --icon="PTSApp-Icon.ico" PTSApp-MultiScreen.py
 
 import asyncio
 import threading
@@ -2284,18 +2284,31 @@ WindowManager:
             font_size: (app.yDiv*2)
             on_release: app.root.current = "main"
 
-        MDFillRoundFlatButton:
+        Button:
             id: btn_RunCam1
-            text: "RUN"
+            text: "R"
             user_font_size: "30sp"
             line_width: 2
             line_color: .13, .13, .13, 1
             md_bg_color: get_color_from_hex("#757981")
             pos: (app.xDiv*52), (app.yDiv*65.7)
-            size: (app.xDiv*8), (app.yDiv*6)
+            size: (app.xDiv*4), (app.yDiv*4)
             size_hint: None, None
             font_size: (app.yDiv*2)
             on_release: app.btnRunCam1()
+
+        Button:
+            id: btn_RunCamMoves1
+            text: "Rm"
+            user_font_size: "30sp"
+            line_width: 2
+            line_color: .13, .13, .13, 1
+            md_bg_color: get_color_from_hex("#757981")
+            pos: (app.xDiv*58), (app.yDiv*65.7)
+            size: (app.xDiv*4), (app.yDiv*4)
+            size_hint: None, None
+            font_size: (app.yDiv*2)
+            on_release: app.btnRunCamM1()
 
         MDFillRoundFlatButton:
             id: btn_Report
@@ -3085,18 +3098,31 @@ WindowManager:
             font_size: (app.yDiv*2)
             on_release: app.root.current = "main"
 
-        MDFillRoundFlatButton:
+        Button:
             id: btn_RunCam2
-            text: "RUN"
+            text: "R"
             user_font_size: "30sp"
             line_width: 2
             line_color: .13, .13, .13, 1
             md_bg_color: get_color_from_hex("#757981")
             pos: (app.xDiv*52), (app.yDiv*65.7)
-            size: (app.xDiv*8), (app.yDiv*6)
+            size: (app.xDiv*4), (app.yDiv*4)
             size_hint: None, None
             font_size: (app.yDiv*2)
             on_release: app.btnRunCam2()
+
+        Button:
+            id: btn_RunCamMoves2
+            text: "Rm"
+            user_font_size: "30sp"
+            line_width: 2
+            line_color: .13, .13, .13, 1
+            md_bg_color: get_color_from_hex("#757981")
+            pos: (app.xDiv*58), (app.yDiv*65.7)
+            size: (app.xDiv*4), (app.yDiv*4)
+            size_hint: None, None
+            font_size: (app.yDiv*2)
+            on_release: app.btnRunCamM2()
 
         MDFillRoundFlatButton:
             id: btn_Report
@@ -3891,18 +3917,31 @@ WindowManager:
             font_size: (app.yDiv*2)
             on_release: app.root.current = "main"
 
-        MDFillRoundFlatButton:
+        Button:
             id: btn_RunCam3
-            text: "RUN"
+            text: "R"
             user_font_size: "30sp"
             line_width: 2
             line_color: .13, .13, .13, 1
             md_bg_color: get_color_from_hex("#757981")
             pos: (app.xDiv*52), (app.yDiv*65.7)
-            size: (app.xDiv*8), (app.yDiv*6)
+            size: (app.xDiv*4), (app.yDiv*4)
             size_hint: None, None
             font_size: (app.yDiv*2)
             on_release: app.btnRunCam3()
+
+        Button:
+            id: btn_RunCamMoves3
+            text: "Rm"
+            user_font_size: "30sp"
+            line_width: 2
+            line_color: .13, .13, .13, 1
+            md_bg_color: get_color_from_hex("#757981")
+            pos: (app.xDiv*58), (app.yDiv*65.7)
+            size: (app.xDiv*4), (app.yDiv*4)
+            size_hint: None, None
+            font_size: (app.yDiv*2)
+            on_release: app.btnRunCamM3()
 
         MDFillRoundFlatButton:
             id: btn_Report
@@ -6428,7 +6467,7 @@ class PTSApp(MDApp):
 
     def btnRunCam3(self):
         try:
-            self.sendSerial('@?J\n')
+            self.sendSerial('@?J')
         except :
             self.root.get_screen('main').ids.txtInput_read.text += "[color=#FFFFFF]Port not connected.\n[/color]"
             textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
@@ -6441,6 +6480,56 @@ class PTSApp(MDApp):
             self.root.get_screen('1stcam').ids.scroll_view.scroll_y = 0
             self.root.get_screen('2ndcam').ids.scroll_view.scroll_y = 0
             self.root.get_screen('3rdcam').ids.scroll_view.scroll_y = 0
+
+
+    def btnRunCamM1(self):
+        try:
+            self.sendSerial('??L')
+        except:
+            self.root.get_screen('main').ids.txtInput_read.text += "[color=#FFFFFF]Port not connected.\n[/color]"
+            textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
+            if textLength > 8000:
+                self.root.get_screen('main').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text[1000:textLength]
+            self.root.get_screen('main').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('1stcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('2ndcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('3rdcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('1stcam').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('2ndcam').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('3rdcam').ids.scroll_view.scroll_y = 0
+       
+    def btnRunCamM2(self):
+        try:
+            self.sendSerial('!?L')
+        except :
+            self.root.get_screen('main').ids.txtInput_read.text += "[color=#FFFFFF]Port not connected.\n[/color]"
+            textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
+            if textLength > 8000:
+                self.root.get_screen('main').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text[1000:textLength]
+            self.root.get_screen('main').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('1stcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('2ndcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('3rdcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('1stcam').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('2ndcam').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('3rdcam').ids.scroll_view.scroll_y = 0
+
+    def btnRunCamM3(self):
+        try:
+            self.sendSerial('@?L')
+        except :
+            self.root.get_screen('main').ids.txtInput_read.text += "[color=#FFFFFF]Port not connected.\n[/color]"
+            textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
+            if textLength > 8000:
+                self.root.get_screen('main').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text[1000:textLength]
+            self.root.get_screen('main').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('1stcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('2ndcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('3rdcam').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text
+            self.root.get_screen('1stcam').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('2ndcam').ids.scroll_view.scroll_y = 0
+            self.root.get_screen('3rdcam').ids.scroll_view.scroll_y = 0
+
 
     def btnReport(self):
         global whichCamSerial

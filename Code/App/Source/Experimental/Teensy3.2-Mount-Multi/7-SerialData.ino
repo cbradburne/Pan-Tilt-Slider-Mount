@@ -737,14 +737,21 @@ void SerialData(void) {
           isLastRunMove = false;
           counter = 1;
 
-          //rotate_stepperP.rotateAsync(stepper_pan);
-          //rotate_stepperT.rotateAsync(stepper_tilt);
-          //rotate_stepperS.rotateAsync(stepper_slider);
-
           while (runCamLoop) {
             PIDmove();
           }
           isLastRunMove = false;
+        }
+      }
+      break;
+    case INSTRUCTION_IS_RUN_CAM_MOVES: {
+        if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
+          runCamLoopMoves = true;
+          counter = 1;
+
+          while (runCamLoopMoves) {
+            RunMoves();
+          }
         }
       }
       break;
