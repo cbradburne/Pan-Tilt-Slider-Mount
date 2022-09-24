@@ -25,7 +25,7 @@
 //#define PAN_GEAR_RATIO 8    //  160/40 *2 teeth       - New Mount 0.9 degree steppers
 //#define TILT_GEAR_RATIO 8   //  80/20 *2 teeth        - New Mount
 
-#define PAN_GEAR_RATIO 15    //  270/36 *2 teeth      - New Mount 0.9 degree steppers Pulley drive
+#define PAN_GEAR_RATIO 15    //  270/36 *2 teeth      - New Mount 0.9 degree steppers Pulley drive. Resolution = 0.00375 degrees ((360/15)/(400*16), (360 / ratio) / (steps per rotor revolution for 0.9 deg stepper * 16th microstepping))  
 #define TILT_GEAR_RATIO 15   //  120/16 *2 teeth      - New Mount
 
 #define MAX_STRING_LENGTH 10
