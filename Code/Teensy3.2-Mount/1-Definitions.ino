@@ -1,7 +1,7 @@
 #include "Definitions.h"
-#include <Iibrary.h> //A library I created for Arduino that contains some simple functions I commonly use. Library available at: https://github.com/isaac879/Iibrary
+#include <Iibrary.h>  //A library I created for Arduino that contains some simple functions I commonly use. Library available at: https://github.com/isaac879/Iibrary
 #include "TeensyStep.h"
-#include <EEPROM.h> //To be able to save values when powered off
+#include <EEPROM.h>  //To be able to save values when powered off
 #include <elapsedMillis.h>
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -35,11 +35,11 @@ void initPanTilt(void) {
   Serial2.begin(BAUD_RATE);
   Serial3.begin(BAUD_RATE);
 
-  pinMode(13, OUTPUT);                      // LED
-  digitalWrite(13, HIGH);                   // LED ON
+  pinMode(13, OUTPUT);     // LED
+  digitalWrite(13, HIGH);  // LED ON
 
-  pinMode(PIN_SW1, INPUT_PULLUP);           // Dip Switch 1
-  pinMode(PIN_SW2, INPUT_PULLUP);           // Dip Switch 2
+  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1
+  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2
 
   setEEPROMVariables();
 
@@ -56,7 +56,7 @@ void initPanTilt(void) {
   Serial2.println("#a");
   Serial3.println("#a");
 
-  Serial1.println("#%");                   // clear remote LEDS
+  Serial1.println("#%");  // clear remote LEDS
   Serial2.println("#%");
   Serial3.println("#%");
 
@@ -64,24 +64,21 @@ void initPanTilt(void) {
     Serial1.println("^@7");
     Serial2.println("^@7");
     Serial3.println("^@7");
-  }
-  else if (pan_set_speed >= 10 && pan_set_speed < 20) {
+  } else if (pan_set_speed >= 10 && pan_set_speed < 20) {
     Serial1.println("^@5");
     Serial2.println("^@5");
     Serial3.println("^@5");
-  }
-  else if (pan_set_speed >= 5 && pan_set_speed < 10) {
+  } else if (pan_set_speed >= 5 && pan_set_speed < 10) {
     Serial1.println("^@3");
     Serial2.println("^@3");
     Serial3.println("^@3");
-  }
-  else if (pan_set_speed < 5) {
+  } else if (pan_set_speed < 5) {
     Serial1.println("^@1");
     Serial2.println("^@1");
     Serial3.println("^@1");
   }
 
-  LEDsliderSpeed = 7 - ((7 / ((slider_max_speed - slider_min_speed) / ((slider_max_speed - slider_min_speed) - (slider_set_speed - slider_min_speed)) )));
+  LEDsliderSpeed = 7 - ((7 / ((slider_max_speed - slider_min_speed) / ((slider_max_speed - slider_min_speed) - (slider_set_speed - slider_min_speed)))));
   Serial1.print("^=");
   Serial1.println(LEDsliderSpeed);
   Serial2.print("^=");

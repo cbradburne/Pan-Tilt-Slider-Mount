@@ -7,7 +7,6 @@
 #cd KivyMD
 #pip install .
 #
-#Other
 #python3 -m pip install pygame==2.0.1
 #python3 -m pip install usbserial4a
 #python3 -m pip install python-osc
