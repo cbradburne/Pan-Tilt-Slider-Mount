@@ -1,25 +1,28 @@
 #macOS
-#Kivy
-#python3 -m pip install "kivy[base] @ https://github.com/kivy/kivy/archive/master.zip"
-#
-#KivyMD
-#git clone https://github.com/kivymd/KivyMD.git --depth 1
-#cd KivyMD
-#pip install .
-#
-#python3 -m pip install pygame==2.0.1
+#python3 -m pip install https://github.com/kivy/kivy/archive/master.zip
+#python3 -m pip install https://github.com/kivymd/KivyMD/archive/master.zip
 #python3 -m pip install usbserial4a
 #python3 -m pip install python-osc
 #python3 -m pip install pyserial
 #python3 -m pip install pyjnius
 #python3 -m pip install pynput
-
 #python3 -m pip install pyinstaller
-#macOS
+#python3 -m PyInstaller PTSApp.spec
+
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --osx-bundle-identifier 'com.bradders' --name PTSApp PTSApp.py
-#
+
+
 #Windows
-#pyinstaller --onefile --windowed --icon="PTSApp-Icon.ico" PTSApp.py
+#python -m pip install https://github.com/kivy/kivy/archive/master.zip
+#python -m pip install https://github.com/kivymd/KivyMD/archive/master.zip
+#python -m pip install usbserial4a
+#python -m pip install python-osc
+#python -m pip install pyserial
+#python -m pip install pyjnius
+#python -m pip install pynput
+#python -m pip install pyinstaller
+
+#pyinstaller --onefile --windowed --icon="PTSApp-Icon.ico" --name PTSApp PTSApp.py
 
 import asyncio
 import threading
@@ -63,6 +66,8 @@ from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.behaviors.focus import FocusBehavior
 from kivymd.app import MDApp
+from kivymd.uix.screen import MDScreen
+from kivymd.icon_definitions import md_icons
 import threading
 import os, sys
 import time
@@ -2669,6 +2674,7 @@ class PTSApp(MDApp):
 
             usb_port = 'usbmodem'
             usb_port2 = 'usb/00'
+            usb_port3 = 'COM3'
             
             if (usb_port in '\t'.join(self.device_name_list)):
                 try:
@@ -2679,6 +2685,12 @@ class PTSApp(MDApp):
             elif (usb_port2 in '\t'.join(self.device_name_list)):
                 try:
                     serialPortSelect = [string for string in self.device_name_list if usb_port2 in string]
+                    self.autoSerial(serialPortSelect, 1)
+                except:
+                    pass
+            elif (usb_port3 in '\t'.join(self.device_name_list)):
+                try:
+                    serialPortSelect = [string for string in self.device_name_list if usb_port3 in string]
                     self.autoSerial(serialPortSelect, 1)
                 except:
                     pass
@@ -2993,13 +3005,24 @@ class PTSApp(MDApp):
             global whileLoopRun
             if whileLoopRun == False:
                 serialLoop = False
-            try:
-                if not self.serial_port.is_open:
-                    serialLoop = False
-                received_msg = self.serial_port.readline(self.serial_port.in_waiting)
-                if received_msg:
+
+            #try:
+            if not self.serial_port.is_open:
+                serialLoop = False
+            else:
+                #try:
+                while (self.serial_port.in_waiting > 0):
+                    received_msg = self.serial_port.readline()#read_until(b'\n')
                     msg = bytes(received_msg).decode('utf8', "ignore")
                     self.readSerial(msg)
+            #try:
+                #if not self.serial_port.is_open:
+                    #serialLoop = False
+                #received_msg = self.serial_port.readline()#self.serial_port.in_waiting)
+                #if received_msg:
+                    #msg = bytes(received_msg).decode('utf8', "ignore")
+                    #self.readSerial(msg)
+            '''
             except:
                 self.on_stop()
                 self.root.ids.txtInput_read.text += "[color=#FFFFFF]Serial Port disconnected.\n[/color]"
@@ -3074,6 +3097,7 @@ class PTSApp(MDApp):
                 self.doButtonColours()
 
                 serialLoop = False
+                '''
                 
     @mainthread
     def readSerial(self, msg):
@@ -3167,7 +3191,8 @@ class PTSApp(MDApp):
         textLength = len(self.root.ids.txtInput_read.text)
         if textLength > 8000:
             self.root.ids.txtInput_read.text = self.root.ids.txtInput_read.text[1000:textLength]
-
+        if msg == "":
+            return
         if msg[0] == "":
             msg = ''
             return
