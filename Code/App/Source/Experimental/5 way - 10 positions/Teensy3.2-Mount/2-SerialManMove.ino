@@ -3,12 +3,12 @@
 void panDegrees(float panAngle) {
 
   Serial1.println("#s");        //  Clear external "At Pos" LEDs
-  Serial2.println("#s");
-  Serial3.println("#s");
+  //Serial2.println("#s");
+  //Serial3.println("#s");
 
-  Serial.println(String("Current Pan Position   : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
-  Serial.println(String("Target  Pan Position   : ") + panAngle + String("°"));
-  Serial.println("-");
+  //Serial.println(String("Current Pan Position   : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
+  //Serial.println(String("Target  Pan Position   : ") + panAngle + String("°"));
+  //Serial.println("-");
 
   Serial1.println(String("Current Pan Position   : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial1.println(String("Target  Pan Position   : ") + panAngle + String("°"));
@@ -39,12 +39,12 @@ void panDegrees(float panAngle) {
 void panDegreesRel(float panAngle) {
 
   Serial1.println("#s");        //  Clear external "At Pos" LEDs
-  Serial2.println("#s");
-  Serial3.println("#s");
+  //Serial2.println("#s");
+  //Serial3.println("#s");
 
-  Serial.println(String("Current Pan Position   : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
-  Serial.println(String("Relative Pan Position  : ") + (panStepsToDegrees(stepper_pan.getPosition()) + panAngle) + String("°"));
-  Serial.println("-");
+  //Serial.println(String("Current Pan Position   : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
+  //Serial.println(String("Relative Pan Position  : ") + (panStepsToDegrees(stepper_pan.getPosition()) + panAngle) + String("°"));
+  //Serial.println("-");
 
   Serial1.println(String("Current Pan Position   : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial1.println(String("Relative Pan Position  : ") + (panStepsToDegrees(stepper_pan.getPosition()) + panAngle) + String("°"));
@@ -75,12 +75,12 @@ void panDegreesRel(float panAngle) {
 void tiltDegrees(float tiltAngle) {
 
   Serial1.println("#s");        //  Clear external "At Pos" LEDs
-  Serial2.println("#s");
-  Serial3.println("#s");
+  //Serial2.println("#s");
+  //Serial3.println("#s");
 
-  Serial.println(String("Current Tilt Position  : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
-  Serial.println(String("Relative Tilt Position : ") + tiltAngle + String("°"));
-  Serial.println("-");
+  //Serial.println(String("Current Tilt Position  : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
+  //Serial.println(String("Relative Tilt Position : ") + tiltAngle + String("°"));
+  //Serial.println("-");
 
   Serial1.println(String("Current Tilt Position  : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
   Serial1.println(String("Relative Tilt Position : ") + tiltAngle + String("°"));
@@ -111,12 +111,12 @@ void tiltDegrees(float tiltAngle) {
 void tiltDegreesRel(float tiltAngle) {
 
   Serial1.println("#s");        //  Clear external "At Pos" LEDs
-  Serial2.println("#s");
-  Serial3.println("#s");
+  //Serial2.println("#s");
+  //Serial3.println("#s");
 
-  Serial.println(String("Current Tilt Position  : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
-  Serial.println(String("Target  Tilt Position  : ") + (tiltStepsToDegrees(stepper_tilt.getPosition()) + tiltAngle) + String("°"));
-  Serial.println("-");
+  //Serial.println(String("Current Tilt Position  : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
+  //Serial.println(String("Target  Tilt Position  : ") + (tiltStepsToDegrees(stepper_tilt.getPosition()) + tiltAngle) + String("°"));
+  //Serial.println("-");
 
   Serial1.println(String("Current Tilt Position  : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
   Serial1.println(String("Target  Tilt Position  : ") + (tiltStepsToDegrees(stepper_tilt.getPosition()) + tiltAngle) + String("°"));
@@ -147,12 +147,12 @@ void tiltDegreesRel(float tiltAngle) {
 void sliderMoveTo(float mm) {
 
   Serial1.println("#s");        //  Clear external "At Pos" LEDs
-  Serial2.println("#s");
-  Serial3.println("#s");
+  //Serial2.println("#s");
+  //Serial3.println("#s");
 
-  Serial.println(String("Current Slider Position: ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String(" mm"));
-  Serial.println(String("Target Slider Position : ") + mm + String(" mm"));
-  Serial.println("-");
+  //Serial.println(String("Current Slider Position: ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String(" mm"));
+  //Serial.println(String("Target Slider Position : ") + mm + String(" mm"));
+  //Serial.println("-");
 
   Serial1.println(String("Current Slider Position: ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String(" mm"));
   Serial1.println(String("Target Slider Position : ") + mm + String(" mm"));
@@ -183,12 +183,12 @@ void sliderMoveTo(float mm) {
 void sliderMMRel(float mm) {
 
   Serial1.println("#s");        //  Clear external "At Pos" LEDs
-  Serial2.println("#s");
-  Serial3.println("#s");
+  //Serial2.println("#s");
+  //Serial3.println("#s");
 
-  Serial.println(String("Current Slider Position: ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String(" mm"));
-  Serial.println(String("Target Slider Position : ") + (sliderStepsToMillimetres(stepper_slider.getPosition()) + mm) + String(" mm"));
-  Serial.println("-");
+  //Serial.println(String("Current Slider Position: ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String(" mm"));
+  //Serial.println(String("Target Slider Position : ") + (sliderStepsToMillimetres(stepper_slider.getPosition()) + mm) + String(" mm"));
+  //Serial.println("-");
 
   Serial1.println(String("Current Slider Position: ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String(" mm"));
   Serial1.println(String("Target Slider Position : ") + (sliderStepsToMillimetres(stepper_slider.getPosition()) + mm) + String(" mm"));

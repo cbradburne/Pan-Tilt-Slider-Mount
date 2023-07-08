@@ -30,10 +30,10 @@ elapsedMillis timeElapsed;
 
 
 void initPanTilt(void) {
-  Serial.begin(BAUD_RATE);
+  //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
-  Serial2.begin(BAUD_RATE);
-  Serial3.begin(BAUD_RATE);
+  //Serial2.begin(BAUD_RATE);
+  //Serial3.begin(BAUD_RATE);
 
   pinMode(13, OUTPUT);     // LED
   digitalWrite(13, HIGH);  // LED ON
@@ -53,43 +53,43 @@ void initPanTilt(void) {
   delay(200);
 
   Serial1.println("#a");
-  Serial2.println("#a");
-  Serial3.println("#a");
+  //Serial2.println("#a");
+  //Serial3.println("#a");
 
   Serial1.println("#%");  // clear remote LEDS
-  Serial2.println("#%");
-  Serial3.println("#%");
+  //Serial2.println("#%");
+  //Serial3.println("#%");
 
   if (pan_set_speed >= 20) {
     Serial1.println("^@7");
-    Serial2.println("^@7");
-    Serial3.println("^@7");
+    //Serial2.println("^@7");
+    //Serial3.println("^@7");
   } else if (pan_set_speed >= 10 && pan_set_speed < 20) {
     Serial1.println("^@5");
-    Serial2.println("^@5");
-    Serial3.println("^@5");
+    //Serial2.println("^@5");
+    //Serial3.println("^@5");
   } else if (pan_set_speed >= 5 && pan_set_speed < 10) {
     Serial1.println("^@3");
-    Serial2.println("^@3");
-    Serial3.println("^@3");
+    //Serial2.println("^@3");
+    //Serial3.println("^@3");
   } else if (pan_set_speed < 5) {
     Serial1.println("^@1");
-    Serial2.println("^@1");
-    Serial3.println("^@1");
+    //Serial2.println("^@1");
+    //Serial3.println("^@1");
   }
 
   LEDsliderSpeed = 7 - ((7 / ((slider_max_speed - slider_min_speed) / ((slider_max_speed - slider_min_speed) - (slider_set_speed - slider_min_speed)))));
   Serial1.print("^=");
   Serial1.println(LEDsliderSpeed);
-  Serial2.print("^=");
-  Serial2.println(LEDsliderSpeed);
-  Serial3.print("^=");
-  Serial3.println(LEDsliderSpeed);
+  //Serial2.print("^=");
+  //Serial2.println(LEDsliderSpeed);
+  //Serial3.print("^=");
+  //Serial3.println(LEDsliderSpeed);
 
-  Serial.println(String("Pan speed         : ") + pan_set_speed + String("°/s"));
-  Serial.println(String("Tilt speed        : ") + tilt_set_speed + String("°/s"));
-  Serial.println(String("Slider speed      : ") + slider_set_speed + String("mm/s"));
-  Serial.println("-");
+  //Serial.println(String("Pan speed         : ") + pan_set_speed + String("°/s"));
+  //Serial.println(String("Tilt speed        : ") + tilt_set_speed + String("°/s"));
+  //Serial.println(String("Slider speed      : ") + slider_set_speed + String("mm/s"));
+  //Serial.println("-");
 
   //Serial1.println(String("Pan speed         : ") + pan_set_speed + String("°/s"));
   //Serial1.println(String("Tilt speed        : ") + tilt_set_speed + String("°/s"));
@@ -151,19 +151,19 @@ float tiltStepsToDegrees(float steps) {
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-
+/*
 void SerialFlush(void) {
   while (Serial.available() > 0) {
     c = Serial.read();
   }
 }
-
+*/
 void Serial1Flush(void) {
   while (Serial1.available() > 0) {
     c = Serial1.read();
   }
 }
-
+/*
 void Serial2Flush(void) {
   while (Serial2.available() > 0) {
     c = Serial2.read();
@@ -175,7 +175,7 @@ void Serial3Flush(void) {
     c = Serial3.read();
   }
 }
-
+*/
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 

@@ -2,7 +2,7 @@
 
 
 void debugReport(void) {
-
+/*
   Serial.println("Debug Report:");
   Serial.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
@@ -19,7 +19,7 @@ void debugReport(void) {
   Serial.println(String("Pan Joy Accel Factor    : ") + panAccelJoy);
   Serial.println(String("Tilt Joy Accel Factor   : ") + tiltAccelJoy);
   Serial.println(String("Slider Joy Accel Factor : ") + sliderAccelJoy + String("\n"));
-
+*/
   Serial1.println("Debug Report:");
   Serial1.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial1.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
@@ -45,10 +45,10 @@ void debugReport(void) {
 
 
 void positionReport(void) {
-  Serial.println("Position Report:");
-  Serial.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
-  Serial.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
-  Serial.println(String("Slider position   : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm\n"));
+  //Serial.println("Position Report:");
+  //Serial.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
+  //Serial.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
+  //Serial.println(String("Slider position   : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm\n"));
 
   Serial1.println("Position Report:");
   Serial1.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
@@ -87,7 +87,7 @@ void printKeyframeElements(void) {
     row++;
   } while (row < 10);
 
-  Serial.print("\n");
+  //Serial.print("\n");
   Serial1.print("\n");
   Serial1.println("#$");
 }
