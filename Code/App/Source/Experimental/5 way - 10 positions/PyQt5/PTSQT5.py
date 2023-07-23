@@ -20,9 +20,24 @@
 #sudo make altinstall
 #/usr/local/bin/python3.9 -V
 
-#python -m pip install pyqt5
+#sudo apt install qtbase5-dev
+#python -m pip install pyqt5 --config-settings --confirm-license= --verbose
 #python -m pip install pyjoystick
 #python -m pip install pyserial
+
+#Qt Virtual Keyboard
+
+'''
+sudo apt-get update
+sudo apt install git build-essential
+sudo apt-get install python3-pyqt5 qt5-default qtdeclarative5-dev libqt5svg5-dev qtbase5-private-dev qml-module-qtquick-controls2 qml-module-qtquick-controls qml-module-qt-labs-folderlistmodel
+sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
+git clone -b 5.9 https://github.com/qt/qtvirtualkeyboard.git
+cd qtvirtualkeyboard
+qmake 
+sudo make
+sudo make install
+'''
 
 #python -m pip install pyinstaller
 
@@ -34,11 +49,14 @@ from PyQt5.QtCore import Qt, QTimer
 import pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 #from qt_thread_updater import ThreadUpdater
-import sys, time
+import sys, time, os, subprocess
 
 #pyuic5 -x PTSQT2.ui -o PTSQT3.py
 
 
+
+
+count = 0
 serial_port = None
 read_thread = None
 
@@ -72,9 +90,11 @@ arr = []
 oldAxisX = 0
 oldAxisY = 0
 oldAxisZ = 0
+oldAxisW = 0
 axisX = 0
 axisY = 0
 axisZ = 0
+axisW = 0
 data = bytearray(8)
 hat = ()
 oldHatX = 0
@@ -487,6 +507,7 @@ class Ui_editWindow(QMainWindow):
         global newText
         newText = self.lineEdit.text()
         self.close()
+        #os.system('/usr/bin/toggle-keyboard.sh')
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -505,6 +526,7 @@ class PTSapp(QMainWindow):
         self.ui2 = Ui_editWindow()
         self.ui2.setupUi()
         self.ui2.lineEdit.setText(text)
+        #os.system('/usr/bin/toggle-keyboard.sh')
 
 
     def setupUi(self):
@@ -536,6 +558,7 @@ class PTSapp(QMainWindow):
             global axisX
             global axisY
             global axisZ
+            global axisW
 
             if key.number == 3:
                 axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
@@ -543,20 +566,19 @@ class PTSapp(QMainWindow):
                 axisY = int(self.scale(key.value, (-1, 1), (-255,255)))
             elif key.number == 0:
                 axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
+            elif key.number == 1:
+                axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
 
             self.doJoyMoves(1)
 
-        mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop,
-                                            handle_key_event=handle_key_event)
+        mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
         mngr.start()
-
-        
 
         self.pushButton12 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go2())
         self.pushButton12.setGeometry(QtCore.QRect(160, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton12.setFont(font)
         self.pushButton12.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -567,7 +589,7 @@ class PTSapp(QMainWindow):
         self.pushButton17.setGeometry(QtCore.QRect(860, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton17.setFont(font)
         self.pushButton17.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -578,7 +600,7 @@ class PTSapp(QMainWindow):
         self.pushButton10.setGeometry(QtCore.QRect(1280, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton10.setFont(font)
         self.pushButton10.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -589,7 +611,7 @@ class PTSapp(QMainWindow):
         self.pushButton15.setGeometry(QtCore.QRect(580, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton15.setFont(font)
         self.pushButton15.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -600,7 +622,7 @@ class PTSapp(QMainWindow):
         self.pushButton16.setGeometry(QtCore.QRect(720, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton16.setFont(font)
         self.pushButton16.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -611,7 +633,7 @@ class PTSapp(QMainWindow):
         self.pushButton11.setGeometry(QtCore.QRect(20, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton11.setFont(font)
         self.pushButton11.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -622,7 +644,7 @@ class PTSapp(QMainWindow):
         self.pushButton14.setGeometry(QtCore.QRect(440, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton14.setFont(font)
         self.pushButton14.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -633,7 +655,7 @@ class PTSapp(QMainWindow):
         self.pushButton13.setGeometry(QtCore.QRect(300, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton13.setFont(font)
         self.pushButton13.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -644,7 +666,7 @@ class PTSapp(QMainWindow):
         self.pushButton18.setGeometry(QtCore.QRect(1000, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton18.setFont(font)
         self.pushButton18.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
@@ -655,29 +677,29 @@ class PTSapp(QMainWindow):
         self.pushButton19.setGeometry(QtCore.QRect(1140, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton19.setFont(font)
         self.pushButton19.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #4C8A4C;\n"
 "border-radius: 40px;")
         self.pushButton19.setFlat(False)
         self.pushButton19.setObjectName("pushButton19")
-        self.dial1p = QtWidgets.QDial(self.groupBox)
+        self.dial1p = QtWidgets.QDial(self.groupBox, valueChanged= lambda: self.setDials(1, 1, self.dial1p.value()))
         self.dial1p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial1p.setStyleSheet("background: black;")
         self.dial1p.setMinimum(1)
-        self.dial1p.setMaximum(10)
+        self.dial1p.setMaximum(4)
         self.dial1p.setInvertedAppearance(False)
         self.dial1p.setInvertedControls(False)
         self.dial1p.setWrapping(False)
         self.dial1p.setNotchTarget(11.7)
         self.dial1p.setNotchesVisible(True)
         self.dial1p.setObjectName("dial1p")
-        self.dial1s = QtWidgets.QDial(self.groupBox)
+        self.dial1s = QtWidgets.QDial(self.groupBox, valueChanged= lambda: self.setDials(1, 2, self.dial1s.value()))
         self.dial1s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial1s.setStyleSheet("background: black;")
         self.dial1s.setMinimum(1)
-        self.dial1s.setMaximum(10)
+        self.dial1s.setMaximum(4)
         self.dial1s.setNotchTarget(11.7)
         self.dial1s.setNotchesVisible(True)
         self.dial1s.setObjectName("dial1s")
@@ -706,7 +728,7 @@ class PTSapp(QMainWindow):
         self.pushButton22.setGeometry(QtCore.QRect(160, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton22.setFont(font)
         self.pushButton22.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -717,7 +739,7 @@ class PTSapp(QMainWindow):
         self.pushButton27.setGeometry(QtCore.QRect(860, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton27.setFont(font)
         self.pushButton27.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -728,7 +750,7 @@ class PTSapp(QMainWindow):
         self.pushButton20.setGeometry(QtCore.QRect(1280, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton20.setFont(font)
         self.pushButton20.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -739,7 +761,7 @@ class PTSapp(QMainWindow):
         self.pushButton25.setGeometry(QtCore.QRect(580, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton25.setFont(font)
         self.pushButton25.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -750,7 +772,7 @@ class PTSapp(QMainWindow):
         self.pushButton26.setGeometry(QtCore.QRect(720, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton26.setFont(font)
         self.pushButton26.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -761,7 +783,7 @@ class PTSapp(QMainWindow):
         self.pushButton21.setGeometry(QtCore.QRect(20, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton21.setFont(font)
         self.pushButton21.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -772,7 +794,7 @@ class PTSapp(QMainWindow):
         self.pushButton24.setGeometry(QtCore.QRect(440, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton24.setFont(font)
         self.pushButton24.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -783,7 +805,7 @@ class PTSapp(QMainWindow):
         self.pushButton23.setGeometry(QtCore.QRect(300, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton23.setFont(font)
         self.pushButton23.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -794,7 +816,7 @@ class PTSapp(QMainWindow):
         self.pushButton28.setGeometry(QtCore.QRect(1000, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton28.setFont(font)
         self.pushButton28.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
@@ -805,26 +827,26 @@ class PTSapp(QMainWindow):
         self.pushButton29.setGeometry(QtCore.QRect(1140, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton29.setFont(font)
         self.pushButton29.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #405C80;\n"
 "border-radius: 40px;")
         self.pushButton29.setFlat(False)
         self.pushButton29.setObjectName("pushButton29")
-        self.dial2s = QtWidgets.QDial(self.groupBox_2)
+        self.dial2s = QtWidgets.QDial(self.groupBox_2, valueChanged= lambda: self.setDials(2, 2, self.dial1p.value()))
         self.dial2s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial2s.setStyleSheet("background: black;")
         self.dial2s.setMinimum(1)
-        self.dial2s.setMaximum(10)
+        self.dial2s.setMaximum(4)
         self.dial2s.setNotchTarget(11.7)
         self.dial2s.setNotchesVisible(True)
         self.dial2s.setObjectName("dial2s")
-        self.dial2p = QtWidgets.QDial(self.groupBox_2)
+        self.dial2p = QtWidgets.QDial(self.groupBox_2, valueChanged= lambda: self.setDials(2, 1, self.dial1p.value()))
         self.dial2p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial2p.setStyleSheet("background: black;")
         self.dial2p.setMinimum(1)
-        self.dial2p.setMaximum(10)
+        self.dial2p.setMaximum(4)
         self.dial2p.setTracking(True)
         self.dial2p.setInvertedAppearance(False)
         self.dial2p.setInvertedControls(False)
@@ -857,7 +879,7 @@ class PTSapp(QMainWindow):
         self.pushButton32.setGeometry(QtCore.QRect(160, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton32.setFont(font)
         self.pushButton32.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -868,7 +890,7 @@ class PTSapp(QMainWindow):
         self.pushButton37.setGeometry(QtCore.QRect(860, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton37.setFont(font)
         self.pushButton37.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -879,7 +901,7 @@ class PTSapp(QMainWindow):
         self.pushButton30.setGeometry(QtCore.QRect(1280, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton30.setFont(font)
         self.pushButton30.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -890,7 +912,7 @@ class PTSapp(QMainWindow):
         self.pushButton35.setGeometry(QtCore.QRect(580, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton35.setFont(font)
         self.pushButton35.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -901,7 +923,7 @@ class PTSapp(QMainWindow):
         self.pushButton36.setGeometry(QtCore.QRect(720, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton36.setFont(font)
         self.pushButton36.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -912,7 +934,7 @@ class PTSapp(QMainWindow):
         self.pushButton31.setGeometry(QtCore.QRect(20, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton31.setFont(font)
         self.pushButton31.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -923,7 +945,7 @@ class PTSapp(QMainWindow):
         self.pushButton34.setGeometry(QtCore.QRect(440, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton34.setFont(font)
         self.pushButton34.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -934,7 +956,7 @@ class PTSapp(QMainWindow):
         self.pushButton33.setGeometry(QtCore.QRect(300, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton33.setFont(font)
         self.pushButton33.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -945,7 +967,7 @@ class PTSapp(QMainWindow):
         self.pushButton38.setGeometry(QtCore.QRect(1000, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton38.setFont(font)
         self.pushButton38.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
@@ -956,26 +978,26 @@ class PTSapp(QMainWindow):
         self.pushButton39.setGeometry(QtCore.QRect(1140, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton39.setFont(font)
         self.pushButton39.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #807100;\n"
 "border-radius: 40px;")
         self.pushButton39.setFlat(False)
         self.pushButton39.setObjectName("pushButton39")
-        self.dial3s = QtWidgets.QDial(self.groupBox_3)
+        self.dial3s = QtWidgets.QDial(self.groupBox_3, valueChanged= lambda: self.setDials(1, 2, self.dial1p.value()))
         self.dial3s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial3s.setStyleSheet("background: black;")
         self.dial3s.setMinimum(1)
-        self.dial3s.setMaximum(10)
+        self.dial3s.setMaximum(4)
         self.dial3s.setNotchTarget(11.7)
         self.dial3s.setNotchesVisible(True)
         self.dial3s.setObjectName("dial3s")
-        self.dial3p = QtWidgets.QDial(self.groupBox_3)
+        self.dial3p = QtWidgets.QDial(self.groupBox_3, valueChanged= lambda: self.setDials(1, 1, self.dial1p.value()))
         self.dial3p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial3p.setStyleSheet("background: black;")
         self.dial3p.setMinimum(1)
-        self.dial3p.setMaximum(10)
+        self.dial3p.setMaximum(4)
         self.dial3p.setInvertedAppearance(False)
         self.dial3p.setInvertedControls(False)
         self.dial3p.setWrapping(False)
@@ -1007,7 +1029,7 @@ class PTSapp(QMainWindow):
         self.pushButton42.setGeometry(QtCore.QRect(160, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton42.setFont(font)
         self.pushButton42.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1018,7 +1040,7 @@ class PTSapp(QMainWindow):
         self.pushButton47.setGeometry(QtCore.QRect(860, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton47.setFont(font)
         self.pushButton47.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1029,7 +1051,7 @@ class PTSapp(QMainWindow):
         self.pushButton40.setGeometry(QtCore.QRect(1280, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton40.setFont(font)
         self.pushButton40.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1040,7 +1062,7 @@ class PTSapp(QMainWindow):
         self.pushButton45.setGeometry(QtCore.QRect(580, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton45.setFont(font)
         self.pushButton45.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1051,7 +1073,7 @@ class PTSapp(QMainWindow):
         self.pushButton46.setGeometry(QtCore.QRect(720, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton46.setFont(font)
         self.pushButton46.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1062,7 +1084,7 @@ class PTSapp(QMainWindow):
         self.pushButton41.setGeometry(QtCore.QRect(20, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton41.setFont(font)
         self.pushButton41.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1073,7 +1095,7 @@ class PTSapp(QMainWindow):
         self.pushButton44.setGeometry(QtCore.QRect(440, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton44.setFont(font)
         self.pushButton44.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1084,7 +1106,7 @@ class PTSapp(QMainWindow):
         self.pushButton43.setGeometry(QtCore.QRect(300, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton43.setFont(font)
         self.pushButton43.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1095,7 +1117,7 @@ class PTSapp(QMainWindow):
         self.pushButton48.setGeometry(QtCore.QRect(1000, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton48.setFont(font)
         self.pushButton48.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
@@ -1106,26 +1128,26 @@ class PTSapp(QMainWindow):
         self.pushButton49.setGeometry(QtCore.QRect(1140, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton49.setFont(font)
         self.pushButton49.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #008071;\n"
 "border-radius: 40px;")
         self.pushButton49.setFlat(False)
         self.pushButton49.setObjectName("pushButton49")
-        self.dial4s = QtWidgets.QDial(self.groupBox_4)
+        self.dial4s = QtWidgets.QDial(self.groupBox_4, valueChanged= lambda: self.setDials(4, 2, self.dial1p.value()))
         self.dial4s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial4s.setStyleSheet("background: black;")
         self.dial4s.setMinimum(1)
-        self.dial4s.setMaximum(10)
+        self.dial4s.setMaximum(4)
         self.dial4s.setNotchTarget(11.7)
         self.dial4s.setNotchesVisible(True)
         self.dial4s.setObjectName("dial4s")
-        self.dial4p = QtWidgets.QDial(self.groupBox_4)
+        self.dial4p = QtWidgets.QDial(self.groupBox_4, valueChanged= lambda: self.setDials(4, 1, self.dial1p.value()))
         self.dial4p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial4p.setStyleSheet("background: black;")
         self.dial4p.setMinimum(1)
-        self.dial4p.setMaximum(10)
+        self.dial4p.setMaximum(4)
         self.dial4p.setInvertedAppearance(False)
         self.dial4p.setInvertedControls(False)
         self.dial4p.setWrapping(False)
@@ -1157,7 +1179,7 @@ class PTSapp(QMainWindow):
         self.pushButton52.setGeometry(QtCore.QRect(160, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton52.setFont(font)
         self.pushButton52.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
@@ -1168,7 +1190,7 @@ class PTSapp(QMainWindow):
         self.pushButton57.setGeometry(QtCore.QRect(860, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton57.setFont(font)
         self.pushButton57.setAutoFillBackground(False)
         self.pushButton57.setStyleSheet("border: 10px solid grey; \n"
@@ -1180,7 +1202,7 @@ class PTSapp(QMainWindow):
         self.pushButton50.setGeometry(QtCore.QRect(1280, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton50.setFont(font)
         self.pushButton50.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
@@ -1191,7 +1213,7 @@ class PTSapp(QMainWindow):
         self.pushButton55.setGeometry(QtCore.QRect(580, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton55.setFont(font)
         self.pushButton55.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
@@ -1202,7 +1224,7 @@ class PTSapp(QMainWindow):
         self.pushButton56.setGeometry(QtCore.QRect(720, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton56.setFont(font)
         self.pushButton56.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
@@ -1213,7 +1235,7 @@ class PTSapp(QMainWindow):
         self.pushButton51.setGeometry(QtCore.QRect(20, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton51.setFont(font)
         self.pushButton51.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
@@ -1224,7 +1246,7 @@ class PTSapp(QMainWindow):
         self.pushButton54.setGeometry(QtCore.QRect(440, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton54.setFont(font)
         self.pushButton54.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
@@ -1235,7 +1257,7 @@ class PTSapp(QMainWindow):
         self.pushButton53.setGeometry(QtCore.QRect(300, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton53.setFont(font)
         self.pushButton53.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
@@ -1246,7 +1268,7 @@ class PTSapp(QMainWindow):
         self.pushButton58.setGeometry(QtCore.QRect(1000, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton58.setFont(font)
         self.pushButton58.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
@@ -1257,26 +1279,26 @@ class PTSapp(QMainWindow):
         self.pushButton59.setGeometry(QtCore.QRect(1140, 20, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(48)
+        font.setPointSize(32)
         self.pushButton59.setFont(font)
         self.pushButton59.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
 "border-radius: 40px;")
         self.pushButton59.setFlat(False)
         self.pushButton59.setObjectName("pushButton59")
-        self.dial5s = QtWidgets.QDial(self.groupBox_5)
+        self.dial5s = QtWidgets.QDial(self.groupBox_5, valueChanged= lambda: self.setDials(5, 2, self.dial1p.value()))
         self.dial5s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial5s.setStyleSheet("background: black;")
         self.dial5s.setMinimum(1)
-        self.dial5s.setMaximum(10)
+        self.dial5s.setMaximum(4)
         self.dial5s.setNotchTarget(11.7)
         self.dial5s.setNotchesVisible(True)
         self.dial5s.setObjectName("dial5s")
-        self.dial5p = QtWidgets.QDial(self.groupBox_5)
+        self.dial5p = QtWidgets.QDial(self.groupBox_5, valueChanged= lambda: self.setDials(5, 1, self.dial1p.value()))
         self.dial5p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial5p.setStyleSheet("background: black;")
         self.dial5p.setMinimum(1)
-        self.dial5p.setMaximum(10)
+        self.dial5p.setMaximum(4)
         self.dial5p.setInvertedAppearance(False)
         self.dial5p.setInvertedControls(False)
         self.dial5p.setWrapping(False)
@@ -1365,7 +1387,8 @@ class PTSapp(QMainWindow):
         self.pushButtonConnect = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.buttonConnect())
         self.pushButtonConnect.setGeometry(QtCore.QRect(40, 0, 120, 41))
         font = QtGui.QFont()
-        font.setPointSize(23)
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(18)
         self.pushButtonConnect.setFont(font)
         self.pushButtonConnect.setStyleSheet("border: 4px solid grey; \n"
 "background-color: #405C80;\n"
@@ -1375,6 +1398,7 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setEditToggle())
         self.pushButtonEdit.setGeometry(QtCore.QRect(180, 0, 120, 41))
         font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonEdit.setFont(font)
         self.pushButtonEdit.setStyleSheet("border: 4px solid grey; \n"
@@ -1385,6 +1409,7 @@ class PTSapp(QMainWindow):
         self.labelInfo = QtWidgets.QLabel(self.centralwidget)
         self.labelInfo.setGeometry(QtCore.QRect(1350, 0, 331, 41))
         font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
         font.setPointSize(18)
         self.labelInfo.setFont(font)
         self.labelInfo.setStyleSheet("color: white;\n"
@@ -1470,7 +1495,9 @@ class PTSapp(QMainWindow):
 
         self.initFlashTimer()
 
-        self.show()
+        #self.show()
+        #self.showMaximized()
+        self.showFullScreen()
 
     def initFlashTimer(self):
         self.timer = QTimer()
@@ -1483,6 +1510,65 @@ class PTSapp(QMainWindow):
         self.messageTimer.timeout.connect(self.setMessage)
         self.messageTimer.start(50)
 
+    def setDials(self, cam, ps, value):
+        if cam == 1:
+            if ps == 1:
+                if value == 1: self.sendSerial('&1s1')
+                elif value == 2: self.sendSerial('&1s2')
+                elif value == 3: self.sendSerial('&1s3')
+                elif value == 4: self.sendSerial('&1s4')
+            else:
+                if value == 1: self.sendSerial('&1W1')
+                elif value == 2: self.sendSerial('&1W2')
+                elif value == 3: self.sendSerial('&1W3')
+                elif value == 4: self.sendSerial('&1W4')
+
+        elif cam == 2:
+            if ps == 1:
+                if value == 1: self.sendSerial('&2s1')
+                elif value == 2: self.sendSerial('&2s2')
+                elif value == 3: self.sendSerial('&2s3')
+                elif value == 4: self.sendSerial('&2s4')
+            else:
+                if value == 1: self.sendSerial('&2W1')
+                elif value == 2: self.sendSerial('&2W2')
+                elif value == 3: self.sendSerial('&2W3')
+                elif value == 4: self.sendSerial('&2W4')
+
+        elif cam == 3:
+            if ps == 1:
+                if value == 1: self.sendSerial('&3s1')
+                elif value == 2: self.sendSerial('&3s2')
+                elif value == 3: self.sendSerial('&3s3')
+                elif value == 4: self.sendSerial('&3s4')
+            else:
+                if value == 1: self.sendSerial('&3W1')
+                elif value == 2: self.sendSerial('&3W2')
+                elif value == 3: self.sendSerial('&3W3')
+                elif value == 4: self.sendSerial('&3W4')
+
+        elif cam == 4:
+            if ps == 1:
+                if value == 1: self.sendSerial('&4s1')
+                elif value == 2: self.sendSerial('&4s2')
+                elif value == 3: self.sendSerial('&4s3')
+                elif value == 4: self.sendSerial('&4s4')
+            else:
+                if value == 1: self.sendSerial('&4W1')
+                elif value == 2: self.sendSerial('&4W2')
+                elif value == 3: self.sendSerial('&4W3')
+                elif value == 4: self.sendSerial('&4W4')
+        elif cam == 5:
+            if ps == 1:
+                if value == 1: self.sendSerial('&5s1')
+                elif value == 2: self.sendSerial('&5s2')
+                elif value == 3: self.sendSerial('&5s3')
+                elif value == 4: self.sendSerial('&5s4')
+            else:
+                if value == 1: self.sendSerial('&5W1')
+                elif value == 2: self.sendSerial('&5W2')
+                elif value == 3: self.sendSerial('&5W3')
+                elif value == 4: self.sendSerial('&5W4')
     
     def setEditToggle(self):
         global editToggle
@@ -1500,15 +1586,22 @@ class PTSapp(QMainWindow):
         global axisX
         global axisY
         global axisZ
+        global axisW
         global oldAxisX
         global oldAxisY
         global oldAxisZ
+        global oldAxisW
         global arr
         global currentMillisMoveCheck
         global previousMillisMoveCheck
         global previousTime
         global moveCheckInterval
+        global whichCamSerial
 
+        global count
+
+        #print("Joy Move ", count)
+        count += 1
         if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
             currentMillisMoveCheck = time.time()
             if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
@@ -1527,6 +1620,26 @@ class PTSapp(QMainWindow):
             arr = [4, axisZh, axisXh, axisYh]
             self.sendJoystick(arr)
             previousMillisMoveCheck = time.time()
+
+        if (axisW != oldAxisW):
+            oldAxisW = axisW
+            if axisW == -8: self.sendSerial('&1a8')
+            elif axisW == -7: self.sendSerial('&1a7')
+            elif axisW == -6: self.sendSerial('&1a6')
+            elif axisW == -5: self.sendSerial('&1a5')
+            elif axisW == -4: self.sendSerial('&1a4')
+            elif axisW == -3: self.sendSerial('&1a3')
+            elif axisW == -2: self.sendSerial('&1a2')
+            elif axisW == -1: self.sendSerial('&1a1')
+            elif axisW == 1: self.sendSerial('&1A1')
+            elif axisW == 2: self.sendSerial('&1A2')
+            elif axisW == 3: self.sendSerial('&1A3')
+            elif axisW == 4: self.sendSerial('&1A4')
+            elif axisW == 5: self.sendSerial('&1A5')
+            elif axisW == 6: self.sendSerial('&1A6')
+            elif axisW == 7: self.sendSerial('&1A7')
+            elif axisW == 8: self.sendSerial('&1A8')
+            else: self.sendSerial('&1q')
 
     def sendJoystick(self, arr):
         global data
@@ -1593,7 +1706,7 @@ class PTSapp(QMainWindow):
         if ((sliderInt > 0) and (sliderInt < 256)):
             data[1] = 0
             data[2] = sliderInt
-        elif sliderInt > 257:
+        elif sliderInt > 256:
             data[1] = 255
             data[2] = (sliderInt-65281)
         else:
@@ -1603,7 +1716,7 @@ class PTSapp(QMainWindow):
         if ((panInt > 0) and (panInt < 256)):
             data[3] = 0
             data[4] = panInt
-        elif panInt > 257:
+        elif panInt > 256:
             data[3] = 255
             data[4] = (panInt-65281)
         else:
@@ -1613,7 +1726,7 @@ class PTSapp(QMainWindow):
         if ((tiltInt > 0) and (tiltInt < 256)):
             data[5] = 0
             data[6] = tiltInt
-        elif tiltInt > 257:
+        elif tiltInt > 256:
             data[5] = 255
             data[6] = (tiltInt-65281)
         else:
@@ -1631,8 +1744,8 @@ class PTSapp(QMainWindow):
         #else:
             #self.serial_port.write(data)
         #   print(data)                                    # for debugging
-
-        if whichCamSerial == 1:
+        
+        if whichCamSerial == 1 and (cam1AtPos1 or cam1AtPos2 or cam1AtPos3 or cam1AtPos4 or cam1AtPos5 or cam1AtPos6 or cam1AtPos7 or cam1AtPos8 or cam1AtPos9 or cam1AtPos10):
             cam1AtPos1 = False
             cam1AtPos2 = False
             cam1AtPos3 = False
@@ -1643,7 +1756,8 @@ class PTSapp(QMainWindow):
             cam1AtPos8 = False
             cam1AtPos9 = False
             cam1AtPos10 = False
-        elif whichCamSerial == 2:
+            self.doButtonColours()
+        elif whichCamSerial == 2 and (cam2AtPos1 or cam2AtPos2 or cam2AtPos3 or cam2AtPos4 or cam2AtPos5 or cam2AtPos6 or cam2AtPos7 or cam2AtPos8 or cam2AtPos9 or cam2AtPos10):
             cam2AtPos1 = False
             cam2AtPos2 = False
             cam2AtPos3 = False
@@ -1654,7 +1768,8 @@ class PTSapp(QMainWindow):
             cam2AtPos8 = False
             cam2AtPos9 = False
             cam2AtPos10 = False
-        elif whichCamSerial == 3:
+            self.doButtonColours()
+        elif whichCamSerial == 3 and (cam3AtPos1 or cam3AtPos2 or cam3AtPos3 or cam3AtPos4 or cam3AtPos5 or cam3AtPos6 or cam3AtPos7 or cam3AtPos8 or cam3AtPos9 or cam3AtPos10):
             cam3AtPos1 = False
             cam3AtPos2 = False
             cam3AtPos3 = False
@@ -1665,7 +1780,8 @@ class PTSapp(QMainWindow):
             cam3AtPos8 = False
             cam3AtPos9 = False
             cam3AtPos10 = False
-        elif whichCamSerial == 4:
+            self.doButtonColours()
+        elif whichCamSerial == 4 and (cam4AtPos1 or cam4AtPos2 or cam4AtPos3 or cam4AtPos4 or cam4AtPos5 or cam4AtPos6 or cam4AtPos7 or cam4AtPos8 or cam4AtPos9 or cam4AtPos10):
             cam4AtPos1 = False
             cam4AtPos2 = False
             cam4AtPos3 = False
@@ -1676,7 +1792,8 @@ class PTSapp(QMainWindow):
             cam4AtPos8 = False
             cam4AtPos9 = False
             cam4AtPos10 = False
-        elif whichCamSerial == 5:
+            self.doButtonColours()
+        elif whichCamSerial == 5 and (cam5AtPos1 or cam5AtPos2 or cam5AtPos3 or cam5AtPos4 or cam5AtPos5 or cam5AtPos6 or cam5AtPos7 or cam5AtPos8 or cam5AtPos9 or cam5AtPos10):
             cam5AtPos1 = False
             cam5AtPos2 = False
             cam5AtPos3 = False
@@ -1687,8 +1804,9 @@ class PTSapp(QMainWindow):
             cam5AtPos8 = False
             cam5AtPos9 = False
             cam5AtPos10 = False
+            self.doButtonColours()
 
-        self.doButtonColours()
+        
 
     def scale(self, val, src, dst):
         return ((val - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
@@ -1715,7 +1833,7 @@ class PTSapp(QMainWindow):
             usb_port = 'usbmodem'
             usb_port2 = 'usb/00'
             usb_port3 = '/dev/ttyACM0'
-            usb_port4 = 'usbserial'
+            usb_port4 = 'ttyUSB0'
             
             if (usb_port in '\t'.join(self.device_name_list)):
                 #try:
@@ -3402,6 +3520,7 @@ class PTSapp(QMainWindow):
             self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
 
     def doButtonColours(self):
+        print("Button Colours")
         global cam1AtPos1
         global cam1AtPos2
         global cam1AtPos3
@@ -4339,133 +4458,76 @@ class PTSapp(QMainWindow):
             oldcam1Speed = cam1SliderSpeed
             if cam1SliderSpeed == 1:
                 self.dial1s.setValue(1)
-                self.line1s.setGeometry(1820, 130, 20, 21)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
+                self.line1s.setGeometry(1820, 115, 20, 21)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
             elif cam1SliderSpeed == 2:
                 self.dial1s.setValue(3)
-                self.line1s.setGeometry(1820, 110, 20, 41)
+                self.line1s.setGeometry(1820, 80, 20, 41)
             elif cam1SliderSpeed == 3:
                 self.dial1s.setValue(5)
-                self.line1s.setGeometry(1820, 90, 20, 61)
+                self.line1s.setGeometry(1820, 45, 20, 61)
             elif cam1SliderSpeed == 4:
                 self.dial1s.setValue(6)
-                self.line1s.setGeometry(1820, 70, 20, 81)
-            elif cam1SliderSpeed == 5:
-                self.dial1s.setValue(7)
-                self.line1s.setGeometry(1820, 50, 20, 101)
-            elif cam1SliderSpeed == 6:
-                self.dial1s.setValue(9)
-                self.line1s.setGeometry(1820, 30, 20, 121)
-            elif cam1SliderSpeed == 7:
-                self.dial1s.setValue(10)
-                self.line1s.setGeometry(1820, 10, 20, 141)
-
-
-        
+                self.line1s.setGeometry(1820, 10, 20, 81)
 
         if oldcam2Speed != cam2SliderSpeed:
             oldcam2Speed = cam2SliderSpeed
             if cam2SliderSpeed == 1:
                 self.dial2s.setValue(1)
-                self.line2s.setGeometry(1820, 130, 20, 21)
+                self.line2s.setGeometry(1820, 115, 20, 21)
             elif cam2SliderSpeed == 2:
                 self.dial2s.setValue(3)
-                self.line2s.setGeometry(1820, 110, 20, 41)
+                self.line2s.setGeometry(1820, 80, 20, 41)
             elif cam2SliderSpeed == 3:
                 self.dial2s.setValue(5)
-                self.line2s.setGeometry(1820, 90, 20, 61)
+                self.line2s.setGeometry(1820, 45, 20, 61)
             elif cam2SliderSpeed == 4:
                 self.dial2s.setValue(6)
-                self.line2s.setGeometry(1820, 70, 20, 81)
-            elif cam2SliderSpeed == 5:
-                self.dial2s.setValue(7)
-                self.line2s.setGeometry(1820, 50, 20, 101)
-            elif cam2SliderSpeed == 6:
-                self.dial2s.setValue(9)
-                self.line2s.setGeometry(1820, 30, 20, 121)
-            elif cam2SliderSpeed == 7:
-                self.dial2s.setValue(10)
-                self.line2s.setGeometry(1820, 10, 20, 141)
-
-
-        
+                self.line2s.setGeometry(1820, 10, 20, 81)
 
         if oldcam3Speed != cam3SliderSpeed:
             oldcam3Speed = cam3SliderSpeed
             if cam3SliderSpeed == 1:
                 self.dial3s.setValue(1)
-                self.line3s.setGeometry(1820, 130, 20, 21)
+                self.line3s.setGeometry(1820, 115, 20, 21)
             elif cam3SliderSpeed == 2:
                 self.dial3s.setValue(3)
-                self.line3s.setGeometry(1820, 110, 20, 41)
+                self.line3s.setGeometry(1820, 80, 20, 41)
             elif cam3SliderSpeed == 3:
                 self.dial3s.setValue(5)
-                self.line3s.setGeometry(1820, 90, 20, 61)
+                self.line3s.setGeometry(1820, 45, 20, 61)
             elif cam3SliderSpeed == 4:
                 self.dial3s.setValue(6)
-                self.line3s.setGeometry(1820, 70, 20, 81)
-            elif cam3SliderSpeed == 5:
-                self.dial3s.setValue(7)
-                self.line3s.setGeometry(1820, 50, 20, 101)
-            elif cam3SliderSpeed == 6:
-                self.dial3s.setValue(9)
-                self.line3s.setGeometry(1820, 30, 20, 121)
-            elif cam3SliderSpeed == 7:
-                self.dial3s.setValue(10)
-                self.line3s.setGeometry(1820, 10, 20, 141)
-
-
-        
+                self.line3s.setGeometry(1820, 10, 20, 81)
 
         if oldcam4Speed != cam4SliderSpeed:
             oldcam4Speed = cam4SliderSpeed
             if cam4SliderSpeed == 1:
                 self.dial4s.setValue(1)
-                self.line4s.setGeometry(1820, 130, 20, 21)
+                self.line4s.setGeometry(1820, 115, 20, 21)
             elif cam4SliderSpeed == 2:
                 self.dial4s.setValue(3)
-                self.line4s.setGeometry(1820, 110, 20, 41)
+                self.line4s.setGeometry(1820, 80, 20, 41)
             elif cam4SliderSpeed == 3:
                 self.dial4s.setValue(5)
-                self.line4s.setGeometry(1820, 90, 20, 61)
+                self.line4s.setGeometry(1820, 45, 20, 61)
             elif cam4SliderSpeed == 4:
                 self.dial4s.setValue(6)
-                self.line4s.setGeometry(1820, 70, 20, 81)
-            elif cam4SliderSpeed == 5:
-                self.dial4s.setValue(7)
-                self.line4s.setGeometry(1820, 50, 20, 101)
-            elif cam4SliderSpeed == 6:
-                self.dial4s.setValue(9)
-                self.line4s.setGeometry(1820, 30, 20, 121)
-            elif cam4SliderSpeed == 7:
-                self.dial4s.setValue(10)
-                self.line4s.setGeometry(1820, 10, 20, 141)
-
-
-        
+                self.line4s.setGeometry(1820, 10, 20, 81)
 
         if oldcam5Speed != cam5SliderSpeed:
             oldcam5Speed = cam5SliderSpeed
             if cam5SliderSpeed == 1:
                 self.dial5s.setValue(1)
-                self.line5s.setGeometry(1820, 130, 20, 21)
+                self.line5s.setGeometry(1820, 115, 20, 21)
             elif cam5SliderSpeed == 2:
                 self.dial5s.setValue(3)
-                self.line5s.setGeometry(1820, 110, 20, 41)
+                self.line5s.setGeometry(1820, 80, 20, 41)
             elif cam5SliderSpeed == 3:
                 self.dial5s.setValue(5)
-                self.line5s.setGeometry(1820, 90, 20, 61)
+                self.line5s.setGeometry(1820, 45, 20, 61)
             elif cam5SliderSpeed == 4:
                 self.dial5s.setValue(6)
-                self.line5s.setGeometry(1820, 70, 20, 81)
-            elif cam5SliderSpeed == 5:
-                self.dial5s.setValue(7)
-                self.line5s.setGeometry(1820, 50, 20, 101)
-            elif cam5SliderSpeed == 6:
-                self.dial5s.setValue(9)
-                self.line5s.setGeometry(1820, 30, 20, 121)
-            elif cam5SliderSpeed == 7:
-                self.dial5s.setValue(10)
-                self.line5s.setGeometry(1820, 10, 20, 141)
+                self.line5s.setGeometry(1820, 10, 20, 81)
 
         serialFreeze = False
         resetButtons = False
@@ -5942,9 +6004,11 @@ class ThreadClass(QtCore.QThread):
         global axisX
         global axisY
         global axisZ
+        global axisW
         global oldAxisX
         global oldAxisY
         global oldAxisZ
+        global oldAxisW
         global previousMillisMoveCheck
         global message
 
