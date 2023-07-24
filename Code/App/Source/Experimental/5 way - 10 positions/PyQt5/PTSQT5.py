@@ -54,9 +54,9 @@ import pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 #from qt_thread_updater import ThreadUpdater
 import sys, time, os, subprocess
+from sys import platform
 
 #pyuic5 -x PTSQT2.ui -o PTSQT3.py
-
 
 
 
@@ -512,7 +512,8 @@ class Ui_editWindow(QMainWindow):
         global newText
         newText = self.lineEdit.text()
         self.close()
-        os.system('/usr/bin/toggle-keyboard.sh')
+        if platform == "linux" or platform == "linux2":
+            os.system('/usr/bin/toggle-keyboard.sh')
 
     def keyPressEvent(self, e):
         #print(e.key())
@@ -536,8 +537,8 @@ class PTSapp(QMainWindow):
         self.ui2 = Ui_editWindow()
         self.ui2.setupUi()
         self.ui2.lineEdit.setText(text)
-        os.system('/usr/bin/toggle-keyboard.sh')
-
+        if platform == "linux" or platform == "linux2":
+            os.system('/usr/bin/toggle-keyboard.sh')
 
     def setupUi(self):
         self.setObjectName("PTSapp")
