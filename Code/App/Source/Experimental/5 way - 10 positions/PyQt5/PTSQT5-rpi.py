@@ -9,7 +9,6 @@
 #macOS
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT.py
 
-#pyuic5 -x ptsui5.ui -o ptsui5.py
 
 #pi
 #wget https://www.python.org/ftp/python/3.11.4/Python-3.9.13.tgz
@@ -480,16 +479,15 @@ class Ui_editWindow(QMainWindow):
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(50, 30, 120, 120))
+        self.lineEdit.setGeometry(QtCore.QRect(50, 20, 91, 91))
         font = QtGui.QFont()
-        font.setFamily("Helvetica Neue")
-        font.setPointSize(32)
+        font.setPointSize(36)
         self.lineEdit.setFont(font)
         self.lineEdit.setText("")
         self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit.setObjectName("lineEdit")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.editSet())
-        self.pushButton.setGeometry(QtCore.QRect(190, 50, 91, 81))
+        self.pushButton.setGeometry(QtCore.QRect(190, 30, 91, 81))
         font = QtGui.QFont()
         font.setPointSize(24)
         self.pushButton.setFont(font)
@@ -514,11 +512,6 @@ class Ui_editWindow(QMainWindow):
         self.close()
         os.system('/usr/bin/toggle-keyboard.sh')
 
-    def keyPressEvent(self, e):
-        #print(e.key())
-        if e.key() == Qt.Key_Return:
-            self.editSet()
-
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("editWindow", "Edit Name"))
@@ -540,6 +533,9 @@ class PTSapp(QMainWindow):
 
 
     def setupUi(self):
+        #self.my_widget = Ui_editWindow()
+        #self.my_widget.editedText.connect(self.onTextEdit)
+
         self.setObjectName("PTSapp")
         self.resize(1920, 997)
         self.setAutoFillBackground(False)
@@ -547,7 +543,7 @@ class PTSapp(QMainWindow):
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(20, 140, 1881, 160))
+        self.groupBox.setGeometry(QtCore.QRect(20, 80, 1881, 160))
         self.groupBox.setStyleSheet("background-color: #1e252a; \n"
 "border: 4px solid #262d32; ")
         self.groupBox.setTitle("")
@@ -575,6 +571,8 @@ class PTSapp(QMainWindow):
                 axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
             elif key.number == 1:
                 axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
+
+            #self.doJoyMoves(1)
 
         mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
         mngr.start()
@@ -723,7 +721,7 @@ class PTSapp(QMainWindow):
         self.line1s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line1s.setObjectName("line1s")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_2.setGeometry(QtCore.QRect(20, 310, 1881, 160))
+        self.groupBox_2.setGeometry(QtCore.QRect(20, 250, 1881, 160))
         self.groupBox_2.setStyleSheet("background-color: #1e252a; \n"
 "border: 4px solid #262d32; ")
         self.groupBox_2.setTitle("")
@@ -874,7 +872,7 @@ class PTSapp(QMainWindow):
         self.line2s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line2s.setObjectName("line2s")
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_3.setGeometry(QtCore.QRect(20, 480, 1881, 160))
+        self.groupBox_3.setGeometry(QtCore.QRect(20, 420, 1881, 160))
         self.groupBox_3.setStyleSheet("background-color: #1e252a; \n"
 "border: 4px solid #262d32; ")
         self.groupBox_3.setTitle("")
@@ -1024,7 +1022,7 @@ class PTSapp(QMainWindow):
         self.line3s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line3s.setObjectName("line3s")
         self.groupBox_4 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_4.setGeometry(QtCore.QRect(20, 650, 1881, 160))
+        self.groupBox_4.setGeometry(QtCore.QRect(20, 590, 1881, 160))
         self.groupBox_4.setStyleSheet("background-color: #1e252a; \n"
 "border: 4px solid #262d32; ")
         self.groupBox_4.setTitle("")
@@ -1174,7 +1172,7 @@ class PTSapp(QMainWindow):
         self.line4s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line4s.setObjectName("line4s")
         self.groupBox_5 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_5.setGeometry(QtCore.QRect(20, 820, 1881, 160))
+        self.groupBox_5.setGeometry(QtCore.QRect(20, 760, 1881, 160))
         self.groupBox_5.setStyleSheet("background-color: #1e252a; \n"
 "border: 4px solid #262d32; ")
         self.groupBox_5.setTitle("")
@@ -1325,7 +1323,7 @@ class PTSapp(QMainWindow):
         self.line5s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line5s.setObjectName("line5s")
         self.pushButtonCam1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial1())
-        self.pushButtonCam1.setGeometry(QtCore.QRect(570, 30, 120, 71))
+        self.pushButtonCam1.setGeometry(QtCore.QRect(570, 0, 120, 41))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -1336,7 +1334,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam1.setFlat(False)
         self.pushButtonCam1.setObjectName("pushButtonCam1")
         self.pushButtonCam2 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial2())
-        self.pushButtonCam2.setGeometry(QtCore.QRect(730, 30, 120, 71))
+        self.pushButtonCam2.setGeometry(QtCore.QRect(730, 0, 120, 41))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -1347,7 +1345,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam2.setFlat(False)
         self.pushButtonCam2.setObjectName("pushButtonCam2")
         self.pushButtonCam3 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial3())
-        self.pushButtonCam3.setGeometry(QtCore.QRect(890, 30, 120, 71))
+        self.pushButtonCam3.setGeometry(QtCore.QRect(890, 0, 120, 41))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -1358,7 +1356,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam3.setFlat(False)
         self.pushButtonCam3.setObjectName("pushButtonCam3")
         self.pushButtonCam4 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial4())
-        self.pushButtonCam4.setGeometry(QtCore.QRect(1050, 30, 120, 71))
+        self.pushButtonCam4.setGeometry(QtCore.QRect(1050, 0, 120, 41))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -1369,7 +1367,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam4.setFlat(False)
         self.pushButtonCam4.setObjectName("pushButtonCam4")
         self.pushButtonCam5 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial5())
-        self.pushButtonCam5.setGeometry(QtCore.QRect(1210, 30, 120, 71))
+        self.pushButtonCam5.setGeometry(QtCore.QRect(1210, 0, 120, 41))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -1380,7 +1378,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam5.setFlat(False)
         self.pushButtonCam5.setObjectName("pushButtonCam5")
         self.pushButtonSet = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setPos(3))
-        self.pushButtonSet.setGeometry(QtCore.QRect(1760, 30, 120, 71))
+        self.pushButtonSet.setGeometry(QtCore.QRect(1700, 0, 120, 41))
         font = QtGui.QFont()
         font.setPointSize(23)
         self.pushButtonSet.setFont(font)
@@ -1389,8 +1387,19 @@ class PTSapp(QMainWindow):
 "border-radius: 10px;")
         self.pushButtonSet.setFlat(False)
         self.pushButtonSet.setObjectName("pushButtonSet")
+        self.pushButtonConnect = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.buttonConnect())
+        self.pushButtonConnect.setGeometry(QtCore.QRect(40, 0, 120, 41))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(18)
+        self.pushButtonConnect.setFont(font)
+        self.pushButtonConnect.setStyleSheet("border: 4px solid grey; \n"
+"background-color: #405C80;\n"
+"border-radius: 10px;")
+        self.pushButtonConnect.setFlat(False)
+        self.pushButtonConnect.setObjectName("pushButtonConnect")
         self.pushButtonEdit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setEditToggle())
-        self.pushButtonEdit.setGeometry(QtCore.QRect(40, 30, 120, 71))
+        self.pushButtonEdit.setGeometry(QtCore.QRect(180, 0, 120, 41))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -1401,7 +1410,7 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
         self.labelInfo = QtWidgets.QLabel(self.centralwidget)
-        self.labelInfo.setGeometry(QtCore.QRect(1360, 50, 371, 41))
+        self.labelInfo.setGeometry(QtCore.QRect(1350, 0, 331, 41))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(18)
@@ -1413,16 +1422,6 @@ class PTSapp(QMainWindow):
         self.labelInfo.setText("")
         self.labelInfo.setAlignment(QtCore.Qt.AlignCenter)
         self.labelInfo.setObjectName("labelInfo")
-        self.comboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox.setGeometry(QtCore.QRect(190, 50, 351, 41))
-        font = QtGui.QFont()
-        font.setFamily("Helvetica Neue")
-        font.setPointSize(18)
-        self.comboBox.setFont(font)
-        self.comboBox.setStyleSheet("color: white; border: 4px solid grey; background-color: #333333; border-radius: 10px;")
-        self.comboBox.setCurrentText("")
-        self.comboBox.setObjectName("comboBox")
-        self.comboBox.activated.connect(self.autoSerial)
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1920, 24))
@@ -1431,14 +1430,6 @@ class PTSapp(QMainWindow):
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
         self.setStatusBar(self.statusbar)
-
-        self.device_name_list = []
-        usb_device_list = list_ports.comports()
-        self.device_name_list = [port.device for port in usb_device_list]
-        self.device_name_list.insert(0, '-')
-        print(self.device_name_list)
-
-        self.comboBox.addItems(self.device_name_list)
 
         self.retranslateUi()
         QtCore.QMetaObject.connectSlotsByName(self)
@@ -1502,22 +1493,23 @@ class PTSapp(QMainWindow):
         self.pushButtonCam4.setText(_translate("MainWindow", "Cam4"))
         self.pushButtonCam5.setText(_translate("MainWindow", "Cam5"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
+        self.pushButtonConnect.setText(_translate("MainWindow", "Connect"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
 
         self.initFlashTimer()
 
-        self.show()
-        #self.showMaximized()
+        #self.show()
+        self.showMaximized()
         #self.showFullScreen()
 
     def initFlashTimer(self):
-        # self.timer.singleShot(2000,self.update_function)  # for one time call only
-
         self.timer = QTimer()
+        # self.timer.singleShot(2000,self.update_function)  # for one time call only
         self.timer.timeout.connect(self.flash)
         self.timer.start(500)
 
         self.messageTimer = QTimer()
+        # self.timer.singleShot(2000,self.update_function)  # for one time call only
         self.messageTimer.timeout.connect(self.setMessage)
         self.messageTimer.start(50)
 
@@ -1882,19 +1874,17 @@ class PTSapp(QMainWindow):
         else:
             self.resetButtonColours()
 
-    def autoSerial(self):#, serialPortSelect):
+    def autoSerial(self, serialPortSelect):
         global btn_scan_show
         global device_name
         global serialLoop
 
-        #device_name = serialPortSelect[0]
-
-        device_name = self.comboBox.currentText()
+        device_name = serialPortSelect[0]
     
         self.thread = ThreadClass(parent=None, index=1)
         self.thread.start()
         self.thread.any_signal.connect(self.readSerial)
-        #self.pushButtonConnect.setEnabled(False)
+        self.pushButtonConnect.setEnabled(False)
 
     def stopping(self, dt):
         global whileLoopRun
@@ -3302,6 +3292,7 @@ class PTSapp(QMainWindow):
 
         self.doButtonColours()
 
+
     def flash(self):
         #print("Flashing")
         global cam1Pos1Run
@@ -3406,6 +3397,14 @@ class PTSapp(QMainWindow):
         global cam5AtPos10
 
         global flashTick
+
+        global serialLoop
+        global isConnected
+
+        if serialLoop and not isConnected:
+            self.pushButtonConnect.setStyleSheet("border: 4px solid grey; background-color: #229922; color: whute; border-radius: 10px;")
+            self.pushButtonConnect.setText("Connected")
+            isConnected = True
 
         if flashTick:
             flashTick = False
@@ -4462,76 +4461,76 @@ class PTSapp(QMainWindow):
             oldcam1Speed = cam1SliderSpeed
             if cam1SliderSpeed == 1:
                 self.dial1s.setValue(1)
-                self.line1s.setGeometry(1820, 115, 20, 36)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
+                self.line1s.setGeometry(1820, 115, 20, 21)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
             elif cam1SliderSpeed == 2:
                 self.dial1s.setValue(3)
-                self.line1s.setGeometry(1820, 80, 20, 71)
+                self.line1s.setGeometry(1820, 80, 20, 41)
             elif cam1SliderSpeed == 3:
                 self.dial1s.setValue(5)
-                self.line1s.setGeometry(1820, 45, 20, 106)
+                self.line1s.setGeometry(1820, 45, 20, 61)
             elif cam1SliderSpeed == 4:
                 self.dial1s.setValue(6)
-                self.line1s.setGeometry(1820, 10, 20, 141)
+                self.line1s.setGeometry(1820, 10, 20, 81)
 
         if oldcam2Speed != cam2SliderSpeed:
             oldcam2Speed = cam2SliderSpeed
             if cam2SliderSpeed == 1:
                 self.dial2s.setValue(1)
-                self.line2s.setGeometry(1820, 115, 20, 36)
+                self.line2s.setGeometry(1820, 115, 20, 21)
             elif cam2SliderSpeed == 2:
                 self.dial2s.setValue(3)
-                self.line2s.setGeometry(1820, 80, 20, 71)
+                self.line2s.setGeometry(1820, 80, 20, 41)
             elif cam2SliderSpeed == 3:
                 self.dial2s.setValue(5)
-                self.line2s.setGeometry(1820, 45, 20, 106)
+                self.line2s.setGeometry(1820, 45, 20, 61)
             elif cam2SliderSpeed == 4:
                 self.dial2s.setValue(6)
-                self.line2s.setGeometry(1820, 10, 20, 141)
+                self.line2s.setGeometry(1820, 10, 20, 81)
 
         if oldcam3Speed != cam3SliderSpeed:
             oldcam3Speed = cam3SliderSpeed
             if cam3SliderSpeed == 1:
                 self.dial3s.setValue(1)
-                self.line3s.setGeometry(1820, 115, 20, 36)
+                self.line3s.setGeometry(1820, 115, 20, 21)
             elif cam3SliderSpeed == 2:
                 self.dial3s.setValue(3)
-                self.line3s.setGeometry(1820, 80, 20, 71)
+                self.line3s.setGeometry(1820, 80, 20, 41)
             elif cam3SliderSpeed == 3:
                 self.dial3s.setValue(5)
-                self.line3s.setGeometry(1820, 45, 20, 106)
+                self.line3s.setGeometry(1820, 45, 20, 61)
             elif cam3SliderSpeed == 4:
                 self.dial3s.setValue(6)
-                self.line3s.setGeometry(1820, 10, 20, 141)
+                self.line3s.setGeometry(1820, 10, 20, 81)
 
         if oldcam4Speed != cam4SliderSpeed:
             oldcam4Speed = cam4SliderSpeed
             if cam4SliderSpeed == 1:
                 self.dial4s.setValue(1)
-                self.line4s.setGeometry(1820, 115, 20, 36)
+                self.line4s.setGeometry(1820, 115, 20, 21)
             elif cam4SliderSpeed == 2:
                 self.dial4s.setValue(3)
-                self.line4s.setGeometry(1820, 80, 20, 71)
+                self.line4s.setGeometry(1820, 80, 20, 41)
             elif cam4SliderSpeed == 3:
                 self.dial4s.setValue(5)
-                self.line4s.setGeometry(1820, 45, 20, 106)
+                self.line4s.setGeometry(1820, 45, 20, 61)
             elif cam4SliderSpeed == 4:
                 self.dial4s.setValue(6)
-                self.line4s.setGeometry(1820, 10, 20, 141)
+                self.line4s.setGeometry(1820, 10, 20, 81)
 
         if oldcam5Speed != cam5SliderSpeed:
             oldcam5Speed = cam5SliderSpeed
             if cam5SliderSpeed == 1:
                 self.dial5s.setValue(1)
-                self.line5s.setGeometry(1820, 115, 20, 36)
+                self.line5s.setGeometry(1820, 115, 20, 21)
             elif cam5SliderSpeed == 2:
                 self.dial5s.setValue(3)
-                self.line5s.setGeometry(1820, 80, 20, 71)
+                self.line5s.setGeometry(1820, 80, 20, 41)
             elif cam5SliderSpeed == 3:
                 self.dial5s.setValue(5)
-                self.line5s.setGeometry(1820, 45, 20, 106)
+                self.line5s.setGeometry(1820, 45, 20, 61)
             elif cam5SliderSpeed == 4:
                 self.dial5s.setValue(6)
-                self.line5s.setGeometry(1820, 10, 20, 141)
+                self.line5s.setGeometry(1820, 10, 20, 81)
 
         serialFreeze = False
         resetButtons = False
@@ -4539,6 +4538,7 @@ class PTSapp(QMainWindow):
     def resetButtonColours(self):
         global resetButtons
         resetButtons = True
+
 
         global cam1AtPos1
         global cam1AtPos2
@@ -4727,6 +4727,7 @@ class PTSapp(QMainWindow):
         global oldcam4PTSpeed
         global oldcam5PTSpeed
 
+
         cam1Pos1Set = False
         cam1Pos2Set = False
         cam1Pos3Set = False
@@ -4907,7 +4908,9 @@ class PTSapp(QMainWindow):
         oldcam5PTSpeed = 9
 
         self.sendSerial("&!")
+
         #self.doButtonColours()
+
 
     def setMessage(self):
         global message
@@ -4918,7 +4921,8 @@ class PTSapp(QMainWindow):
         global editToggle
 
         if serialLoop and not isConnected:
-            self.comboBox.setStyleSheet("color: white; border: 4px solid grey; background-color: #229922; border-radius: 10px;")
+            self.pushButtonConnect.setStyleSheet("border: 4px solid grey; background-color: #229922; color: whute; border-radius: 10px;")
+            self.pushButtonConnect.setText("Connected")
             isConnected = True
 
         if isConnected:
@@ -4926,8 +4930,8 @@ class PTSapp(QMainWindow):
 
         if message != "":
             self.labelInfo.setText(message)
-            self.messageTimer = QTimer()
-            self.messageTimer.singleShot(2000,self.resetMessage)  # for one time call only
+            self.timer = QTimer()
+            self.timer.singleShot(2000,self.resetMessage)  # for one time call only
             message = ""
 
         if newText != "":
@@ -6014,10 +6018,11 @@ class ThreadClass(QtCore.QThread):
         global previousMillisMoveCheck
         global message
 
+        message = (f"Connected to {device_name}")
+
         try:
             self.serial_port = Serial(device_name, 38400, 8, 'N', 1, timeout=1)
             serialLoop = True
-            message = (f"Connected to {device_name}")
         except:
             print("Couldn't connect")
 
