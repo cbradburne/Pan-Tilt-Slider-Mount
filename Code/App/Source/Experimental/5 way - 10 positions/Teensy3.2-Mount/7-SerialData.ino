@@ -119,7 +119,9 @@ void SerialData(void) {
       return;
     }
   }
-  else if (Serial2.available() > 0) {
+  */
+
+  if (Serial2.available() > 0) {
     instruction = Serial2.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
@@ -234,8 +236,7 @@ void SerialData(void) {
       return;
     }
   }
-  else */
-  if (Serial1.available() > 0) {
+  else if (Serial1.available() > 0) {
     instruction = Serial1.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
@@ -910,8 +911,8 @@ void SerialData(void) {
 
         Serial1.print("#I");
         Serial1.println(zoom_speed);
-        //Serial2.print("#I");
-        //Serial2.println(zoom_speed);
+        Serial2.print("#I");
+        Serial2.println(zoom_speed);
         //Serial3.print("#I");
         //Serial3.println(zoom_speed);
 
@@ -927,8 +928,8 @@ void SerialData(void) {
 
         Serial1.print("#i");
         Serial1.println(zoom_speed);
-        //Serial2.print("#i");
-        //Serial2.println(zoom_speed);
+        Serial2.print("#i");
+        Serial2.println(zoom_speed);
         //Serial3.print("#i");
         //Serial3.println(zoom_speed);
 
@@ -942,11 +943,11 @@ void SerialData(void) {
         zoomOUT = false;
 
         Serial1.println("#o");
-        //Serial2.println("#o");
+        Serial2.println("#o");
         //Serial3.println("#o");
         delay(20);
         Serial1.println("#o");                    // Just in case, it's important!
-        //Serial2.println("#o");
+        Serial2.println("#o");
         //Serial3.println("#o");
 
         //Serial.println("STOP Zooming.\n");
@@ -956,7 +957,7 @@ void SerialData(void) {
       break;
     case INSTRUCTION_TOGGLE_RECORDING: {
         Serial1.println("#O");
-        //Serial2.println("#O");
+        Serial2.println("#O");
         //Serial3.println("#O");
 
         //Serial.println("Toggle Record.\n");
@@ -966,13 +967,13 @@ void SerialData(void) {
       break;
     case INSTRUCTION_IS_RECORDING: {
         Serial1.println("#P");
-        //Serial2.println("#P");
+        Serial2.println("#P");
         //Serial3.println("#P");
       }
       break;
     case INSTRUCTION_IS_NOT_RECORDING: {
         Serial1.println("#p");
-        //Serial2.println("#p");
+        Serial2.println("#p");
         //Serial3.println("#p");
       }
       break;

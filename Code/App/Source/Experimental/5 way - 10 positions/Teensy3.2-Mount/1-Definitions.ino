@@ -32,7 +32,7 @@ elapsedMillis timeElapsed;
 void initPanTilt(void) {
   //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
-  //Serial2.begin(BAUD_RATE);
+  Serial2.begin(BAUD_RATE);
   //Serial3.begin(BAUD_RATE);
 
   pinMode(13, OUTPUT);     // LED
@@ -163,13 +163,14 @@ void Serial1Flush(void) {
     c = Serial1.read();
   }
 }
-/*
+
 void Serial2Flush(void) {
   while (Serial2.available() > 0) {
     c = Serial2.read();
   }
 }
 
+/*
 void Serial3Flush(void) {
   while (Serial3.available() > 0) {
     c = Serial3.read();
