@@ -62,7 +62,7 @@ count = 0
 serial_port = None
 read_thread = None
 
-serialFreeze = False
+serialFirstRun = False
 
 device_name = ""
 serialLoop = False
@@ -1927,11 +1927,7 @@ class PTSapp(QMainWindow):
         sendData = toSendData
 
     def readSerial(self, msg):
-        global serialFreeze
-        serialFreeze = True
-
         #print(msg)
-
         global cam1AtPos1
         global cam1AtPos2
         global cam1AtPos3
@@ -3822,8 +3818,6 @@ class PTSapp(QMainWindow):
 
         global resetButtons
 
-        global serialFreeze
-
         buttonColourSet = "#ff0000"
         buttonColourAt = "#00ff00"
 
@@ -4550,7 +4544,6 @@ class PTSapp(QMainWindow):
                 #self.dial5s.setValue(6)
                 self.line5s.setGeometry(1820, 10, 20, 141)
 
-        serialFreeze = False
         resetButtons = False
 
     def resetButtonColours(self):
