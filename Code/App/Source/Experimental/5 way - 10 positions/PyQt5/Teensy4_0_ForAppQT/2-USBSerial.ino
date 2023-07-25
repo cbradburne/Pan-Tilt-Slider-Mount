@@ -96,11 +96,11 @@ void USBSerialData() {
             break;
           case '?':  // Save pos 10
             {
-              if (camNumInst == '1') { Serial1.println("?M0"); } 
-              else if (camNumInst == '2') { Serial3.println("?M0"); } 
-              else if (camNumInst == '3') { Serial2.println("?M0"); } 
-              else if (camNumInst == '4') { Serial4.println("?M0"); } 
-              else if (camNumInst == '5') { Serial5.println("?M0"); }
+              if (camNumInst == '1') { Serial1.println("?M10"); } 
+              else if (camNumInst == '2') { Serial3.println("?M10"); } 
+              else if (camNumInst == '3') { Serial2.println("?M10"); } 
+              else if (camNumInst == '4') { Serial4.println("?M10"); } 
+              else if (camNumInst == '5') { Serial5.println("?M10"); }
             }
             break;
           case 'z':  // Move to pos 1
@@ -186,11 +186,11 @@ void USBSerialData() {
             break;
           case '/':  // Move to pos 10
             {
-              if (camNumInst == '1') { Serial1.println("?m0"); } 
-              else if (camNumInst == '2') { Serial3.println("?m0"); } 
-              else if (camNumInst == '3') { Serial2.println("?m0"); } 
-              else if (camNumInst == '4') { Serial4.println("?m0"); } 
-              else if (camNumInst == '5') { Serial5.println("?m0"); }
+              if (camNumInst == '1') { Serial1.println("?m10"); } 
+              else if (camNumInst == '2') { Serial3.println("?m10"); } 
+              else if (camNumInst == '3') { Serial2.println("?m10"); } 
+              else if (camNumInst == '4') { Serial4.println("?m10"); } 
+              else if (camNumInst == '5') { Serial5.println("?m10"); }
             }
             break;
           case 'a':  // Zoom out
@@ -203,49 +203,49 @@ void USBSerialData() {
                 else if (camNumInst == '4') { Serial4.println("?z8"); } 
                 else if (camNumInst == '5') { Serial5.println("?z8"); }
               }
-              elif (instruction == '7') {
+              else if (instruction == '7') {
                 if (camNumInst == '1') { Serial1.println("?z7"); } 
                 else if (camNumInst == '2') { Serial3.println("?z7"); } 
                 else if (camNumInst == '3') { Serial2.println("?z7"); } 
                 else if (camNumInst == '4') { Serial4.println("?z7"); } 
                 else if (camNumInst == '5') { Serial5.println("?z7"); }
               }
-              elif (instruction == '6') {
+              else if (instruction == '6') {
                 if (camNumInst == '1') { Serial1.println("?z6"); } 
                 else if (camNumInst == '2') { Serial3.println("?z6"); } 
                 else if (camNumInst == '3') { Serial2.println("?z6"); } 
                 else if (camNumInst == '4') { Serial4.println("?z6"); } 
                 else if (camNumInst == '5') { Serial5.println("?z6"); }
               }
-              elif (instruction == '5') {
+              else if (instruction == '5') {
                 if (camNumInst == '1') { Serial1.println("?z5"); } 
                 else if (camNumInst == '2') { Serial3.println("?z5"); } 
                 else if (camNumInst == '3') { Serial2.println("?z5"); } 
                 else if (camNumInst == '4') { Serial4.println("?z5"); } 
                 else if (camNumInst == '5') { Serial5.println("?z5"); }
               }
-              elif (instruction == '4') {
+              else if (instruction == '4') {
                 if (camNumInst == '1') { Serial1.println("?z4"); } 
                 else if (camNumInst == '2') { Serial3.println("?z4"); } 
                 else if (camNumInst == '3') { Serial2.println("?z4"); } 
                 else if (camNumInst == '4') { Serial4.println("?z4"); } 
                 else if (camNumInst == '5') { Serial5.println("?z4"); }
               }
-              elif (instruction == '3') {
+              else if (instruction == '3') {
                 if (camNumInst == '1') { Serial1.println("?z3"); } 
                 else if (camNumInst == '2') { Serial3.println("?z3"); } 
                 else if (camNumInst == '3') { Serial2.println("?z3"); } 
                 else if (camNumInst == '4') { Serial4.println("?z3"); } 
                 else if (camNumInst == '5') { Serial5.println("?z3"); }
               }
-              elif (instruction == '2') {
+              else if (instruction == '2') {
                 if (camNumInst == '1') { Serial1.println("?z2"); } 
                 else if (camNumInst == '2') { Serial3.println("?z2"); } 
                 else if (camNumInst == '3') { Serial2.println("?z2"); } 
                 else if (camNumInst == '4') { Serial4.println("?z2"); } 
                 else if (camNumInst == '5') { Serial5.println("?z2"); }
               }
-              elif (instruction == '1') {
+              else if (instruction == '1') {
                 if (camNumInst == '1') { Serial1.println("?z1"); } 
                 else if (camNumInst == '2') { Serial3.println("?z1"); } 
                 else if (camNumInst == '3') { Serial2.println("?z1"); } 
@@ -264,49 +264,49 @@ void USBSerialData() {
                 else if (camNumInst == '4') { Serial4.println("?Z8"); } 
                 else if (camNumInst == '5') { Serial5.println("?Z8"); }
               }
-              elif (instruction == '7') {
+              else if (instruction == '7') {
                 if (camNumInst == '1') { Serial1.println("?Z7"); } 
                 else if (camNumInst == '2') { Serial3.println("?Z7"); } 
                 else if (camNumInst == '3') { Serial2.println("?Z7"); } 
                 else if (camNumInst == '4') { Serial4.println("?Z7"); } 
                 else if (camNumInst == '5') { Serial5.println("?Z7"); }
               }
-              elif (instruction == '6') {
+              else if (instruction == '6') {
                 if (camNumInst == '1') { Serial1.println("?Z6"); } 
                 else if (camNumInst == '2') { Serial3.println("?Z6"); } 
                 else if (camNumInst == '3') { Serial2.println("?Z6"); } 
                 else if (camNumInst == '4') { Serial4.println("?Z6"); } 
                 else if (camNumInst == '5') { Serial5.println("?Z6"); }
               }
-              elif (instruction == '5') {
+              else if (instruction == '5') {
                 if (camNumInst == '1') { Serial1.println("?Z5"); } 
                 else if (camNumInst == '2') { Serial3.println("?Z5"); } 
                 else if (camNumInst == '3') { Serial2.println("?Z5"); } 
                 else if (camNumInst == '4') { Serial4.println("?Z5"); } 
                 else if (camNumInst == '5') { Serial5.println("?Z5"); }
               }
-              elif (instruction == '4') {
+              else if (instruction == '4') {
                 if (camNumInst == '1') { Serial1.println("?Z4"); } 
                 else if (camNumInst == '2') { Serial3.println("?Z4"); } 
                 else if (camNumInst == '3') { Serial2.println("?Z4"); } 
                 else if (camNumInst == '4') { Serial4.println("?Z4"); } 
                 else if (camNumInst == '5') { Serial5.println("?Z4"); }
               }
-              elif (instruction == '3') {
+              else if (instruction == '3') {
                 if (camNumInst == '1') { Serial1.println("?Z3"); } 
                 else if (camNumInst == '2') { Serial3.println("?Z3"); } 
                 else if (camNumInst == '3') { Serial2.println("?Z3"); } 
                 else if (camNumInst == '4') { Serial4.println("?Z3"); } 
                 else if (camNumInst == '5') { Serial5.println("?Z3"); }
               }
-              elif (instruction == '2') {
+              else if (instruction == '2') {
                 if (camNumInst == '1') { Serial1.println("?Z2"); } 
                 else if (camNumInst == '2') { Serial3.println("?Z2"); } 
                 else if (camNumInst == '3') { Serial2.println("?Z2"); } 
                 else if (camNumInst == '4') { Serial4.println("?Z2"); } 
                 else if (camNumInst == '5') { Serial5.println("?Z2"); }
               }
-              elif (instruction == '1') {
+              else if (instruction == '1') {
                 if (camNumInst == '1') { Serial1.println("?Z1"); } 
                 else if (camNumInst == '2') { Serial3.println("?Z1"); } 
                 else if (camNumInst == '3') { Serial2.println("?Z1"); } 

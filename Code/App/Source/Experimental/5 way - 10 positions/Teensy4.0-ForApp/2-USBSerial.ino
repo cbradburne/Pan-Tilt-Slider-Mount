@@ -151,15 +151,15 @@ void USBSerialData() {
           case '?':  // Save pos 10
             {
               if (camNumInst == '1') {
-                Serial1.println("?M0");
+                Serial1.println("?M10");
               } else if (camNumInst == '2') {
-                Serial3.println("?M0");
+                Serial3.println("?M10");
               } else if (camNumInst == '3') {
-                Serial2.println("?M0");
+                Serial2.println("?M10");
               } else if (camNumInst == '4') {
-                Serial4.println("?M0");
+                Serial4.println("?M10");
               } else if (camNumInst == '5') {
-                Serial5.println("?M0");
+                Serial5.println("?M10");
               }
             }
             break;
@@ -301,15 +301,15 @@ void USBSerialData() {
           case '/':  // Move to pos 10
             {
               if (camNumInst == '1') {
-                Serial1.println("?m0");
+                Serial1.println("?m10");
               } else if (camNumInst == '2') {
-                Serial3.println("?m0");
+                Serial3.println("?m10");
               } else if (camNumInst == '3') {
-                Serial2.println("?m0");
+                Serial2.println("?m10");
               } else if (camNumInst == '4') {
-                Serial4.println("?m0");
+                Serial4.println("?m10");
               } else if (camNumInst == '5') {
-                Serial5.println("?m0");
+                Serial5.println("?m10");
               }
             }
             break;

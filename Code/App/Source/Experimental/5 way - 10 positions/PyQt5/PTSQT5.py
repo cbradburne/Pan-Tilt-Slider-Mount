@@ -60,6 +60,7 @@ from sys import platform
 
 
 
+
 count = 0
 serial_port = None
 read_thread = None
@@ -539,6 +540,7 @@ class PTSapp(QMainWindow):
         self.ui2.lineEdit.setText(text)
         if platform == "linux" or platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
+
 
     def setupUi(self):
         self.setObjectName("PTSapp")
@@ -1635,23 +1637,30 @@ class PTSapp(QMainWindow):
 
         if (axisW != oldAxisW):
             oldAxisW = axisW
-            if axisW == -8: self.sendSerial('&1a8')
-            elif axisW == -7: self.sendSerial('&1a7')
-            elif axisW == -6: self.sendSerial('&1a6')
-            elif axisW == -5: self.sendSerial('&1a5')
-            elif axisW == -4: self.sendSerial('&1a4')
-            elif axisW == -3: self.sendSerial('&1a3')
-            elif axisW == -2: self.sendSerial('&1a2')
-            elif axisW == -1: self.sendSerial('&1a1')
-            elif axisW == 1: self.sendSerial('&1A1')
-            elif axisW == 2: self.sendSerial('&1A2')
-            elif axisW == 3: self.sendSerial('&1A3')
-            elif axisW == 4: self.sendSerial('&1A4')
-            elif axisW == 5: self.sendSerial('&1A5')
-            elif axisW == 6: self.sendSerial('&1A6')
-            elif axisW == 7: self.sendSerial('&1A7')
-            elif axisW == 8: self.sendSerial('&1A8')
-            else: self.sendSerial('&1q')
+            zoomSerial = "&"
+            if whichCamSerial == 1: zoomSerial = zoomSerial + "1"
+            elif whichCamSerial == 2: zoomSerial = zoomSerial + "2"
+            elif whichCamSerial == 3: zoomSerial = zoomSerial + "3"
+            elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
+            elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
+
+            if axisW == -8: self.sendSerial(zoomSerial + 'a8')
+            elif axisW == -7: self.sendSerial(zoomSerial + 'a7')
+            elif axisW == -6: self.sendSerial(zoomSerial + 'a6')
+            elif axisW == -5: self.sendSerial(zoomSerial + 'a5')
+            elif axisW == -4: self.sendSerial(zoomSerial + 'a4')
+            elif axisW == -3: self.sendSerial(zoomSerial + 'a3')
+            elif axisW == -2: self.sendSerial(zoomSerial + 'a2')
+            elif axisW == -1: self.sendSerial(zoomSerial + 'a1')
+            elif axisW == 1: self.sendSerial(zoomSerial + 'A1')
+            elif axisW == 2: self.sendSerial(zoomSerial + 'A2')
+            elif axisW == 3: self.sendSerial(zoomSerial + 'A3')
+            elif axisW == 4: self.sendSerial(zoomSerial + 'A4')
+            elif axisW == 5: self.sendSerial(zoomSerial + 'A5')
+            elif axisW == 6: self.sendSerial(zoomSerial + 'A6')
+            elif axisW == 7: self.sendSerial(zoomSerial + 'A7')
+            elif axisW == 8: self.sendSerial(zoomSerial + 'A8')
+            else: self.sendSerial(zoomSerial + 'q')
 
     def sendJoystick(self, arr):
         global data
@@ -4387,151 +4396,151 @@ class PTSapp(QMainWindow):
         if oldcam1PTSpeed != cam1PTSpeed:
             oldcam1PTSpeed = cam1PTSpeed
             if cam1PTSpeed == 1:
-                self.dial1p.setValue(1)
+                #self.dial1p.setValue(1)
                 self.line1p.setGeometry(1470, 115, 20, 36)            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
             elif cam1PTSpeed == 3:
-                self.dial1p.setValue(4)
+                #self.dial1p.setValue(4)
                 self.line1p.setGeometry(1470, 80, 20, 71)
             elif cam1PTSpeed == 5:
-                self.dial1p.setValue(7)
+                #self.dial1p.setValue(7)
                 self.line1p.setGeometry(1470, 45, 20, 106)
             elif cam1PTSpeed == 7:
-                self.dial1p.setValue(10)
+                #self.dial1p.setValue(10)
                 self.line1p.setGeometry(1470, 10, 20, 141)
 
         if oldcam2PTSpeed != cam2PTSpeed:
             oldcam2PTSpeed = cam2PTSpeed
             if cam2PTSpeed == 1:
-                self.dial2p.setValue(1)
+                #self.dial2p.setValue(1)
                 self.line2p.setGeometry(1470, 115, 20, 36)
             elif cam2PTSpeed == 3:
-                self.dial2p.setValue(4)
+                #self.dial2p.setValue(4)
                 self.line2p.setGeometry(1470, 80, 20, 71)
             elif cam2PTSpeed == 5:
-                self.dial2p.setValue(7)
+                #self.dial2p.setValue(7)
                 self.line2p.setGeometry(1470, 45, 20, 106)
             elif cam2PTSpeed == 7:
-                self.dial2p.setValue(10)
+                #self.dial2p.setValue(10)
                 self.line2p.setGeometry(1470, 10, 20, 141)
 
         if oldcam3PTSpeed != cam3PTSpeed:
             oldcam3PTSpeed = cam3PTSpeed
             if cam3PTSpeed == 1:
-                self.dial3p.setValue(1)
+                #self.dial3p.setValue(1)
                 self.line3p.setGeometry(1470, 115, 20, 36)
             elif cam3PTSpeed == 3:
-                self.dial3p.setValue(4)
+                #self.dial3p.setValue(4)
                 self.line3p.setGeometry(1470, 80, 20, 71)
             elif cam3PTSpeed == 5:
-                self.dial3p.setValue(7)
+                #self.dial3p.setValue(7)
                 self.line3p.setGeometry(1470, 45, 20, 106)
             elif cam3PTSpeed == 7:
-                self.dial3p.setValue(10)
+                #self.dial3p.setValue(10)
                 self.line3p.setGeometry(1470, 10, 20, 141)
 
         if oldcam4PTSpeed != cam4PTSpeed:
             oldcam4PTSpeed = cam4PTSpeed
             if cam4PTSpeed == 1:
-                self.dial4p.setValue(1)
+                #self.dial4p.setValue(1)
                 self.line4p.setGeometry(1470, 115, 20, 36)
             elif cam4PTSpeed == 3:
-                self.dial4p.setValue(4)
+                #self.dial4p.setValue(4)
                 self.line4p.setGeometry(1470, 80, 20, 71)
             elif cam4PTSpeed == 5:
-                self.dial4p.setValue(7)
+                #self.dial4p.setValue(7)
                 self.line4p.setGeometry(1470, 45, 20, 106)
             elif cam4PTSpeed == 7:
-                self.dial4p.setValue(10)
+                #self.dial4p.setValue(10)
                 self.line4p.setGeometry(1470, 10, 20, 141)
 
         if oldcam5PTSpeed != cam5PTSpeed:
             oldcam5PTSpeed = cam5PTSpeed
             if cam5PTSpeed == 1:
-                self.dial5p.setValue(1)
+                #self.dial5p.setValue(1)
                 self.line5p.setGeometry(1470, 115, 20, 36)
             elif cam5PTSpeed == 3:
-                self.dial5p.setValue(4)
+                #self.dial5p.setValue(4)
                 self.line5p.setGeometry(1470, 80, 20, 71)
             elif cam5PTSpeed == 5:
-                self.dial5p.setValue(7)
+                #self.dial5p.setValue(7)
                 self.line5p.setGeometry(1470, 45, 20, 106)
             elif cam5PTSpeed == 7:
-                self.dial5p.setValue(10)
+                #self.dial5p.setValue(10)
                 self.line5p.setGeometry(1470, 10, 20, 141)
 
         if oldcam1Speed != cam1SliderSpeed:
             oldcam1Speed = cam1SliderSpeed
             if cam1SliderSpeed == 1:
-                self.dial1s.setValue(1)
+                #self.dial1s.setValue(1)
                 self.line1s.setGeometry(1820, 115, 20, 36)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
             elif cam1SliderSpeed == 2:
-                self.dial1s.setValue(3)
+                #self.dial1s.setValue(3)
                 self.line1s.setGeometry(1820, 80, 20, 71)
             elif cam1SliderSpeed == 3:
-                self.dial1s.setValue(5)
+                #self.dial1s.setValue(5)
                 self.line1s.setGeometry(1820, 45, 20, 106)
             elif cam1SliderSpeed == 4:
-                self.dial1s.setValue(6)
+                #self.dial1s.setValue(6)
                 self.line1s.setGeometry(1820, 10, 20, 141)
 
         if oldcam2Speed != cam2SliderSpeed:
             oldcam2Speed = cam2SliderSpeed
             if cam2SliderSpeed == 1:
-                self.dial2s.setValue(1)
+                #self.dial2s.setValue(1)
                 self.line2s.setGeometry(1820, 115, 20, 36)
             elif cam2SliderSpeed == 2:
-                self.dial2s.setValue(3)
+                #self.dial2s.setValue(3)
                 self.line2s.setGeometry(1820, 80, 20, 71)
             elif cam2SliderSpeed == 3:
-                self.dial2s.setValue(5)
+                #self.dial2s.setValue(5)
                 self.line2s.setGeometry(1820, 45, 20, 106)
             elif cam2SliderSpeed == 4:
-                self.dial2s.setValue(6)
+                #self.dial2s.setValue(6)
                 self.line2s.setGeometry(1820, 10, 20, 141)
 
         if oldcam3Speed != cam3SliderSpeed:
             oldcam3Speed = cam3SliderSpeed
             if cam3SliderSpeed == 1:
-                self.dial3s.setValue(1)
+                #self.dial3s.setValue(1)
                 self.line3s.setGeometry(1820, 115, 20, 36)
             elif cam3SliderSpeed == 2:
-                self.dial3s.setValue(3)
+                #self.dial3s.setValue(3)
                 self.line3s.setGeometry(1820, 80, 20, 71)
             elif cam3SliderSpeed == 3:
-                self.dial3s.setValue(5)
+                #self.dial3s.setValue(5)
                 self.line3s.setGeometry(1820, 45, 20, 106)
             elif cam3SliderSpeed == 4:
-                self.dial3s.setValue(6)
+                #self.dial3s.setValue(6)
                 self.line3s.setGeometry(1820, 10, 20, 141)
 
         if oldcam4Speed != cam4SliderSpeed:
             oldcam4Speed = cam4SliderSpeed
             if cam4SliderSpeed == 1:
-                self.dial4s.setValue(1)
+                #self.dial4s.setValue(1)
                 self.line4s.setGeometry(1820, 115, 20, 36)
             elif cam4SliderSpeed == 2:
-                self.dial4s.setValue(3)
+                #self.dial4s.setValue(3)
                 self.line4s.setGeometry(1820, 80, 20, 71)
             elif cam4SliderSpeed == 3:
-                self.dial4s.setValue(5)
+                #self.dial4s.setValue(5)
                 self.line4s.setGeometry(1820, 45, 20, 106)
             elif cam4SliderSpeed == 4:
-                self.dial4s.setValue(6)
+                #self.dial4s.setValue(6)
                 self.line4s.setGeometry(1820, 10, 20, 141)
 
         if oldcam5Speed != cam5SliderSpeed:
             oldcam5Speed = cam5SliderSpeed
             if cam5SliderSpeed == 1:
-                self.dial5s.setValue(1)
+                #self.dial5s.setValue(1)
                 self.line5s.setGeometry(1820, 115, 20, 36)
             elif cam5SliderSpeed == 2:
-                self.dial5s.setValue(3)
+                #self.dial5s.setValue(3)
                 self.line5s.setGeometry(1820, 80, 20, 71)
             elif cam5SliderSpeed == 3:
-                self.dial5s.setValue(5)
+                #self.dial5s.setValue(5)
                 self.line5s.setGeometry(1820, 45, 20, 106)
             elif cam5SliderSpeed == 4:
-                self.dial5s.setValue(6)
+                #self.dial5s.setValue(6)
                 self.line5s.setGeometry(1820, 10, 20, 141)
 
         serialFreeze = False
@@ -4923,12 +4932,13 @@ class PTSapp(QMainWindow):
             isConnected = True
 
         if isConnected:
+            #print("joy")
             self.doJoyMoves(1)
 
         if message != "":
             self.labelInfo.setText(message)
-            self.messageTimer = QTimer()
-            self.messageTimer.singleShot(2000,self.resetMessage)  # for one time call only
+            self.messageTimerReset = QTimer()
+            self.messageTimerReset.singleShot(2000,self.resetMessage)  # for one time call only
             message = ""
 
         if newText != "":
@@ -5079,7 +5089,7 @@ class PTSapp(QMainWindow):
 
         if SetPosToggle:
             self.setPos(3)
-            self.sendSerial('&1D')
+            self.sendSerial('&5D')
         else:
             whichCamSerial = 5
             self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")

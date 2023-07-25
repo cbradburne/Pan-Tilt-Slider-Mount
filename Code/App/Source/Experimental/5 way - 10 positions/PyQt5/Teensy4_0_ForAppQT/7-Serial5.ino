@@ -12,22 +12,34 @@ void Serial5Data() {
       else if (h == 'V') { Serial.println("~541"); }
       else if (h == 'B') { Serial.println("~551"); }
       else if (h == 'N') { Serial.println("~561"); }
+      else if (h == 'M') { Serial.println("~571"); }
+      else if (h == '<') { Serial.println("~581"); }
+      else if (h == '>') { Serial.println("~591"); }
+      else if (h == '?') { Serial.println("~501"); }
       else if (h == 'A') { Serial.println("~512"); }
       else if (h == 'S') { Serial.println("~522"); }
       else if (h == 'D') { Serial.println("~532"); }
       else if (h == 'F') { Serial.println("~542"); }
       else if (h == 'G') { Serial.println("~552"); }
       else if (h == 'H') { Serial.println("~562"); }
+      else if (h == 'J') { Serial.println("~572"); }
+      else if (h == 'K') { Serial.println("~582"); }
+      else if (h == 'L') { Serial.println("~592"); }
+      else if (h == ':') { Serial.println("~502"); }
       else if (h == 'z') { Serial.println("~513"); }
       else if (h == 'x') { Serial.println("~523"); }
       else if (h == 'c') { Serial.println("~533"); }
       else if (h == 'v') { Serial.println("~543"); }
       else if (h == 'b') { Serial.println("~553"); }
       else if (h == 'n') { Serial.println("~563"); }
+      else if (h == 'm') { Serial.println("~573"); }
+      else if (h == ',') { Serial.println("~583"); }
+      else if (h == '.') { Serial.println("~593"); }
+      else if (h == '/') { Serial.println("~503"); }
       else if (h == 'p') { Serial.println("~514"); }
       else if (h == 'P') { Serial.println("~524"); }
       else if (h == 'a') { Serial.println("~500"); }
-      else if (h == 's') { Serial.println("~*"); }
+      else if (h == 's') { Serial.println("~&");  }
       else if (h == '0') {
         Serial.println("~100");
         Serial.println("~200");
