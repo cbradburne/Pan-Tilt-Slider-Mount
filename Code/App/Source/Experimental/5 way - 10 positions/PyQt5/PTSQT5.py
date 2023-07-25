@@ -548,8 +548,7 @@ class PTSapp(QMainWindow):
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox.setGeometry(QtCore.QRect(20, 140, 1881, 160))
-        self.groupBox.setStyleSheet("background-color: #1e252a; \n"
-"border: 4px solid #262d32; ")
+        self.groupBox.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
         self.groupBox.setTitle("")
         self.groupBox.setFlat(False)
         self.groupBox.setObjectName("groupBox")
@@ -585,9 +584,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton12.setFont(font)
-        self.pushButton12.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton12.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton12.setFlat(False)
         self.pushButton12.setObjectName("pushButton12")
         self.pushButton17 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go7())
@@ -596,9 +593,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton17.setFont(font)
-        self.pushButton17.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton17.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton17.setFlat(False)
         self.pushButton17.setObjectName("pushButton17")
         self.pushButton10 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go10())
@@ -607,9 +602,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton10.setFont(font)
-        self.pushButton10.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton10.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton10.setFlat(False)
         self.pushButton10.setObjectName("pushButton10")
         self.pushButton15 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go5())
@@ -618,9 +611,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton15.setFont(font)
-        self.pushButton15.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton15.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton15.setFlat(False)
         self.pushButton15.setObjectName("pushButton15")
         self.pushButton16 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go6())
@@ -629,9 +620,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton16.setFont(font)
-        self.pushButton16.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton16.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton16.setFlat(False)
         self.pushButton16.setObjectName("pushButton16")
         self.pushButton11 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go1())
@@ -640,9 +629,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton11.setFont(font)
-        self.pushButton11.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton11.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton11.setFlat(False)
         self.pushButton11.setObjectName("pushButton11")
         self.pushButton14 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go4())
@@ -651,9 +638,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton14.setFont(font)
-        self.pushButton14.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton14.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton14.setFlat(False)
         self.pushButton14.setObjectName("pushButton14")
         self.pushButton13 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go3())
@@ -662,9 +647,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton13.setFont(font)
-        self.pushButton13.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton13.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton13.setFlat(False)
         self.pushButton13.setObjectName("pushButton13")
         self.pushButton18 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go8())
@@ -673,9 +656,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton18.setFont(font)
-        self.pushButton18.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton18.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton18.setFlat(False)
         self.pushButton18.setObjectName("pushButton18")
         self.pushButton19 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go9())
@@ -684,9 +665,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton19.setFont(font)
-        self.pushButton19.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 40px;")
+        self.pushButton19.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton19.setFlat(False)
         self.pushButton19.setObjectName("pushButton19")
         self.dial1p = QtWidgets.QDial(self.groupBox, valueChanged= lambda: self.setDials(1, 1, self.dial1p.value()))
@@ -716,7 +695,7 @@ class PTSapp(QMainWindow):
         self.line1p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line1p.setObjectName("line1p")
         self.line1s = QtWidgets.QFrame(self.groupBox)
-        self.line1s.setGeometry(QtCore.QRect(1820, 115, 20, 36))           #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
+        self.line1s.setGeometry(QtCore.QRect(1820, 115, 20, 36))
         self.line1s.setStyleSheet("border: 10px solid #aaaa00;")
         self.line1s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line1s.setLineWidth(20)
@@ -724,8 +703,7 @@ class PTSapp(QMainWindow):
         self.line1s.setObjectName("line1s")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(20, 310, 1881, 160))
-        self.groupBox_2.setStyleSheet("background-color: #1e252a; \n"
-"border: 4px solid #262d32; ")
+        self.groupBox_2.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox_2.setTitle("")
         self.groupBox_2.setFlat(False)
         self.groupBox_2.setObjectName("groupBox_2")
@@ -735,9 +713,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton22.setFont(font)
-        self.pushButton22.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton22.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton22.setFlat(False)
         self.pushButton22.setObjectName("pushButton22")
         self.pushButton27 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go7())
@@ -746,9 +722,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton27.setFont(font)
-        self.pushButton27.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton27.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton27.setFlat(False)
         self.pushButton27.setObjectName("pushButton27")
         self.pushButton20 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go10())
@@ -757,9 +731,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton20.setFont(font)
-        self.pushButton20.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton20.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton20.setFlat(False)
         self.pushButton20.setObjectName("pushButton20")
         self.pushButton25 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go5())
@@ -768,9 +740,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton25.setFont(font)
-        self.pushButton25.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton25.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton25.setFlat(False)
         self.pushButton25.setObjectName("pushButton25")
         self.pushButton26 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go6())
@@ -779,9 +749,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton26.setFont(font)
-        self.pushButton26.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton26.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton26.setFlat(False)
         self.pushButton26.setObjectName("pushButton26")
         self.pushButton21 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go1())
@@ -790,9 +758,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton21.setFont(font)
-        self.pushButton21.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton21.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton21.setFlat(False)
         self.pushButton21.setObjectName("pushButton21")
         self.pushButton24 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go4())
@@ -801,9 +767,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton24.setFont(font)
-        self.pushButton24.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton24.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton24.setFlat(False)
         self.pushButton24.setObjectName("pushButton24")
         self.pushButton23 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go3())
@@ -812,9 +776,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton23.setFont(font)
-        self.pushButton23.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton23.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton23.setFlat(False)
         self.pushButton23.setObjectName("pushButton23")
         self.pushButton28 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go8())
@@ -823,9 +785,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton28.setFont(font)
-        self.pushButton28.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton28.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton28.setFlat(False)
         self.pushButton28.setObjectName("pushButton28")
         self.pushButton29 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go9())
@@ -834,9 +794,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton29.setFont(font)
-        self.pushButton29.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 40px;")
+        self.pushButton29.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton29.setFlat(False)
         self.pushButton29.setObjectName("pushButton29")
         self.dial2s = QtWidgets.QDial(self.groupBox_2, valueChanged= lambda: self.setDials(2, 2, self.dial2s.value()))
@@ -875,8 +833,7 @@ class PTSapp(QMainWindow):
         self.line2s.setObjectName("line2s")
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setGeometry(QtCore.QRect(20, 480, 1881, 160))
-        self.groupBox_3.setStyleSheet("background-color: #1e252a; \n"
-"border: 4px solid #262d32; ")
+        self.groupBox_3.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
         self.groupBox_3.setTitle("")
         self.groupBox_3.setFlat(False)
         self.groupBox_3.setObjectName("groupBox_3")
@@ -886,9 +843,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton32.setFont(font)
-        self.pushButton32.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton32.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton32.setFlat(False)
         self.pushButton32.setObjectName("pushButton32")
         self.pushButton37 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go7())
@@ -897,9 +852,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton37.setFont(font)
-        self.pushButton37.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton37.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton37.setFlat(False)
         self.pushButton37.setObjectName("pushButton37")
         self.pushButton30 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go10())
@@ -908,9 +861,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton30.setFont(font)
-        self.pushButton30.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton30.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton30.setFlat(False)
         self.pushButton30.setObjectName("pushButton30")
         self.pushButton35 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go5())
@@ -919,9 +870,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton35.setFont(font)
-        self.pushButton35.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton35.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton35.setFlat(False)
         self.pushButton35.setObjectName("pushButton35")
         self.pushButton36 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go6())
@@ -930,9 +879,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton36.setFont(font)
-        self.pushButton36.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton36.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton36.setFlat(False)
         self.pushButton36.setObjectName("pushButton36")
         self.pushButton31 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go1())
@@ -941,9 +888,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton31.setFont(font)
-        self.pushButton31.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton31.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton31.setFlat(False)
         self.pushButton31.setObjectName("pushButton31")
         self.pushButton34 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go4())
@@ -952,9 +897,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton34.setFont(font)
-        self.pushButton34.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton34.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton34.setFlat(False)
         self.pushButton34.setObjectName("pushButton34")
         self.pushButton33 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go3())
@@ -963,9 +906,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton33.setFont(font)
-        self.pushButton33.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton33.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton33.setFlat(False)
         self.pushButton33.setObjectName("pushButton33")
         self.pushButton38 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go8())
@@ -974,9 +915,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton38.setFont(font)
-        self.pushButton38.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton38.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton38.setFlat(False)
         self.pushButton38.setObjectName("pushButton38")
         self.pushButton39 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go9())
@@ -985,9 +924,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton39.setFont(font)
-        self.pushButton39.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 40px;")
+        self.pushButton39.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton39.setFlat(False)
         self.pushButton39.setObjectName("pushButton39")
         self.dial3s = QtWidgets.QDial(self.groupBox_3, valueChanged= lambda: self.setDials(3, 2, self.dial3s.value()))
@@ -1025,8 +962,7 @@ class PTSapp(QMainWindow):
         self.line3s.setObjectName("line3s")
         self.groupBox_4 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_4.setGeometry(QtCore.QRect(20, 650, 1881, 160))
-        self.groupBox_4.setStyleSheet("background-color: #1e252a; \n"
-"border: 4px solid #262d32; ")
+        self.groupBox_4.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
         self.groupBox_4.setTitle("")
         self.groupBox_4.setFlat(False)
         self.groupBox_4.setObjectName("groupBox_4")
@@ -1036,9 +972,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton42.setFont(font)
-        self.pushButton42.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton42.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton42.setFlat(False)
         self.pushButton42.setObjectName("pushButton42")
         self.pushButton47 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go7())
@@ -1047,9 +981,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton47.setFont(font)
-        self.pushButton47.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton47.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton47.setFlat(False)
         self.pushButton47.setObjectName("pushButton47")
         self.pushButton40 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go10())
@@ -1058,9 +990,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton40.setFont(font)
-        self.pushButton40.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton40.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton40.setFlat(False)
         self.pushButton40.setObjectName("pushButton40")
         self.pushButton45 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go5())
@@ -1069,9 +999,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton45.setFont(font)
-        self.pushButton45.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton45.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton45.setFlat(False)
         self.pushButton45.setObjectName("pushButton45")
         self.pushButton46 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go6())
@@ -1080,9 +1008,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton46.setFont(font)
-        self.pushButton46.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton46.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton46.setFlat(False)
         self.pushButton46.setObjectName("pushButton46")
         self.pushButton41 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go1())
@@ -1091,9 +1017,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton41.setFont(font)
-        self.pushButton41.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton41.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton41.setFlat(False)
         self.pushButton41.setObjectName("pushButton41")
         self.pushButton44 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go4())
@@ -1102,9 +1026,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton44.setFont(font)
-        self.pushButton44.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton44.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton44.setFlat(False)
         self.pushButton44.setObjectName("pushButton44")
         self.pushButton43 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go3())
@@ -1113,9 +1035,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton43.setFont(font)
-        self.pushButton43.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton43.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton43.setFlat(False)
         self.pushButton43.setObjectName("pushButton43")
         self.pushButton48 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go8())
@@ -1124,9 +1044,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton48.setFont(font)
-        self.pushButton48.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton48.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton48.setFlat(False)
         self.pushButton48.setObjectName("pushButton48")
         self.pushButton49 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go9())
@@ -1135,9 +1053,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton49.setFont(font)
-        self.pushButton49.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 40px;")
+        self.pushButton49.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton49.setFlat(False)
         self.pushButton49.setObjectName("pushButton49")
         self.dial4s = QtWidgets.QDial(self.groupBox_4, valueChanged= lambda: self.setDials(4, 2, self.dial4s.value()))
@@ -1175,8 +1091,7 @@ class PTSapp(QMainWindow):
         self.line4s.setObjectName("line4s")
         self.groupBox_5 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_5.setGeometry(QtCore.QRect(20, 820, 1881, 160))
-        self.groupBox_5.setStyleSheet("background-color: #1e252a; \n"
-"border: 4px solid #262d32; ")
+        self.groupBox_5.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox_5.setTitle("")
         self.groupBox_5.setFlat(False)
         self.groupBox_5.setObjectName("groupBox_5")
@@ -1186,9 +1101,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton52.setFont(font)
-        self.pushButton52.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton52.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton52.setFlat(False)
         self.pushButton52.setObjectName("pushButton52")
         self.pushButton57 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go7())
@@ -1198,9 +1111,7 @@ class PTSapp(QMainWindow):
         font.setPointSize(32)
         self.pushButton57.setFont(font)
         self.pushButton57.setAutoFillBackground(False)
-        self.pushButton57.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton57.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton57.setFlat(False)
         self.pushButton57.setObjectName("pushButton57")
         self.pushButton50 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go10())
@@ -1209,9 +1120,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton50.setFont(font)
-        self.pushButton50.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton50.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton50.setFlat(False)
         self.pushButton50.setObjectName("pushButton50")
         self.pushButton55 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go5())
@@ -1220,9 +1129,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton55.setFont(font)
-        self.pushButton55.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton55.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton55.setFlat(False)
         self.pushButton55.setObjectName("pushButton55")
         self.pushButton56 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go6())
@@ -1231,9 +1138,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton56.setFont(font)
-        self.pushButton56.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton56.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton56.setFlat(False)
         self.pushButton56.setObjectName("pushButton56")
         self.pushButton51 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go1())
@@ -1242,9 +1147,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton51.setFont(font)
-        self.pushButton51.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton51.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton51.setFlat(False)
         self.pushButton51.setObjectName("pushButton51")
         self.pushButton54 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go4())
@@ -1253,9 +1156,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton54.setFont(font)
-        self.pushButton54.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton54.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton54.setFlat(False)
         self.pushButton54.setObjectName("pushButton54")
         self.pushButton53 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go3())
@@ -1264,9 +1165,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton53.setFont(font)
-        self.pushButton53.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton53.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton53.setFlat(False)
         self.pushButton53.setObjectName("pushButton53")
         self.pushButton58 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go8())
@@ -1275,9 +1174,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton58.setFont(font)
-        self.pushButton58.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton58.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton58.setFlat(False)
         self.pushButton58.setObjectName("pushButton58")
         self.pushButton59 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go9())
@@ -1286,9 +1183,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton59.setFont(font)
-        self.pushButton59.setStyleSheet("border: 10px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 40px;")
+        self.pushButton59.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton59.setFlat(False)
         self.pushButton59.setObjectName("pushButton59")
         self.dial5p = QtWidgets.QDial(self.groupBox_5, valueChanged= lambda: self.setDials(5, 1, self.dial5p.value()))
@@ -1330,9 +1225,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam1.setFont(font)
-        self.pushButtonCam1.setStyleSheet("border: 4px solid red; \n"
-"background-color: #4C8A4C;\n"
-"border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet("border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
         self.pushButtonCam1.setFlat(False)
         self.pushButtonCam1.setObjectName("pushButtonCam1")
         self.pushButtonCam2 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial2())
@@ -1341,9 +1234,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam2.setFont(font)
-        self.pushButtonCam2.setStyleSheet("border: 4px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 10px;")
+        self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         self.pushButtonCam2.setFlat(False)
         self.pushButtonCam2.setObjectName("pushButtonCam2")
         self.pushButtonCam3 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial3())
@@ -1352,9 +1243,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam3.setFont(font)
-        self.pushButtonCam3.setStyleSheet("border: 4px solid grey; \n"
-"background-color: #807100;\n"
-"border-radius: 10px;")
+        self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
         self.pushButtonCam3.setFlat(False)
         self.pushButtonCam3.setObjectName("pushButtonCam3")
         self.pushButtonCam4 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial4())
@@ -1363,9 +1252,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam4.setFont(font)
-        self.pushButtonCam4.setStyleSheet("border: 4px solid grey; \n"
-"background-color: #008071;\n"
-"border-radius: 10px;")
+        self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
         self.pushButtonCam4.setFlat(False)
         self.pushButtonCam4.setObjectName("pushButtonCam4")
         self.pushButtonCam5 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial5())
@@ -1374,9 +1261,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam5.setFont(font)
-        self.pushButtonCam5.setStyleSheet("border: 4px solid grey; \n"
-"background-color: #8D5395;\n"
-"border-radius: 10px;")
+        self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
         self.pushButtonCam5.setFlat(False)
         self.pushButtonCam5.setObjectName("pushButtonCam5")
         self.pushButtonSet = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setPos(3))
@@ -1384,9 +1269,7 @@ class PTSapp(QMainWindow):
         font = QtGui.QFont()
         font.setPointSize(23)
         self.pushButtonSet.setFont(font)
-        self.pushButtonSet.setStyleSheet("border: 4px solid grey; \n"
-"background-color: #bbbbbb;\n"
-"border-radius: 10px;")
+        self.pushButtonSet.setStyleSheet("border: 4px solid grey; background-color: #bbbbbb; border-radius: 10px;")
         self.pushButtonSet.setFlat(False)
         self.pushButtonSet.setObjectName("pushButtonSet")
         self.pushButtonEdit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setEditToggle())
@@ -1395,9 +1278,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonEdit.setFont(font)
-        self.pushButtonEdit.setStyleSheet("border: 4px solid grey; \n"
-"background-color: #405C80;\n"
-"border-radius: 10px;")
+        self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
         self.labelInfo = QtWidgets.QLabel(self.centralwidget)
@@ -1406,10 +1287,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(18)
         self.labelInfo.setFont(font)
-        self.labelInfo.setStyleSheet("color: white;\n"
-"border: 4px solid grey; \n"
-"background-color: #333333;\n"
-"border-radius: 10px;")
+        self.labelInfo.setStyleSheet("color: white; border: 4px solid grey; background-color: #333333; border-radius: 10px;")
         self.labelInfo.setText("")
         self.labelInfo.setAlignment(QtCore.Qt.AlignCenter)
         self.labelInfo.setObjectName("labelInfo")
@@ -1834,7 +1712,6 @@ class PTSapp(QMainWindow):
             cam5AtPos10 = False
             self.doButtonColours()
 
-        
 
     def scale(self, val, src, dst):
         return ((val - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
@@ -1923,7 +1800,6 @@ class PTSapp(QMainWindow):
 
     def sendSerial(self, toSendData):
         global sendData
-
         sendData = toSendData
 
     def readSerial(self, msg):
