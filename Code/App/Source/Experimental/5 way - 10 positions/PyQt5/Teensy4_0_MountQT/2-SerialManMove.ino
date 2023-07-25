@@ -8,8 +8,9 @@ void panDegrees(float panAngle) {
   Serial1.println("-");
   Serial1.println("#$");
 
-  stepper_pan.setTargetAbs(panDegreesToSteps(panAngle));
-  step_stepperP.move(stepper_pan);
+  //stepper_pan.setTargetAbs(panDegreesToSteps(panAngle));
+  stepper_pan.moveAbs(panDegreesToSteps(panAngle));
+  //stepper_pan.move();
 
   sentMoved = false;
 
@@ -37,8 +38,8 @@ void panDegreesRel(float panAngle) {
   Serial1.println("-");
   Serial1.println("#$");
 
-  stepper_pan.setTargetRel(panDegreesToSteps(panAngle));
-  step_stepperP.move(stepper_pan);
+  //stepper_pan.setTargetRel(panDegreesToSteps(panAngle));
+  stepper_pan.moveRel(panDegreesToSteps(panAngle));
   
   sentMoved = false;
 
@@ -66,8 +67,8 @@ void tiltDegrees(float tiltAngle) {
   Serial1.println("-");
   Serial1.println("#$");
 
-  stepper_tilt.setTargetAbs(tiltDegreesToSteps(tiltAngle));
-  step_stepperT.move(stepper_tilt);
+  //stepper_tilt.setTargetAbs(tiltDegreesToSteps(tiltAngle));
+  stepper_tilt.moveAbs(tiltDegreesToSteps(tiltAngle));
   
   sentMoved = false;
 
@@ -95,8 +96,8 @@ void tiltDegreesRel(float tiltAngle) {
   Serial1.println("-");
   Serial1.println("#$");
 
-  stepper_tilt.setTargetRel(tiltDegreesToSteps(tiltAngle));
-  step_stepperT.move(stepper_tilt);
+  //stepper_tilt.setTargetRel(tiltDegreesToSteps(tiltAngle));
+  stepper_tilt.moveRel(tiltDegreesToSteps(tiltAngle));
   
   sentMoved = false;
 
@@ -124,8 +125,8 @@ void sliderMoveTo(float mm) {
   Serial1.println("-");
   Serial1.println("#$");
 
-  stepper_slider.setTargetAbs(sliderMillimetresToSteps(mm));
-  step_stepperS.move(stepper_slider);
+  //stepper_slider.setTargetAbs(sliderMillimetresToSteps(mm));
+  stepper_slider.moveAbs(sliderMillimetresToSteps(mm));
   
   sentMoved = false;
 
@@ -153,8 +154,8 @@ void sliderMMRel(float mm) {
   Serial1.println("-");
   Serial1.println("#$");
 
-  stepper_slider.setTargetRel(sliderMillimetresToSteps(mm));
-  step_stepperS.move(stepper_slider);
+  //stepper_slider.setTargetRel(sliderMillimetresToSteps(mm));
+  stepper_slider.moveRel(sliderMillimetresToSteps(mm));
   
   sentMoved = false;
 

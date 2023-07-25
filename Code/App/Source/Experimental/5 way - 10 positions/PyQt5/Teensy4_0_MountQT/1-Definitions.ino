@@ -15,15 +15,15 @@ Stepper stepper_pan(PIN_STEP_PAN, PIN_DIRECTION_PAN);
 Stepper stepper_tilt(PIN_STEP_TILT, PIN_DIRECTION_TILT);
 Stepper stepper_slider(PIN_STEP_SLIDER, PIN_DIRECTION_SLIDER);
 
-StepControl multi_stepper;
+//StepControl multi_stepper;
 
-StepControl step_stepperP;
-StepControl step_stepperT;
-StepControl step_stepperS;
+//StepControl step_stepperP;
+//StepControl step_stepperT;
+//StepControl step_stepperS;
 
-RotateControl rotate_stepperP;
-RotateControl rotate_stepperT;
-RotateControl rotate_stepperS;
+//#RotateControl rotate_stepperP;
+//RotateControl rotate_stepperT;
+//RotateControl rotate_stepperS;
 
 KeyframeElement keyframe_array[10];
 
@@ -34,8 +34,12 @@ elapsedMillis timeElapsed;
 
 void initPanTilt(void) {
   Serial1.begin(BAUD_RATE);
+  Serial2.begin(BAUD_RATE);
   
   TS4::begin();
+
+
+  StepperGroup stepGroup({stepper_pan, stepper_tilt, stepper_slider});
 
   pinMode(13, OUTPUT);     // LED
   digitalWrite(13, HIGH);  // LED ON
@@ -72,14 +76,14 @@ void initPanTilt(void) {
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
 
-  if (upsideDown) {
-    stepper_pan.setInverseRotation(true);
-    stepper_tilt.setInverseRotation(true);
-  }
+  //if (upsideDown) {
+  //  stepper_pan.setInverseRotation(true);
+  //  stepper_tilt.setInverseRotation(true);
+  //}
 
-  if (slideReverse) {
-    stepper_slider.setInverseRotation(true);
-  }
+  //if (slideReverse) {
+  //  stepper_slider.setInverseRotation(true);
+  //}
 }
 
 
@@ -105,6 +109,12 @@ void Serial1Flush(void) {
   }
 }
 
+void Serial2Flush(void) {
+  while (Serial2.available() > 0) {
+    c = Serial2.read();
+  }
+}
+
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
@@ -115,9 +125,9 @@ void mainLoop(void) {
     unsigned long currentMillisMoveCheck = millis();
     if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval) {
       previousMillisMoveCheck = currentMillisMoveCheck;
-      rotate_stepperS.stopAsync();
-      rotate_stepperP.stopAsync();
-      rotate_stepperT.stopAsync();
+      stepper_pan.stopAsync();
+      stepper_tilt.stopAsync();
+      stepper_slider.stopAsync();
     }
   }
 }

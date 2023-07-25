@@ -158,7 +158,10 @@ void moveToIndex(int index) {
   stepper_tilt.setTargetAbs(keyframe_array[index - 1].tiltStepCount);
   stepper_slider.setTargetAbs(keyframe_array[index - 1].sliderStepCount);
 
-  multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
+  //multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
+  //stepGroup.move();
+
+  StepperGroup ({stepper_pan, stepper_tilt, stepper_slider}).move();
 
   Serial1Flush(); 
 
