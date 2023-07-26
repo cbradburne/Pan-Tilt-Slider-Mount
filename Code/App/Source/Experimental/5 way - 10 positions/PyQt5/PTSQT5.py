@@ -60,7 +60,6 @@ from sys import platform
 #pyuic5 -x PTSQT2.ui -o PTSQT3.py
 
 serial_port = None
-read_thread = None
 
 serialFirstRun = False
 

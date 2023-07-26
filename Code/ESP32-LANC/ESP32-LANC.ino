@@ -184,12 +184,8 @@ void setup()
     }
   */
   Serial2.begin(38400);
-  if ( DEBUG ) {
-    Serial.begin(38400);
-  }
-  else {
-    Serial.begin(9600, SERIAL_8E1);
-  }
+  if ( DEBUG ) { Serial.begin(38400); }
+  else { Serial.begin(9600, SERIAL_8E1); }
 }
 
 void loop() {
@@ -201,30 +197,18 @@ void loop() {
       }
       c = Serial2.read();
       if (c == 'W') {
-        if (isRecording) {
-          Serial2.println("?G");                                // IS RECORDING
-        }
-        else {
-          Serial2.println("?g");                                // IS NOT RECORDING
-        }
+        if (isRecording) { Serial2.println("?G"); }             // IS RECORDING
+        else { Serial2.println("?g"); }
       }
 
       if (c == 'O') {                                           // Toggle recording status
-        if (isSerialLANC) {
-          Serial.print("#7100*");
-        }
-        else {
-          lancCommand(REC);
-        }
+        if (isSerialLANC) { Serial.print("#7100*"); }
+        else { lancCommand(REC); }
       }
 
       if (c == 'o' && isZooming) {                              // Stop Zooming
-        if (isSerialLANC) {
-          Serial.print("#7590*");
-        }
-        else {
-          lancZoom = 0;
-        }
+        if (isSerialLANC) { Serial.print("#7590*"); }
+        else { lancZoom = 0; }
         isZooming = false;
       }
 
@@ -234,155 +218,74 @@ void loop() {
         }
         c = Serial2.read();
         if (c == '1') {
-          if (isSerialLANC) {
-            Serial.print("#7410*");
-          }
-          else {
-            lancZoom = 1;
-            //lancCommand(ZOOM_IN_1);
-          }
+          if (isSerialLANC) { Serial.print("#7410*"); }
+          else { lancZoom = 1; }
         }
         else if (c == '2') {
-          if (isSerialLANC) {
-            Serial.print("#7420*");
-          }
-          else {
-            lancZoom = 2;
-            //lancCommand(ZOOM_IN_2);
-          }
+          if (isSerialLANC) { Serial.print("#7420*"); }
+          else { lancZoom = 2; }
         }
         else if (c == '3') {
-          if (isSerialLANC) {
-            Serial.print("#7430*");
-          }
-          else {
-            lancZoom = 3;
-            //lancCommand(ZOOM_IN_3);
-          }
+          if (isSerialLANC) { Serial.print("#7430*"); }
+          else { lancZoom = 3; }
         }
         else if (c == '4') {
-          if (isSerialLANC) {
-            Serial.print("#7440*");
-          }
-          else {
-            lancZoom = 4;
-            //lancCommand(ZOOM_IN_4);
-          }
+          if (isSerialLANC) { Serial.print("#7440*"); }
+          else { lancZoom = 4; }
         }
         else if (c == '5') {
-          if (isSerialLANC) {
-            Serial.print("#7450*");
-          }
-          else {
-            lancZoom = 5;
-            //lancCommand(ZOOM_IN_5);
-          }
+          if (isSerialLANC) { Serial.print("#7450*"); }
+          else { lancZoom = 5; }
         }
         else if (c == '6') {
-          if (isSerialLANC) {
-            Serial.print("#7460*");
-          }
-          else {
-            lancZoom = 6;
-            //lancCommand(ZOOM_IN_6);
-          }
+          if (isSerialLANC) { Serial.print("#7460*"); }
+          else { lancZoom = 6; }
         }
         else if (c == '7') {
-          if (isSerialLANC) {
-            Serial.print("#7470*");
-          }
-          else {
-            lancZoom = 7;
-            //lancCommand(ZOOM_IN_7);
-          }
+          if (isSerialLANC) { Serial.print("#7470*"); }
+          else { lancZoom = 7; }
         }
         else if (c == '8') {
-          if (isSerialLANC) {
-            Serial.print("#7480*");
-          }
-          else {
-            lancZoom = 8;
-            //lancCommand(ZOOM_IN_8);
-          }
+          if (isSerialLANC) { Serial.print("#7480*"); }
+          else { lancZoom = 8; }
         }
         isZooming = true;
       }
       else if (c == 'i' && !isZooming) {
-        while (Serial2.available() < 1) {                        //  Wait for 1 byte to be available.
-          delayMicroseconds(1);
-        }
+        while (Serial2.available() < 1) { delayMicroseconds(1); }                       //  Wait for 1 byte to be available.
+        
         c = Serial2.read();
         if (c == '1') {
-          if (isSerialLANC) {
-            Serial.print("#7510*");
-          }
-          else {
-            lancZoom = 11;
-            //lancCommand(ZOOM_OUT_1);
-          }
+          if (isSerialLANC) { Serial.print("#7510*"); }
+          else { lancZoom = 11; }
         }
         else if (c == '2') {
-          if (isSerialLANC) {
-            Serial.print("#7520*");
-          }
-          else {
-            lancZoom = 12;
-            //lancCommand(ZOOM_OUT_2);
-          }
+          if (isSerialLANC) { Serial.print("#7520*"); }
+          else { lancZoom = 12; }
         }
         else if (c == '3') {
-          if (isSerialLANC) {
-            lancZoom = 13;
-            Serial.print("#7530*");
-          }
-          else {
-            //lancCommand(ZOOM_OUT_3);
-          }
+          if (isSerialLANC) { Serial.print("#7530*"); }
+          else { lancZoom = 13; }
         }
         else if (c == '4') {
-          if (isSerialLANC) {
-            Serial.print("#7540*");
-          }
-          else {
-            lancZoom = 14;
-            //lancCommand(ZOOM_OUT_4);
-          }
+          if (isSerialLANC) { Serial.print("#7540*"); }
+          else { lancZoom = 14; }
         }
         else if (c == '5') {
-          if (isSerialLANC) {
-            Serial.print("#7550*");
-          }
-          else {
-            lancZoom = 15;
-            //lancCommand(ZOOM_OUT_5);
-          }
+          if (isSerialLANC) { Serial.print("#7550*"); }
+          else { lancZoom = 15; }
         }
         else if (c == '6') {
-          if (isSerialLANC) {
-            Serial.print("#7560*");
-          }
-          else {
-            lancZoom = 16;
-            //lancCommand(ZOOM_OUT_6);
-          }
+          if (isSerialLANC) { Serial.print("#7560*"); }
+          else { lancZoom = 16; }
         }
         else if (c == '7') {
-          if (isSerialLANC) {
-            Serial.print("#7570*");
-          }
-          else {
-            lancZoom = 17;
-            //lancCommand(ZOOM_OUT_7);
-          }
+          if (isSerialLANC) { Serial.print("#7570*"); }
+          else { lancZoom = 17; }
         }
         else if (c == '8') {
-          if (isSerialLANC) {
-            Serial.print("#7580*");
-          }
-          else {
-            lancZoom = 18;
-            //lancCommand(ZOOM_OUT_8);
-          }
+          if (isSerialLANC) { Serial.print("#7580*"); }
+          else { lancZoom = 18; }
         }
         isZooming = true;
       }
@@ -394,54 +297,22 @@ void loop() {
   }
 
   if (!isSerialLANC && lancZoom > 0) {
-    if (lancZoom == 1) {
-      lancCommand(ZOOM_IN_1);
-    }
-    else if (lancZoom == 2) {
-      lancCommand(ZOOM_IN_2);
-    }
-    else if (lancZoom == 3) {
-      lancCommand(ZOOM_IN_3);
-    }
-    else if (lancZoom == 4) {
-      lancCommand(ZOOM_IN_4);
-    }
-    else if (lancZoom == 5) {
-      lancCommand(ZOOM_IN_5);
-    }
-    else if (lancZoom == 6) {
-      lancCommand(ZOOM_IN_6);
-    }
-    else if (lancZoom == 7) {
-      lancCommand(ZOOM_IN_7);
-    }
-    else if (lancZoom == 8) {
-      lancCommand(ZOOM_IN_8);
-    }
-    else if (lancZoom == 11) {
-      lancCommand(ZOOM_OUT_1);
-    }
-    else if (lancZoom == 12) {
-      lancCommand(ZOOM_OUT_2);
-    }
-    else if (lancZoom == 13) {
-      lancCommand(ZOOM_OUT_3);
-    }
-    else if (lancZoom == 14) {
-      lancCommand(ZOOM_OUT_4);
-    }
-    else if (lancZoom == 15) {
-      lancCommand(ZOOM_OUT_5);
-    }
-    else if (lancZoom == 16) {
-      lancCommand(ZOOM_OUT_6);
-    }
-    else if (lancZoom == 17) {
-      lancCommand(ZOOM_OUT_7);
-    }
-    else if (lancZoom == 18) {
-      lancCommand(ZOOM_OUT_8);
-    }
+    if (lancZoom == 1) { lancCommand(ZOOM_IN_1); }
+    else if (lancZoom == 2) { lancCommand(ZOOM_IN_2); }
+    else if (lancZoom == 3) { lancCommand(ZOOM_IN_3); }
+    else if (lancZoom == 4) { lancCommand(ZOOM_IN_4); }
+    else if (lancZoom == 5) { lancCommand(ZOOM_IN_5); }
+    else if (lancZoom == 6) { lancCommand(ZOOM_IN_6); }
+    else if (lancZoom == 7) { lancCommand(ZOOM_IN_7); }
+    else if (lancZoom == 8) { lancCommand(ZOOM_IN_8); }
+    else if (lancZoom == 11) { lancCommand(ZOOM_OUT_1); }
+    else if (lancZoom == 12) { lancCommand(ZOOM_OUT_2); }
+    else if (lancZoom == 13) { lancCommand(ZOOM_OUT_3); }
+    else if (lancZoom == 14) { lancCommand(ZOOM_OUT_4); }
+    else if (lancZoom == 15) { lancCommand(ZOOM_OUT_5); }
+    else if (lancZoom == 16) { lancCommand(ZOOM_OUT_6); }
+    else if (lancZoom == 17) { lancCommand(ZOOM_OUT_7); }
+    else if (lancZoom == 18) { lancCommand(ZOOM_OUT_8); }
   }
 }
 
@@ -483,29 +354,25 @@ void doLANC() {
   {
     c = processCharInput(cmdBuffer, Serial.read());
 
-    if (strcmp("%000*", cmdBuffer) == 0)                                              //  Handshake
-    {
+    if (strcmp("%000*", cmdBuffer) == 0) {                                           //  Handshake
       Serial.print("&00080*");
       digitalWrite(LED, HIGH);
       cmdBuffer[0] = 0;
     }
-    else if (strcmp("$71000*", cmdBuffer) == 0)                                       //  Recording pt1
-    {
+    else if (strcmp("$71000*", cmdBuffer) == 0) {                                     //  Recording pt1
       Serial.print("#7110*");
       cmdBuffer[0] = 0;
     }
     else if (strcmp("$71100*", cmdBuffer) == 0) cmdBuffer[0] = 0;                     //  Recording pt2
 
-    else if (strcmp("%7610*", cmdBuffer) == 0)
-    {
+    else if (strcmp("%7610*", cmdBuffer) == 0) {
       Serial.print("&76100*");
       delay(200);
       Serial2.println("?G");
       isRecording = true;
       cmdBuffer[0] = 0;
     }
-    else if (strcmp("%7600*", cmdBuffer) == 0)
-    {
+    else if (strcmp("%7600*", cmdBuffer) == 0) {
       Serial.print("&76000*");
       delay(200);
       Serial2.println("?g");
@@ -565,13 +432,9 @@ char processCharInput(char* cmdBuffer, const char c)
     if (strlen(cmdBuffer) < CMDBUFFER_SIZE) {
       strncat(cmdBuffer, &c, 1);
     }
-    else {
-      cmdBuffer[0] = 0;
-    }
+    else { cmdBuffer[0] = 0; }
   }
-  else if ((c == 8 || c == 127) && cmdBuffer[0] != 0) {
-    cmdBuffer[strlen(cmdBuffer) - 1] = 0;
-  }
+  else if ((c == 8 || c == 127) && cmdBuffer[0] != 0) { cmdBuffer[strlen(cmdBuffer) - 1] = 0; }
   return c;
 }
 
