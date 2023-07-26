@@ -475,22 +475,31 @@ class Ui_editWindow(QMainWindow):
     def setupUi(self):
         self.setObjectName("editWindow")
         self.resize(332, 185)
+        self.setAutoFillBackground(False)
+        self.setStyleSheet("background-color: #7593BC;")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(50, 30, 120, 120))
+        self.lineEdit.setGeometry(QtCore.QRect(40, 30, 120, 120))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.lineEdit.setFont(font)
+        self.lineEdit.setStyleSheet("border: 10px solid grey; background-color: #cccccc; border-radius: 40px;")
+        #self.lineEdit.setGeometry(QtCore.QRect(50, 30, 120, 120))
+        #font = QtGui.QFont()
+        #font.setFamily("Helvetica Neue")
+        #font.setPointSize(32)
+        #self.lineEdit.setFont(font)
         self.lineEdit.setText("")
         self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit.setObjectName("lineEdit")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.editSet())
-        self.pushButton.setGeometry(QtCore.QRect(190, 50, 91, 81))
+        self.pushButton.setGeometry(QtCore.QRect(200, 50, 91, 81))
         font = QtGui.QFont()
         font.setPointSize(24)
         self.pushButton.setFont(font)
+        self.pushButton.setStyleSheet("background-color: #cccccc;")
         self.pushButton.setObjectName("pushButton")
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
@@ -1461,8 +1470,12 @@ class PTSapp(QMainWindow):
     
     def setEditToggle(self):
         global editToggle
+        global SetPosToggle
 
-        if editToggle:
+        if SetPosToggle:
+            self.close()
+
+        elif editToggle:
             editToggle = False
             self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         
@@ -4889,6 +4902,8 @@ class PTSapp(QMainWindow):
             self.pushButtonCam3.setText("Cam3")
             self.pushButtonCam4.setText("Cam4")
             self.pushButtonCam5.setText("Cam5")
+            self.pushButtonEdit.setText("Edit")
+            self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
             self.pushButtonSet.setStyleSheet("border: 4px solid #ff0000; background-color: #7D0000; border-radius: 10px;")
@@ -4897,6 +4912,8 @@ class PTSapp(QMainWindow):
             self.pushButtonCam3.setText("Clear")
             self.pushButtonCam4.setText("Clear")
             self.pushButtonCam5.setText("Clear")
+            self.pushButtonEdit.setText("QUIT")
+            self.pushButtonEdit.setStyleSheet("border: 4px solid #ff0000; background-color: #7D0000; border-radius: 10px;")
 
 
     def whichCamSerial1(self):

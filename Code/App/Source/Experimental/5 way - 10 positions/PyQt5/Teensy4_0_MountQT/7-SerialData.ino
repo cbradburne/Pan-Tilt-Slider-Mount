@@ -3,83 +3,11 @@
 
 void SerialData(void) {
   char instruction;
+
+  
   if (Serial2.available() > 0) {
     instruction = Serial2.read();
-    if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
-      int count = 0;
-      while (Serial2.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
-        delayMicroseconds(200);
-        count++;
-        if (count > 100) {
-          Serial2Flush();  //  Clear the Serial2 buffer
-          break;
-        }
-      }
-
-      atPos1 = false;
-      atPos2 = false;
-      atPos3 = false;
-      atPos4 = false;
-      atPos5 = false;
-      atPos6 = false;
-      atPos7 = false;
-      atPos8 = false;
-      atPos9 = false;
-      atPos0 = false;
-
-      short sliderStepSpeed = (Serial2.read() << 8) + Serial2.read();
-      short panStepSpeed = (Serial2.read() << 8) + Serial2.read();
-      short tiltStepSpeed = (Serial2.read() << 8) + Serial2.read();
-
-      float sliderStepSpeed2 = sliderStepSpeed;
-      float panStepSpeed2 = panStepSpeed;
-      float tiltStepSpeed2 = tiltStepSpeed;
-
-      float speedFactorS = map(sliderStepSpeed2, -255, 255, -sliderMaxFactor, sliderMaxFactor);
-      float speedFactorP = map(panStepSpeed2, -255, 255, -panMaxFactor, panMaxFactor);
-      float speedFactorT = map(tiltStepSpeed2, -255, 255, -tiltMaxFactor, tiltMaxFactor);
-
-      if (speedFactorS == 0.0) {
-        stepper_slider.stopAsync();
-      } else {
-        stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
-        //stepper_slider.overrideAcceleration(sliderAccelJoy);  // to make accel less when using joystick
-        stepper_slider.overrideSpeed(speedFactorS);
-      }
-
-      if (speedFactorP == 0.0) {
-        stepper_pan.stopAsync();
-      } else {
-        stepper_pan.rotateAsync(panDegreesToSteps(pan_set_speed));
-        //stepper_pan.overrideAcceleration(panAccelJoy);  // to make accel less when using joystick
-        stepper_pan.overrideSpeed(speedFactorP);
-      }
-
-      if (speedFactorT == 0.0) {
-        stepper_tilt.stopAsync();
-      } else {
-        stepper_tilt.rotateAsync(tiltDegreesToSteps(tilt_set_speed));
-        //stepper_tilt.overrideAcceleration(tiltAccelJoy);  // to make accel less when using joystick
-        stepper_tilt.overrideSpeed(speedFactorT);
-      }
-
-      if (speedFactorS == 0.0) {
-        stepper_slider.stopAsync();
-      }
-      if (speedFactorP == 0.0) {
-        stepper_pan.stopAsync();
-      }
-      if (speedFactorT == 0.0) {
-        stepper_tilt.stopAsync();
-      }
-
-      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
-        isManualMove = false;
-      } else {
-        isManualMove = true;
-        previousMillisMoveCheck = millis();
-      }
-    } else if (instruction == INSTRUCTION_IS_COMMAND) {
+    if (instruction == INSTRUCTION_IS_COMMAND) {
       delay(2);  //wait to make sure all data in the Serial2 message has arived
       instruction = Serial2.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
@@ -110,7 +38,11 @@ void SerialData(void) {
     } else {
       return;
     }
-  } else if (Serial1.available() > 0) {
+  } 
+  
+  
+  
+  else if (Serial1.available() > 0) {
     instruction = Serial1.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
@@ -146,54 +78,37 @@ void SerialData(void) {
       float speedFactorP = map(panStepSpeed2, -255, 255, -panMaxFactor, panMaxFactor);
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -tiltMaxFactor, tiltMaxFactor);
 
-      if (speedFactorS == 0.0) { stepper_slider.stopAsync(); }  // rotate_stepperS.stopAsync(); }
+
+      if (speedFactorP == 0.0) { stepper_pan.stopAsync(); }
       else {
-        //rotate_stepperS.rotateAsync(stepper_slider);
-        //rotate_stepperS.overrideAcceleration(sliderAccelJoy);         // to make accel less when using joystick
-        //rotate_stepperS.overrideSpeed(speedFactorS);
-
-        stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
-        //stepper_slider.overrideAcceleration(sliderAccelJoy);  // to make accel less when using joystick
-        stepper_slider.overrideSpeed(speedFactorS);
-      }
-
-      if (speedFactorP == 0.0) { stepper_pan.stopAsync(); }  //rotate_stepperP.stopAsync(); }
-      else {
-        //rotate_stepperP.rotateAsync(stepper_pan);
-        //rotate_stepperP.overrideAcceleration(panAccelJoy);            // to make accel less when using joystick
-        //rotate_stepperP.overrideSpeed(speedFactorP);
-
-        stepper_pan.rotateAsync(panDegreesToSteps(pan_set_speed));
-        //stepper_pan.overrideAcceleration(panAccelJoy);  // to make accel less when using joystick
+        digitalWrite(13, HIGH);  // LED ON
+        stepper_pan.setAcceleration(pan_accel * 100);
+        stepper_pan.rotateAsync(pan_set_speed * 100);
         stepper_pan.overrideSpeed(speedFactorP);
       }
 
-      if (speedFactorT == 0.0) { stepper_tilt.stopAsync(); }  //rotate_stepperT.stopAsync(); }
+      if (speedFactorT == 0.0) { stepper_tilt.stopAsync(); }
       else {
-        //rotate_stepperT.rotateAsync(stepper_tilt);
-        //rotate_stepperT.overrideAcceleration(tiltAccelJoy);           // to make accel less when using joystick
-        //rotate_stepperT.overrideSpeed(speedFactorT);
-
-        stepper_tilt.rotateAsync(tiltDegreesToSteps(tilt_set_speed));
-        //stepper_tilt.overrideAcceleration(tiltAccelJoy);                // to make accel less when using joystick
+        digitalWrite(13, HIGH);  // LED ON
+        stepper_tilt.setAcceleration(tilt_accel * 100);
+        stepper_tilt.rotateAsync(tilt_set_speed * 100);
         stepper_tilt.overrideSpeed(speedFactorT);
       }
 
-      if (speedFactorS == 0.0) {
-        //stepper_slider.overrideSpeed(0);
-        stepper_slider.stopAsync();
-      }  //rotate_stepperS.stopAsync(); }
-      if (speedFactorP == 0.0) {
-        //stepper_pan.overrideSpeed(0);
-        stepper_pan.stopAsync();
-      }  //rotate_stepperP.stopAsync(); }
-      if (speedFactorT == 0.0) {
-        //stepper_tilt.overrideSpeed(0);
-        stepper_tilt.stopAsync();
-      }  //rotate_stepperT.stopAsync(); }
+      if (speedFactorS == 0.0) { stepper_slider.stopAsync(); }
+      else {
+        digitalWrite(13, HIGH);  // LED ON
+        stepper_slider.setAcceleration(slider_accel * 100);
+        stepper_slider.rotateAsync(slider_set_speed * 100);
+        stepper_slider.overrideSpeed(speedFactorS);
+      }
+
+      //if (speedFactorS == 0.0) { stepper_slider.stopAsync(); }
+      //if (speedFactorP == 0.0) { stepper_pan.stopAsync(); }
+      //if (speedFactorT == 0.0) { stepper_tilt.stopAsync(); }
 
       if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
-        isManualMove = false;
+        digitalWrite(13, LOW);  // LED OFF
       } else {
         isManualMove = true;
         previousMillisMoveCheck = millis();
