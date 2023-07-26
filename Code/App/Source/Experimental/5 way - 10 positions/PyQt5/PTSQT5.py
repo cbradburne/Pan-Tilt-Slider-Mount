@@ -59,7 +59,6 @@ from sys import platform
 
 #pyuic5 -x PTSQT2.ui -o PTSQT3.py
 
-count = 0
 serial_port = None
 read_thread = None
 
@@ -471,7 +470,6 @@ cam5isRecording = False
 class Ui_editWindow(QMainWindow):
     def __init__(self):
         super(Ui_editWindow, self).__init__()
-        self.counter = 0
 
     def setupUi(self):
         self.setObjectName("editWindow")
@@ -1501,10 +1499,6 @@ class PTSapp(QMainWindow):
         global moveCheckInterval
         global whichCamSerial
 
-        global count
-
-        #print("Joy Move ", count)
-        count += 1
         if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
             currentMillisMoveCheck = time.time()
             if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):

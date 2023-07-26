@@ -38,7 +38,6 @@ void initPanTilt(void) {
   
   TS4::begin();
 
-
   StepperGroup stepGroup({stepper_pan, stepper_tilt, stepper_slider});
 
   pinMode(13, OUTPUT);     // LED
