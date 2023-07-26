@@ -79,7 +79,10 @@ void SerialData(void) {
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -tiltMaxFactor, tiltMaxFactor);
 
 
-      if (speedFactorP == 0.0) { stepper_pan.stopAsync(); }
+      if (speedFactorP == 0.0) { 
+        stepper_pan.stopAsync(); 
+        //stepper_pan.overrideSpeed(0);
+      }
       else {
         digitalWrite(13, HIGH);  // LED ON
         stepper_pan.setAcceleration(pan_accel * 100);
@@ -87,7 +90,10 @@ void SerialData(void) {
         stepper_pan.overrideSpeed(speedFactorP);
       }
 
-      if (speedFactorT == 0.0) { stepper_tilt.stopAsync(); }
+      if (speedFactorT == 0.0) { 
+        stepper_tilt.stopAsync();
+        //stepper_tilt.overrideSpeed(0);
+      }
       else {
         digitalWrite(13, HIGH);  // LED ON
         stepper_tilt.setAcceleration(tilt_accel * 100);
@@ -95,7 +101,10 @@ void SerialData(void) {
         stepper_tilt.overrideSpeed(speedFactorT);
       }
 
-      if (speedFactorS == 0.0) { stepper_slider.stopAsync(); }
+      if (speedFactorS == 0.0) { 
+        stepper_slider.stopAsync(); 
+        //stepper_slider.overrideSpeed(0);
+      }
       else {
         digitalWrite(13, HIGH);  // LED ON
         stepper_slider.setAcceleration(slider_accel * 100);
