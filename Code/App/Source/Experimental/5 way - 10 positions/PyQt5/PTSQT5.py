@@ -2,6 +2,7 @@
 #python3 -m pip install pyjoystick
 #python3 -m pip install pyserial
 #python3 -m pip install pyinstaller
+#python3 -m pip install pysdl2-dll
 
 #python3 -m pip install-qt aqtinstall
 #python3 -m aqt install-qt 5.15.2 linux desktop -m qtvirtualkeyboard --outputdir qt
