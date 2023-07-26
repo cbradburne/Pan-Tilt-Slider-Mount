@@ -111,6 +111,10 @@ bool useKeyframeSpeeds = false;
 bool upsideDown = false;
 bool slideReverse = false;
 
+bool panAsync = false;
+bool tiltAsync = false;
+bool sliderAsync = false;
+
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
 
