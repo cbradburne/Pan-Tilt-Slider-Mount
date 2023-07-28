@@ -16,12 +16,15 @@
 #python -m pip install pyserial
 #python -m pip install pyinstaller
 #python -m pip install pysdl2-dll
+#python -m pip install auto-py-to-exe
 
-#pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.ico --name PTSApp-QT PTSQT5.py
+#python -m pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
+
+#pyinstaller --paths 'C:\Users\Music\AppData\Local\Programs\Python\Python39\Lib\site-packages\sdl2' --hidden-import=pkg_resources.py2_warn --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.ico --name PTSApp-QT PTSQT5.py
 
 #cd 'C:\Users\Music\Documents\GitHub\Pan-Tilt-Slider-Mount\Code\App\Source\Experimental\5 way - 10 positions\PyQt5'
 
-
+#pyinstaller PTSApp-QT.spec
 
 #pyuic5 -x ptsui5.ui -o ptsui5.py
 
@@ -58,7 +61,11 @@ sudo make install
 '''
 
 #python -m pip install pyinstaller
+import sys
+import os
 
+os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path('C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms') #join(sys._MEIPASS, 'PyQt5', 'plugins', 'platforms')
+#plugin_path = os.path.join(dirname, 'Qt', 'plugins', 'platforms')
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QMainWindow
@@ -70,8 +77,9 @@ from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 #from qt_thread_updater import ThreadUpdater
 import sys, time, os, subprocess
 from qt_thread_updater import ThreadUpdater
-from sys import platform
+import pkg_resources
 import re
+from sys import platform
 
 #os.environ["PYSDL2_DLL_PATH"] = "C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\sdl2dll\\dll"
 
@@ -545,9 +553,9 @@ class Ui_editWindow(QMainWindow):
         global newText
         newText = self.lineEdit.text()
         self.close()
-        if platform == "win32":
+        if sys.platform == "win32":
             os.system('wmic process where name="osk.exe" delete')
-        elif platform == "linux" or platform == "linux2":
+        elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
 
     def keyPressEvent(self, e):
@@ -573,9 +581,9 @@ class PTSapp(QMainWindow):
         self.ui2.setupUi()
         self.ui2.lineEdit.setText(text)
         
-        if platform == "win32":
+        if sys.platform == "win32":
             os.startfile("C:\\\Windows\\System32\\osk.exe")
-        elif platform == "linux" or platform == "linux2":
+        elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
 
 
