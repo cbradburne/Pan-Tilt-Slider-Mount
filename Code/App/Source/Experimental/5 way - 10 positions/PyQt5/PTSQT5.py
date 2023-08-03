@@ -1,3 +1,4 @@
+#macOS
 #python3 -m pip install pyqt5
 #python3 -m pip install pyjoystick
 #python3 -m pip install pyserial
@@ -8,7 +9,23 @@
 #python3 -m aqt install-qt 5.15.2 linux desktop -m qtvirtualkeyboard --outputdir qt
 
 #macOS
-#pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT.py
+#pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT5.py
+
+#Windows
+#python -m pip install pyqt5
+#python -m pip install pyjoystick
+#python -m pip install pyserial
+#python -m pip install pyinstaller
+#python -m pip install pysdl2-dll
+#python -m pip install auto-py-to-exe
+
+#python -m pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
+
+#pyinstaller --paths 'C:\Users\Music\AppData\Local\Programs\Python\Python39\Lib\site-packages\sdl2' --hidden-import=pkg_resources.py2_warn --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.ico --name PTSApp-QT PTSQT5.py
+
+#cd 'C:\Users\Music\Documents\GitHub\Pan-Tilt-Slider-Mount\Code\App\Source\Experimental\5 way - 10 positions\PyQt5'
+
+#pyinstaller PTSApp-QT.spec
 
 #pyuic5 -x ptsui5.ui -o ptsui5.py
 
@@ -45,6 +62,11 @@ sudo make install
 '''
 
 #python -m pip install pyinstaller
+import sys
+import os
+
+#os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path('C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms') #join(sys._MEIPASS, 'PyQt5', 'plugins', 'platforms')
+#plugin_path = os.path.join(dirname, 'Qt', 'plugins', 'platforms')
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QMainWindow
@@ -55,11 +77,26 @@ import pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 #from qt_thread_updater import ThreadUpdater
 import sys, time, os, subprocess
+from qt_thread_updater import ThreadUpdater
+import pkg_resources
+import re
 from sys import platform
 
 #pyuic5 -x PTSQT5.ui -o PTSQT6.py
 
+#os.environ["PYSDL2_DLL_PATH"] = "C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\sdl2dll\\dll"
+
+#if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+#print('running in a PyInstaller bundle')
+
+#pyuic5 -x PTSQT2.ui -o PTSQT3.py
+updater = ThreadUpdater()
+
+#os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+
 serial_port = None
+
+serialFirstRun = False
 
 device_name = ""
 serialLoop = False
@@ -503,12 +540,18 @@ class Ui_editWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.show()
+        self.move(780, 200)
+
+        self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
+        self.lineEdit.setFocus()
 
     def editSet(self):
         global newText
         newText = self.lineEdit.text()
         self.close()
-        if platform == "linux" or platform == "linux2":
+        if sys.platform == "win32":
+            os.system('wmic process where name="osk.exe" delete')
+        elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
 
     def keyPressEvent(self, e):
@@ -669,7 +712,10 @@ class PTSapp(QMainWindow):
         self.ui2 = Ui_editWindow()
         self.ui2.setupUi()
         self.ui2.lineEdit.setText(text)
-        if platform == "linux" or platform == "linux2":
+        
+        if sys.platform == "win32":
+            os.startfile("C:\\\Windows\\System32\\osk.exe")
+        elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
 
     
@@ -705,15 +751,32 @@ class PTSapp(QMainWindow):
             global axisY
             global axisZ
             global axisW
+            
+            #updater.now_call_latest()
+            joyName = str(key.joystick)
+            joyName = joyName.lower()
 
-            if key.number == 3:
-                axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
-            elif key.number == 2:
-                axisY = int(self.scale(key.value, (-1, 1), (-255,255)))
-            elif key.number == 0:
-                axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
-            elif key.number == 1:
-                axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
+            if re.search('xbox', joyName):
+                #print("YEY")
+                if key.number == 3:
+                    axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
+                elif key.number == 4:
+                    axisY = int(self.scale(key.value, (-1, 1), (255,-255)))
+                elif key.number == 0:
+                    axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
+                elif key.number == 1:
+                    axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
+            
+            else:
+                if key.number == 3:
+                    axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
+                elif key.number == 2:
+                    axisY = int(self.scale(key.value, (-1, 1), (-255,255)))
+                elif key.number == 0:
+                    axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
+                elif key.number == 1:
+                    axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
+
 
         mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
         mngr.start()
@@ -6130,7 +6193,8 @@ class ThreadClass(QtCore.QThread):
             serialLoop = True
             message = (f"Connected to {device_name}")
         except:
-            print("Couldn't connect")
+            #print("Couldn't connect")
+            message = ("Couldn't connect")
 
         sendData = ""
         sendData = '&!'
@@ -6154,7 +6218,7 @@ class ThreadClass(QtCore.QThread):
                         data = bytes((sendData + '\n'), 'utf8')
                         try:
                             self.serial_port.write(data)
-                            print(sendData)
+                            #print(sendData)
                         except Exception as error:
                             print("Didn't send button :(")
                             print(error)
