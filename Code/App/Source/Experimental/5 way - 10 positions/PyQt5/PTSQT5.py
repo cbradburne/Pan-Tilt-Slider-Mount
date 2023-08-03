@@ -75,22 +75,20 @@ from serial import Serial
 from PyQt5.QtCore import Qt, QTimer
 import pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
-#from qt_thread_updater import ThreadUpdater
 import sys, time, os, subprocess
-from qt_thread_updater import ThreadUpdater
 import pkg_resources
 import re
 from sys import platform
 
-#pyuic5 -x PTSQT5.ui -o PTSQT6.py
+#from qt_thread_updater import ThreadUpdater
 
+#updater = ThreadUpdater()
 #os.environ["PYSDL2_DLL_PATH"] = "C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\sdl2dll\\dll"
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 #print('running in a PyInstaller bundle')
 
 #pyuic5 -x PTSQT2.ui -o PTSQT3.py
-updater = ThreadUpdater()
 
 #os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
@@ -580,7 +578,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushUP10.setFont(font)
         self.pushUP10.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
         self.pushUP10.setObjectName("pushUP10")
-        self.pushUP1 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushUP1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.up1())
         self.pushUP1.setGeometry(QtCore.QRect(240, 130, 121, 121))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
@@ -588,42 +586,42 @@ class Ui_MoverWindow(QMainWindow):
         self.pushUP1.setFont(font)
         self.pushUP1.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
         self.pushUP1.setObjectName("pushUP1")
-        self.pushDOWN10 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushDOWN10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.down10())
         self.pushDOWN10.setGeometry(QtCore.QRect(240, 480, 121, 121))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushDOWN10.setFont(font)
         self.pushDOWN10.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
         self.pushDOWN10.setObjectName("pushDOWN10")
-        self.pushDOWN1 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushDOWN1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.down1())
         self.pushDOWN1.setGeometry(QtCore.QRect(240, 350, 121, 121))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushDOWN1.setFont(font)
         self.pushDOWN1.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
         self.pushDOWN1.setObjectName("pushDOWN1")
-        self.pushLEFT10 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushLEFT10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.left10())
         self.pushLEFT10.setGeometry(QtCore.QRect(0, 240, 121, 121))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushLEFT10.setFont(font)
         self.pushLEFT10.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
         self.pushLEFT10.setObjectName("pushLEFT10")
-        self.pushLEFT1 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushLEFT1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.left1())
         self.pushLEFT1.setGeometry(QtCore.QRect(130, 240, 121, 121))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushLEFT1.setFont(font)
         self.pushLEFT1.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
         self.pushLEFT1.setObjectName("pushLEFT1")
-        self.pushRIGHT1 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushRIGHT1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.right1())
         self.pushRIGHT1.setGeometry(QtCore.QRect(350, 240, 121, 121))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushRIGHT1.setFont(font)
         self.pushRIGHT1.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
         self.pushRIGHT1.setObjectName("pushRIGHT1")
-        self.pushRIGHT10 = QtWidgets.QPushButton(self.centralwidget)
+        self.pushRIGHT10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.right10())
         self.pushRIGHT10.setGeometry(QtCore.QRect(480, 240, 121, 121))
         font = QtGui.QFont()
         font.setPointSize(48)
@@ -719,10 +717,10 @@ class PTSapp(QMainWindow):
             os.system('/usr/bin/toggle-keyboard.sh')
 
     
-    def openMoverWindow(self, text):
-
+    def openMoverWindow(self):
         self.ui3 = Ui_MoverWindow()
         self.ui3.setupUi()
+        self.setPos(3)
 
 
     def setupUi(self):
@@ -1522,12 +1520,13 @@ class PTSapp(QMainWindow):
         self.statusbar = QtWidgets.QStatusBar(self)
         self.statusbar.setObjectName("statusbar")
         self.setStatusBar(self.statusbar)
-        self.actionMover = QtWidgets.QAction(self)
-        self.actionMover.setObjectName("actionMover")
-        self.actionMover.triggered.connect(self.openMoverWindow)
-        self.menuControl.addAction(self.actionMover)
-        self.menubar.addAction(self.menuFile.menuAction())
-        self.menubar.addAction(self.menuControl.menuAction())
+
+        #self.actionMover = QtWidgets.QAction(self)
+        #self.actionMover.setObjectName("actionMover")
+        #self.actionMover.triggered.connect(self.openMoverWindow)
+        #self.menuControl.addAction(self.actionMover)
+        #self.menubar.addAction(self.menuFile.menuAction())
+        #self.menubar.addAction(self.menuControl.menuAction())
 
         self.device_name_list = []
         usb_device_list = list_ports.comports()
@@ -1600,9 +1599,9 @@ class PTSapp(QMainWindow):
         self.pushButtonCam5.setText(_translate("MainWindow", "Cam5"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
-        self.menuFile.setTitle(_translate("MainWindow", "File"))
-        self.menuControl.setTitle(_translate("MainWindow", "Control"))
-        self.actionMover.setText(_translate("MainWindow", "Mover"))
+        #self.menuFile.setTitle(_translate("MainWindow", "File"))
+        #self.menuControl.setTitle(_translate("MainWindow", "Control"))
+        #self.actionMover.setText(_translate("MainWindow", "Mover"))
 
         self.initFlashTimer()
 
@@ -1686,7 +1685,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
 
         if SetPosToggle:
-            self.close()
+            self.openMoverWindow()
 
         elif editToggle:
             editToggle = False
@@ -5038,7 +5037,7 @@ class PTSapp(QMainWindow):
         if message != "":
             self.labelInfo.setText(message)
             self.messageTimerReset = QTimer()
-            self.messageTimerReset.singleShot(2000,self.resetMessage)  # for one time call only
+            self.messageTimerReset.singleShot(2000,self.resetMessage)  # for one time call only. (once)
             message = ""
 
         if manualMove != "":
@@ -5183,7 +5182,7 @@ class PTSapp(QMainWindow):
             self.pushButtonCam3.setText("Clear")
             self.pushButtonCam4.setText("Clear")
             self.pushButtonCam5.setText("Clear")
-            self.pushButtonEdit.setText("QUIT")
+            self.pushButtonEdit.setText("Move")
             self.pushButtonEdit.setStyleSheet("border: 4px solid #ff0000; background-color: #7D0000; border-radius: 10px;")
 
 
