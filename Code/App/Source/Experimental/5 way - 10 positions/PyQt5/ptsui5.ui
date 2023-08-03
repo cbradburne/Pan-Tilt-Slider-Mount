@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1917</width>
+    <width>1680</width>
     <height>997</height>
    </rect>
   </property>
@@ -2057,12 +2057,30 @@ border-radius: 10px;</string>
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1917</width>
+     <width>1680</width>
      <height>24</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuFile">
+    <property name="title">
+     <string>File</string>
+    </property>
+   </widget>
+   <widget class="QMenu" name="menuControl">
+    <property name="title">
+     <string>Control</string>
+    </property>
+    <addaction name="actionMover"/>
+   </widget>
+   <addaction name="menuFile"/>
+   <addaction name="menuControl"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionMover">
+   <property name="text">
+    <string>Mover</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
