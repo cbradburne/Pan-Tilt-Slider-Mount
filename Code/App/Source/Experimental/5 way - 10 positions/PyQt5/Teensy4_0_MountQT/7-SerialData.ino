@@ -80,8 +80,8 @@ void SerialData(void) {
 
 
       if (speedFactorP == 0.0) { 
-        stepper_pan.stopAsync(); 
-        //stepper_pan.overrideSpeed(0);
+        //stepper_pan.stopAsync(); 
+        stepper_pan.overrideSpeed(0);
       }
       else {
         digitalWrite(13, HIGH);  // LED ON
@@ -102,8 +102,8 @@ void SerialData(void) {
       }
 
       if (speedFactorS == 0.0) { 
-        stepper_slider.stopAsync(); 
-        //stepper_slider.overrideSpeed(0);
+        //stepper_slider.stopAsync(); 
+        stepper_slider.overrideSpeed(0);
       }
       else {
         digitalWrite(13, HIGH);  // LED ON
