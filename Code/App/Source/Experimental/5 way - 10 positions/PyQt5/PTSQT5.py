@@ -5,10 +5,6 @@
 #python3 -m pip install pyinstaller
 #python3 -m pip install pysdl2-dll
 
-#python3 -m pip install-qt aqtinstall
-#python3 -m aqt install-qt 5.15.2 linux desktop -m qtvirtualkeyboard --outputdir qt
-
-#macOS
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT5.py
 
 #Windows
@@ -17,83 +13,36 @@
 #python -m pip install pyserial
 #python -m pip install pyinstaller
 #python -m pip install pysdl2-dll
-#python -m pip install auto-py-to-exe
 
-#python -m pip install https://github.com/pyinstaller/pyinstaller/archive/develop.zip
-
+#pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.ico --name PTSApp-QT PTSQT5.py
 #pyinstaller --paths 'C:\Users\Music\AppData\Local\Programs\Python\Python39\Lib\site-packages\sdl2' --hidden-import=pkg_resources.py2_warn --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.ico --name PTSApp-QT PTSQT5.py
 
 #cd 'C:\Users\Music\Documents\GitHub\Pan-Tilt-Slider-Mount\Code\App\Source\Experimental\5 way - 10 positions\PyQt5'
-
 #pyinstaller PTSApp-QT.spec
-
 #pyuic5 -x ptsui5.ui -o ptsui5.py
 
-#pi
-#wget https://www.python.org/ftp/python/3.11.4/Python-3.9.13.tgz
-#sudo apt update
-#sudo apt install build-essential zlib1g-dev libncurses5-dev libgdbm-dev libnss3-dev
-#tar -xzvf Python-3.9.13.tgz 
-#cd Python-3.9.13/
-#./configure --enable-optimizations
-#sudo make altinstall
-#/usr/local/bin/python3.9 -V
-
-#sudo apt install qtbase5-dev
-#python -m pip install pyqt5 --config-settings --confirm-license= --verbose
-#python -m pip install pyjoystick
-#python -m pip install pyserial
-#python -m pip install pyinstaller
-
-#pyinstaller --additional-hooks-dir=. --onefile --windowed --name PTSApp-QT PTSQT5.py
-
-#Qt Virtual Keyboard
-
-'''
-sudo apt-get update
-sudo apt install git build-essential
-sudo apt-get install python3-pyqt5 qt5-default qtdeclarative5-dev libqt5svg5-dev qtbase5-private-dev qml-module-qtquick-controls2 qml-module-qtquick-controls qml-module-qt-labs-folderlistmodel
-sudo apt-get install '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev libxkbcommon-dev libxkbcommon-x11-dev
-git clone -b 5.9 https://github.com/qt/qtvirtualkeyboard.git
-cd qtvirtualkeyboard
-qmake 
-sudo make
-sudo make install
-'''
-
-#python -m pip install pyinstaller
-import sys
-import os
-
-#os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path('C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms') #join(sys._MEIPASS, 'PyQt5', 'plugins', 'platforms')
-#plugin_path = os.path.join(dirname, 'Qt', 'plugins', 'platforms')
-
+from PyQt5.QtCore import Qt, QTimer
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QWidget, QMainWindow
 from serial.tools import list_ports
 from serial import Serial
-from PyQt5.QtCore import Qt, QTimer
 import pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 import sys, time, os, subprocess
+from sys import platform
 import pkg_resources
 import re
-from sys import platform
 
 #from qt_thread_updater import ThreadUpdater
-
 #updater = ThreadUpdater()
+
+#os.environ['QT_QPA_PLATFORM_PLUGIN_PATH'] = os.path('C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\PyQt5\\Qt5\\plugins\\platforms') #join(sys._MEIPASS, 'PyQt5', 'plugins', 'platforms')
+#plugin_path = os.path.join(dirname, 'Qt', 'plugins', 'platforms')
 #os.environ["PYSDL2_DLL_PATH"] = "C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\sdl2dll\\dll"
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
-#print('running in a PyInstaller bundle')
-
-#pyuic5 -x PTSQT2.ui -o PTSQT3.py
-
-#os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
 
 serial_port = None
-
 serialFirstRun = False
 
 device_name = ""
@@ -697,6 +646,7 @@ class Ui_MoverWindow(QMainWindow):
     def right10(self):
         global manualMove
         manualMove = "r10"
+
 
 class PTSapp(QMainWindow):
     def __init__(self, txt):
