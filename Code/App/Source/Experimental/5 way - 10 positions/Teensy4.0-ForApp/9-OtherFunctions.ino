@@ -8,7 +8,7 @@ void RefreshLEDs() {
   if (doLEDrefresh2) {
     unsigned long currentMillisLED = millis();
     if (currentMillisLED - previousMillisLED > LEDInterval) {
-      Serial3.println("?W");
+      Serial2.println("?W");
       doLEDrefresh2 = false;
       doLEDrefresh3 = true;
       previousMillisLED = currentMillisLED;
@@ -17,7 +17,7 @@ void RefreshLEDs() {
   if (doLEDrefresh3) {
     unsigned long currentMillisLED = millis();
     if (currentMillisLED - previousMillisLED > LEDInterval) {
-      Serial2.println("?W");
+      Serial3.println("?W");
       doLEDrefresh3 = false;
       doLEDrefresh4 = true;
       previousMillisLED = currentMillisLED;
@@ -64,8 +64,8 @@ void RefreshLEDs() {
     resetLEDs = false;
 
     Serial1.println("#0");
-    Serial3.println("#0");
     Serial2.println("#0");
+    Serial3.println("#0");
     Serial4.println("#0");
     Serial5.println("#0");
 
@@ -95,11 +95,11 @@ void sendSliderPanTiltStepSpeed(int command, short* arr, int whichCamJoy) {
     Serial1.write(data, sizeof(data));  // Send the command and the 6 bytes of data
     Serial1.print("\n");
   } else if (whichCamJoy == 2) {
-    Serial3.write(data, sizeof(data));  // Send the command and the 6 bytes of data
-    Serial3.print("\n");
-  } else if (whichCamJoy == 3) {
     Serial2.write(data, sizeof(data));  // Send the command and the 6 bytes of data
     Serial2.print("\n");
+  } else if (whichCamJoy == 3) {
+    Serial3.write(data, sizeof(data));  // Send the command and the 6 bytes of data
+    Serial3.print("\n");
   } else if (whichCamJoy == 4) {
     Serial4.write(data, sizeof(data));  // Send the command and the 6 bytes of data
     Serial4.print("\n");

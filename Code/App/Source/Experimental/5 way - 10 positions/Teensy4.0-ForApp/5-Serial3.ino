@@ -1,11 +1,11 @@
-void Serial2Data() {
-    if (Serial2.available()) {                                   // If anything comes in Serial2 (pins 0 & 1)
-    char g = Serial2.read();
+void Serial3Data() {
+    if (Serial3.available()) {                                   // If anything comes in Serial3 (pins 0 & 1)
+    char g = Serial3.read();
     if (g == '#') {
-      while (Serial2.available() < 1) {                        //  Wait for 1 byte to be available.
+      while (Serial3.available() < 1) {                        //  Wait for 1 byte to be available.
         delayMicroseconds(200);
       }
-      char h = Serial2.read();
+      char h = Serial3.read();
       if (h == 'Z') {
         Serial.println("~311");
       }
@@ -117,19 +117,19 @@ void Serial2Data() {
       }
     }
     else if (g == '^') {
-      while (Serial2.available() < 2) {                        //  Wait for 1 byts to be available
+      while (Serial3.available() < 2) {                        //  Wait for 1 byts to be available
         delayMicroseconds(200);
       }
-      g = Serial2.read();
+      g = Serial3.read();
       if (g == '=') {
-        s3Speed = Serial2.read();
+        s3Speed = Serial3.read();
         s3Speed -= 48;
         Serial.print("=3");
         Serial.println(s3Speed);
       }
 
       else if (g == '@') {
-        cam3PTSpeed = Serial2.read();
+        cam3PTSpeed = Serial3.read();
         cam3PTSpeed -= 48;
         Serial.print("=@3");
         Serial.println(cam3PTSpeed);
@@ -148,28 +148,28 @@ void Serial2Data() {
     }
 
     else if (g == '?') {
-      String readSerial2 = Serial2.readStringUntil('\n');
+      String readSerial3 = Serial3.readStringUntil('\n');
     }
 
     else if (g == 4) {
       delay(1);
-      while (Serial2.available() < 7) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial3.available() < 7) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
       }
-      char readSerialC3 = Serial2.read();
-      readSerialC3 = Serial2.read();
-      readSerialC3 = Serial2.read();
-      readSerialC3 = Serial2.read();
-      readSerialC3 = Serial2.read();
-      readSerialC3 = Serial2.read();
+      char readSerialC3 = Serial3.read();
+      readSerialC3 = Serial3.read();
+      readSerialC3 = Serial3.read();
+      readSerialC3 = Serial3.read();
+      readSerialC3 = Serial3.read();
+      readSerialC3 = Serial3.read();
     }
 
     else {
       inData3 = "\nCam3:\n";
       inData3 += g;
       delay(1);
-      while (Serial2.available() > 0) {
-        inData3 += Serial2.readStringUntil('\n');
+      while (Serial3.available() > 0) {
+        inData3 += Serial3.readStringUntil('\n');
         if (inData3 == "#$\r") {
           break;
         }

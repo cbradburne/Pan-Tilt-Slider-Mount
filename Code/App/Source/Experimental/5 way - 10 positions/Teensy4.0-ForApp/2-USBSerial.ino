@@ -18,9 +18,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M1");
               } else if (camNumInst == '2') {
-                Serial3.println("?M1");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M1");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M1");
               } else if (camNumInst == '4') {
                 Serial4.println("?M1");
               } else if (camNumInst == '5') {
@@ -33,9 +33,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M2");
               } else if (camNumInst == '2') {
-                Serial3.println("?M2");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M2");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M2");
               } else if (camNumInst == '4') {
                 Serial4.println("?M2");
               } else if (camNumInst == '5') {
@@ -48,9 +48,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M3");
               } else if (camNumInst == '2') {
-                Serial3.println("?M3");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M3");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M3");
               } else if (camNumInst == '4') {
                 Serial4.println("?M3");
               } else if (camNumInst == '5') {
@@ -63,9 +63,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M4");
               } else if (camNumInst == '2') {
-                Serial3.println("?M4");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M4");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M4");
               } else if (camNumInst == '4') {
                 Serial4.println("?M4");
               } else if (camNumInst == '5') {
@@ -78,9 +78,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M5");
               } else if (camNumInst == '2') {
-                Serial3.println("?M5");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M5");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M5");
               } else if (camNumInst == '4') {
                 Serial4.println("?M5");
               } else if (camNumInst == '5') {
@@ -93,9 +93,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M6");
               } else if (camNumInst == '2') {
-                Serial3.println("?M6");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M6");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M6");
               } else if (camNumInst == '4') {
                 Serial4.println("?M6");
               } else if (camNumInst == '5') {
@@ -108,9 +108,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M7");
               } else if (camNumInst == '2') {
-                Serial3.println("?M7");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M7");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M7");
               } else if (camNumInst == '4') {
                 Serial4.println("?M7");
               } else if (camNumInst == '5') {
@@ -123,9 +123,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M8");
               } else if (camNumInst == '2') {
-                Serial3.println("?M8");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M8");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M8");
               } else if (camNumInst == '4') {
                 Serial4.println("?M8");
               } else if (camNumInst == '5') {
@@ -138,9 +138,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M9");
               } else if (camNumInst == '2') {
-                Serial3.println("?M9");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M9");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M9");
               } else if (camNumInst == '4') {
                 Serial4.println("?M9");
               } else if (camNumInst == '5') {
@@ -153,9 +153,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?M10");
               } else if (camNumInst == '2') {
-                Serial3.println("?M10");
-              } else if (camNumInst == '3') {
                 Serial2.println("?M10");
+              } else if (camNumInst == '3') {
+                Serial3.println("?M10");
               } else if (camNumInst == '4') {
                 Serial4.println("?M10");
               } else if (camNumInst == '5') {
@@ -168,9 +168,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m1");
               } else if (camNumInst == '2') {
-                Serial3.println("?m1");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m1");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m1");
               } else if (camNumInst == '4') {
                 Serial4.println("?m1");
               } else if (camNumInst == '5') {
@@ -183,9 +183,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m2");
               } else if (camNumInst == '2') {
-                Serial3.println("?m2");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m2");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m2");
               } else if (camNumInst == '4') {
                 Serial4.println("?m2");
               } else if (camNumInst == '5') {
@@ -198,9 +198,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m3");
               } else if (camNumInst == '2') {
-                Serial3.println("?m3");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m3");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m3");
               } else if (camNumInst == '4') {
                 Serial4.println("?m3");
               } else if (camNumInst == '5') {
@@ -213,9 +213,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m4");
               } else if (camNumInst == '2') {
-                Serial3.println("?m4");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m4");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m4");
               } else if (camNumInst == '4') {
                 Serial4.println("?m4");
               } else if (camNumInst == '5') {
@@ -228,9 +228,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m5");
               } else if (camNumInst == '2') {
-                Serial3.println("?m5");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m5");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m5");
               } else if (camNumInst == '4') {
                 Serial4.println("?m5");
               } else if (camNumInst == '5') {
@@ -243,9 +243,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m6");
               } else if (camNumInst == '2') {
-                Serial3.println("?m6");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m6");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m6");
               } else if (camNumInst == '4') {
                 Serial4.println("?m6");
               } else if (camNumInst == '5') {
@@ -258,9 +258,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m7");
               } else if (camNumInst == '2') {
-                Serial3.println("?m7");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m7");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m7");
               } else if (camNumInst == '4') {
                 Serial4.println("?m7");
               } else if (camNumInst == '5') {
@@ -273,9 +273,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m8");
               } else if (camNumInst == '2') {
-                Serial3.println("?m8");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m8");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m8");
               } else if (camNumInst == '4') {
                 Serial4.println("?m8");
               } else if (camNumInst == '5') {
@@ -288,9 +288,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m9");
               } else if (camNumInst == '2') {
-                Serial3.println("?m9");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m9");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m9");
               } else if (camNumInst == '4') {
                 Serial4.println("?m9");
               } else if (camNumInst == '5') {
@@ -303,9 +303,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?m10");
               } else if (camNumInst == '2') {
-                Serial3.println("?m10");
-              } else if (camNumInst == '3') {
                 Serial2.println("?m10");
+              } else if (camNumInst == '3') {
+                Serial3.println("?m10");
               } else if (camNumInst == '4') {
                 Serial4.println("?m10");
               } else if (camNumInst == '5') {
@@ -318,9 +318,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?b");
               } else if (camNumInst == '2') {
-                Serial3.println("?b");
-              } else if (camNumInst == '3') {
                 Serial2.println("?b");
+              } else if (camNumInst == '3') {
+                Serial3.println("?b");
               } else if (camNumInst == '4') {
                 Serial4.println("?b");
               } else if (camNumInst == '5') {
@@ -333,9 +333,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?B");
               } else if (camNumInst == '2') {
-                Serial3.println("?B");
-              } else if (camNumInst == '3') {
                 Serial2.println("?B");
+              } else if (camNumInst == '3') {
+                Serial3.println("?B");
               } else if (camNumInst == '4') {
                 Serial4.println("?B");
               } else if (camNumInst == '5') {
@@ -348,9 +348,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?z1");
               } else if (camNumInst == '2') {
-                Serial3.println("?z1");
-              } else if (camNumInst == '3') {
                 Serial2.println("?z1");
+              } else if (camNumInst == '3') {
+                Serial3.println("?z1");
               } else if (camNumInst == '4') {
                 Serial4.println("?z1");
               } else if (camNumInst == '5') {
@@ -363,9 +363,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?Z1");
               } else if (camNumInst == '2') {
-                Serial3.println("?Z1");
-              } else if (camNumInst == '3') {
                 Serial2.println("?Z1");
+              } else if (camNumInst == '3') {
+                Serial3.println("?Z1");
               } else if (camNumInst == '4') {
                 Serial4.println("?Z1");
               } else if (camNumInst == '5') {
@@ -378,9 +378,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?N");
               } else if (camNumInst == '2') {
-                Serial3.println("?N");
-              } else if (camNumInst == '3') {
                 Serial2.println("?N");
+              } else if (camNumInst == '3') {
+                Serial3.println("?N");
               } else if (camNumInst == '4') {
                 Serial4.println("?N");
               } else if (camNumInst == '5') {
@@ -393,9 +393,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?u");
               } else if (camNumInst == '2') {
-                Serial3.println("?u");
-              } else if (camNumInst == '3') {
                 Serial2.println("?u");
+              } else if (camNumInst == '3') {
+                Serial3.println("?u");
               } else if (camNumInst == '4') {
                 Serial4.println("?u");
               } else if (camNumInst == '5') {
@@ -408,9 +408,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?Y");
               } else if (camNumInst == '2') {
-                Serial3.println("?Y");
-              } else if (camNumInst == '3') {
                 Serial2.println("?Y");
+              } else if (camNumInst == '3') {
+                Serial3.println("?Y");
               } else if (camNumInst == '4') {
                 Serial4.println("?Y");
               } else if (camNumInst == '5') {
@@ -423,9 +423,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?r");
               } else if (camNumInst == '2') {
-                Serial3.println("?r");
-              } else if (camNumInst == '3') {
                 Serial2.println("?r");
+              } else if (camNumInst == '3') {
+                Serial3.println("?r");
               } else if (camNumInst == '4') {
                 Serial4.println("?r");
               } else if (camNumInst == '5') {
@@ -438,9 +438,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?R");
               } else if (camNumInst == '2') {
-                Serial3.println("?R");
-              } else if (camNumInst == '3') {
                 Serial2.println("?R");
+              } else if (camNumInst == '3') {
+                Serial3.println("?R");
               } else if (camNumInst == '4') {
                 Serial4.println("?R");
               } else if (camNumInst == '5') {
@@ -453,9 +453,9 @@ void USBSerialData() {
               if (camNumInst == '1') {
                 Serial1.println("?k");
               } else if (camNumInst == '2') {
-                Serial3.println("?k");
-              } else if (camNumInst == '3') {
                 Serial2.println("?k");
+              } else if (camNumInst == '3') {
+                Serial3.println("?k");
               } else if (camNumInst == '4') {
                 Serial4.println("?k");
               } else if (camNumInst == '5') {
@@ -474,11 +474,11 @@ void USBSerialData() {
                   Serial1.print("?s");
                   Serial1.println(speed1);
                 } else if (camNumInst == '2') {
-                  Serial3.print("?s");
-                  Serial3.println(speed1);
-                } else if (camNumInst == '3') {
                   Serial2.print("?s");
                   Serial2.println(speed1);
+                } else if (camNumInst == '3') {
+                  Serial3.print("?s");
+                  Serial3.println(speed1);
                 } else if (camNumInst == '4') {
                   Serial4.print("?s");
                   Serial4.println(speed1);
@@ -491,11 +491,11 @@ void USBSerialData() {
                   Serial1.print("?s");
                   Serial1.println(speed2);
                 } else if (camNumInst == '2') {
-                  Serial3.print("?s");
-                  Serial3.println(speed2);
-                } else if (camNumInst == '3') {
                   Serial2.print("?s");
                   Serial2.println(speed2);
+                } else if (camNumInst == '3') {
+                  Serial3.print("?s");
+                  Serial3.println(speed2);
                 } else if (camNumInst == '4') {
                   Serial4.print("?s");
                   Serial4.println(speed2);
@@ -508,11 +508,11 @@ void USBSerialData() {
                   Serial1.print("?s");
                   Serial1.println(speed3);
                 } else if (camNumInst == '2') {
-                  Serial3.print("?s");
-                  Serial3.println(speed3);
-                } else if (camNumInst == '3') {
                   Serial2.print("?s");
                   Serial2.println(speed3);
+                } else if (camNumInst == '3') {
+                  Serial3.print("?s");
+                  Serial3.println(speed3);
                 } else if (camNumInst == '4') {
                   Serial4.print("?s");
                   Serial4.println(speed3);
@@ -525,11 +525,11 @@ void USBSerialData() {
                   Serial1.print("?s");
                   Serial1.println(speed4);
                 } else if (camNumInst == '2') {
-                  Serial3.print("?s");
-                  Serial3.println(speed4);
-                } else if (camNumInst == '3') {
                   Serial2.print("?s");
                   Serial2.println(speed4);
+                } else if (camNumInst == '3') {
+                  Serial3.print("?s");
+                  Serial3.println(speed4);
                 } else if (camNumInst == '4') {
                   Serial4.print("?s");
                   Serial4.println(speed4);
@@ -573,7 +573,7 @@ void USBSerialData() {
         char received = Serial.read();
         inData6 += received;
         if (received == '\n') {
-          Serial3.println(inData6);
+          Serial2.println(inData6);
           inData6 = "";
         }
       }
@@ -582,7 +582,7 @@ void USBSerialData() {
         char received = Serial.read();
         inData6 += received;
         if (received == '\n') {
-          Serial2.println(inData6);
+          Serial3.println(inData6);
           inData6 = "";
         }
       }
