@@ -66,7 +66,12 @@ void SerialData(void) {
       atPos9 = false;
       atPos0 = false;
 
-      short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
+      if (withSlider) {
+        short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
+      }
+      else {
+        short sliderStepSpeed = 0
+      }
       short panStepSpeed = (Serial1.read() << 8) + Serial1.read();
       short tiltStepSpeed = (Serial1.read() << 8) + Serial1.read();
 
@@ -91,8 +96,8 @@ void SerialData(void) {
       }
 
       if (speedFactorT == 0.0) { 
-        stepper_tilt.stopAsync();
-        //stepper_tilt.overrideSpeed(0);
+        //stepper_tilt.stopAsync();
+        stepper_tilt.overrideSpeed(0);
       }
       else {
         digitalWrite(13, HIGH);  // LED ON
@@ -262,15 +267,26 @@ void SerialData(void) {
       {
         //if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {  // && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
-
-
           moveToIndex(SerialCommandValueInt);
         }
       }
       break;
     case INSTRUCTION_SETPOS:
       {
-        editKeyframe(SerialCommandValueInt);
+        //editKeyframe(SerialCommandValueInt);
+
+        stepper_pan.setMaxSpeed(10000);
+        stepper_tilt.setMaxSpeed(10000);
+        stepper_slider.setMaxSpeed(10000);
+
+        stepper_pan.setTargetAbs(5000);
+        stepper_tilt.setTargetAbs(5000);
+        stepper_slider.setTargetAbs(5000);
+
+        //multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
+        stepGroup.move();
+
+        //StepperGroup ({stepper_pan, stepper_tilt, stepper_slider}).move();
       }
       break;
     case INSTRUCTION_CLEAR_ARRAY:

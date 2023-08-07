@@ -43,7 +43,6 @@ import re
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
 serial_port = None
-serialFirstRun = False
 
 device_name = ""
 serialLoop = False
