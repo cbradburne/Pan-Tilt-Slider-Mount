@@ -33,6 +33,7 @@ elapsedMillis timeElapsed;
 
 
 void initPanTilt(void) {
+  Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
   
