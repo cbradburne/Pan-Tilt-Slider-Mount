@@ -300,8 +300,13 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SETPOS:
       {
+<<<<<<< HEAD
         editKeyframe(SerialCommandValueInt);
         /*
+=======
+        //editKeyframe(SerialCommandValueInt);
+        Serial.println("Starting move");
+>>>>>>> 39f3439b1e859f69796cb695a4cad9354bac6c11
         stepper_pan.setMaxSpeed(10000);
         stepper_tilt.setMaxSpeed(10000);
         stepper_slider.setMaxSpeed(10000);
@@ -313,6 +318,7 @@ void SerialData(void) {
         //multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
         StepperGroup stepGroup({ stepper_pan, stepper_tilt, stepper_slider });
         stepGroup.move();
+        Serial.println("Finished move");
 
         //StepperGroup ({stepper_pan, stepper_tilt, stepper_slider}).move();
         */

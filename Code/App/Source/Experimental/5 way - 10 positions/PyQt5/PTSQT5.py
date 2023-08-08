@@ -512,6 +512,10 @@ class Ui_editWindow(QMainWindow):
 
 
 class Ui_MoverWindow(QMainWindow):
+
+    def __init__(self):
+        QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
+
     def setupUi(self):
         self.setObjectName("MainWindow")
         self.resize(603, 651)
@@ -704,7 +708,7 @@ class PTSapp(QMainWindow):
             joyName = joyName.lower()
 
             if re.search('xbox', joyName):
-                #print("YEY")
+                #print(key.number)
                 if key.number == 3:
                     axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif key.number == 4:
@@ -4992,60 +4996,92 @@ class PTSapp(QMainWindow):
         if manualMove != "":
             if manualMove == "u10":
                 if whichCamSerial == 1:
-                    self.sendSerial('??T10')
+                    self.sendSerial('&??T10')
                 elif whichCamSerial == 2:
-                    self.sendSerial('!?T10')
+                    self.sendSerial('&!?T10')
                 elif whichCamSerial == 3:
-                    self.sendSerial('@?T10')
+                    self.sendSerial('&@?T10')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?T10')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?T10')
             elif manualMove == "u1":
                 if whichCamSerial == 1:
-                    self.sendSerial('??T0.5')
+                    self.sendSerial('&??T0.5')
                 elif whichCamSerial == 2:
-                    self.sendSerial('!?T0.5')
+                    self.sendSerial('&!?T0.5')
                 elif whichCamSerial == 3:
-                    self.sendSerial('@?T0.5')
+                    self.sendSerial('&@?T0.5')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?T0.5')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?T0.5')
             elif manualMove == "d1":
                 if whichCamSerial == 1:
-                    self.sendSerial('??-T0.5')
+                    self.sendSerial('&??T-0.5')
                 elif whichCamSerial == 2:
-                    self.sendSerial('!?-T0.5')
+                    self.sendSerial('&!?T-0.5')
                 elif whichCamSerial == 3:
-                    self.sendSerial('@?-T0.5')
+                    self.sendSerial('&@?T-0.5')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?T-0.5')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?T-0.5')
             elif manualMove == "d10":
                 if whichCamSerial == 1:
-                    self.sendSerial('??T-10')
+                    self.sendSerial('&??T-10')
                 elif whichCamSerial == 2:
-                    self.sendSerial('!?T-10')
+                    self.sendSerial('&!?T-10')
                 elif whichCamSerial == 3:
-                    self.sendSerial('@?T-10')
+                    self.sendSerial('&@?T-10')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?T-10')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?T-10')
             elif manualMove == "l10":
                 if whichCamSerial == 1:
-                    self.sendSerial('??P-10')
+                    self.sendSerial('&??P-10')
                 elif whichCamSerial == 2:
-                    self.sendSerial('!?P-10')
+                    self.sendSerial('&!?P-10')
                 elif whichCamSerial == 3:
-                    self.sendSerial('@?P-10')
+                    self.sendSerial('&@?P-10')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?P-10')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?P-10')
             elif manualMove == "l1":
                 if whichCamSerial == 1:
-                    self.sendSerial('??P-0.5')
+                    self.sendSerial('&??P-0.5')
                 elif whichCamSerial == 2:
-                    self.sendSerial('!?P-0.5')
+                    self.sendSerial('&!?P-0.5')
                 elif whichCamSerial == 3:
-                    self.sendSerial('@?P-0.5')
+                    self.sendSerial('&@?P-0.5')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?P-0.5')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?P-0.5')
             elif manualMove == "r1":
                 if whichCamSerial == 1:
-                    self.sendSerial('??P0.5')
+                    self.sendSerial('&??P0.5')
                 elif whichCamSerial == 2:
-                    self.sendSerial('!?P0.5')
+                    self.sendSerial('&!?P0.5')
                 elif whichCamSerial == 3:
-                    self.sendSerial('@?P0.5')
+                    self.sendSerial('&@?P0.5')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?P0.5')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?P0.5')
             elif manualMove == "r10":
                 if whichCamSerial == 1:
-                    self.sendSerial('??P10')
+                    self.sendSerial('&??P10')
                 elif whichCamSerial == 2:
-                    self.sendSerial('!?P10')
+                    self.sendSerial('&!?P10')
                 elif whichCamSerial == 3:
-                    self.sendSerial('@?P10')
+                    self.sendSerial('&@?P10')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?P10')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?P10')
                     
             manualMove = ""
 
