@@ -694,7 +694,7 @@ class PTSapp(QMainWindow):
         self.thread = None
 
         def handle_key_event(key):
-            #print(key, '-', key.keytype, '-', key.number, '-', key.value)
+            print(key, '-', key.keytype, '-', key.number, '-', key.value)
             #keytest = key[1]
             #print(key.number)
 
@@ -707,25 +707,28 @@ class PTSapp(QMainWindow):
             joyName = str(key.joystick)
             joyName = joyName.lower()
 
+            joyType = str(key)
+            #print(joyType[-6:])
+
             if re.search('xbox', joyName):
                 #print(key.number)
-                if key.number == 3:
+                if joyType[-6:] == "Axis 3":
                     axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
-                elif key.number == 4:
+                elif joyType[-6:] == "Axis 4":
                     axisY = int(self.scale(key.value, (-1, 1), (255,-255)))
-                elif key.number == 0:
+                elif joyType[-6:] == "Axis 0":
                     axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
-                elif key.number == 1:
+                elif joyType[-6:] == "Axis 1":
                     axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
             
             else:
-                if key.number == 3:
+                if joyType[-6:] == "Axis 3":
                     axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
-                elif key.number == 2:
+                elif joyType[-6:] == "Axis 2":
                     axisY = int(self.scale(key.value, (-1, 1), (-255,255)))
-                elif key.number == 0:
+                elif joyType[-6:] == "Axis 0":
                     axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
-                elif key.number == 1:
+                elif joyType[-6:] == "Axis 1":
                     axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
 
 
