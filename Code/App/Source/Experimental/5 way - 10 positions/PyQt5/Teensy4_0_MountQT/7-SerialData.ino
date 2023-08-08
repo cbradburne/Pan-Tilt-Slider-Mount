@@ -69,7 +69,7 @@ void SerialData(void) {
 
       short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
       if (!withSlider) {
-        short sliderStepSpeed = 0;
+        sliderStepSpeed = 0;
       }
       short panStepSpeed = (Serial1.read() << 8) + Serial1.read();
       short tiltStepSpeed = (Serial1.read() << 8) + Serial1.read();
@@ -87,58 +87,59 @@ void SerialData(void) {
       bool sliderRunning = false;
 
       if (speedFactorP == 0.0) {
-
+        stepper_pan.setAcceleration(500);
         stepper_pan.overrideSpeed(0);
         if (panRunning) {
-          stepper_pan.overrideSpeed(0);
-          //stepper_pan.stopAsync();
           panRunning = false;
+          stepper_pan.overrideSpeed(0);
         }
-        //stepper_pan.overrideSpeed(0);
+        //stepper_pan.stopAsync();
       } else {
-        digitalWrite(13, HIGH);  // LED ON
-        stepper_pan.setAcceleration(pan_accel * 100);
+        digitalWrite(13, HIGH);              // LED ON
+        stepper_pan.setAcceleration(10000);  //pan_accel *
         if (!panRunning) {
           panRunning = true;
-          stepper_pan.rotateAsync(pan_set_speed * 100);
+          stepper_pan.rotateAsync(pan_set_speed * 100);  //, 10000);
         }
         stepper_pan.overrideSpeed(speedFactorP);
+
+        //Serial.print("Speed - ");
+        //Serial.println(pan_set_speed * 100);
+
+        //Serial.print("Factor - ");
+        //Serial.println(speedFactorP);
       }
 
       if (speedFactorT == 0.0) {
-
+        stepper_tilt.setAcceleration(500);
         stepper_tilt.overrideSpeed(0);
         if (tiltRunning) {
           tiltRunning = false;
           stepper_tilt.overrideSpeed(0);
-          //stepper_tilt.stopAsync();
         }
-        //stepper_tilt.overrideSpeed(0);
+        //stepper_tilt.stopAsync();
       } else {
-        digitalWrite(13, HIGH);  // LED ON
-        stepper_tilt.setAcceleration(tilt_accel * 100);
+        digitalWrite(13, HIGH);                          // LED ON
+        stepper_tilt.setAcceleration(10000);             //tilt_accel *
         if (!tiltRunning) {
           tiltRunning = true;
-          stepper_tilt.rotateAsync(tilt_set_speed * 100);
+          stepper_tilt.rotateAsync(tilt_set_speed * 100);  //, 10000);
         }
         stepper_tilt.overrideSpeed(speedFactorT);
       }
 
       if (speedFactorS == 0.0) {
+        stepper_slider.setAcceleration(500);
         stepper_slider.overrideSpeed(0);
         if (sliderRunning) {
-          sliderRunning = false;
           stepper_slider.overrideSpeed(0);
-          //stepper_slider.stopAsync();
         }
-        //stepper_slider.overrideSpeed(0);
-        sliderRunning = false;
+        //stepper_slider.stopAsync();
       } else {
-        digitalWrite(13, HIGH);  // LED ON
-        stepper_slider.setAcceleration(slider_accel * 100);
+        digitalWrite(13, HIGH);                              // LED ON
+        stepper_slider.setAcceleration(10000);               //slider_accel *
         if (!sliderRunning) {
-          sliderRunning = true;
-          stepper_slider.rotateAsync(slider_set_speed * 100);
+          stepper_slider.rotateAsync(slider_set_speed * 100);  //, 10000);
         }
         stepper_slider.overrideSpeed(speedFactorS);
       }
