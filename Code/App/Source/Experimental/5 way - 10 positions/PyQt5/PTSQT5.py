@@ -694,7 +694,7 @@ class PTSapp(QMainWindow):
         self.thread = None
 
         def handle_key_event(key):
-            print(key, '-', key.keytype, '-', key.number, '-', key.value)
+            #print(key, '-', key.keytype, '-', key.number, '-', key.value)
             #keytest = key[1]
             #print(key.number)
 
