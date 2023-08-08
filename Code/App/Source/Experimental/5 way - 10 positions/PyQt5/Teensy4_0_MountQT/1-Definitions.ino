@@ -76,7 +76,7 @@ void initPanTilt(void) {
 
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
-  withSlider = digitalRead(PIN_SW3);
+  //withSlider = digitalRead(PIN_SW3);
 
   //if (upsideDown) {
   //  stepper_pan.setInverseRotation(true);
