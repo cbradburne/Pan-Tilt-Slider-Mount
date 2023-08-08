@@ -161,6 +161,8 @@ void moveToIndex(int index) {
   //multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
   //stepGroup.move();
 
+  //StepperGroup stepGroup({ stepper_pan, stepper_tilt, stepper_slider });
+  //stepGroup.move();
   StepperGroup ({stepper_pan, stepper_tilt, stepper_slider}).move();
 
   Serial1Flush(); 
