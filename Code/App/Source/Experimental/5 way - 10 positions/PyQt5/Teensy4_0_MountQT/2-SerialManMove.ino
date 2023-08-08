@@ -9,7 +9,7 @@ void panDegrees(float panAngle) {
   Serial1.println("#$");
 
   //stepper_pan.setTargetAbs(panDegreesToSteps(panAngle));
-  stepper_pan.moveAbs(panDegreesToSteps(panAngle), 5000);
+  stepper_pan.moveAbs(panDegreesToSteps(panAngle));
   //stepper_pan.move();
 
   sentMoved = false;
@@ -38,10 +38,8 @@ void panDegreesRel(float panAngle) {
   Serial1.println("-");
   Serial1.println("#$");
 
-  Serial.println("Pan Rel Move");
-
   //stepper_pan.setTargetRel(panDegreesToSteps(panAngle));
-  stepper_pan.moveRel(panDegreesToSteps(panAngle), 5000); //panDegreesToSteps(pan_set_speed)
+  stepper_pan.moveRel(panDegreesToSteps(panAngle));
   
   sentMoved = false;
 
@@ -70,7 +68,7 @@ void tiltDegrees(float tiltAngle) {
   Serial1.println("#$");
 
   //stepper_tilt.setTargetAbs(tiltDegreesToSteps(tiltAngle));
-  stepper_tilt.moveAbs(tiltDegreesToSteps(tiltAngle), 5000);
+  stepper_tilt.moveAbs(tiltDegreesToSteps(tiltAngle));
   
   sentMoved = false;
 
@@ -99,7 +97,7 @@ void tiltDegreesRel(float tiltAngle) {
   Serial1.println("#$");
 
   //stepper_tilt.setTargetRel(tiltDegreesToSteps(tiltAngle));
-  stepper_tilt.moveRel(tiltDegreesToSteps(tiltAngle), 5000);
+  stepper_tilt.moveRel(tiltDegreesToSteps(tiltAngle));
   
   sentMoved = false;
 

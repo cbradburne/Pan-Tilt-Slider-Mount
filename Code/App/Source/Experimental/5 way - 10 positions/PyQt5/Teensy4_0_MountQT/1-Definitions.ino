@@ -41,6 +41,7 @@ void initPanTilt(void) {
 
   StepperGroup stepGroup({stepper_pan, stepper_tilt, stepper_slider});
 
+
   pinMode(13, OUTPUT);     // LED
   digitalWrite(13, LOW);  // LED OFF
 
