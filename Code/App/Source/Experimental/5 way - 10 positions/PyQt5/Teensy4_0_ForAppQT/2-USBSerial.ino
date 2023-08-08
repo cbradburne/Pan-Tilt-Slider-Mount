@@ -805,7 +805,7 @@ void USBSerialData() {
             }
             break;
         }
-      } else if (instruction == '!') {
+      } else if (instruction == '-') {
         resetLEDs = true;
       } else if (instruction == '?') {
         while (Serial.available() > 0) {
