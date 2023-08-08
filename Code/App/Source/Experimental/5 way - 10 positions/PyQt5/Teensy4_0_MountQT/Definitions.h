@@ -107,6 +107,7 @@
 
 #define VERSION_NUMBER "Version: 8.2\n21 Mar 2022"
 
+bool withSlider = false;
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
 bool upsideDown = false;
