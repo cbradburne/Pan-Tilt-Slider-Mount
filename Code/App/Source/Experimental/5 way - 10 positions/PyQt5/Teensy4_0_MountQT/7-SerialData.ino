@@ -4,7 +4,7 @@
 void SerialData(void) {
   char instruction;
 
-  
+
   if (Serial.available() > 0) {
     instruction = Serial.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {
@@ -14,16 +14,16 @@ void SerialData(void) {
         delay(2);
         dlyPos = Serial.read();
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
-        while (Serial.available()) {                   //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial.read();                  //read in a char
+        while (Serial.available()) {                    //set elemetns of stringText to the Serial2 values sent
+          char digit = Serial.read();                   //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
         Serial2Flush();                            //Clear any excess data in the Serial2 buffer
         SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
       } else {
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
-        while (Serial.available()) {                   //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial.read();                  //read in a char
+        while (Serial.available()) {                    //set elemetns of stringText to the Serial2 values sent
+          char digit = Serial.read();                   //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
         Serial2Flush();                              //Clear any excess data in the Serial2 buffer
@@ -38,13 +38,12 @@ void SerialData(void) {
     } else {
       return;
     }
-  } 
-  
-  
-  
+  }
+
+
+
   else if (Serial1.available() > 0) {
     instruction = Serial1.read();
-    Serial.println(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
       while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
@@ -67,14 +66,11 @@ void SerialData(void) {
       atPos9 = false;
       atPos0 = false;
 
-      short sliderStepSpeed = 0;
-      if (withSlider) {
-        short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
-      }
-      else {
-        short sliderStepSpeed = 0;
-      }
 
+      short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
+      if (!withSlider) {
+        sliderStepSpeed = 0;
+      }
       short panStepSpeed = (Serial1.read() << 8) + Serial1.read();
       short tiltStepSpeed = (Serial1.read() << 8) + Serial1.read();
 
@@ -86,37 +82,65 @@ void SerialData(void) {
       float speedFactorP = map(panStepSpeed2, -255, 255, -panMaxFactor, panMaxFactor);
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -tiltMaxFactor, tiltMaxFactor);
 
+      bool panRunning = false;
+      bool tiltRunning = false;
+      bool sliderRunning = false;
 
-      if (speedFactorP == 0.0) { 
-        //stepper_pan.stopAsync(); 
+      if (speedFactorP == 0.0) {
+        stepper_pan.setAcceleration(500);
         stepper_pan.overrideSpeed(0);
-      }
-      else {
-        digitalWrite(13, HIGH);  // LED ON
-        stepper_pan.setAcceleration(pan_accel * 100);
-        stepper_pan.rotateAsync(pan_set_speed * 100);
+        if (panRunning) {
+          panRunning = false;
+          stepper_pan.overrideSpeed(0);
+        }
+        //stepper_pan.stopAsync();
+      } else {
+        digitalWrite(13, HIGH);              // LED ON
+        stepper_pan.setAcceleration(10000);  //pan_accel *
+        if (!panRunning) {
+          panRunning = true;
+          stepper_pan.rotateAsync(pan_set_speed * 100);  //, 10000);
+        }
         stepper_pan.overrideSpeed(speedFactorP);
+
+        //Serial.print("Speed - ");
+        //Serial.println(pan_set_speed * 100);
+
+        //Serial.print("Factor - ");
+        //Serial.println(speedFactorP);
       }
 
-      if (speedFactorT == 0.0) { 
-        //stepper_tilt.stopAsync();
+      if (speedFactorT == 0.0) {
+        stepper_tilt.setAcceleration(500);
         stepper_tilt.overrideSpeed(0);
-      }
-      else {
-        digitalWrite(13, HIGH);  // LED ON
-        stepper_tilt.setAcceleration(tilt_accel * 100);
-        stepper_tilt.rotateAsync(tilt_set_speed * 100);
+        if (tiltRunning) {
+          tiltRunning = false;
+          stepper_tilt.overrideSpeed(0);
+        }
+        //stepper_tilt.stopAsync();
+      } else {
+        digitalWrite(13, HIGH);                          // LED ON
+        stepper_tilt.setAcceleration(10000);             //tilt_accel *
+        if (!tiltRunning) {
+          tiltRunning = true;
+          stepper_tilt.rotateAsync(tilt_set_speed * 100);  //, 10000);
+        }
         stepper_tilt.overrideSpeed(speedFactorT);
       }
 
-      if (speedFactorS == 0.0) { 
-        //stepper_slider.stopAsync(); 
+      if (speedFactorS == 0.0) {
+        stepper_slider.setAcceleration(500);
         stepper_slider.overrideSpeed(0);
-      }
-      else {
-        digitalWrite(13, HIGH);  // LED ON
-        stepper_slider.setAcceleration(slider_accel * 100);
-        stepper_slider.rotateAsync(slider_set_speed * 100);
+        if (sliderRunning) {
+          stepper_slider.overrideSpeed(0);
+        }
+        //stepper_slider.stopAsync();
+      } else {
+        digitalWrite(13, HIGH);                              // LED ON
+        stepper_slider.setAcceleration(10000);               //slider_accel *
+        if (!sliderRunning) {
+          stepper_slider.rotateAsync(slider_set_speed * 100);  //, 10000);
+        }
         stepper_slider.overrideSpeed(speedFactorS);
       }
 
@@ -134,8 +158,6 @@ void SerialData(void) {
       delay(2);  //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
 
-      Serial.println(instruction);
-
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
         dlyPos = Serial1.read();
@@ -146,8 +168,6 @@ void SerialData(void) {
         }
         Serial1Flush();                            //Clear any excess data in the Serial1 buffer
         SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
-
-        Serial.println(SerialCommandValueInt);
       } else {
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
         while (Serial1.available()) {                   //set elemetns of stringText to the Serial1 values sent
@@ -156,9 +176,7 @@ void SerialData(void) {
         }
         Serial1Flush();                              //Clear any excess data in the Serial1 buffer
         SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
-        Serial.println(SerialCommandValueInt);
         SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
-        Serial.println(SerialCommandValueFloat);
         if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
           delay(100);                                //wait to make sure all data in the Serial1 message has arived
           Serial1Flush();                            //Clear any excess data in the Serial1 buffer
@@ -283,6 +301,8 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SETPOS:
       {
+        editKeyframe(SerialCommandValueInt);
+        /*
         //editKeyframe(SerialCommandValueInt);
         Serial.println("Starting move");
         stepper_pan.setMaxSpeed(10000);
@@ -294,12 +314,12 @@ void SerialData(void) {
         stepper_slider.setTargetAbs(5000);
 
         //multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
-
-        StepperGroup stepGroup({stepper_pan, stepper_tilt, stepper_slider});
+        StepperGroup stepGroup({ stepper_pan, stepper_tilt, stepper_slider });
         stepGroup.move();
         Serial.println("Finished move");
 
         //StepperGroup ({stepper_pan, stepper_tilt, stepper_slider}).move();
+        */
       }
       break;
     case INSTRUCTION_CLEAR_ARRAY:
@@ -504,8 +524,8 @@ void SerialData(void) {
 
         Serial1.print("#I");
         Serial1.println(zoom_speed);
-        Serial.print("#I");
-        Serial.println(zoom_speed);
+        Serial2.print("#I");
+        Serial2.println(zoom_speed);
 
         Serial1.println("Zoom IN.");
         Serial1.println("#$");
@@ -519,8 +539,8 @@ void SerialData(void) {
 
         Serial1.print("#i");
         Serial1.println(zoom_speed);
-        Serial.print("#i");
-        Serial.println(zoom_speed);
+        Serial2.print("#i");
+        Serial2.println(zoom_speed);
 
         Serial1.println("Zoom OUT.");
         Serial1.println("#$");
@@ -532,10 +552,10 @@ void SerialData(void) {
         zoomOUT = false;
 
         Serial1.println("#o");
-        Serial.println("#o");
+        Serial2.println("#o");
         delay(20);
         Serial1.println("#o");  // Just in case, it's important!
-        Serial.println("#o");
+        Serial2.println("#o");
 
         Serial1.println("STOP Zooming.\n");
         Serial1.println("#$");
@@ -544,7 +564,7 @@ void SerialData(void) {
     case INSTRUCTION_TOGGLE_RECORDING:
       {
         Serial1.println("#O");
-        Serial.println("#O");
+        Serial2.println("#O");
 
         Serial1.println("Toggle Record.\n");
         Serial1.println("#$");
@@ -553,13 +573,13 @@ void SerialData(void) {
     case INSTRUCTION_IS_RECORDING:
       {
         Serial1.println("#P");
-        Serial.println("#P");
+        Serial2.println("#P");
       }
       break;
     case INSTRUCTION_IS_NOT_RECORDING:
       {
         Serial1.println("#p");
-        Serial.println("#p");
+        Serial2.println("#p");
       }
       break;
     case INSTRUCTION_SET_ZERO_POS:

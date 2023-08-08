@@ -19,7 +19,7 @@ void debugReport(void) {
   Serial1.println(String("Tilt Joy Accel Factor   : ") + tiltAccelJoy);
   Serial1.println(String("Slider Joy Accel Factor : ") + sliderAccelJoy + String("\n"));
 
-  
+
   Serial.println("Debug Report:");
   Serial.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
@@ -36,6 +36,7 @@ void debugReport(void) {
   Serial.println(String("Pan Joy Accel Factor    : ") + panAccelJoy);
   Serial.println(String("Tilt Joy Accel Factor   : ") + tiltAccelJoy);
   Serial.println(String("Slider Joy Accel Factor : ") + sliderAccelJoy + String("\n"));
+
   printEEPROM();
 }
 
