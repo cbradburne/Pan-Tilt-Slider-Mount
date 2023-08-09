@@ -23,7 +23,7 @@
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QMainWindow
+from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget
 from serial.tools import list_ports
 from serial import Serial
 import pyjoystick
@@ -518,7 +518,7 @@ class Ui_MoverWindow(QMainWindow):
 
     def setupUi(self):
         self.setObjectName("MainWindow")
-        self.resize(603, 651)
+        self.resize(603, 801)
         self.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
@@ -580,6 +580,34 @@ class Ui_MoverWindow(QMainWindow):
         self.pushRIGHT10.setFont(font)
         self.pushRIGHT10.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
         self.pushRIGHT10.setObjectName("pushRIGHT10")
+        self.pushSlideLeft100 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideLeft100())
+        self.pushSlideLeft100.setGeometry(QtCore.QRect(0, 640, 121, 121))
+        font = QtGui.QFont()
+        font.setPointSize(48)
+        self.pushSlideLeft100.setFont(font)
+        self.pushSlideLeft100.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
+        self.pushSlideLeft100.setObjectName("pushSlideLeft100")
+        self.pushSlideLeft10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideLeft10())
+        self.pushSlideLeft10.setGeometry(QtCore.QRect(130, 640, 121, 121))
+        font = QtGui.QFont()
+        font.setPointSize(48)
+        self.pushSlideLeft10.setFont(font)
+        self.pushSlideLeft10.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
+        self.pushSlideLeft10.setObjectName("pushSlideLeft10")
+        self.pushSlideRight10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideRight10())
+        self.pushSlideRight10.setGeometry(QtCore.QRect(350, 640, 121, 121))
+        font = QtGui.QFont()
+        font.setPointSize(48)
+        self.pushSlideRight10.setFont(font)
+        self.pushSlideRight10.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
+        self.pushSlideRight10.setObjectName("pushSlideRight10")
+        self.pushSlideRight100 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideRight100())
+        self.pushSlideRight100.setGeometry(QtCore.QRect(480, 640, 121, 121))
+        font = QtGui.QFont()
+        font.setPointSize(48)
+        self.pushSlideRight100.setFont(font)
+        self.pushSlideRight100.setStyleSheet("border: 10px solid grey; background-color: #aabbcc; border-radius: 50px;")
+        self.pushSlideRight100.setObjectName("pushSlideRight100")
         self.pushClose = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.pushToClose())
         self.pushClose.setGeometry(QtCore.QRect(10, 0, 101, 101))
         font = QtGui.QFont()
@@ -601,6 +629,13 @@ class Ui_MoverWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.show()
+    
+        ag = QDesktopWidget().availableGeometry()
+        sg = QDesktopWidget().screenGeometry()
+        widget = self.geometry()
+        x = (ag.width() / 2) - (widget.width() / 2)
+        y = 2 * ag.height() - sg.height() - widget.height()
+        self.move(x, y)
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -613,6 +648,10 @@ class Ui_MoverWindow(QMainWindow):
         self.pushLEFT1.setText(_translate("MainWindow", "1"))
         self.pushRIGHT1.setText(_translate("MainWindow", "1"))
         self.pushRIGHT10.setText(_translate("MainWindow", "10"))
+        self.pushSlideLeft100.setText(_translate("MainWindow", "100"))
+        self.pushSlideLeft10.setText(_translate("MainWindow", "10"))
+        self.pushSlideRight10.setText(_translate("MainWindow", "10"))
+        self.pushSlideRight100.setText(_translate("MainWindow", "100"))
         self.pushClose.setText(_translate("MainWindow", "X"))
 
     def pushToClose(self):
@@ -649,6 +688,24 @@ class Ui_MoverWindow(QMainWindow):
     def right10(self):
         global manualMove
         manualMove = "r10"
+
+
+
+    def slideLeft100(self):
+        global manualMove
+        manualMove = "sl100"
+
+    def slideLeft10(self):
+        global manualMove
+        manualMove = "sl10"
+
+    def slideRight10(self):
+        global manualMove
+        manualMove = "sr10"
+
+    def slideRight100(self):
+        global manualMove
+        manualMove = "sr100"
 
 
 class PTSapp(QMainWindow):
@@ -5085,6 +5142,50 @@ class PTSapp(QMainWindow):
                     self.sendSerial('&&?P10')
                 elif whichCamSerial == 5:
                     self.sendSerial('&*?P10')
+            elif manualMove == "sl100":
+                if whichCamSerial == 1:
+                    self.sendSerial('&??X-100')
+                elif whichCamSerial == 2:
+                    self.sendSerial('&!?X-100')
+                elif whichCamSerial == 3:
+                    self.sendSerial('&@?X-100')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?X-100')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?X-100')
+            elif manualMove == "sl10":
+                if whichCamSerial == 1:
+                    self.sendSerial('&??X-10')
+                elif whichCamSerial == 2:
+                    self.sendSerial('&!?X-10')
+                elif whichCamSerial == 3:
+                    self.sendSerial('&@?X-10')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?X-10')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?X-10')
+            elif manualMove == "sr10":
+                if whichCamSerial == 1:
+                    self.sendSerial('&??X10')
+                elif whichCamSerial == 2:
+                    self.sendSerial('&!?X10')
+                elif whichCamSerial == 3:
+                    self.sendSerial('&@?X10')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?X10')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?X10')
+            elif manualMove == "sr100":
+                if whichCamSerial == 1:
+                    self.sendSerial('&??X100')
+                elif whichCamSerial == 2:
+                    self.sendSerial('&!?X100')
+                elif whichCamSerial == 3:
+                    self.sendSerial('&@?X100')
+                elif whichCamSerial == 4:
+                    self.sendSerial('&&?X100')
+                elif whichCamSerial == 5:
+                    self.sendSerial('&*?X100')
                     
             manualMove = ""
 
