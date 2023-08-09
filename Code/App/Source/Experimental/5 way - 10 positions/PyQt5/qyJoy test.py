@@ -5,6 +5,7 @@ from qt_thread_updater import ThreadUpdater
 # from pyjoystick.pygame import Key, Joystick, run_event_loop
 
 #python3 -m pip install qt_thread_updater
+#python -m pip install qt_thread_updater
 
 from qtpy import QtWidgets, QtGui, QtCore
 

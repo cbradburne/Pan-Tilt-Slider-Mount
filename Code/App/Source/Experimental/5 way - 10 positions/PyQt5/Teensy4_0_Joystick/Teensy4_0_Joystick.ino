@@ -62,7 +62,6 @@ short WShort = 0;
 short TShort = 0;
 
 void setup() {
-  //Serial.begin(9600);
   pinMode(joyPinX, INPUT);
   pinMode(joyPinY, INPUT);
   pinMode(joyPinZ, INPUT);
@@ -122,20 +121,21 @@ void setup() {
 void loop() {
   doJoystick();
   delay(50);
-  Serial.begin(38400);
+  //Serial.begin(38400);
 }
 
 void doJoystick() {
 
-
   joyX = analogRead(joyPinX);
   if (joyX < XdeadRangeLow) {
     XShort = map(joyX, X_min, XdeadRangeLow, 0, 512);
+    //Serial.println(XShort);
     if (XShort < 0) {
       XShort = 0;
     }
   } else if (joyX > XdeadRangeHigh) {
     XShort = map(joyX, XdeadRangeHigh, X_max, 512, 1023);
+    //Serial.println(XShort);
     if (XShort > 1023) {
       XShort = 1023;
     }
@@ -146,11 +146,13 @@ void doJoystick() {
   joyY = analogRead(joyPinY);
   if (joyY < YdeadRangeLow) {
     YShort = map(joyY, Y_min, YdeadRangeLow, 0, 512);
+    //Serial.println(YShort);
     if (YShort < 0) {
       YShort = 0;
     }
   } else if (joyY > YdeadRangeHigh) {
     YShort = map(joyY, YdeadRangeHigh, Y_max, 512, 1023);
+    //Serial.println(YShort);
     if (YShort > 1023) {
       YShort = 1023;
     }
@@ -161,11 +163,13 @@ void doJoystick() {
   joyZ = analogRead(joyPinZ);
   if (joyZ < ZdeadRangeLow) {
     ZShort = map(joyZ, Z_min, ZdeadRangeLow, 0, 512);
+    //Serial.println(ZShort);
     if (ZShort < 0) {
       ZShort = 0;
     }
   } else if (joyZ > ZdeadRangeHigh) {
     ZShort = map(joyZ, ZdeadRangeHigh, Z_max, 512, 1023);
+    //Serial.println(ZShort);
     if (ZShort > 1023) {
       ZShort = 1023;
     }
@@ -176,11 +180,13 @@ void doJoystick() {
   joyW = analogRead(joyPinW);
   if (joyW < WdeadRangeLow) {
     WShort = map(joyW, W_min, WdeadRangeLow, 0, 512);
+    //Serial.println(WShort);
     if (WShort < 0) {
       WShort = 0;
     }
   } else if (joyW > WdeadRangeHigh) {
     WShort = map(joyW, WdeadRangeHigh, W_max, 512, 1023);
+    //Serial.println(WShort);
     if (WShort > 1023) {
       WShort = 1023;
     }
@@ -213,12 +219,8 @@ void doJoystick() {
   //  }
   //  OLDjoyB = joyB;
   //}
-  //Serial.println(TShort);
+  ////Serial.println(TShort);
 
-  Joystick.X(XShort);
-  Joystick.Y(YShort);
-  Joystick.Z(ZShort);
-  Joystick.Zrotate(WShort);
 
 
   joyB1 = digitalRead(joyPinB1);
@@ -285,7 +287,11 @@ void doJoystick() {
   //Joystick.button(9, 0);
   //Joystick.button(10, 0);
 
+  Joystick.X(XShort);
+  Joystick.Y(YShort);
+  Joystick.Z(ZShort);
+  Joystick.Zrotate(WShort);
+
   Joystick.hat(-1);
   //Joystick.sliderRight(TShort);
-
 }
