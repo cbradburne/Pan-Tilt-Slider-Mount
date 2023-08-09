@@ -132,7 +132,6 @@ void SerialData(void) {
         stepper_slider.setAcceleration(500);
         stepper_slider.overrideSpeed(0);
         if (sliderRunning) {
-          sliderRunning = false;
           stepper_slider.overrideSpeed(0);
         }
         //stepper_slider.stopAsync();
@@ -140,7 +139,6 @@ void SerialData(void) {
         digitalWrite(13, HIGH);                              // LED ON
         stepper_slider.setAcceleration(10000);               //slider_accel *
         if (!sliderRunning) {
-          sliderRunning = true;
           stepper_slider.rotateAsync(slider_set_speed * 100);  //, 10000);
         }
         stepper_slider.overrideSpeed(speedFactorS);
