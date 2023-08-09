@@ -1,45 +1,7 @@
-/*
-    Project     Arduino XInput Library
-    @author     David Madison
-    @link       github.com/dmadison/ArduinoXInput
-    @license    MIT - Copyright (c) 2019 David Madison
+//https://github.com/dmadison/ArduinoXInput
+//https://github.com/dmadison/ArduinoXInput_Teensy
 
-   Permission is hereby granted, free of charge, to any person obtaining a copy
-   of this software and associated documentation files (the "Software"), to deal
-   in the Software without restriction, including without limitation the rights
-   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-   copies of the Software, and to permit persons to whom the Software is
-   furnished to do so, subject to the following conditions:
-
-   The above copyright notice and this permission notice shall be included in
-   all copies or substantial portions of the Software.
-
-   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-   AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-   THE SOFTWARE.
-
-    Example:      GamepadPins
-    Description:  Uses all of the available pin inputs to build a 'complete'
-                  Xbox gamepad, with both analog joysticks, both triggers,
-                  and all of the main buttons.
-
- *                * Joysticks should be your typical 10k dual potentiometers.
-                    To prevent random values caused by floating inputs,
-                    joysticks are disabled by default.
- *                * Triggers can be either analog (pots) or digital (buttons).
-                    Set the 'TriggerButtons' variable to change between the two.
- *                * Buttons use the internal pull-ups and should be connected
-                    directly to ground.
-
-                  These pins are designed around the Leonardo's layout. You
-                  may need to change the pin numbers if you're using a
-                  different board type
-
-*/
+// I used the older Arduino IDE v1.58 along with the older Teensyduino
 
 #include <XInput.h>
 
