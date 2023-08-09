@@ -37,6 +37,7 @@ void initPanTilt(void) {
 
   pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1
   pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2
+  pinMode(PIN_SW3, INPUT_PULLUP);  // pin 10 to gnd if no slider used
 
   setEEPROMVariables();
 
@@ -66,6 +67,7 @@ void initPanTilt(void) {
 
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
+  withSlider = digitalRead(PIN_SW3);  // pin 10 to gnd if no slider used
 
   if (upsideDown) {
     stepper_pan.setInverseRotation(true);

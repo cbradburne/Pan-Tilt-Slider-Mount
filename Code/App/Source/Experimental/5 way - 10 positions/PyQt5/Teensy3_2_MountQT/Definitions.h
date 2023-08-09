@@ -14,6 +14,7 @@
 
 #define PIN_SW1 11
 #define PIN_SW2 12
+#define PIN_SW3 10
 
 #define SLIDER_PULLEY_TEETH 36.0
 //#define PAN_GEAR_RATIO 8.4705882352941176470588235294118  //  144/17 teeth      - Original Mount
@@ -104,8 +105,9 @@
 #define EEPROM_ADDRESS_TILT_JOY_ACCEL 80
 #define EEPROM_ADDRESS_SLIDER_JOY_ACCEL 88
 
-#define VERSION_NUMBER "Version: 8.2\n21 Mar 2022"
+#define VERSION_NUMBER "8 Aug 2023"
 
+bool withSlider = false;
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
 bool upsideDown = false;

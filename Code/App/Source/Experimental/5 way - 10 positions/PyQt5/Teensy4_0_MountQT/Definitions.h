@@ -105,7 +105,7 @@
 #define EEPROM_ADDRESS_TILT_JOY_ACCEL 80
 #define EEPROM_ADDRESS_SLIDER_JOY_ACCEL 88
 
-#define VERSION_NUMBER "Version: 8.2\n21 Mar 2022"
+#define VERSION_NUMBER "8 Aug 2023"
 
 bool withSlider = false;
 bool DEBUG1 = false;

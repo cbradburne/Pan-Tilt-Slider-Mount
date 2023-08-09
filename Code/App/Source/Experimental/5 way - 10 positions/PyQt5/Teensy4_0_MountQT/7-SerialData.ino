@@ -3,8 +3,6 @@
 
 void SerialData(void) {
   char instruction;
-
-
   if (Serial.available() > 0) {
     instruction = Serial.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {

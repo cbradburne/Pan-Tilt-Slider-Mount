@@ -28,6 +28,9 @@ void SerialData(void) {
       atPos0 = false;
 
       short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
+      if (!withSlider) {
+        sliderStepSpeed = 0;
+      }
       short panStepSpeed = (Serial1.read() << 8) + Serial1.read();
       short tiltStepSpeed = (Serial1.read() << 8) + Serial1.read();
 
