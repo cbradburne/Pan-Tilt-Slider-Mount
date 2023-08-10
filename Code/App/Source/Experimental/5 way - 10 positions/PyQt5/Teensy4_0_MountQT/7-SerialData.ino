@@ -90,7 +90,7 @@ void SerialData(void) {
           panRunning = false;
           stepper_pan.stopAsync();
         }
-        stepper_pan.setAcceleration(500);
+        stepper_pan.setAcceleration(pan_accel);
       } else {
         digitalWrite(13, HIGH);              // LED ON
         stepper_pan.setAcceleration(10000);  //pan_accel *
@@ -107,7 +107,7 @@ void SerialData(void) {
           tiltRunning = false;
           stepper_tilt.stopAsync();
         }
-        stepper_tilt.setAcceleration(500);
+        stepper_tilt.setAcceleration(tilt_accel);
       } else {
         digitalWrite(13, HIGH);               // LED ON
         stepper_tilt.setAcceleration(10000);  //tilt_accel *
@@ -123,7 +123,7 @@ void SerialData(void) {
         if (sliderRunning) {
           stepper_slider.stopAsync();
         }
-        stepper_slider.setAcceleration(500);
+        stepper_slider.setAcceleration(slider_accel);
       } else {
         digitalWrite(13, HIGH);                 // LED ON
         stepper_slider.setAcceleration(10000);  //slider_accel *
