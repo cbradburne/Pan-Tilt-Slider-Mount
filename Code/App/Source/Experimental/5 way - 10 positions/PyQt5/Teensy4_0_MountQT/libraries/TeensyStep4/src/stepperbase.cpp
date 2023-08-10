@@ -93,7 +93,7 @@ namespace TS4
 
     void StepperBase::startStopping(int32_t v_end, uint32_t a)
     {
-        if (!isMoving) return;
+        // if (!isMoving) return;
         mode = mode_t::stopping;
         startRotate(v_end, a);
         mode = mode_t::stopping;

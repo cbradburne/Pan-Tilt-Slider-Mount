@@ -36,13 +36,14 @@ void initPanTilt(void) {
   Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
-  
+
   TS4::begin();
 
-  StepperGroup stepGroup({stepper_pan, stepper_tilt, stepper_slider});
+  //Serial.println("Boot up");
 
+  StepperGroup stepGroup({ stepper_pan, stepper_tilt, stepper_slider });
 
-  pinMode(13, OUTPUT);     // LED
+  pinMode(13, OUTPUT);    // LED
   digitalWrite(13, LOW);  // LED OFF
 
   pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1
@@ -77,7 +78,7 @@ void initPanTilt(void) {
 
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
-  //withSlider = digitalRead(PIN_SW3);
+  withSlider = digitalRead(PIN_SW3);
 
   //if (upsideDown) {
   //  stepper_pan.setInverseRotation(true);
@@ -123,16 +124,6 @@ void Serial2Flush(void) {
 
 void mainLoop(void) {
   SerialData();
-
-  if (isManualMove) {
-    unsigned long currentMillisMoveCheck = millis();
-    if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval) {
-      previousMillisMoveCheck = currentMillisMoveCheck;
-      stepper_pan.stopAsync();
-      stepper_tilt.stopAsync();
-      stepper_slider.stopAsync();
-    }
-  }
 }
 
 

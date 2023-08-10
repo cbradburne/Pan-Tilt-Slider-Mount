@@ -134,12 +134,12 @@ namespace TS4
             delayMicroseconds(5);
 
             v_abs = sqrtf(std::abs(v_sqr));
-             SerialUSB.printf("vabs % d\n",v_abs);
+             //SerialUSB.printf("vabs % d\n",v_abs);
             stpTimer->updateFrequency(v_abs);
             doStep();
         } else
         {
-            SerialUSB.println("rotISR reached");
+            //SerialUSB.println("rotISR reached");
             dir = signum(v_sqr);
             digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
             delayMicroseconds(5);
@@ -147,12 +147,12 @@ namespace TS4
             if (v_tgt != 0)
             {
                 v_abs = sqrtf(std::abs(v_sqr));
-                SerialUSB.printf("vabs % d\n",v_abs);
+                //SerialUSB.printf("vabs % d\n",v_abs);
                 stpTimer->updateFrequency(v_abs);
                 doStep();
             } else
             {
-                SerialUSB.printf("rotISR %s stopped\n", name.c_str());
+                //SerialUSB.printf("rotISR %s stopped\n", name.c_str());
                 stpTimer->stop();
                 TimerFactory::returnTimer(stpTimer);
                 stpTimer = nullptr;
