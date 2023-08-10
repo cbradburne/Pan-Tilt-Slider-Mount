@@ -486,7 +486,7 @@ class Ui_editWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.show()
-        self.move(780, 200)
+        self.move(780, 150)
 
         self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
         self.lineEdit.setFocus()
@@ -630,11 +630,12 @@ class Ui_MoverWindow(QMainWindow):
 
         self.show()
     
-        ag = QDesktopWidget().availableGeometry()
-        sg = QDesktopWidget().screenGeometry()
-        widget = self.geometry()
+        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
+        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        widget = self.geometry()                        # 
         x = (ag.width() / 2) - (widget.width() / 2)
-        y = 2 * ag.height() - sg.height() - widget.height()
+        y = 2 * ag.height() - sg.height() - widget.height() - 100
+        print(widget.height())
         self.move(x, y)
 
     def retranslateUi(self):
@@ -1501,6 +1502,16 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
+        self.pushButtonExit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.pushToClose())
+        self.pushButtonExit.setGeometry(QtCore.QRect(1615, 990, 120, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonExit.setFont(font)
+        self.pushButtonExit.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
+        self.pushButtonExit.setFlat(False)
+        self.pushButtonExit.setObjectName("pushButtonExit")
+        self.pushButtonExit.hide()
         self.labelInfo = QtWidgets.QLabel(self.centralwidget)
         self.labelInfo.setGeometry(QtCore.QRect(1360, 50, 371, 41))
         font = QtGui.QFont()
@@ -1614,15 +1625,19 @@ class PTSapp(QMainWindow):
         self.pushButtonCam5.setText(_translate("MainWindow", "Cam5"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
+        self.pushButtonExit.setText(_translate("MainWindow", "Exit"))
         #self.menuFile.setTitle(_translate("MainWindow", "File"))
         #self.menuControl.setTitle(_translate("MainWindow", "Control"))
         #self.actionMover.setText(_translate("MainWindow", "Mover"))
 
         self.initFlashTimer()
 
-        self.show()
+        #self.show()
         #self.showMaximized()
-        #self.showFullScreen()
+        self.showFullScreen()
+
+    def pushToClose(self):
+        self.close()
 
     def initFlashTimer(self):
         # self.timer.singleShot(2000,self.update_function)  # for one time call only
@@ -1708,7 +1723,7 @@ class PTSapp(QMainWindow):
         
         else:
             editToggle = True
-            self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #aa4444; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #CC5050; border-radius: 10px;")
         
 
     def doJoyMoves(self, dt):
@@ -5247,9 +5262,11 @@ class PTSapp(QMainWindow):
 
     def setPos(self, state):
         global SetPosToggle
+        global editToggle
         
         if (SetPosToggle == True and state == 3) or state == 0:
             SetPosToggle = False
+            editToggle = False
             self.pushButtonSet.setStyleSheet("border: 4px solid grey; background-color: #bbbbbb; border-radius: 10px;")
             self.pushButtonCam1.setText("Cam1")
             self.pushButtonCam2.setText("Cam2")
@@ -5258,16 +5275,19 @@ class PTSapp(QMainWindow):
             self.pushButtonCam5.setText("Cam5")
             self.pushButtonEdit.setText("Edit")
             self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonExit.hide()
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
-            self.pushButtonSet.setStyleSheet("border: 4px solid #ff0000; background-color: #7D0000; border-radius: 10px;")
+            editToggle = True
+            self.pushButtonSet.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
             self.pushButtonCam1.setText("Clear")
             self.pushButtonCam2.setText("Clear")
             self.pushButtonCam3.setText("Clear")
             self.pushButtonCam4.setText("Clear")
             self.pushButtonCam5.setText("Clear")
             self.pushButtonEdit.setText("Move")
-            self.pushButtonEdit.setStyleSheet("border: 4px solid #ff0000; background-color: #7D0000; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
+            self.pushButtonExit.show()
 
 
     def whichCamSerial1(self):
