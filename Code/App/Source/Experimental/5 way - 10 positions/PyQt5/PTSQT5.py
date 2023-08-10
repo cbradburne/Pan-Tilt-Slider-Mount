@@ -4515,13 +4515,13 @@ class PTSapp(QMainWindow):
                 self.dial1p.setValue(1)
                 self.line1p.setGeometry(1470, 115, 20, 36)            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
             elif cam1PTSpeed == 3:
-                self.dial1p.setValue(4)
+                self.dial1p.setValue(2)
                 self.line1p.setGeometry(1470, 80, 20, 71)
             elif cam1PTSpeed == 5:
-                self.dial1p.setValue(7)
+                self.dial1p.setValue(3)
                 self.line1p.setGeometry(1470, 45, 20, 106)
             elif cam1PTSpeed == 7:
-                self.dial1p.setValue(10)
+                self.dial1p.setValue(4)
                 self.line1p.setGeometry(1470, 10, 20, 141)
 
         if oldcam2PTSpeed != cam2PTSpeed:
@@ -4530,13 +4530,13 @@ class PTSapp(QMainWindow):
                 self.dial2p.setValue(1)
                 self.line2p.setGeometry(1470, 115, 20, 36)
             elif cam2PTSpeed == 3:
-                self.dial2p.setValue(4)
+                self.dial2p.setValue(2)
                 self.line2p.setGeometry(1470, 80, 20, 71)
             elif cam2PTSpeed == 5:
-                self.dial2p.setValue(7)
+                self.dial2p.setValue(3)
                 self.line2p.setGeometry(1470, 45, 20, 106)
             elif cam2PTSpeed == 7:
-                self.dial2p.setValue(10)
+                self.dial2p.setValue(4)
                 self.line2p.setGeometry(1470, 10, 20, 141)
 
         if oldcam3PTSpeed != cam3PTSpeed:
@@ -4545,13 +4545,13 @@ class PTSapp(QMainWindow):
                 self.dial3p.setValue(1)
                 self.line3p.setGeometry(1470, 115, 20, 36)
             elif cam3PTSpeed == 3:
-                self.dial3p.setValue(4)
+                self.dial3p.setValue(2)
                 self.line3p.setGeometry(1470, 80, 20, 71)
             elif cam3PTSpeed == 5:
-                self.dial3p.setValue(7)
+                self.dial3p.setValue(3)
                 self.line3p.setGeometry(1470, 45, 20, 106)
             elif cam3PTSpeed == 7:
-                self.dial3p.setValue(10)
+                self.dial3p.setValue(4)
                 self.line3p.setGeometry(1470, 10, 20, 141)
 
         if oldcam4PTSpeed != cam4PTSpeed:
@@ -4560,13 +4560,13 @@ class PTSapp(QMainWindow):
                 self.dial4p.setValue(1)
                 self.line4p.setGeometry(1470, 115, 20, 36)
             elif cam4PTSpeed == 3:
-                self.dial4p.setValue(4)
+                self.dial4p.setValue(2)
                 self.line4p.setGeometry(1470, 80, 20, 71)
             elif cam4PTSpeed == 5:
-                self.dial4p.setValue(7)
+                self.dial4p.setValue(3)
                 self.line4p.setGeometry(1470, 45, 20, 106)
             elif cam4PTSpeed == 7:
-                self.dial4p.setValue(10)
+                self.dial4p.setValue(4)
                 self.line4p.setGeometry(1470, 10, 20, 141)
 
         if oldcam5PTSpeed != cam5PTSpeed:
@@ -4575,13 +4575,13 @@ class PTSapp(QMainWindow):
                 self.dial5p.setValue(1)
                 self.line5p.setGeometry(1470, 115, 20, 36)
             elif cam5PTSpeed == 3:
-                self.dial5p.setValue(4)
+                self.dial5p.setValue(2)
                 self.line5p.setGeometry(1470, 80, 20, 71)
             elif cam5PTSpeed == 5:
-                self.dial5p.setValue(7)
+                self.dial5p.setValue(3)
                 self.line5p.setGeometry(1470, 45, 20, 106)
             elif cam5PTSpeed == 7:
-                self.dial5p.setValue(10)
+                self.dial5p.setValue(4)
                 self.line5p.setGeometry(1470, 10, 20, 141)
 
         if oldcam1Speed != cam1SliderSpeed:
@@ -4590,13 +4590,13 @@ class PTSapp(QMainWindow):
                 self.dial1s.setValue(1)
                 self.line1s.setGeometry(1820, 115, 20, 36)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
             elif cam1SliderSpeed == 3:
-                self.dial1s.setValue(3)
+                self.dial1s.setValue(2)
                 self.line1s.setGeometry(1820, 80, 20, 71)
             elif cam1SliderSpeed == 5:
-                self.dial1s.setValue(5)
+                self.dial1s.setValue(3)
                 self.line1s.setGeometry(1820, 45, 20, 106)
             elif cam1SliderSpeed >= 7:
-                self.dial1s.setValue(6)
+                self.dial1s.setValue(4)
                 self.line1s.setGeometry(1820, 10, 20, 141)
 
         if oldcam2Speed != cam2SliderSpeed:
@@ -4605,13 +4605,13 @@ class PTSapp(QMainWindow):
                 self.dial2s.setValue(1)
                 self.line2s.setGeometry(1820, 115, 20, 36)
             elif cam2SliderSpeed == 3:
-                self.dial2s.setValue(3)
+                self.dial2s.setValue(2)
                 self.line2s.setGeometry(1820, 80, 20, 71)
             elif cam2SliderSpeed == 5:
-                self.dial2s.setValue(5)
+                self.dial2s.setValue(3)
                 self.line2s.setGeometry(1820, 45, 20, 106)
             elif cam2SliderSpeed >= 7:
-                self.dial2s.setValue(6)
+                self.dial2s.setValue(4)
                 self.line2s.setGeometry(1820, 10, 20, 141)
 
         if oldcam3Speed != cam3SliderSpeed:
@@ -4620,13 +4620,13 @@ class PTSapp(QMainWindow):
                 self.dial3s.setValue(1)
                 self.line3s.setGeometry(1820, 115, 20, 36)
             elif cam3SliderSpeed == 3:
-                self.dial3s.setValue(3)
+                self.dial3s.setValue(2)
                 self.line3s.setGeometry(1820, 80, 20, 71)
             elif cam3SliderSpeed == 5:
-                self.dial3s.setValue(5)
+                self.dial3s.setValue(3)
                 self.line3s.setGeometry(1820, 45, 20, 106)
             elif cam3SliderSpeed >= 7:
-                self.dial3s.setValue(6)
+                self.dial3s.setValue(4)
                 self.line3s.setGeometry(1820, 10, 20, 141)
 
         if oldcam4Speed != cam4SliderSpeed:
@@ -4635,13 +4635,13 @@ class PTSapp(QMainWindow):
                 self.dial4s.setValue(1)
                 self.line4s.setGeometry(1820, 115, 20, 36)
             elif cam4SliderSpeed == 3:
-                self.dial4s.setValue(3)
+                self.dial4s.setValue(2)
                 self.line4s.setGeometry(1820, 80, 20, 71)
             elif cam4SliderSpeed == 5:
-                self.dial4s.setValue(5)
+                self.dial4s.setValue(3)
                 self.line4s.setGeometry(1820, 45, 20, 106)
             elif cam4SliderSpeed >= 7:
-                self.dial4s.setValue(6)
+                self.dial4s.setValue(4)
                 self.line4s.setGeometry(1820, 10, 20, 141)
 
         if oldcam5Speed != cam5SliderSpeed:
@@ -4650,13 +4650,13 @@ class PTSapp(QMainWindow):
                 self.dial5s.setValue(1)
                 self.line5s.setGeometry(1820, 115, 20, 36)
             elif cam5SliderSpeed == 3:
-                self.dial5s.setValue(3)
+                self.dial5s.setValue(2)
                 self.line5s.setGeometry(1820, 80, 20, 71)
             elif cam5SliderSpeed == 5:
-                self.dial5s.setValue(5)
+                self.dial5s.setValue(3)
                 self.line5s.setGeometry(1820, 45, 20, 106)
             elif cam5SliderSpeed >= 7:
-                self.dial5s.setValue(6)
+                self.dial5s.setValue(4)
                 self.line5s.setGeometry(1820, 10, 20, 141)
 
         resetButtons = False
@@ -5031,7 +5031,31 @@ class PTSapp(QMainWindow):
         oldcam4PTSpeed = 9
         oldcam5PTSpeed = 9
 
-        self.sendSerial("&!")
+        self.dial1p.setValue(1)
+        self.line1p.setGeometry(1470, 115, 20, 36)
+        self.dial2p.setValue(1)
+        self.line2p.setGeometry(1470, 115, 20, 36)
+        self.dial3p.setValue(1)
+        self.line3p.setGeometry(1470, 115, 20, 36)
+        self.dial4p.setValue(1)
+        self.line4p.setGeometry(1470, 115, 20, 36)
+        self.dial5p.setValue(1)
+        self.line5p.setGeometry(1470, 115, 20, 36)
+        
+        self.dial1s.setValue(1)
+        self.line1s.setGeometry(1820, 115, 20, 36)
+        self.dial2s.setValue(1)
+        self.line2s.setGeometry(1820, 115, 20, 36)
+        self.dial3s.setValue(1)
+        self.line3s.setGeometry(1820, 115, 20, 36)
+        self.dial4s.setValue(1)
+        self.line4s.setGeometry(1820, 115, 20, 36)
+        self.dial5s.setValue(1)
+        self.line5s.setGeometry(1820, 115, 20, 36)
+
+        self.setPos(3)
+        self.doButtonColours()
+        self.sendSerial("&-")
 
     def setMessage(self):
         global message
@@ -5273,7 +5297,7 @@ class PTSapp(QMainWindow):
             self.pushButtonLED.hide()
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
-            editToggle = True
+            editToggle = False
             self.pushButtonSet.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
             self.pushButtonCam1.setText("Clear")
             self.pushButtonCam2.setText("Clear")
