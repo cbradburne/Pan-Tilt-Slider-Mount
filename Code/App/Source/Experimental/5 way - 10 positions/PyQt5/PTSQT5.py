@@ -6278,7 +6278,7 @@ class ThreadClass(QtCore.QThread):
             message = ("Couldn't connect")
 
         sendData = ""
-        sendData = '&!'
+        sendData = '&-'
         while serialLoop:
             if not self.serial_port.is_open:
                 serialLoop = False
