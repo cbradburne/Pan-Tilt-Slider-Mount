@@ -1545,7 +1545,9 @@ class PTSapp(QMainWindow):
         usb_device_list = list_ports.comports()
         self.device_name_list = [port.device for port in usb_device_list]
         self.device_name_list.insert(0, '-')
-        print(self.device_name_list)
+        #print(self.device_name_list)
+
+        self.buttonConnect(self.device_name_list)
 
         self.comboBox.addItems(self.device_name_list)
 
@@ -1954,71 +1956,62 @@ class PTSapp(QMainWindow):
         return hex((val + (1 << nbits)) % (1 << nbits))
 
 
-    def buttonConnect(self):
+    def buttonConnect(self, device_list):
         global btn_scan_show
         global whichCamSerial
         global isConnected
         global message
+        global device_name
 
         if not isConnected:
-            #btn_scan_show = True
-            
-            self.device_name_list = []
-            usb_device_list = list_ports.comports()
-            self.device_name_list = [port.device for port in usb_device_list]
-
-            print(self.device_name_list)
+            device_name_list = device_list
+            #print(device_name_list)
 
             usb_port = 'usbmodem'
             usb_port2 = 'usb/00'
-            usb_port3 = '/dev/ttyACM1'
+            usb_port3 = 'COM6'
             usb_port4 = 'ttyUSB0'
             
-            if (usb_port in '\t'.join(self.device_name_list)):
-                #try:
-                serialPortSelect = [string for string in self.device_name_list if usb_port in string]
-                self.autoSerial(serialPortSelect)
-                print(usb_port)
-                #except:
-                #    pass
-            elif (usb_port2 in '\t'.join(self.device_name_list)):
-                #try:
-                serialPortSelect = [string for string in self.device_name_list if usb_port2 in string]
-                self.autoSerial(serialPortSelect)
-                print(usb_port2)
-                #except:
-                #    print("Port Fail")
-                    #pass
-            elif (usb_port3 in '\t'.join(self.device_name_list)):
-                #try:
-                serialPortSelect = [string for string in self.device_name_list if usb_port3 in string]
-                self.autoSerial(serialPortSelect)
-                print(usb_port3)
-                #except:
-                #    pass
-            elif (usb_port4 in '\t'.join(self.device_name_list)):
-                #try:
-                serialPortSelect = [string for string in self.device_name_list if usb_port4 in string]
-                self.autoSerial(serialPortSelect)
-                print(usb_port4)
-                #except:
-                #    pass
+            if (usb_port in '\t'.join(device_name_list)):
+                serialPortSelect = [string for string in device_name_list if usb_port in string]
+                #print(usb_port)
+            elif (usb_port2 in '\t'.join(device_name_list)):
+                serialPortSelect = [string for string in device_name_list if usb_port2 in string]
+                #print(usb_port2)
+            elif (usb_port3 in '\t'.join(device_name_list)):
+                serialPortSelect = [string for string in device_name_list if usb_port3 in string]
+                #print(usb_port3)
+            elif (usb_port4 in '\t'.join(device_name_list)):
+                serialPortSelect = [string for string in device_name_list if usb_port4 in string]
+                #print(usb_port4)
             else:
                 message = ("No USB Serial Found")
                 print("No USB Serial Found")
 
-        else:
-            self.resetButtonColours()
+            if serialPortSelect != "":
 
-    def autoSerial(self):#, serialPortSelect):
+                message = ("Auto Connecting")
+                device_name = serialPortSelect
+                
+                self.autoPortTimer = QTimer()
+                self.autoPortTimer.singleShot(2000,self.autoSerial)
+
+        #else:
+        #    self.resetButtonColours()
+
+    def autoSerial(self):
         global btn_scan_show
         global device_name
         global serialLoop
 
-        #device_name = serialPortSelect[0]
-
-        device_name = self.comboBox.currentText()
-    
+        if device_name == "":
+            device_name = self.comboBox.currentText()
+        else:
+            device_name = device_name[0]
+            self.comboBox.setCurrentText(device_name)
+        
+        #print(device_name)
+        #print("Connecting")
         self.thread = ThreadClass(parent=None, index=1)
         self.thread.start()
         self.thread.any_signal.connect(self.readSerial)
@@ -4581,10 +4574,10 @@ class PTSapp(QMainWindow):
 
         if oldcam1Speed != cam1SliderSpeed:
             oldcam1Speed = cam1SliderSpeed
-            if cam1SliderSpeed == 0:
+            if cam1SliderSpeed == 1:
                 #self.dial1s.setValue(1)
                 self.line1s.setGeometry(1820, 115, 20, 36)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
-            elif cam1SliderSpeed == 2:
+            elif cam1SliderSpeed == 3:
                 #self.dial1s.setValue(3)
                 self.line1s.setGeometry(1820, 80, 20, 71)
             elif cam1SliderSpeed == 5:
@@ -4596,10 +4589,10 @@ class PTSapp(QMainWindow):
 
         if oldcam2Speed != cam2SliderSpeed:
             oldcam2Speed = cam2SliderSpeed
-            if cam2SliderSpeed == 0:
+            if cam2SliderSpeed == 1:
                 #self.dial2s.setValue(1)
                 self.line2s.setGeometry(1820, 115, 20, 36)
-            elif cam2SliderSpeed == 2:
+            elif cam2SliderSpeed == 3:
                 #self.dial2s.setValue(3)
                 self.line2s.setGeometry(1820, 80, 20, 71)
             elif cam2SliderSpeed == 5:
@@ -4611,10 +4604,10 @@ class PTSapp(QMainWindow):
 
         if oldcam3Speed != cam3SliderSpeed:
             oldcam3Speed = cam3SliderSpeed
-            if cam3SliderSpeed == 0:
+            if cam3SliderSpeed == 1:
                 #self.dial3s.setValue(1)
                 self.line3s.setGeometry(1820, 115, 20, 36)
-            elif cam3SliderSpeed == 2:
+            elif cam3SliderSpeed == 3:
                 #self.dial3s.setValue(3)
                 self.line3s.setGeometry(1820, 80, 20, 71)
             elif cam3SliderSpeed == 5:
@@ -4626,10 +4619,10 @@ class PTSapp(QMainWindow):
 
         if oldcam4Speed != cam4SliderSpeed:
             oldcam4Speed = cam4SliderSpeed
-            if cam4SliderSpeed == 0:
+            if cam4SliderSpeed == 1:
                 #self.dial4s.setValue(1)
                 self.line4s.setGeometry(1820, 115, 20, 36)
-            elif cam4SliderSpeed == 2:
+            elif cam4SliderSpeed == 3:
                 #self.dial4s.setValue(3)
                 self.line4s.setGeometry(1820, 80, 20, 71)
             elif cam4SliderSpeed == 5:
@@ -4641,10 +4634,10 @@ class PTSapp(QMainWindow):
 
         if oldcam5Speed != cam5SliderSpeed:
             oldcam5Speed = cam5SliderSpeed
-            if cam5SliderSpeed == 0:
+            if cam5SliderSpeed == 1:
                 #self.dial5s.setValue(1)
                 self.line5s.setGeometry(1820, 115, 20, 36)
-            elif cam5SliderSpeed == 2:
+            elif cam5SliderSpeed == 3:
                 #self.dial5s.setValue(3)
                 self.line5s.setGeometry(1820, 80, 20, 71)
             elif cam5SliderSpeed == 5:
