@@ -1502,8 +1502,18 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
+        self.pushButtonLED = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.resetButtonColours())
+        self.pushButtonLED.setGeometry(QtCore.QRect(1550, 990, 120, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonLED.setFont(font)
+        self.pushButtonLED.setStyleSheet("border: 4px solid #FFFC67; background-color: #F7BA00; border-radius: 10px;")
+        self.pushButtonLED.setFlat(False)
+        self.pushButtonLED.setObjectName("pushButtonLED")
+        self.pushButtonLED.hide()
         self.pushButtonExit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.pushToClose())
-        self.pushButtonExit.setGeometry(QtCore.QRect(1615, 990, 120, 51))
+        self.pushButtonExit.setGeometry(QtCore.QRect(1700, 990, 120, 51))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -1742,13 +1752,13 @@ class PTSapp(QMainWindow):
         global moveCheckInterval
         global whichCamSerial
 
-        if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
-            currentMillisMoveCheck = time.time()
-            if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
-                previousMillisMoveCheck = currentMillisMoveCheck
+        #if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
+        #    currentMillisMoveCheck = time.time()
+        #    if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
+        #        previousMillisMoveCheck = currentMillisMoveCheck
                 #arr = [4, axisZh, axisXh, axisYh]                                          # for debugging
-                self.sendJoystick(arr)
-        elif ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
+        #        self.sendJoystick(arr)
+        if ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
             previousTime = time.time()
             oldAxisX = axisX
             oldAxisY = axisY
@@ -1764,21 +1774,11 @@ class PTSapp(QMainWindow):
         if (axisW != oldAxisW):                                     # ZOOM
             oldAxisW = axisW
             zoomSerial = "&"
-            if whichCamSerial == 1: 
-                zoomSerial = zoomSerial + "1"
-                #self.sendSerial(zoomSerial + 'q')
-            elif whichCamSerial == 2: 
-                zoomSerial = zoomSerial + "2"
-                #self.sendSerial(zoomSerial + 'q')
-            elif whichCamSerial == 3: 
-                zoomSerial = zoomSerial + "3"
-            elif whichCamSerial == 4: 
-                #self.sendSerial(zoomSerial + 'q')
-                zoomSerial = zoomSerial + "4"
-                #self.sendSerial(zoomSerial + 'q')
-            elif whichCamSerial == 5: 
-                zoomSerial = zoomSerial + "5"
-                #self.sendSerial(zoomSerial + 'q')
+            if whichCamSerial == 1: zoomSerial = zoomSerial + "1"
+            elif whichCamSerial == 2: zoomSerial = zoomSerial + "2"
+            elif whichCamSerial == 3: zoomSerial = zoomSerial + "3"
+            elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
+            elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
             if axisW == -8: self.sendSerial(zoomSerial + 'a8')
             elif axisW == -7: self.sendSerial(zoomSerial + 'a7')
@@ -1991,22 +1991,16 @@ class PTSapp(QMainWindow):
             
             if (usb_port in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port in string]
-                #print(usb_port)
             elif (usb_port2 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port2 in string]
-                #print(usb_port2)
             elif (usb_port3 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port3 in string]
-                #print(usb_port3)
             elif (usb_port4 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port4 in string]
-                #print(usb_port4)
             else:
                 message = ("No USB Serial Found")
-                print("No USB Serial Found")
 
             if serialPortSelect != "":
-
                 message = ("Auto Connecting")
                 device_name = serialPortSelect
                 
@@ -5037,7 +5031,6 @@ class PTSapp(QMainWindow):
         oldcam5PTSpeed = 9
 
         self.sendSerial("&!")
-        #self.doButtonColours()
 
     def setMessage(self):
         global message
@@ -5053,9 +5046,9 @@ class PTSapp(QMainWindow):
             self.comboBox.setStyleSheet("color: white; border: 4px solid grey; background-color: #229922; border-radius: 10px;")
             isConnected = True
 
-        if isConnected:
+        #if isConnected:
             #print("joy")
-            self.doJoyMoves(1)
+            #self.doJoyMoves(1)
 
         if message != "":
             self.labelInfo.setText(message)
@@ -5276,6 +5269,7 @@ class PTSapp(QMainWindow):
             self.pushButtonEdit.setText("Edit")
             self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
             self.pushButtonExit.hide()
+            self.pushButtonLED.hide()
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
             editToggle = True
@@ -5288,6 +5282,7 @@ class PTSapp(QMainWindow):
             self.pushButtonEdit.setText("Move")
             self.pushButtonEdit.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
             self.pushButtonExit.show()
+            self.pushButtonLED.show()
 
 
     def whichCamSerial1(self):
@@ -6275,7 +6270,6 @@ class ThreadClass(QtCore.QThread):
         self.is_running = True
 
     def run(self):
-        #print("Starting thread", self.index)
         global msg
         global serialLoop
         global sendData
@@ -6296,7 +6290,6 @@ class ThreadClass(QtCore.QThread):
             serialLoop = True
             message = (f"Connected to {device_name}")
         except:
-            #print("Couldn't connect")
             message = ("Couldn't connect")
 
         sendData = ""
@@ -6305,18 +6298,13 @@ class ThreadClass(QtCore.QThread):
             if not self.serial_port.is_open:
                 serialLoop = False
             else:
-                #msg = "~111"
-                #self.any_signal.emit(msg)
-                #msg=''
-
                 while (self.serial_port.in_waiting > 0):
-                    received_msg = self.serial_port.readline()                  #read_until(b'\n')
+                    received_msg = self.serial_port.readline()
                     msg = bytes(received_msg).decode('utf8', "ignore")
                     self.any_signal.emit(msg)
                     msg=''
 
                 if sendData != "":
-                    #print(sendData)
                     if type(sendData) is str:
                         data = bytes((sendData + '\n'), 'utf8')
                         try:
@@ -6347,10 +6335,9 @@ class ThreadClass(QtCore.QThread):
                         try:
                             self.serial_port.write(joyData)
                             previousMillisMoveCheck = time.time()
+                            print("Re-sending Joystick for keep-alive")    # debugging
                         except:
                             print("Didn't RE-send joystick :(")
-
-                        #self.on_stop()
                             
     def stop(self):
         self.is_running = False
