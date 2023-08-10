@@ -486,7 +486,7 @@ class Ui_editWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.show()
-        self.move(780, 200)
+        self.move(780, 150)
 
         self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
         self.lineEdit.setFocus()
@@ -630,11 +630,12 @@ class Ui_MoverWindow(QMainWindow):
 
         self.show()
     
-        ag = QDesktopWidget().availableGeometry()
-        sg = QDesktopWidget().screenGeometry()
-        widget = self.geometry()
+        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
+        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        widget = self.geometry()                        # 
         x = (ag.width() / 2) - (widget.width() / 2)
-        y = 2 * ag.height() - sg.height() - widget.height()
+        y = 2 * ag.height() - sg.height() - widget.height() - 100
+        print(widget.height())
         self.move(x, y)
 
     def retranslateUi(self):
@@ -882,7 +883,7 @@ class PTSapp(QMainWindow):
         self.pushButton10.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
         self.pushButton10.setFlat(False)
         self.pushButton10.setObjectName("pushButton10")
-        self.dial1p = QtWidgets.QDial(self.groupBox, valueChanged= lambda: self.setDials(1, 1, self.dial1p.value()))
+        self.dial1p = QtWidgets.QDial(self.groupBox, sliderPressed= lambda: self.setDials(1, 1, self.dial1p.value()))
         self.dial1p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial1p.setStyleSheet("background: black;")
         self.dial1p.setMinimum(1)
@@ -893,7 +894,7 @@ class PTSapp(QMainWindow):
         self.dial1p.setNotchTarget(11.7)
         self.dial1p.setNotchesVisible(True)
         self.dial1p.setObjectName("dial1p")
-        self.dial1s = QtWidgets.QDial(self.groupBox, valueChanged= lambda: self.setDials(1, 2, self.dial1s.value()))
+        self.dial1s = QtWidgets.QDial(self.groupBox, sliderPressed= lambda: self.setDials(1, 2, self.dial1s.value()))
         self.dial1s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial1s.setStyleSheet("background: black;")
         self.dial1s.setMinimum(1)
@@ -1012,7 +1013,7 @@ class PTSapp(QMainWindow):
         self.pushButton20.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
         self.pushButton20.setFlat(False)
         self.pushButton20.setObjectName("pushButton20")
-        self.dial2p = QtWidgets.QDial(self.groupBox_2, valueChanged= lambda: self.setDials(2, 1, self.dial2p.value()))
+        self.dial2p = QtWidgets.QDial(self.groupBox_2, sliderPressed= lambda: self.setDials(2, 1, self.dial2p.value()))
         self.dial2p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial2p.setStyleSheet("background: black;")
         self.dial2p.setMinimum(1)
@@ -1024,7 +1025,7 @@ class PTSapp(QMainWindow):
         self.dial2p.setNotchTarget(11.7)
         self.dial2p.setNotchesVisible(True)
         self.dial2p.setObjectName("dial2p")
-        self.dial2s = QtWidgets.QDial(self.groupBox_2, valueChanged= lambda: self.setDials(2, 2, self.dial2s.value()))
+        self.dial2s = QtWidgets.QDial(self.groupBox_2, sliderPressed= lambda: self.setDials(2, 2, self.dial2s.value()))
         self.dial2s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial2s.setStyleSheet("background: black;")
         self.dial2s.setMinimum(1)
@@ -1143,7 +1144,7 @@ class PTSapp(QMainWindow):
         self.pushButton30.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
         self.pushButton30.setFlat(False)
         self.pushButton30.setObjectName("pushButton30")
-        self.dial3p = QtWidgets.QDial(self.groupBox_3, valueChanged= lambda: self.setDials(3, 1, self.dial3p.value()))
+        self.dial3p = QtWidgets.QDial(self.groupBox_3, sliderPressed= lambda: self.setDials(3, 1, self.dial3p.value()))
         self.dial3p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial3p.setStyleSheet("background: black;")
         self.dial3p.setMinimum(1)
@@ -1154,7 +1155,7 @@ class PTSapp(QMainWindow):
         self.dial3p.setNotchTarget(11.7)
         self.dial3p.setNotchesVisible(True)
         self.dial3p.setObjectName("dial3p")
-        self.dial3s = QtWidgets.QDial(self.groupBox_3, valueChanged= lambda: self.setDials(3, 2, self.dial3s.value()))
+        self.dial3s = QtWidgets.QDial(self.groupBox_3, sliderPressed= lambda: self.setDials(3, 2, self.dial3s.value()))
         self.dial3s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial3s.setStyleSheet("background: black;")
         self.dial3s.setMinimum(1)
@@ -1273,7 +1274,7 @@ class PTSapp(QMainWindow):
         self.pushButton40.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
         self.pushButton40.setFlat(False)
         self.pushButton40.setObjectName("pushButton40")
-        self.dial4p = QtWidgets.QDial(self.groupBox_4, valueChanged= lambda: self.setDials(4, 1, self.dial4p.value()))
+        self.dial4p = QtWidgets.QDial(self.groupBox_4, sliderPressed= lambda: self.setDials(4, 1, self.dial4p.value()))
         self.dial4p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial4p.setStyleSheet("background: black;")
         self.dial4p.setMinimum(1)
@@ -1284,7 +1285,7 @@ class PTSapp(QMainWindow):
         self.dial4p.setNotchTarget(11.7)
         self.dial4p.setNotchesVisible(True)
         self.dial4p.setObjectName("dial4p")
-        self.dial4s = QtWidgets.QDial(self.groupBox_4, valueChanged= lambda: self.setDials(4, 2, self.dial4s.value()))
+        self.dial4s = QtWidgets.QDial(self.groupBox_4, sliderPressed= lambda: self.setDials(4, 2, self.dial4s.value()))
         self.dial4s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial4s.setStyleSheet("background: black;")
         self.dial4s.setMinimum(1)
@@ -1404,7 +1405,7 @@ class PTSapp(QMainWindow):
         self.pushButton50.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
         self.pushButton50.setFlat(False)
         self.pushButton50.setObjectName("pushButton50")
-        self.dial5p = QtWidgets.QDial(self.groupBox_5, valueChanged= lambda: self.setDials(5, 1, self.dial5p.value()))
+        self.dial5p = QtWidgets.QDial(self.groupBox_5, sliderPressed= lambda: self.setDials(5, 1, self.dial5p.value()))
         self.dial5p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
         self.dial5p.setStyleSheet("background: black;")
         self.dial5p.setMinimum(1)
@@ -1415,7 +1416,7 @@ class PTSapp(QMainWindow):
         self.dial5p.setNotchTarget(11.7)
         self.dial5p.setNotchesVisible(True)
         self.dial5p.setObjectName("dial5p")
-        self.dial5s = QtWidgets.QDial(self.groupBox_5, valueChanged= lambda: self.setDials(5, 2, self.dial5s.value()))
+        self.dial5s = QtWidgets.QDial(self.groupBox_5, sliderPressed= lambda: self.setDials(5, 2, self.dial5s.value()))
         self.dial5s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
         self.dial5s.setStyleSheet("background: black;")
         self.dial5s.setMinimum(1)
@@ -1501,6 +1502,26 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
+        self.pushButtonLED = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.resetButtonColours())
+        self.pushButtonLED.setGeometry(QtCore.QRect(1500, 990, 120, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonLED.setFont(font)
+        self.pushButtonLED.setStyleSheet("border: 4px solid #FFFC67; background-color: #F7BA00; border-radius: 10px;")
+        self.pushButtonLED.setFlat(False)
+        self.pushButtonLED.setObjectName("pushButtonLED")
+        self.pushButtonLED.hide()
+        self.pushButtonExit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.pushToClose())
+        self.pushButtonExit.setGeometry(QtCore.QRect(1740, 990, 120, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonExit.setFont(font)
+        self.pushButtonExit.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
+        self.pushButtonExit.setFlat(False)
+        self.pushButtonExit.setObjectName("pushButtonExit")
+        self.pushButtonExit.hide()
         self.labelInfo = QtWidgets.QLabel(self.centralwidget)
         self.labelInfo.setGeometry(QtCore.QRect(1360, 50, 371, 41))
         font = QtGui.QFont()
@@ -1614,15 +1635,20 @@ class PTSapp(QMainWindow):
         self.pushButtonCam5.setText(_translate("MainWindow", "Cam5"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
+        self.pushButtonLED.setText(_translate("MainWindow", "Reset"))
+        self.pushButtonExit.setText(_translate("MainWindow", "Exit"))
         #self.menuFile.setTitle(_translate("MainWindow", "File"))
         #self.menuControl.setTitle(_translate("MainWindow", "Control"))
         #self.actionMover.setText(_translate("MainWindow", "Mover"))
 
         self.initFlashTimer()
 
-        self.show()
+        #self.show()
         #self.showMaximized()
-        #self.showFullScreen()
+        self.showFullScreen()
+
+    def pushToClose(self):
+        self.close()
 
     def initFlashTimer(self):
         # self.timer.singleShot(2000,self.update_function)  # for one time call only
@@ -1708,7 +1734,7 @@ class PTSapp(QMainWindow):
         
         else:
             editToggle = True
-            self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #aa4444; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #CC5050; border-radius: 10px;")
         
 
     def doJoyMoves(self, dt):
@@ -1727,13 +1753,13 @@ class PTSapp(QMainWindow):
         global moveCheckInterval
         global whichCamSerial
 
-        if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
-            currentMillisMoveCheck = time.time()
-            if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
-                previousMillisMoveCheck = currentMillisMoveCheck
+        #if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
+        #    currentMillisMoveCheck = time.time()
+        #    if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
+        #        previousMillisMoveCheck = currentMillisMoveCheck
                 #arr = [4, axisZh, axisXh, axisYh]                                          # for debugging
-                self.sendJoystick(arr)
-        elif ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
+        #        self.sendJoystick(arr)
+        if ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
             previousTime = time.time()
             oldAxisX = axisX
             oldAxisY = axisY
@@ -1749,21 +1775,11 @@ class PTSapp(QMainWindow):
         if (axisW != oldAxisW):                                     # ZOOM
             oldAxisW = axisW
             zoomSerial = "&"
-            if whichCamSerial == 1: 
-                zoomSerial = zoomSerial + "1"
-                #self.sendSerial(zoomSerial + 'q')
-            elif whichCamSerial == 2: 
-                zoomSerial = zoomSerial + "2"
-                #self.sendSerial(zoomSerial + 'q')
-            elif whichCamSerial == 3: 
-                zoomSerial = zoomSerial + "3"
-            elif whichCamSerial == 4: 
-                #self.sendSerial(zoomSerial + 'q')
-                zoomSerial = zoomSerial + "4"
-                #self.sendSerial(zoomSerial + 'q')
-            elif whichCamSerial == 5: 
-                zoomSerial = zoomSerial + "5"
-                #self.sendSerial(zoomSerial + 'q')
+            if whichCamSerial == 1: zoomSerial = zoomSerial + "1"
+            elif whichCamSerial == 2: zoomSerial = zoomSerial + "2"
+            elif whichCamSerial == 3: zoomSerial = zoomSerial + "3"
+            elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
+            elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
             if axisW == -8: self.sendSerial(zoomSerial + 'a8')
             elif axisW == -7: self.sendSerial(zoomSerial + 'a7')
@@ -1976,22 +1992,16 @@ class PTSapp(QMainWindow):
             
             if (usb_port in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port in string]
-                #print(usb_port)
             elif (usb_port2 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port2 in string]
-                #print(usb_port2)
             elif (usb_port3 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port3 in string]
-                #print(usb_port3)
             elif (usb_port4 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port4 in string]
-                #print(usb_port4)
             else:
                 message = ("No USB Serial Found")
-                print("No USB Serial Found")
 
             if serialPortSelect != "":
-
                 message = ("Auto Connecting")
                 device_name = serialPortSelect
                 
@@ -4502,151 +4512,151 @@ class PTSapp(QMainWindow):
         if oldcam1PTSpeed != cam1PTSpeed:
             oldcam1PTSpeed = cam1PTSpeed
             if cam1PTSpeed == 1:
-                #self.dial1p.setValue(1)
+                self.dial1p.setValue(1)
                 self.line1p.setGeometry(1470, 115, 20, 36)            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
             elif cam1PTSpeed == 3:
-                #self.dial1p.setValue(4)
+                self.dial1p.setValue(2)
                 self.line1p.setGeometry(1470, 80, 20, 71)
             elif cam1PTSpeed == 5:
-                #self.dial1p.setValue(7)
+                self.dial1p.setValue(3)
                 self.line1p.setGeometry(1470, 45, 20, 106)
             elif cam1PTSpeed == 7:
-                #self.dial1p.setValue(10)
+                self.dial1p.setValue(4)
                 self.line1p.setGeometry(1470, 10, 20, 141)
 
         if oldcam2PTSpeed != cam2PTSpeed:
             oldcam2PTSpeed = cam2PTSpeed
             if cam2PTSpeed == 1:
-                #self.dial2p.setValue(1)
+                self.dial2p.setValue(1)
                 self.line2p.setGeometry(1470, 115, 20, 36)
             elif cam2PTSpeed == 3:
-                #self.dial2p.setValue(4)
+                self.dial2p.setValue(2)
                 self.line2p.setGeometry(1470, 80, 20, 71)
             elif cam2PTSpeed == 5:
-                #self.dial2p.setValue(7)
+                self.dial2p.setValue(3)
                 self.line2p.setGeometry(1470, 45, 20, 106)
             elif cam2PTSpeed == 7:
-                #self.dial2p.setValue(10)
+                self.dial2p.setValue(4)
                 self.line2p.setGeometry(1470, 10, 20, 141)
 
         if oldcam3PTSpeed != cam3PTSpeed:
             oldcam3PTSpeed = cam3PTSpeed
             if cam3PTSpeed == 1:
-                #self.dial3p.setValue(1)
+                self.dial3p.setValue(1)
                 self.line3p.setGeometry(1470, 115, 20, 36)
             elif cam3PTSpeed == 3:
-                #self.dial3p.setValue(4)
+                self.dial3p.setValue(2)
                 self.line3p.setGeometry(1470, 80, 20, 71)
             elif cam3PTSpeed == 5:
-                #self.dial3p.setValue(7)
+                self.dial3p.setValue(3)
                 self.line3p.setGeometry(1470, 45, 20, 106)
             elif cam3PTSpeed == 7:
-                #self.dial3p.setValue(10)
+                self.dial3p.setValue(4)
                 self.line3p.setGeometry(1470, 10, 20, 141)
 
         if oldcam4PTSpeed != cam4PTSpeed:
             oldcam4PTSpeed = cam4PTSpeed
             if cam4PTSpeed == 1:
-                #self.dial4p.setValue(1)
+                self.dial4p.setValue(1)
                 self.line4p.setGeometry(1470, 115, 20, 36)
             elif cam4PTSpeed == 3:
-                #self.dial4p.setValue(4)
+                self.dial4p.setValue(2)
                 self.line4p.setGeometry(1470, 80, 20, 71)
             elif cam4PTSpeed == 5:
-                #self.dial4p.setValue(7)
+                self.dial4p.setValue(3)
                 self.line4p.setGeometry(1470, 45, 20, 106)
             elif cam4PTSpeed == 7:
-                #self.dial4p.setValue(10)
+                self.dial4p.setValue(4)
                 self.line4p.setGeometry(1470, 10, 20, 141)
 
         if oldcam5PTSpeed != cam5PTSpeed:
             oldcam5PTSpeed = cam5PTSpeed
             if cam5PTSpeed == 1:
-                #self.dial5p.setValue(1)
+                self.dial5p.setValue(1)
                 self.line5p.setGeometry(1470, 115, 20, 36)
             elif cam5PTSpeed == 3:
-                #self.dial5p.setValue(4)
+                self.dial5p.setValue(2)
                 self.line5p.setGeometry(1470, 80, 20, 71)
             elif cam5PTSpeed == 5:
-                #self.dial5p.setValue(7)
+                self.dial5p.setValue(3)
                 self.line5p.setGeometry(1470, 45, 20, 106)
             elif cam5PTSpeed == 7:
-                #self.dial5p.setValue(10)
+                self.dial5p.setValue(4)
                 self.line5p.setGeometry(1470, 10, 20, 141)
 
         if oldcam1Speed != cam1SliderSpeed:
             oldcam1Speed = cam1SliderSpeed
             if cam1SliderSpeed == 1:
-                #self.dial1s.setValue(1)
+                self.dial1s.setValue(1)
                 self.line1s.setGeometry(1820, 115, 20, 36)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
             elif cam1SliderSpeed == 3:
-                #self.dial1s.setValue(3)
+                self.dial1s.setValue(2)
                 self.line1s.setGeometry(1820, 80, 20, 71)
             elif cam1SliderSpeed == 5:
-                #self.dial1s.setValue(5)
+                self.dial1s.setValue(3)
                 self.line1s.setGeometry(1820, 45, 20, 106)
             elif cam1SliderSpeed >= 7:
-                #self.dial1s.setValue(6)
+                self.dial1s.setValue(4)
                 self.line1s.setGeometry(1820, 10, 20, 141)
 
         if oldcam2Speed != cam2SliderSpeed:
             oldcam2Speed = cam2SliderSpeed
             if cam2SliderSpeed == 1:
-                #self.dial2s.setValue(1)
+                self.dial2s.setValue(1)
                 self.line2s.setGeometry(1820, 115, 20, 36)
             elif cam2SliderSpeed == 3:
-                #self.dial2s.setValue(3)
+                self.dial2s.setValue(2)
                 self.line2s.setGeometry(1820, 80, 20, 71)
             elif cam2SliderSpeed == 5:
-                #self.dial2s.setValue(5)
+                self.dial2s.setValue(3)
                 self.line2s.setGeometry(1820, 45, 20, 106)
             elif cam2SliderSpeed >= 7:
-                #self.dial2s.setValue(6)
+                self.dial2s.setValue(4)
                 self.line2s.setGeometry(1820, 10, 20, 141)
 
         if oldcam3Speed != cam3SliderSpeed:
             oldcam3Speed = cam3SliderSpeed
             if cam3SliderSpeed == 1:
-                #self.dial3s.setValue(1)
+                self.dial3s.setValue(1)
                 self.line3s.setGeometry(1820, 115, 20, 36)
             elif cam3SliderSpeed == 3:
-                #self.dial3s.setValue(3)
+                self.dial3s.setValue(2)
                 self.line3s.setGeometry(1820, 80, 20, 71)
             elif cam3SliderSpeed == 5:
-                #self.dial3s.setValue(5)
+                self.dial3s.setValue(3)
                 self.line3s.setGeometry(1820, 45, 20, 106)
             elif cam3SliderSpeed >= 7:
-                #self.dial3s.setValue(6)
+                self.dial3s.setValue(4)
                 self.line3s.setGeometry(1820, 10, 20, 141)
 
         if oldcam4Speed != cam4SliderSpeed:
             oldcam4Speed = cam4SliderSpeed
             if cam4SliderSpeed == 1:
-                #self.dial4s.setValue(1)
+                self.dial4s.setValue(1)
                 self.line4s.setGeometry(1820, 115, 20, 36)
             elif cam4SliderSpeed == 3:
-                #self.dial4s.setValue(3)
+                self.dial4s.setValue(2)
                 self.line4s.setGeometry(1820, 80, 20, 71)
             elif cam4SliderSpeed == 5:
-                #self.dial4s.setValue(5)
+                self.dial4s.setValue(3)
                 self.line4s.setGeometry(1820, 45, 20, 106)
             elif cam4SliderSpeed >= 7:
-                #self.dial4s.setValue(6)
+                self.dial4s.setValue(4)
                 self.line4s.setGeometry(1820, 10, 20, 141)
 
         if oldcam5Speed != cam5SliderSpeed:
             oldcam5Speed = cam5SliderSpeed
             if cam5SliderSpeed == 1:
-                #self.dial5s.setValue(1)
+                self.dial5s.setValue(1)
                 self.line5s.setGeometry(1820, 115, 20, 36)
             elif cam5SliderSpeed == 3:
-                #self.dial5s.setValue(3)
+                self.dial5s.setValue(2)
                 self.line5s.setGeometry(1820, 80, 20, 71)
             elif cam5SliderSpeed == 5:
-                #self.dial5s.setValue(5)
+                self.dial5s.setValue(3)
                 self.line5s.setGeometry(1820, 45, 20, 106)
             elif cam5SliderSpeed >= 7:
-                #self.dial5s.setValue(6)
+                self.dial5s.setValue(4)
                 self.line5s.setGeometry(1820, 10, 20, 141)
 
         resetButtons = False
@@ -5021,8 +5031,31 @@ class PTSapp(QMainWindow):
         oldcam4PTSpeed = 9
         oldcam5PTSpeed = 9
 
-        self.sendSerial("&!")
-        #self.doButtonColours()
+        self.dial1p.setValue(1)
+        self.line1p.setGeometry(1470, 115, 20, 36)
+        self.dial2p.setValue(1)
+        self.line2p.setGeometry(1470, 115, 20, 36)
+        self.dial3p.setValue(1)
+        self.line3p.setGeometry(1470, 115, 20, 36)
+        self.dial4p.setValue(1)
+        self.line4p.setGeometry(1470, 115, 20, 36)
+        self.dial5p.setValue(1)
+        self.line5p.setGeometry(1470, 115, 20, 36)
+        
+        self.dial1s.setValue(1)
+        self.line1s.setGeometry(1820, 115, 20, 36)
+        self.dial2s.setValue(1)
+        self.line2s.setGeometry(1820, 115, 20, 36)
+        self.dial3s.setValue(1)
+        self.line3s.setGeometry(1820, 115, 20, 36)
+        self.dial4s.setValue(1)
+        self.line4s.setGeometry(1820, 115, 20, 36)
+        self.dial5s.setValue(1)
+        self.line5s.setGeometry(1820, 115, 20, 36)
+
+        self.setPos(3)
+        self.doButtonColours()
+        self.sendSerial("&-")
 
     def setMessage(self):
         global message
@@ -5038,9 +5071,9 @@ class PTSapp(QMainWindow):
             self.comboBox.setStyleSheet("color: white; border: 4px solid grey; background-color: #229922; border-radius: 10px;")
             isConnected = True
 
-        if isConnected:
+        #if isConnected:
             #print("joy")
-            self.doJoyMoves(1)
+            #self.doJoyMoves(1)
 
         if message != "":
             self.labelInfo.setText(message)
@@ -5247,9 +5280,11 @@ class PTSapp(QMainWindow):
 
     def setPos(self, state):
         global SetPosToggle
+        global editToggle
         
         if (SetPosToggle == True and state == 3) or state == 0:
             SetPosToggle = False
+            editToggle = False
             self.pushButtonSet.setStyleSheet("border: 4px solid grey; background-color: #bbbbbb; border-radius: 10px;")
             self.pushButtonCam1.setText("Cam1")
             self.pushButtonCam2.setText("Cam2")
@@ -5258,16 +5293,21 @@ class PTSapp(QMainWindow):
             self.pushButtonCam5.setText("Cam5")
             self.pushButtonEdit.setText("Edit")
             self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonExit.hide()
+            self.pushButtonLED.hide()
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
-            self.pushButtonSet.setStyleSheet("border: 4px solid #ff0000; background-color: #7D0000; border-radius: 10px;")
+            editToggle = False
+            self.pushButtonSet.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
             self.pushButtonCam1.setText("Clear")
             self.pushButtonCam2.setText("Clear")
             self.pushButtonCam3.setText("Clear")
             self.pushButtonCam4.setText("Clear")
             self.pushButtonCam5.setText("Clear")
             self.pushButtonEdit.setText("Move")
-            self.pushButtonEdit.setStyleSheet("border: 4px solid #ff0000; background-color: #7D0000; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
+            self.pushButtonExit.show()
+            self.pushButtonLED.show()
 
 
     def whichCamSerial1(self):
@@ -6255,7 +6295,6 @@ class ThreadClass(QtCore.QThread):
         self.is_running = True
 
     def run(self):
-        #print("Starting thread", self.index)
         global msg
         global serialLoop
         global sendData
@@ -6276,7 +6315,6 @@ class ThreadClass(QtCore.QThread):
             serialLoop = True
             message = (f"Connected to {device_name}")
         except:
-            #print("Couldn't connect")
             message = ("Couldn't connect")
 
         sendData = ""
@@ -6285,18 +6323,13 @@ class ThreadClass(QtCore.QThread):
             if not self.serial_port.is_open:
                 serialLoop = False
             else:
-                #msg = "~111"
-                #self.any_signal.emit(msg)
-                #msg=''
-
                 while (self.serial_port.in_waiting > 0):
-                    received_msg = self.serial_port.readline()                  #read_until(b'\n')
+                    received_msg = self.serial_port.readline()
                     msg = bytes(received_msg).decode('utf8', "ignore")
                     self.any_signal.emit(msg)
                     msg=''
 
                 if sendData != "":
-                    #print(sendData)
                     if type(sendData) is str:
                         data = bytes((sendData + '\n'), 'utf8')
                         try:
@@ -6327,10 +6360,9 @@ class ThreadClass(QtCore.QThread):
                         try:
                             self.serial_port.write(joyData)
                             previousMillisMoveCheck = time.time()
+                            print("Re-sending Joystick for keep-alive")    # debugging
                         except:
                             print("Didn't RE-send joystick :(")
-
-                        #self.on_stop()
                             
     def stop(self):
         self.is_running = False
