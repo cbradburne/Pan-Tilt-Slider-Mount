@@ -1963,6 +1963,8 @@ class PTSapp(QMainWindow):
         global message
         global device_name
 
+        serialPortSelect = ""
+
         if not isConnected:
             device_name_list = device_list
             #print(device_name_list)
@@ -1970,7 +1972,7 @@ class PTSapp(QMainWindow):
             usb_port = 'usbmodem'
             usb_port2 = 'usb/00'
             usb_port3 = 'COM6'
-            usb_port4 = 'ttyUSB0'
+            usb_port4 = 'COM3'
             
             if (usb_port in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port in string]
