@@ -85,13 +85,12 @@ void SerialData(void) {
       bool sliderRunning = false;
 
       if (speedFactorP == 0.0) {
-        stepper_pan.setAcceleration(500);
         stepper_pan.overrideSpeed(0);
         if (panRunning) {
           panRunning = false;
-          stepper_pan.overrideSpeed(0);
+          stepper_pan.stopAsync();
         }
-        //stepper_pan.stopAsync();
+        stepper_pan.setAcceleration(pan_accel);
       } else {
         digitalWrite(13, HIGH);              // LED ON
         stepper_pan.setAcceleration(10000);  //pan_accel *
@@ -100,25 +99,18 @@ void SerialData(void) {
           stepper_pan.rotateAsync(pan_set_speed * 100);  //, 10000);
         }
         stepper_pan.overrideSpeed(speedFactorP);
-
-        //Serial.print("Speed - ");
-        //Serial.println(pan_set_speed * 100);
-
-        //Serial.print("Factor - ");
-        //Serial.println(speedFactorP);
       }
 
       if (speedFactorT == 0.0) {
-        stepper_tilt.setAcceleration(500);
         stepper_tilt.overrideSpeed(0);
         if (tiltRunning) {
           tiltRunning = false;
-          stepper_tilt.overrideSpeed(0);
+          stepper_tilt.stopAsync();
         }
-        //stepper_tilt.stopAsync();
+        stepper_tilt.setAcceleration(tilt_accel);
       } else {
-        digitalWrite(13, HIGH);                          // LED ON
-        stepper_tilt.setAcceleration(10000);             //tilt_accel *
+        digitalWrite(13, HIGH);               // LED ON
+        stepper_tilt.setAcceleration(10000);  //tilt_accel *
         if (!tiltRunning) {
           tiltRunning = true;
           stepper_tilt.rotateAsync(tilt_set_speed * 100);  //, 10000);
@@ -127,15 +119,14 @@ void SerialData(void) {
       }
 
       if (speedFactorS == 0.0) {
-        stepper_slider.setAcceleration(500);
         stepper_slider.overrideSpeed(0);
         if (sliderRunning) {
-          stepper_slider.overrideSpeed(0);
+          stepper_slider.stopAsync();
         }
-        //stepper_slider.stopAsync();
+        stepper_slider.setAcceleration(slider_accel);
       } else {
-        digitalWrite(13, HIGH);                              // LED ON
-        stepper_slider.setAcceleration(10000);               //slider_accel *
+        digitalWrite(13, HIGH);                 // LED ON
+        stepper_slider.setAcceleration(10000);  //slider_accel *
         if (!sliderRunning) {
           stepper_slider.rotateAsync(slider_set_speed * 100);  //, 10000);
         }
