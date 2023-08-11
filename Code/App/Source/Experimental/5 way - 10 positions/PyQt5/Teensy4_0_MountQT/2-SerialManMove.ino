@@ -9,6 +9,9 @@ void panDegrees(float panAngle) {
   Serial1.println("#$");
 
   //stepper_pan.setTargetAbs(panDegreesToSteps(panAngle));
+  if (upsideDown) {
+    panAngle = (panAngle * -1);
+  }
   stepper_pan.moveAbs(panDegreesToSteps(panAngle));
   //stepper_pan.move();
 
@@ -39,6 +42,10 @@ void panDegreesRel(float panAngle) {
   Serial1.println("#$");
 
   //stepper_pan.setTargetRel(panDegreesToSteps(panAngle));
+  
+  if (upsideDown) {
+    panAngle = (panAngle * -1);
+  }
   stepper_pan.moveRel(panDegreesToSteps(panAngle));
   
   sentMoved = false;
@@ -68,6 +75,9 @@ void tiltDegrees(float tiltAngle) {
   Serial1.println("#$");
 
   //stepper_tilt.setTargetAbs(tiltDegreesToSteps(tiltAngle));
+  if (upsideDown) {
+    tiltAngle = (tiltAngle * -1);
+  }
   stepper_tilt.moveAbs(tiltDegreesToSteps(tiltAngle));
   
   sentMoved = false;
@@ -97,6 +107,9 @@ void tiltDegreesRel(float tiltAngle) {
   Serial1.println("#$");
 
   //stepper_tilt.setTargetRel(tiltDegreesToSteps(tiltAngle));
+  if (upsideDown) {
+    tiltAngle = (tiltAngle * -1);
+  }
   stepper_tilt.moveRel(tiltDegreesToSteps(tiltAngle));
   
   sentMoved = false;
@@ -126,6 +139,9 @@ void sliderMoveTo(float mm) {
     Serial1.println("#$");
 
     //stepper_slider.setTargetAbs(sliderMillimetresToSteps(mm));
+    if (mm) {
+      mm = (mm * -1);
+    }
     stepper_slider.moveAbs(sliderMillimetresToSteps(mm));
     
     sentMoved = false;
@@ -156,6 +172,9 @@ void sliderMMRel(float mm) {
     Serial1.println("#$");
 
     //stepper_slider.setTargetRel(sliderMillimetresToSteps(mm));
+    if (mm) {
+      mm = (mm * -1);
+    }
     stepper_slider.moveRel(sliderMillimetresToSteps(mm));
     
     sentMoved = false;
