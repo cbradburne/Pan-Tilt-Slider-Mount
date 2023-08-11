@@ -42,6 +42,8 @@ void SerialData(void) {
       float speedFactorP = map(panStepSpeed2, -255, 255, -panMaxFactor, panMaxFactor);
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -tiltMaxFactor, tiltMaxFactor);
 
+      previousMillisMoveCheck = millis();
+
       if (speedFactorS == 0.0) { rotate_stepperS.stopAsync(); }
       else {
         rotate_stepperS.rotateAsync(stepper_slider);

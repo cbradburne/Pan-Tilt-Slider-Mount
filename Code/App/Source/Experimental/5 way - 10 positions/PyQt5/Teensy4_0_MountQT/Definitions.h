@@ -203,6 +203,7 @@ bool atPos8 = false;
 bool atPos9 = false;
 bool atPos0 = false;
 
+bool isManualMove = false;
 unsigned long previousMillisMoveCheck = 0;
 unsigned long currentMillisMoveCheck = 0;
 unsigned long moveCheckInterval = 1000;

@@ -42,6 +42,7 @@ void SerialData(void) {
 
   else if (Serial1.available() > 0) {
     instruction = Serial1.read();
+    //Serial.println(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
       while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
@@ -80,13 +81,14 @@ void SerialData(void) {
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -tiltMaxFactor, tiltMaxFactor);
 
 
+      previousMillisMoveCheck = millis();
+
       if (speedFactorP == 0.0) {
         if (panRunning) {
           panRunning = false;
           stepper_pan.overrideSpeed(0);
           stepper_pan.stopAsync();
         }
-        stepper_pan.setAcceleration(pan_accel);
       } else {
         if (!panRunning) {
           panRunning = true;
@@ -102,7 +104,6 @@ void SerialData(void) {
           stepper_tilt.overrideSpeed(0);
           stepper_tilt.stopAsync();
         }
-        stepper_tilt.setAcceleration(tilt_accel);
       } else {
         if (!tiltRunning) {
           tiltRunning = true;
@@ -118,7 +119,6 @@ void SerialData(void) {
           stepper_slider.overrideSpeed(0);
           stepper_slider.stopAsync();
         }
-        stepper_slider.setAcceleration(slider_accel);
       } else {
         if (!sliderRunning) {
           sliderRunning = true;
@@ -127,9 +127,31 @@ void SerialData(void) {
         }
         stepper_slider.overrideSpeed(speedFactorS);
       }
+
+      if (speedFactorP == 0.0) {
+        stepper_pan.setAcceleration(pan_accel);
+      }
+      if (speedFactorT == 0.0) {
+        stepper_tilt.setAcceleration(tilt_accel);
+      }
+      if (speedFactorS == 0.0) {
+        stepper_slider.setAcceleration(slider_accel);
+      }
+
+      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
+        isManualMove = false;
+      } else {
+        isManualMove = true;
+        previousMillisMoveCheck = millis();
+      }
+
+
+
+
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
       delay(2);  //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
+      //Serial.println(instruction);
 
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
@@ -150,6 +172,10 @@ void SerialData(void) {
         Serial1Flush();                              //Clear any excess data in the Serial1 buffer
         SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
         SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
+
+      //rintln(SerialCommandValueInt);
+      //Serial.println(SerialCommandValueFloat);
+      
         if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
           delay(100);                                //wait to make sure all data in the Serial1 message has arived
           Serial1Flush();                            //Clear any excess data in the Serial1 buffer
@@ -165,9 +191,12 @@ void SerialData(void) {
 
   if (!atPos1 && !atPos2 && !atPos3 && !atPos4 && !atPos5 && !atPos6 && !atPos7 && !atPos8 && !atPos9 && !atPos0 && !sentMoved) {
     Serial1.println("#s");  // not at any set pos
+    //Serial.println("not at any set pos");
     sentMoved = true;
   }
 
+  //Serial.print("Switch case: ");
+  //Serial.println(instruction);
   switch (instruction) {
     case INSTRUCTION_IS_CAM_DELAY:
       {
@@ -266,8 +295,15 @@ void SerialData(void) {
       break;
     case INSTRUCTION_DIRECT_MOVE:
       {
+          //Serial.print("is pan moving?? ");
+          //Serial.println(stepper_pan.isMoving);
+          //Serial.print("is tilt moving?? ");
+          //Serial.println(stepper_tilt.isMoving);
+          //Serial.print("is slider moving?? ");
+          //Serial.println(stepper_slider.isMoving);
         //if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {  // && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
+          //Serial.println("Sent moveToIndex");
           moveToIndex(SerialCommandValueInt);
         }
       }
