@@ -1753,12 +1753,12 @@ class PTSapp(QMainWindow):
         global moveCheckInterval
         global whichCamSerial
 
-        #if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
-        #    currentMillisMoveCheck = time.time()
-        #    if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
-        #        previousMillisMoveCheck = currentMillisMoveCheck
+        if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
+            currentMillisMoveCheck = time.time()
+            if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
+                previousMillisMoveCheck = currentMillisMoveCheck
                 #arr = [4, axisZh, axisXh, axisYh]                                          # for debugging
-        #        self.sendJoystick(arr)
+                self.sendJoystick(arr)
         if ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
             previousTime = time.time()
             oldAxisX = axisX
@@ -5071,9 +5071,9 @@ class PTSapp(QMainWindow):
             self.comboBox.setStyleSheet("color: white; border: 4px solid grey; background-color: #229922; border-radius: 10px;")
             isConnected = True
 
-        #if isConnected:
+        if isConnected:
             #print("joy")
-            #self.doJoyMoves(1)
+            self.doJoyMoves(1)
 
         if message != "":
             self.labelInfo.setText(message)
@@ -6363,7 +6363,7 @@ class ThreadClass(QtCore.QThread):
                         try:
                             self.serial_port.write(joyData)
                             previousMillisMoveCheck = time.time()
-                            print("Re-sending Joystick for keep-alive")    # debugging
+                            #print("Re-sending Joystick for keep-alive")    # debugging
                         except:
                             print("Didn't RE-send joystick :(")
                             self.stop()

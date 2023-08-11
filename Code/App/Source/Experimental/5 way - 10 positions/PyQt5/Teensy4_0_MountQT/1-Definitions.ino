@@ -36,13 +36,14 @@ void initPanTilt(void) {
   Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
-  
+
   TS4::begin();
 
-  StepperGroup stepGroup({stepper_pan, stepper_tilt, stepper_slider});
+  //Serial.println("Boot up");
 
+  StepperGroup stepGroup({ stepper_pan, stepper_tilt, stepper_slider });
 
-  pinMode(13, OUTPUT);     // LED
+  pinMode(13, OUTPUT);    // LED
   digitalWrite(13, LOW);  // LED OFF
 
   pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1
@@ -63,10 +64,15 @@ void initPanTilt(void) {
   Serial1.println("#a");
   Serial1.println("#%");  // clear remote LEDS
 
-  if (pan_set_speed >= 20) { Serial1.println("^@7"); } 
-  else if (pan_set_speed >= 10 && pan_set_speed < 20) { Serial1.println("^@5"); }
-  else if (pan_set_speed >= 5 && pan_set_speed < 10) { Serial1.println("^@3"); }
-  else if (pan_set_speed < 5) { Serial1.println("^@1"); }
+  if (pan_set_speed >= 20) {
+    Serial1.println("^@7");
+  } else if (pan_set_speed >= 10 && pan_set_speed < 20) {
+    Serial1.println("^@5");
+  } else if (pan_set_speed >= 5 && pan_set_speed < 10) {
+    Serial1.println("^@3");
+  } else if (pan_set_speed < 5) {
+    Serial1.println("^@1");
+  }
 
   Serial1.print("^=");
   Serial1.println(slider_set_speed);
@@ -77,7 +83,7 @@ void initPanTilt(void) {
 
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
-  //withSlider = digitalRead(PIN_SW3);
+  withSlider = digitalRead(PIN_SW3);
 
   //if (upsideDown) {
   //  stepper_pan.setInverseRotation(true);
@@ -93,14 +99,30 @@ void initPanTilt(void) {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-float panDegreesToSteps(float angle) { return pan_steps_per_degree * angle; }
-float tiltDegreesToSteps(float angle) { return tilt_steps_per_degree * angle; }
-long sliderMillimetresToSteps(float mm) { return round(mm * slider_steps_per_millimetre); }
-float sliderStepsToMillimetres(long steps) { return (float)steps / slider_steps_per_millimetre; }
-float panStepsToDegrees(long steps) { return steps / pan_steps_per_degree; }
-float panStepsToDegrees(float steps) { return steps / pan_steps_per_degree; }
-float tiltStepsToDegrees(long steps) { return steps / tilt_steps_per_degree; }
-float tiltStepsToDegrees(float steps) { return steps / tilt_steps_per_degree; }
+float panDegreesToSteps(float angle) {
+  return pan_steps_per_degree * angle;
+}
+float tiltDegreesToSteps(float angle) {
+  return tilt_steps_per_degree * angle;
+}
+long sliderMillimetresToSteps(float mm) {
+  return round(mm * slider_steps_per_millimetre);
+}
+float sliderStepsToMillimetres(long steps) {
+  return (float)steps / slider_steps_per_millimetre;
+}
+float panStepsToDegrees(long steps) {
+  return steps / pan_steps_per_degree;
+}
+float panStepsToDegrees(float steps) {
+  return steps / pan_steps_per_degree;
+}
+float tiltStepsToDegrees(long steps) {
+  return steps / tilt_steps_per_degree;
+}
+float tiltStepsToDegrees(float steps) {
+  return steps / tilt_steps_per_degree;
+}
 
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -128,9 +150,28 @@ void mainLoop(void) {
     unsigned long currentMillisMoveCheck = millis();
     if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval) {
       previousMillisMoveCheck = currentMillisMoveCheck;
-      stepper_pan.stopAsync();
-      stepper_tilt.stopAsync();
-      stepper_slider.stopAsync();
+      if (stepper_pan.isMoving) {
+        panRunning = false;
+        stepper_pan.overrideSpeed(0);
+        stepper_pan.stopAsync();
+        delay(10);
+      }
+
+      if (stepper_tilt.isMoving) {
+        tiltRunning = false;
+        stepper_tilt.overrideSpeed(0);
+        stepper_tilt.stopAsync();
+        delay(10);
+      }
+
+      if (stepper_slider.isMoving) {
+        sliderRunning = false;
+        stepper_slider.overrideSpeed(0);
+        stepper_slider.stopAsync();
+        delay(10);
+      }
+
+      isManualMove = false;
     }
   }
 }
