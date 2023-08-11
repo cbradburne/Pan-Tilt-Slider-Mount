@@ -5305,7 +5305,7 @@ class PTSapp(QMainWindow):
             self.pushButtonCam4.setText("Clear")
             self.pushButtonCam5.setText("Clear")
             self.pushButtonEdit.setText("Move")
-            self.pushButtonEdit.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet("border: 4px solid #FFFC67; background-color: #F7BA00; border-radius: 10px;")
             self.pushButtonExit.show()
             self.pushButtonLED.show()
 
@@ -6316,6 +6316,7 @@ class ThreadClass(QtCore.QThread):
             message = (f"Connected to {device_name}")
         except:
             message = ("Couldn't connect")
+            self.stop()
 
         sendData = ""
         sendData = '&-'
@@ -6338,6 +6339,7 @@ class ThreadClass(QtCore.QThread):
                         except Exception as error:
                             print("Didn't send button :(")
                             print(error)
+                            self.stop()
 
                     elif type(sendData) is bytearray:
                         joyData = sendData
@@ -6345,11 +6347,12 @@ class ThreadClass(QtCore.QThread):
                         oldAxisY = axisY
                         oldAxisZ = axisZ
                         try:
-                            #print("joy")
+                            #print(sendData)
                             self.serial_port.write(sendData)
                             previousMillisMoveCheck = time.time()
                         except:
                             print("Didn't send joystick :(")
+                            self.stop()
 
                     sendData = ""
 
@@ -6363,6 +6366,7 @@ class ThreadClass(QtCore.QThread):
                             print("Re-sending Joystick for keep-alive")    # debugging
                         except:
                             print("Didn't RE-send joystick :(")
+                            self.stop()
                             
     def stop(self):
         self.is_running = False
