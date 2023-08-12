@@ -26,7 +26,7 @@ namespace TS4
         inline void attachCallbacks(callback_t stepCb, callback_t resetCb) override;
 
      protected:
-        static constexpr int prescale = 5; // 1->2, 2->4, 3->8...7->128
+        static constexpr int prescale = 5;          // 1->2, 2->4, 3->8...7->128
 
         callback_t stepCB;
         callback_t resetCB;
@@ -89,23 +89,13 @@ namespace TS4
 
     void TmrTimer::stop()
     {
-        // regs->SCTRL &= ~TMR_SCTRL_TCF;
-        // regs->SCTRL &= ~TMR_SCTRL_TCFIE;
-        //Serial.printf("stop \n");
-
         regs->CTRL = 0;
-
-        // regs->CSCTRL &= ~TMR_CSCTRL_TCF1EN;
-        // regs->CSCTRL |= TMR_CSCTRL_TCF1;
     }
 
     void TmrTimer::updateFrequency(float f)
     {
         constexpr unsigned prescale = 32;
         period                      = (150E6 / prescale) / f - pulsewidth - 1.5f;
-        //Serial.printf("p: %d\n", period);
-
-        //constexpr uint16_t pp = p;
     }
 
     void TmrTimer::attachCallbacks(callback_t stepCB, callback_t resetCB)
@@ -119,32 +109,24 @@ namespace TS4
         constexpr unsigned prescale = 32;
         this->pulsewidth            = width_us * (150.0f / prescale) + 0.5;
         this->stpPin                = stpPin;
-
-        //Serial.printf("setPulseParams %d\n", pulsewidth);
     }
 
     void TmrTimer::ISR()
     {
-        //Serial.printf("isr %p\n", regs);
-
-        // if (regs->CSCTRL & TMR_CSCTRL_TCF1)
-        // {
-        //     regs->CSCTRL &= ~TMR_CSCTRL_TCF1; // clear interrupt flag
-        if (first)                     // generate rising edge of pulse
-        {                              //
-            regs->COMP1  = pulsewidth; // set reload to pulse width
+        if (first)                      // generate rising edge of pulse
+        {                               //
+            regs->COMP1  = pulsewidth;  // set reload to pulse width
             regs->CMPLD1 = pulsewidth;
-            first        = false;  // generate falling pulse edge when called next
-            stepCB();              //
-        }                          //
-        else                       //
-        {                          //
-            regs->COMP1  = period; // set reload, period is already reduced by the pulsewidth time
-            regs->CMPLD1 = period; //
-            resetCB();             // reset the step pin
-            first = true;          // generate rising edge when called next
+            first        = false;       // generate falling pulse edge when called next
+            stepCB();                   //
+        }                               //
+        else                            //
+        {                               //
+            regs->COMP1  = period;      // set reload, period is already reduced by the pulsewidth time
+            regs->CMPLD1 = period;      //
+            resetCB();                  // reset the step pin
+            first = true;               // generate rising edge when called next
         }
-        //}
     }
 
     //====================================================================
@@ -184,8 +166,6 @@ namespace TS4
     template <unsigned moduleNr>
     TMRModule<moduleNr>::TMRModule()
     {
-        //Serial.printf("TMRModule cstr %p %d\n", this, moduleNr);
-
         attachInterruptVector(tmrIRQs[moduleNr], ISR);
         NVIC_ENABLE_IRQ(tmrIRQs[moduleNr]);
     };
@@ -205,16 +185,12 @@ namespace TS4
     template <unsigned moduleNr>
     ITimer* TMRModule<moduleNr>::getChannel()
     {
-        //Serial.println("TMRModule::getTimer");
-        //Serial.flush();
-
-        //  isFree[0] = false;
-        //  return (ITimer*)channels[0];
-
         for (int i = 0; i < 4; i++)
         {
             if (isFree[i])
             {
+                //Serial.print("getChannel ");                //colin
+                //Serial.println(i);                          //colin
                 isFree[i] = false;
                 return (ITimer*)channels[i];
             }
@@ -231,6 +207,8 @@ namespace TS4
         {
             if (ch == channels[i])
             {
+                //Serial.print("releaseChannel ");          //colin
+                //Serial.println(i);                        //colin 
                 isFree[i] = true;
             }
         }
@@ -248,7 +226,7 @@ namespace TS4
                 channels[ch]->ISR();
             }
         }
-        asm volatile("dsb"); //wait until register changes propagated through the cache
+        asm volatile("dsb");                        //wait until register changes propagated through the cache
     }
 
     // initialize static members ---------------------------------------------------------------------------------------------

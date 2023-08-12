@@ -36,7 +36,8 @@ namespace TS4
     }
 
     void Stepper::stopAsync()
-    {
+    {   
+        //Serial.println("stopAsync");              //colin
         StepperBase::startStopping(0, acc);
     }
 

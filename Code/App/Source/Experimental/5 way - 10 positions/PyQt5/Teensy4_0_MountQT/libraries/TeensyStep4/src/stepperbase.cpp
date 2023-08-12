@@ -30,7 +30,7 @@ namespace TS4
         // Serial.printf("v:%6d    v_sqr %6.0f  v_tgt: %6d\n", v, (float)v_sqr, v_tgt);
         // Serial.printf("a: %6d   twoA: %6d\n", a, twoA);
         // Serial.printf("moving: %s\n", isMoving ? "yes" : "no");
-
+        
         if (!isMoving)
         {
             stpTimer = TimerFactory::makeTimer();
@@ -53,8 +53,7 @@ namespace TS4
         digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
         delayMicroseconds(5);
 
-        twoA = 2 * a;
-        // v_sqr      = (int64_t) v * v;
+        twoA      = 2 * a;
         v_sqr     = 0;
         v         = 0;
         v_tgt_orig = v_tgt;
@@ -66,17 +65,15 @@ namespace TS4
         accEnd   = accLength - 1;
         decStart = s_tgt - accLength;
 
-        // SerialUSB1.printf("TimerAddr: %p\n", &stpTimer);
-        // SerialUSB1.printf("a: %6d   twoA:  %6d\n", a, twoA);
-        // SerialUSB1.printf("v0:%6d   v_tgt: %6d\n", v, v_tgt);
-        // SerialUSB1.printf("s: %6d   s_tgt: %6d\n", s, s_tgt);
-        // SerialUSB1.printf("aE:%6d   dS:    %6d %d\n\n", accEnd, decStart, accLength);
+        // Serial.printf("TimerAddr: %p\n", &stpTimer);
+        // Serial.printf("a: %6d   twoA:  %6d\n", a, twoA);
+        // Serial.printf("v0:%6d   v_tgt: %6d\n", v, v_tgt);
+        // Serial.printf("s: %6d   s_tgt: %6d\n", s, s_tgt);
+        // Serial.printf("aE:%6d   dS:    %6d %d\n\n", accEnd, decStart, accLength);
 
         if (!isMoving)
         {
-            // Serial.println("ismoving");
             stpTimer = TimerFactory::makeTimer();
-
             stpTimer->attachCallbacks([this] { stepISR(); }, [this] { resetISR(); });
             stpTimer->setPulseParams(8, stepPin);
             isMoving = true;
@@ -86,19 +83,12 @@ namespace TS4
         }
     }
 
-    // void StepperBase::rotateAsync()
-    // {
-    //     rotateAsync(vMax);
-    // }
-
     void StepperBase::startStopping(int32_t v_end, uint32_t a)
     {
         // if (!isMoving) return;
         mode = mode_t::stopping;
         startRotate(v_end, a);
         mode = mode_t::stopping;
-        // SerialUSB1.println("stoprot");
-        // SerialUSB1.flush();
     }
 
     void StepperBase::emergencyStop()
@@ -111,7 +101,7 @@ namespace TS4
     }
 
     void StepperBase::overrideSpeed(float factor)
-    {
+    {   
         if (mode == mode_t::rotate)
         {
             noInterrupts();
@@ -120,8 +110,6 @@ namespace TS4
             vDir      = (int32_t)signum(v_tgt_sqr - v_sqr);
             interrupts();
 
-            // Serial.print(v_tgt_sqr);
-            // Serial.printf("  %d \n", v_tgt);
         }
     }
 }

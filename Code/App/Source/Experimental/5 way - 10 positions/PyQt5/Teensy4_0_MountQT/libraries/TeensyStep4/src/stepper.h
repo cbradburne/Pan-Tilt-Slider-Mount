@@ -14,13 +14,13 @@ namespace TS4
         int32_t getPosition() const { return pos; }
         void setPosition(int32_t p) { pos = p; }
 
-        Stepper& setMaxSpeed(int32_t speed);          // steps/s
-                                                       // StepperBase& setVStart(int32_t vIn);              // steps/s
-                                                       // StepperBase& setVStop(int32_t vIn);               // steps/s
-        Stepper& setAcceleration(uint32_t _a);         // steps/s^2
-                                                       //
-        void setTargetAbs(int32_t pos) { target = pos; }; // Set target position absolute
-                                                       // void setTargetRel(int32_t delta);                 // Set target position relative to current position
+        Stepper& setMaxSpeed(int32_t speed);                // steps/s
+                                                            // StepperBase& setVStart(int32_t vIn);              // steps/s
+                                                            // StepperBase& setVStop(int32_t vIn);               // steps/s
+        Stepper& setAcceleration(uint32_t _a);              // steps/s^2
+                                                            //
+        void setTargetAbs(int32_t pos) { target = pos; };   // Set target position absolute
+                                                            // void setTargetRel(int32_t delta);                 // Set target position relative to current position
 
         void moveAsync();
         void moveAbsAsync(int32_t target, uint32_t v = 0);
@@ -33,11 +33,9 @@ namespace TS4
         void stopAsync();
         void stop();
 
-
-
         int32_t vMax = vMaxDefault;
         uint32_t acc  = aDefault;
-       // uint32_t s_t  = 0;
+        //uint32_t s_t  = 0;
      protected:
 
         static constexpr int32_t vMaxMax       = 100'000; // largest speed possible (steps/s)
@@ -52,6 +50,6 @@ namespace TS4
         //     static bool cmpDelta(const StepperBase* a, const StepperBase* b) { return a->A > b->A; }
         //     static bool cmpAcc(const StepperBase* a, const StepperBase* b) { return a->a < b->a; }
         //     static bool cmpVmin(const StepperBase* a, const StepperBase* b) { return std::abs(a->vMax) < std::abs(b->vMax); }
-        //    static bool cmpVmax(const StepperBase* a, const StepperBase* b) { return std::abs(a->vMax) > std::abs(b->vMax); }
+        //     static bool cmpVmax(const StepperBase* a, const StepperBase* b) { return std::abs(a->vMax) > std::abs(b->vMax); }
     };
 }
