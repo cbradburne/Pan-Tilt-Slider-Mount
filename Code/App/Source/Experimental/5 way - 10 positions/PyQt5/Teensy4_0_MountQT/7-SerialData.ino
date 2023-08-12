@@ -95,6 +95,9 @@ void SerialData(void) {
           stepper_pan.setAcceleration(10000);            //pan_accel *
           stepper_pan.rotateAsync(pan_set_speed * 100);  //, 10000);
         }
+        if (upsideDown) {
+          speedFactorP = (speedFactorP * -1);
+        }
         stepper_pan.overrideSpeed(speedFactorP);
         
         //Serial.print("Factor P - ");
@@ -113,6 +116,9 @@ void SerialData(void) {
           stepper_tilt.setAcceleration(10000);             //tilt_accel *
           stepper_tilt.rotateAsync(tilt_set_speed * 100);  //, 10000);
         }
+        if (upsideDown) {
+          speedFactorT = (speedFactorT * -1);
+        }
         stepper_tilt.overrideSpeed(speedFactorT);
         
         //Serial.print("Factor T - ");
@@ -130,6 +136,9 @@ void SerialData(void) {
           sliderRunning = true;
           stepper_slider.setAcceleration(10000);               //slider_accel *
           stepper_slider.rotateAsync(slider_set_speed * 100);  //, 10000);
+        }
+        if (slideReverse) {
+          speedFactorS = (speedFactorS * -1);
         }
         stepper_slider.overrideSpeed(speedFactorS);
         
@@ -182,12 +191,12 @@ void SerialData(void) {
         SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
         SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
 
-      //rintln(SerialCommandValueInt);
-      //Serial.println(SerialCommandValueFloat);
-      
-        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                //wait to make sure all data in the Serial1 message has arived
-          Serial1Flush();                            //Clear any excess data in the Serial1 buffer
+        //rintln(SerialCommandValueInt);
+        //Serial.println(SerialCommandValueFloat);
+
+        if (instruction == '+') {  //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);              //wait to make sure all data in the Serial1 message has arived
+          Serial1Flush();          //Clear any excess data in the Serial1 buffer
           return;
         }
       }
@@ -304,12 +313,12 @@ void SerialData(void) {
       break;
     case INSTRUCTION_DIRECT_MOVE:
       {
-          //Serial.print("is pan moving?? ");
-          //Serial.println(stepper_pan.isMoving);
-          //Serial.print("is tilt moving?? ");
-          //Serial.println(stepper_tilt.isMoving);
-          //Serial.print("is slider moving?? ");
-          //Serial.println(stepper_slider.isMoving);
+        //Serial.print("is pan moving?? ");
+        //Serial.println(stepper_pan.isMoving);
+        //Serial.print("is tilt moving?? ");
+        //Serial.println(stepper_tilt.isMoving);
+        //Serial.print("is slider moving?? ");
+        //Serial.println(stepper_slider.isMoving);
         //if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {  // && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           //Serial.println("Sent moveToIndex");
