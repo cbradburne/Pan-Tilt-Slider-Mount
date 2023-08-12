@@ -3,6 +3,7 @@
 
 void SerialData(void) {
   char instruction;
+  /*
   if (Serial.available() > 0) {
     instruction = Serial.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {
@@ -40,7 +41,10 @@ void SerialData(void) {
 
 
 
-  else if (Serial1.available() > 0) {
+  else 
+  
+  */
+  if (Serial1.available() > 0) {
     instruction = Serial1.read();
     //Serial.println(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {

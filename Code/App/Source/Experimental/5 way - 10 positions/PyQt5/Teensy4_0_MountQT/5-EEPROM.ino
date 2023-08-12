@@ -45,7 +45,6 @@ void setEEPROMVariables(void) {
 
 void printEEPROM(void) {
   float ftemp;
-  //Serial.println("EEPROM:");
   Serial1.println("EEPROM:");
   EEPROM.get(EEPROM_ADDRESS_PAN_SET_SPEED, ftemp);
   Serial1.println(String("Pan Speed               : ") + ftemp + String("°/s"));
