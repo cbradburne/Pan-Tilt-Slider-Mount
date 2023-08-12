@@ -96,6 +96,9 @@ void SerialData(void) {
           stepper_pan.rotateAsync(pan_set_speed * 100);  //, 10000);
         }
         stepper_pan.overrideSpeed(speedFactorP);
+        
+        //Serial.print("Factor P - ");
+        //Serial.println(speedFactorP);
       }
 
       if (speedFactorT == 0.0) {
@@ -111,6 +114,9 @@ void SerialData(void) {
           stepper_tilt.rotateAsync(tilt_set_speed * 100);  //, 10000);
         }
         stepper_tilt.overrideSpeed(speedFactorT);
+        
+        //Serial.print("Factor T - ");
+        //Serial.println(speedFactorT);
       }
 
       if (speedFactorS == 0.0) {
@@ -126,6 +132,9 @@ void SerialData(void) {
           stepper_slider.rotateAsync(slider_set_speed * 100);  //, 10000);
         }
         stepper_slider.overrideSpeed(speedFactorS);
+        
+        //Serial.print("Factor S - ");
+        //Serial.println(speedFactorS);
       }
 
       if (speedFactorP == 0.0) {
