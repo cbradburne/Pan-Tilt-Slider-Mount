@@ -1,6 +1,5 @@
 //  Reports
 
-
 void debugReport(void) {
   Serial1.println("Debug Report:");
   Serial1.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));

@@ -1,9 +1,8 @@
 #include "Definitions.h"
 #include <Iibrary.h>  //A library I created for Arduino that contains some simple functions I commonly use. Library available at: https://github.com/isaac879/Iibrary
-//#include "TeensyStep.h"
+#include "teensystep4.h"
 #include <EEPROM.h>  //To be able to save values when powered off
 #include <elapsedMillis.h>
-#include "teensystep4.h"
 
 using namespace TS4;
 
@@ -15,16 +14,6 @@ Stepper stepper_pan(PIN_STEP_PAN, PIN_DIRECTION_PAN);
 Stepper stepper_tilt(PIN_STEP_TILT, PIN_DIRECTION_TILT);
 Stepper stepper_slider(PIN_STEP_SLIDER, PIN_DIRECTION_SLIDER);
 
-//StepControl multi_stepper;
-
-//StepControl step_stepperP;
-//StepControl step_stepperT;
-//StepControl step_stepperS;
-
-//#RotateControl rotate_stepperP;
-//RotateControl rotate_stepperT;
-//RotateControl rotate_stepperS;
-
 KeyframeElement keyframe_array[10];
 
 elapsedMillis timeElapsed;
@@ -33,22 +22,17 @@ elapsedMillis timeElapsed;
 
 
 void initPanTilt(void) {
-  //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
 
   TS4::begin();
 
-  //Serial.println("Boot up");
+  pinMode(13, OUTPUT);              // LED
+  digitalWrite(13, LOW);            // LED OFF
 
-  StepperGroup stepGroup({ stepper_pan, stepper_tilt, stepper_slider });
-
-  pinMode(13, OUTPUT);    // LED
-  digitalWrite(13, LOW);  // LED OFF
-
-  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1
-  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2
-  pinMode(PIN_SW3, INPUT_PULLUP);  // pin 10 to gnd if no slider used
+  pinMode(PIN_SW1, INPUT_PULLUP);   // Dip Switch 1
+  pinMode(PIN_SW2, INPUT_PULLUP);   // Dip Switch 2
+  pinMode(PIN_SW3, INPUT_PULLUP);   // pin 10 to gnd if no slider used
 
   setEEPROMVariables();
 
@@ -62,20 +46,40 @@ void initPanTilt(void) {
   delay(200);
 
   Serial1.println("#a");
-  Serial1.println("#%");  // clear remote LEDS
+  Serial1.println("#a");
+  Serial1.println("#%");
+  Serial1.println("#%");            // clear remote LEDS
 
-  if (pan_set_speed >= 20) {
+  if (pan_set_speed == 20) {
     Serial1.println("^@7");
-  } else if (pan_set_speed >= 10 && pan_set_speed < 20) {
+    Serial1.println("^@7");
+  } else if (pan_set_speed == 10) {
     Serial1.println("^@5");
-  } else if (pan_set_speed >= 5 && pan_set_speed < 10) {
+    Serial1.println("^@5");
+  } else if (pan_set_speed == 5) {
     Serial1.println("^@3");
-  } else if (pan_set_speed < 5) {
+    Serial1.println("^@3");
+  } else if (pan_set_speed == 1) {
+    Serial1.println("^@1");
     Serial1.println("^@1");
   }
 
-  Serial1.print("^=");
-  Serial1.println(slider_set_speed);
+  if (slider_set_speed == 160) { 
+    Serial1.println("^=7"); 
+    Serial1.println("^=7"); 
+    }
+  else if (slider_set_speed == 120) { 
+    Serial1.println("^=5"); 
+    Serial1.println("^=5"); 
+    }
+  else if (slider_set_speed == 60) { 
+    Serial1.println("^=3"); 
+    Serial1.println("^=3"); 
+    }
+  else if (slider_set_speed == 20) { 
+    Serial1.println("^=1"); 
+    Serial1.println("^=1"); 
+    }
 
   Serial1.println("Camera Active");
   Serial1.println("-");

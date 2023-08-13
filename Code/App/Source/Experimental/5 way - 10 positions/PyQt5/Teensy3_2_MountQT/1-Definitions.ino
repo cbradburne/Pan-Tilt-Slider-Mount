@@ -51,15 +51,40 @@ void initPanTilt(void) {
   delay(200);
 
   Serial1.println("#a");
+  Serial1.println("#a");
+  Serial1.println("#%");
   Serial1.println("#%");  // clear remote LEDS
 
-  if (pan_set_speed >= 20) { Serial1.println("^@7"); } 
-  else if (pan_set_speed >= 10 && pan_set_speed < 20) { Serial1.println("^@5"); }
-  else if (pan_set_speed >= 5 && pan_set_speed < 10) { Serial1.println("^@3"); }
-  else if (pan_set_speed < 5) { Serial1.println("^@1"); }
+  if (pan_set_speed == 20) {
+    Serial1.println("^@7");
+    Serial1.println("^@7");
+  } else if (pan_set_speed == 10) {
+    Serial1.println("^@5");
+    Serial1.println("^@5");
+  } else if (pan_set_speed == 5) {
+    Serial1.println("^@3");
+    Serial1.println("^@3");
+  } else if (pan_set_speed == 1) {
+    Serial1.println("^@1");
+    Serial1.println("^@1");
+  }
 
-  Serial1.print("^=");
-  Serial1.println(slider_set_speed);
+  if (slider_set_speed == 160) { 
+    Serial1.println("^=7"); 
+    Serial1.println("^=7"); 
+    }
+  else if (slider_set_speed == 120) { 
+    Serial1.println("^=5"); 
+    Serial1.println("^=5"); 
+    }
+  else if (slider_set_speed == 60) { 
+    Serial1.println("^=3"); 
+    Serial1.println("^=3"); 
+    }
+  else if (slider_set_speed == 20) { 
+    Serial1.println("^=1"); 
+    Serial1.println("^=1"); 
+    }
 
   Serial1.println("Camera Active");
   Serial1.println("-");
@@ -99,6 +124,11 @@ float tiltStepsToDegrees(float steps) { return steps / tilt_steps_per_degree; }
 void Serial1Flush(void) {
   while (Serial1.available() > 0) {
     c = Serial1.read();
+  }
+}
+void Serial2Flush(void) {
+  while (Serial2.available() > 0) {
+    c = Serial2.read();
   }
 }
 

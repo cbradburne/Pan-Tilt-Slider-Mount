@@ -1,6 +1,5 @@
 //  Keyframes - Moveto, Edit & Clear
 
-
 void editKeyframe(int keyframeEdit) {
   keyframe_array[(keyframeEdit - 1)].panStepCount = stepper_pan.getPosition();
   keyframe_array[(keyframeEdit - 1)].tiltStepCount = stepper_tilt.getPosition();
@@ -14,60 +13,80 @@ void editKeyframe(int keyframeEdit) {
     pos1set = true;
     atPos1 = true;
     Serial1.println("#z");
+    Serial1.println("#z");
+    Serial1.println("#Z");
     Serial1.println("#Z");
   }
   else if (keyframeEdit == 2) {
     pos2set = true;
     atPos2 = true;
     Serial1.println("#x");
+    Serial1.println("#x");
+    Serial1.println("#X");
     Serial1.println("#X");
   }
   else if (keyframeEdit == 3) {
     pos3set = true;
     atPos3 = true;
     Serial1.println("#c");
+    Serial1.println("#c");
+    Serial1.println("#C");
     Serial1.println("#C");
   }
   else if (keyframeEdit == 4) {
     pos4set = true;
     atPos4 = true;
     Serial1.println("#v");
+    Serial1.println("#v");
+    Serial1.println("#V");
     Serial1.println("#V");
   }
   else if (keyframeEdit == 5) {
     pos5set = true;
     atPos5 = true;
     Serial1.println("#b");
+    Serial1.println("#b");
+    Serial1.println("#B");
     Serial1.println("#B");
   }
   else if (keyframeEdit == 6) {
     pos6set = true;
     atPos6 = true;
     Serial1.println("#n");
+    Serial1.println("#n");
+    Serial1.println("#N");
     Serial1.println("#N");
   }
   else if (keyframeEdit == 7) {
     pos7set = true;
     atPos7 = true;
     Serial1.println("#m");
+    Serial1.println("#m");
+    Serial1.println("#M");
     Serial1.println("#M");
   }
   else if (keyframeEdit == 8) {
     pos8set = true;
     atPos8 = true;
     Serial1.println("#,");
+    Serial1.println("#,");
+    Serial1.println("#<");
     Serial1.println("#<");
   }
   else if (keyframeEdit == 9) {
     pos9set = true;
     atPos9 = true;
     Serial1.println("#.");
+    Serial1.println("#.");
+    Serial1.println("#>");
     Serial1.println("#>");
   }
   else if (keyframeEdit == 10) {
     pos0set = true;
     atPos0 = true;
     Serial1.println("#/");
+    Serial1.println("#/");
+    Serial1.println("#?");
     Serial1.println("#?");
   }
   Serial1.println(String("Edited index: ") + keyframeEdit);
@@ -118,6 +137,7 @@ void clearKeyframes(void) {
   atPos0 = false;
 
   Serial1.println("#a");
+  Serial1.println("#a");
   Serial1.println("Positions Cleared.\n");
   Serial1.println("#$");
 }
@@ -131,16 +151,46 @@ void moveToIndex(int index) {
     return;
   }
 
-  if (index == 1) { Serial1.println("#A"); }
-  else if (index == 2) { Serial1.println("#S"); }
-  else if (index == 3) { Serial1.println("#D"); }
-  else if (index == 4) { Serial1.println("#F"); }
-  else if (index == 5) { Serial1.println("#G"); }
-  else if (index == 6) { Serial1.println("#H"); }
-  else if (index == 7) { Serial1.println("#J"); }
-  else if (index == 8) { Serial1.println("#K"); }
-  else if (index == 9) { Serial1.println("#L"); }
-  else if (index == 10) { Serial1.println("#:"); }
+  if (index == 1) { 
+    Serial1.println("#A"); 
+    Serial1.println("#A"); 
+    }
+  else if (index == 2) { 
+    Serial1.println("#S"); 
+    Serial1.println("#S"); 
+    }
+  else if (index == 3) { 
+    Serial1.println("#D"); 
+    Serial1.println("#D"); 
+    }
+  else if (index == 4) { 
+    Serial1.println("#F"); 
+    Serial1.println("#F"); 
+    }
+  else if (index == 5) { 
+    Serial1.println("#G"); 
+    Serial1.println("#G"); 
+    }
+  else if (index == 6) { 
+    Serial1.println("#H"); 
+    Serial1.println("#H"); 
+    }
+  else if (index == 7) { 
+    Serial1.println("#J"); 
+    Serial1.println("#J"); 
+    }
+  else if (index == 8) { 
+    Serial1.println("#K"); 
+    Serial1.println("#K"); 
+    }
+  else if (index == 9) { 
+    Serial1.println("#L"); 
+    Serial1.println("#L"); 
+    }
+  else if (index == 10) { 
+    Serial1.println("#:"); 
+    Serial1.println("#:"); 
+    }
 
   Serial1.println(String("Moving to Index: ") + index);
   Serial1.println(String("Pan   : ") + panStepsToDegrees(keyframe_array[index - 1].panStepCount) + String("°"));
@@ -158,11 +208,6 @@ void moveToIndex(int index) {
   stepper_tilt.setTargetAbs(keyframe_array[index - 1].tiltStepCount);
   stepper_slider.setTargetAbs(keyframe_array[index - 1].sliderStepCount);
 
-  //multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
-  //stepGroup.move();
-
-  //StepperGroup stepGroup({ stepper_pan, stepper_tilt, stepper_slider });
-  //stepGroup.move();
   StepperGroup ({stepper_pan, stepper_tilt, stepper_slider}).move();
 
   Serial1Flush(); 
@@ -300,6 +345,7 @@ void moveToIndex(int index) {
 
   delay(100);     // delay for serial read
 
+  Serial1.println(atIndex);
   Serial1.println(atIndex);
   Serial1.println(String("At index: ") + index + String("\n"));
   Serial1.println("#$");
