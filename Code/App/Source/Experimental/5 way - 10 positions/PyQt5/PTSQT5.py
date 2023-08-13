@@ -486,7 +486,7 @@ class Ui_editWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.show()
-        self.move(780, 150)
+        #self.move(780, 250)
 
         self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
         self.lineEdit.setFocus()
@@ -634,8 +634,10 @@ class Ui_MoverWindow(QMainWindow):
         sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
         widget = self.geometry()                        # 
         x = (ag.width() / 2) - (widget.width() / 2)
-        y = 2 * ag.height() - sg.height() - widget.height() - 100
-        print(widget.height())
+        y = 2 * ag.height() - sg.height() - widget.height() - 50
+        #print(widget.height())
+        x = int(x)
+        y = int(y)
         self.move(x, y)
 
     def retranslateUi(self):
