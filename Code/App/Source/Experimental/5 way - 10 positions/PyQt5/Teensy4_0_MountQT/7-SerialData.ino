@@ -6,7 +6,7 @@ void SerialData(void) {
   if (Serial2.available() > 0) {
     instruction = Serial2.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);                                         //wait to make sure all data in the Serial message has arived
+      delay(2);  //wait to make sure all data in the Serial message has arived
       instruction = Serial2.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
@@ -16,36 +16,35 @@ void SerialData(void) {
           char digit = Serial2.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                                 //Clear any excess data in the Serial buffer
-        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
+        Serial2Flush();                            //Clear any excess data in the Serial buffer
+        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
       } else {
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
         while (Serial2.available()) {                   //set elemetns of stringText to the Serial values sent
           char digit = Serial2.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                                 //Clear any excess data in the Serial buffer
-        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);     //converts stringText to a float
-        if (instruction == '+') {                       //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                   //wait to make sure all data in the Serial message has arived
-          Serial2Flush();                               //Clear any excess data in the Serial buffer
+        Serial2Flush();                              //Clear any excess data in the Serial buffer
+        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
+        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                //wait to make sure all data in the Serial message has arived
+          Serial2Flush();                            //Clear any excess data in the Serial buffer
           return;
         }
       }
     } else {
       return;
     }
-  }
-  else if (Serial1.available() > 0) {
+  } else if (Serial1.available() > 0) {
     instruction = Serial1.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
-      while (Serial1.available() < 6) {                 //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
         count++;
         if (count > 100) {
-          Serial1Flush();                               //  Clear the Serial1 buffer
+          Serial1Flush();  //  Clear the Serial1 buffer
           break;
         }
       }
@@ -154,7 +153,7 @@ void SerialData(void) {
 
 
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);                                         //wait to make sure all data in the Serial1 message has arived
+      delay(2);  //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
 
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
@@ -165,21 +164,21 @@ void SerialData(void) {
           char digit = Serial1.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                                 //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
+        Serial1Flush();                            //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
       } else {
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
         while (Serial1.available()) {                   //set elemetns of stringText to the Serial1 values sent
           char digit = Serial1.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                                 //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);     //converts stringText to a float
+        Serial1Flush();                              //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
 
-        if (instruction == '+') {                       //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                   //wait to make sure all data in the Serial1 message has arived
-          Serial1Flush();                               //Clear any excess data in the Serial1 buffer
+        if (instruction == '+') {  //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);              //wait to make sure all data in the Serial1 message has arived
+          Serial1Flush();          //Clear any excess data in the Serial1 buffer
           return;
         }
       }
@@ -191,7 +190,7 @@ void SerialData(void) {
   }
 
   if (!atPos1 && !atPos2 && !atPos3 && !atPos4 && !atPos5 && !atPos6 && !atPos7 && !atPos8 && !atPos9 && !atPos0 && !sentMoved) {
-    Serial1.println("#s");                              // not at any set pos
+    Serial1.println("#s");  // not at any set pos
     sentMoved = true;
   }
   switch (instruction) {
@@ -426,11 +425,11 @@ void SerialData(void) {
     case INSTRUCTION_SET_PAN_SPEED:
       {
         pan_set_speed = SerialCommandValueFloat;
-        pan_def_speed = pan_set_speed;                                      //  set default speeds
+        pan_def_speed = pan_set_speed;  //  set default speeds
         stepper_pan.setMaxSpeed(panDegreesToSteps(pan_set_speed));
 
         tilt_set_speed = SerialCommandValueFloat;
-        tilt_def_speed = tilt_set_speed;                                    //  set default speeds
+        tilt_def_speed = tilt_set_speed;  //  set default speeds
         stepper_tilt.setMaxSpeed(tiltDegreesToSteps(tilt_set_speed));
 
         if (pan_set_speed == 20) {
@@ -458,7 +457,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_TILT_SPEED:
       {
         tilt_set_speed = SerialCommandValueFloat;
-        tilt_def_speed = tilt_set_speed;                                    //  set default speeds
+        tilt_def_speed = tilt_set_speed;  //  set default speeds
         stepper_tilt.setMaxSpeed(tiltDegreesToSteps(tilt_set_speed));
         Serial1.println(String("Set Tilt Speed to: ") + tilt_set_speed + String("°/s.\n"));
         Serial1.println("#$");
@@ -467,7 +466,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_SLIDER_SPEED:
       {
         slider_set_speed = SerialCommandValueFloat;
-        slider_def_speed = slider_set_speed;                                //  set default speeds
+        slider_def_speed = slider_set_speed;  //  set default speeds
         stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
 
         if (slider_set_speed == 160) {
@@ -530,7 +529,7 @@ void SerialData(void) {
     case INSTRUCTION_TOGGLE_RECORDING:
       {
         Serial2.println("#O");
-        
+
         Serial1.println("Toggle Record.\n");
         Serial1.println("#$");
       }

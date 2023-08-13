@@ -3,9 +3,9 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-#define BAUD_RATE 38400 //9600 //57600
+#define BAUD_RATE 38400  //9600 //57600
 
-#define PIN_STEP_PAN  19
+#define PIN_STEP_PAN 19
 #define PIN_DIRECTION_PAN 18
 #define PIN_STEP_TILT 17
 #define PIN_DIRECTION_TILT 16
@@ -26,8 +26,8 @@
 //#define PAN_GEAR_RATIO 8    //  160/40 *2 teeth       - New Mount 0.9 degree steppers
 //#define TILT_GEAR_RATIO 8   //  80/20 *2 teeth        - New Mount
 
-#define PAN_GEAR_RATIO 15    //  270/36 *2 teeth      - New Mount 0.9 degree steppers Pulley drive
-#define TILT_GEAR_RATIO 15   //  120/16 *2 teeth      - New Mount
+#define PAN_GEAR_RATIO 15   //  270/36 *2 teeth      - New Mount 0.9 degree steppers Pulley drive
+#define TILT_GEAR_RATIO 15  //  120/16 *2 teeth      - New Mount
 
 #define MAX_STRING_LENGTH 10
 
@@ -116,13 +116,13 @@ bool slideReverse = false;
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
 
-float pan_steps_per_degree = (200.0 * 16 * PAN_GEAR_RATIO) / 360.0;           //  Stepper motor has 200 steps per 360 degrees
-float tilt_steps_per_degree = (200.0 * 16 * TILT_GEAR_RATIO) / 360.0;         //  Stepper motor has 200 steps per 360 degrees
-float slider_steps_per_millimetre = (200.0 * 16) / (SLIDER_PULLEY_TEETH * 2); //  Stepper motor has 200 steps per 360 degrees, the timing pully has 36 teeth and the belt has a pitch of 2mm
+float pan_steps_per_degree = (200.0 * 16 * PAN_GEAR_RATIO) / 360.0;            //  Stepper motor has 200 steps per 360 degrees
+float tilt_steps_per_degree = (200.0 * 16 * TILT_GEAR_RATIO) / 360.0;          //  Stepper motor has 200 steps per 360 degrees
+float slider_steps_per_millimetre = (200.0 * 16) / (SLIDER_PULLEY_TEETH * 2);  //  Stepper motor has 200 steps per 360 degrees, the timing pully has 36 teeth and the belt has a pitch of 2mm
 
-float pan_set_speed = 20;           //  degrees/second.
-float tilt_set_speed = 20;          //  degrees/second.
-float slider_set_speed = 60;        //  mm/second.
+float pan_set_speed = 20;     //  degrees/second.
+float tilt_set_speed = 20;    //  degrees/second.
+float slider_set_speed = 60;  //  mm/second.
 
 float pan_def_speed = 20;
 float tilt_def_speed = 20;
@@ -148,11 +148,11 @@ float pan_accel = 1000;
 float tilt_accel = 1000;
 float slider_accel = 1000;
 
-float panMaxFactor = 1.0;             // Speed factor of joystick moves ( 1 = 100% )
+float panMaxFactor = 1.0;  // Speed factor of joystick moves ( 1 = 100% )
 float tiltMaxFactor = 1.0;
 float sliderMaxFactor = 1.0;
 
-float panAccelJoy = 1;                // Accel factor of joystick moves ( 1 = 100% )
+float panAccelJoy = 1;  // Accel factor of joystick moves ( 1 = 100% )
 float tiltAccelJoy = 1;
 float sliderAccelJoy = 1;
 
@@ -213,26 +213,26 @@ int dlyPos5Time = 0;
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 struct KeyframeElement {
-    long panStepCount = 0;
-    float panSpeed = 0;
-    long tiltStepCount = 0;
-    float tiltSpeed = 0;
-    long sliderStepCount = 0;
-    float sliderSpeed = 0;
-    int isRecorded = 0;
+  long panStepCount = 0;
+  float panSpeed = 0;
+  long tiltStepCount = 0;
+  float tiltSpeed = 0;
+  long sliderStepCount = 0;
+  float sliderSpeed = 0;
+  int isRecorded = 0;
 };
 
 struct FloatCoordinate {
-    float x;
-    float y;
-    float z;
+  float x;
+  float y;
+  float z;
 };
 
 struct LinePoints {
-    float x0;
-    float y0;
-    float x1;
-    float y1;
+  float x0;
+  float y0;
+  float x1;
+  float y1;
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/

@@ -2,8 +2,8 @@
  * Motorised Pan, Tilt, Slide mount.
  * 
  * Using:
- * Teensy 3.2   Development board
- * TMC2208      Stepper motor drivers
+ * Teensy 3.2           Development board
+ * TMC2208 TMC2209      Stepper motor drivers
  * 
  * Original concept by isaac879 
  * Original project video: https://youtu.be/1FfB7cLkUyQ

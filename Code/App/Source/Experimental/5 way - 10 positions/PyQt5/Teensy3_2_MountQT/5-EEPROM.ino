@@ -1,6 +1,5 @@
 //  EEPROM
 
-
 void saveEEPROM(void) {
   EEPROM.put(EEPROM_ADDRESS_PAN_SET_SPEED, pan_set_speed);
   EEPROM.put(EEPROM_ADDRESS_TILT_SET_SPEED, tilt_set_speed);

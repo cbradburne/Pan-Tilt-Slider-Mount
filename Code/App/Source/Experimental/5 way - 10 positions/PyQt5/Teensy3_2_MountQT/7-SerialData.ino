@@ -6,46 +6,45 @@ void SerialData(void) {
   if (Serial2.available() > 0) {
     instruction = Serial2.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);                                             //wait to make sure all data in the Serial message has arived
+      delay(2);  //wait to make sure all data in the Serial message has arived
       instruction = Serial2.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
         dlyPos = Serial2.read();
-        memset(&stringText[0], 0, sizeof(stringText));      //clear the array
-        while (Serial2.available()) {                       //set elemetns of stringText to the Serial values sent
-          char digit = Serial2.read();                      //read in a char
-          strncat(stringText, &digit, 1);                   //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
+        while (Serial2.available()) {                   //set elemetns of stringText to the Serial values sent
+          char digit = Serial2.read();                  //read in a char
+          strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                                     //Clear any excess data in the Serial buffer
-        SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
+        Serial2Flush();                            //Clear any excess data in the Serial buffer
+        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
       } else {
-        memset(&stringText[0], 0, sizeof(stringText));      //clear the array
-        while (Serial2.available()) {                       //set elemetns of stringText to the Serial values sent
-          char digit = Serial2.read();                      //read in a char
-          strncat(stringText, &digit, 1);                   //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
+        while (Serial2.available()) {                   //set elemetns of stringText to the Serial values sent
+          char digit = Serial2.read();                  //read in a char
+          strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                                     //Clear any excess data in the Serial buffer
-        SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);         //converts stringText to a float
-        if (instruction == '+') {                           //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                       //wait to make sure all data in the Serial message has arived
-          Serial2Flush();                                   //Clear any excess data in the Serial buffer
+        Serial2Flush();                              //Clear any excess data in the Serial buffer
+        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
+        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                //wait to make sure all data in the Serial message has arived
+          Serial2Flush();                            //Clear any excess data in the Serial buffer
           return;
         }
       }
     } else {
       return;
     }
-  }
-  else if (Serial1.available() > 0) {
+  } else if (Serial1.available() > 0) {
     instruction = Serial1.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
-      while (Serial1.available() < 6) {                     //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
         count++;
         if (count > 100) {
-          Serial1Flush();                                   //  Clear the Serial1 buffer
+          Serial1Flush();  //  Clear the Serial1 buffer
           break;
         }
       }
@@ -78,24 +77,27 @@ void SerialData(void) {
 
       previousMillisMoveCheck = millis();
 
-      if (speedFactorS == 0.0) { rotate_stepperS.stopAsync(); }
-      else {
+      if (speedFactorS == 0.0) {
+        rotate_stepperS.stopAsync();
+      } else {
         rotate_stepperS.rotateAsync(stepper_slider);
-        rotate_stepperS.overrideAcceleration(sliderAccelJoy);         // to make accel less when using joystick
+        rotate_stepperS.overrideAcceleration(sliderAccelJoy);  // to make accel less when using joystick
         rotate_stepperS.overrideSpeed(speedFactorS);
       }
 
-      if (speedFactorP == 0.0) { rotate_stepperP.stopAsync(); }
-      else {
+      if (speedFactorP == 0.0) {
+        rotate_stepperP.stopAsync();
+      } else {
         rotate_stepperP.rotateAsync(stepper_pan);
-        rotate_stepperP.overrideAcceleration(panAccelJoy);            // to make accel less when using joystick
+        rotate_stepperP.overrideAcceleration(panAccelJoy);  // to make accel less when using joystick
         rotate_stepperP.overrideSpeed(speedFactorP);
       }
 
-      if (speedFactorT == 0.0) { rotate_stepperT.stopAsync(); }
-      else {
+      if (speedFactorT == 0.0) {
+        rotate_stepperT.stopAsync();
+      } else {
         rotate_stepperT.rotateAsync(stepper_tilt);
-        rotate_stepperT.overrideAcceleration(tiltAccelJoy);           // to make accel less when using joystick
+        rotate_stepperT.overrideAcceleration(tiltAccelJoy);  // to make accel less when using joystick
         rotate_stepperT.overrideSpeed(speedFactorT);
       }
 
@@ -103,78 +105,76 @@ void SerialData(void) {
       if (speedFactorP == 0.0) { rotate_stepperP.stopAsync(); }
       if (speedFactorT == 0.0) { rotate_stepperT.stopAsync(); }
 
-      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) { isManualMove = false; }
-      else {
+      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
+        isManualMove = false;
+      } else {
         isManualMove = true;
         previousMillisMoveCheck = millis();
       }
-    }
-    else if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);                                                   //wait to make sure all data in the Serial1 message has arived
+    } else if (instruction == INSTRUCTION_IS_COMMAND) {
+      delay(2);  //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
         dlyPos = Serial1.read();
-        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
-        while (Serial1.available()) {                             //set elemetns of stringText to the Serial1 values sent
-          char digit = Serial1.read();                            //read in a char
-          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
+        while (Serial1.available()) {                   //set elemetns of stringText to the Serial1 values sent
+          char digit = Serial1.read();                  //read in a char
+          strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                                           //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);                 //converts stringText to an int
-      }
-      else {
-        memset(&stringText[0], 0, sizeof(stringText));            //clear the array
-        while (Serial1.available()) {                             //set elemetns of stringText to the Serial1 values sent
-          char digit = Serial1.read();                            //read in a char
-          strncat(stringText, &digit, 1);                         //add digit to the end of the array
+        Serial1Flush();                            //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
+      } else {
+        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
+        while (Serial1.available()) {                   //set elemetns of stringText to the Serial1 values sent
+          char digit = Serial1.read();                  //read in a char
+          strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                                           //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);                 //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);               //converts stringText to a float
-        if (instruction == '+') {                                 //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                             //wait to make sure all data in the Serial1 message has arived
-          Serial1Flush();                                         //Clear any excess data in the Serial1 buffer
+        Serial1Flush();                              //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
+        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                //wait to make sure all data in the Serial1 message has arived
+          Serial1Flush();                            //Clear any excess data in the Serial1 buffer
           return;
         }
       }
+    } else {
+      return;
     }
-    else { return; }
+  } else {
+    return;
   }
-  else { return; }
 
   if (!atPos1 && !atPos2 && !atPos3 && !atPos4 && !atPos5 && !atPos6 && !atPos7 && !atPos8 && !atPos9 && !atPos0 && !sentMoved) {
-    Serial1.println("#s");          // not at any set pos
+    Serial1.println("#s");  // not at any set pos
     sentMoved = true;
   }
 
   switch (instruction) {
-    case INSTRUCTION_IS_CAM_DELAY: {
+    case INSTRUCTION_IS_CAM_DELAY:
+      {
         if (dlyPos == 49) {
           dlyPos1Time = SerialCommandValueInt;
           Serial1.print("Delay before 2nd position set: ");
           Serial1.print(SerialCommandValueInt);
           Serial1.println("ms\n");
-        }
-        else if (dlyPos == 50) {
+        } else if (dlyPos == 50) {
           dlyPos2Time = SerialCommandValueInt;
           Serial1.print("Delay before 3rd position set: ");
           Serial1.print(SerialCommandValueInt);
           Serial1.println("ms\n");
-        }
-        else if (dlyPos == 51) {
+        } else if (dlyPos == 51) {
           dlyPos3Time = SerialCommandValueInt;
           Serial1.print("Delay before 4th position set: ");
           Serial1.print(SerialCommandValueInt);
           Serial1.println("ms\n");
-        }
-        else if (dlyPos == 52) {
+        } else if (dlyPos == 52) {
           dlyPos4Time = SerialCommandValueInt;
           Serial1.print("Delay before 5th position set: ");
           Serial1.print(SerialCommandValueInt);
           Serial1.println("ms\n");
-        }
-        else if (dlyPos == 53) {
+        } else if (dlyPos == 53) {
           dlyPos5Time = SerialCommandValueInt;
           Serial1.print("Delay before 6th position set: ");
           Serial1.print(SerialCommandValueInt);
@@ -182,7 +182,8 @@ void SerialData(void) {
         }
       }
       break;
-    case INSTRUCTION_IS_RUN_CAM: {
+    case INSTRUCTION_IS_RUN_CAM:
+      {
         Serial1.println("Run array of moves.");
         Serial1.println("#$");
         if (pos1set) {
@@ -246,135 +247,163 @@ void SerialData(void) {
         }
       }
       break;
-    case INSTRUCTION_DIRECT_MOVE: {
+    case INSTRUCTION_DIRECT_MOVE:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           moveToIndex(SerialCommandValueInt);
         }
       }
       break;
-    case INSTRUCTION_SETPOS: { editKeyframe(SerialCommandValueInt); }
+    case INSTRUCTION_SETPOS:
+      {
+        editKeyframe(SerialCommandValueInt);
+      }
       break;
-    case INSTRUCTION_CLEAR_ARRAY: { clearKeyframes(); }
+    case INSTRUCTION_CLEAR_ARRAY:
+      {
+        clearKeyframes();
+      }
       break;
-    case INSTRUCTION_PAN_ACCEL: {
+    case INSTRUCTION_PAN_ACCEL:
+      {
         pan_accel = (SerialCommandValueInt >= 0) ? SerialCommandValueInt : 0;
         stepper_pan.setAcceleration(pan_accel);
         Serial1.println(String("Pan accel : ") + pan_accel + String(" steps/s²"));
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_TILT_ACCEL: {
+    case INSTRUCTION_TILT_ACCEL:
+      {
         tilt_accel = (SerialCommandValueInt >= 0) ? SerialCommandValueInt : 0;
         stepper_tilt.setAcceleration(tilt_accel);
         Serial1.println(String("Tilt accel : ") + tilt_accel + String(" steps/s²"));
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_SLIDER_ACCEL: {
+    case INSTRUCTION_SLIDER_ACCEL:
+      {
         slider_accel = (SerialCommandValueInt >= 0) ? SerialCommandValueInt : 0;
         stepper_slider.setAcceleration(slider_accel);
         Serial1.println(String("Slider accel : ") + slider_accel + String(" steps/s²"));
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_PAN_JOY_ACCEL: {
+    case INSTRUCTION_PAN_JOY_ACCEL:
+      {
         panAccelJoy = (SerialCommandValueFloat >= 0) ? SerialCommandValueFloat : 0;
         Serial1.println(String("Pan Joy accel factor : ") + panAccelJoy);
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_TILT_JOY_ACCEL: {
+    case INSTRUCTION_TILT_JOY_ACCEL:
+      {
         tiltAccelJoy = (SerialCommandValueFloat >= 0) ? SerialCommandValueFloat : 0;
         Serial1.println(String("Tilt Joy accel factor : ") + tiltAccelJoy);
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_SLIDER_JOY_ACCEL: {
+    case INSTRUCTION_SLIDER_JOY_ACCEL:
+      {
         sliderAccelJoy = (SerialCommandValueFloat >= 0) ? SerialCommandValueFloat : 0;
         Serial1.println(String("Slider Joy accel factor : ") + sliderAccelJoy);
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_SAVE_TO_EEPROM: { saveEEPROM(); }
+    case INSTRUCTION_SAVE_TO_EEPROM:
+      {
+        saveEEPROM();
+      }
       break;
-    case INSTRUCTION_DEBUG_STATUS: {
+    case INSTRUCTION_DEBUG_STATUS:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           debugReport();
         }
       }
       break;
-    case INSTRUCTION_POSITION_STATUS: {
+    case INSTRUCTION_POSITION_STATUS:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           positionReport();
         }
       }
       break;
-    case INSTRUCTION_KEYFRAMES_STATUS: { printKeyframeElements(); }
+    case INSTRUCTION_KEYFRAMES_STATUS:
+      {
+        printKeyframeElements();
+      }
       break;
-    case INSTRUCTION_RESET_LEDS: { doRemoteControlLEDs(); }
+    case INSTRUCTION_RESET_LEDS:
+      {
+        doRemoteControlLEDs();
+      }
       break;
-    case INSTRUCTION_PAN_DEGREES: {
+    case INSTRUCTION_PAN_DEGREES:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           panDegrees(SerialCommandValueFloat);
         }
       }
       break;
-    case INSTRUCTION_TILT_DEGREES: {
+    case INSTRUCTION_TILT_DEGREES:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           tiltDegrees(SerialCommandValueFloat);
         }
       }
       break;
-    case INSTRUCTION_SLIDER_MILLIMETRES: {
+    case INSTRUCTION_SLIDER_MILLIMETRES:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           sliderMoveTo(SerialCommandValueFloat);
         }
       }
       break;
-    case INSTRUCTION_PAN_DEGREES_REL: {
+    case INSTRUCTION_PAN_DEGREES_REL:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           panDegreesRel(SerialCommandValueFloat);
         }
       }
       break;
-    case INSTRUCTION_TILT_DEGREES_REL: {
+    case INSTRUCTION_TILT_DEGREES_REL:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           tiltDegreesRel(SerialCommandValueFloat);
         }
       }
       break;
-    case INSTRUCTION_SLIDER_MILLIMETRES_REL: {
+    case INSTRUCTION_SLIDER_MILLIMETRES_REL:
+      {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           sliderMMRel(SerialCommandValueFloat);
         }
       }
       break;
-    case INSTRUCTION_SET_PAN_SPEED: {
+    case INSTRUCTION_SET_PAN_SPEED:
+      {
         pan_set_speed = SerialCommandValueFloat;
-        pan_def_speed = pan_set_speed;                                                        //  set default speeds
+        pan_def_speed = pan_set_speed;  //  set default speeds
         stepper_pan.setMaxSpeed(panDegreesToSteps(pan_set_speed));
 
         tilt_set_speed = SerialCommandValueFloat;
-        tilt_def_speed = tilt_set_speed;                                                      //  set default speeds
+        tilt_def_speed = tilt_set_speed;  //  set default speeds
         stepper_tilt.setMaxSpeed(tiltDegreesToSteps(tilt_set_speed));
 
-        if (pan_set_speed == 20) { 
-          Serial1.println("^@7"); 
+        if (pan_set_speed == 20) {
+          Serial1.println("^@7");
           pan_accel = pan_def_accel * 4;
           tilt_accel = tilt_def_accel * 4;
-        }
-        else if (pan_set_speed == 10) { 
-          Serial1.println("^@5"); 
+        } else if (pan_set_speed == 10) {
+          Serial1.println("^@5");
           pan_accel = pan_def_accel * 2;
           tilt_accel = tilt_def_accel * 2;
-        }
-        else if (pan_set_speed == 5) { 
-          Serial1.println("^@3"); 
+        } else if (pan_set_speed == 5) {
+          Serial1.println("^@3");
           pan_accel = pan_def_accel;
           tilt_accel = tilt_def_accel;
-        }
-        else if (pan_set_speed == 1) { 
-          Serial1.println("^@1"); 
+        } else if (pan_set_speed == 1) {
+          Serial1.println("^@1");
           pan_accel = pan_def_accel * 0.2;
           tilt_accel = tilt_def_accel * 0.2;
         }
@@ -383,33 +412,32 @@ void SerialData(void) {
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_SET_TILT_SPEED: {
+    case INSTRUCTION_SET_TILT_SPEED:
+      {
         tilt_set_speed = SerialCommandValueFloat;
-        tilt_def_speed = tilt_set_speed;                                                      //  set default speeds
+        tilt_def_speed = tilt_set_speed;  //  set default speeds
         stepper_tilt.setMaxSpeed(tiltDegreesToSteps(tilt_set_speed));
         Serial1.println(String("Set Tilt Speed to: ") + tilt_set_speed + String("°/s.\n"));
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_SET_SLIDER_SPEED: {
+    case INSTRUCTION_SET_SLIDER_SPEED:
+      {
         slider_set_speed = SerialCommandValueFloat;
-        slider_def_speed = slider_set_speed;                                                  //  set default speeds
+        slider_def_speed = slider_set_speed;  //  set default speeds
         stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
 
-        if (slider_set_speed == 160) { 
+        if (slider_set_speed == 160) {
           Serial1.println("^=7");
           slider_accel = slider_def_accel * 4;
-        }
-        else if (slider_set_speed == 120) { 
-          Serial1.println("^=5"); 
+        } else if (slider_set_speed == 120) {
+          Serial1.println("^=5");
           slider_accel = slider_def_accel * 2;
-        }
-        else if (slider_set_speed == 60) { 
-          Serial1.println("^=3"); 
+        } else if (slider_set_speed == 60) {
+          Serial1.println("^=3");
           slider_accel = slider_def_accel;
-        }
-        else if (slider_set_speed == 20) { 
-          Serial1.println("^=1"); 
+        } else if (slider_set_speed == 20) {
+          Serial1.println("^=1");
           slider_accel = slider_def_accel * 0.3;
         }
 
@@ -417,7 +445,8 @@ void SerialData(void) {
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_ZOOM_IN: {
+    case INSTRUCTION_ZOOM_IN:
+      {
         zoom_speed = SerialCommandValueInt;
         zoomIN = true;
         zoomOUT = false;
@@ -429,7 +458,8 @@ void SerialData(void) {
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_ZOOM_OUT: {
+    case INSTRUCTION_ZOOM_OUT:
+      {
         zoom_speed = SerialCommandValueInt;
         zoomIN = false;
         zoomOUT = true;
@@ -441,7 +471,8 @@ void SerialData(void) {
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_STOP_ZOOM: {
+    case INSTRUCTION_STOP_ZOOM:
+      {
         zoomIN = false;
         zoomOUT = false;
 
@@ -452,8 +483,9 @@ void SerialData(void) {
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_TOGGLE_RECORDING: {
+    case INSTRUCTION_TOGGLE_RECORDING:
       {
+
         Serial2.println("#O");
 
         Serial1.println("Toggle Record.\n");
@@ -472,13 +504,15 @@ void SerialData(void) {
         Serial2.println("#p");
       }
       break;
-    case INSTRUCTION_SET_ZERO_POS: {
+    case INSTRUCTION_SET_ZERO_POS:
+      {
         stepper_pan.setPosition(0);
         stepper_tilt.setPosition(0);
         stepper_slider.setPosition(0);
       }
       break;
-    case INSTRUCTION_RESTORE_DEFAULT_SPEEDS: {
+    case INSTRUCTION_RESTORE_DEFAULT_SPEEDS:
+      {
         pan_set_speed = pan_def_speed;
         tilt_set_speed = tilt_def_speed;
         slider_set_speed = slider_def_speed;
@@ -493,7 +527,6 @@ void SerialData(void) {
       }
       break;
     default:
-      break;    // if unrecognised charater, do nothing
-    }
+      break;  // if unrecognised charater, do nothing
   }
 }

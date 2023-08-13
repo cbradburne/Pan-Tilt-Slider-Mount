@@ -69,22 +69,19 @@ void initPanTilt(void) {
     Serial1.println("^@1");
   }
 
-  if (slider_set_speed == 160) { 
-    Serial1.println("^=7"); 
-    Serial1.println("^=7"); 
-    }
-  else if (slider_set_speed == 120) { 
-    Serial1.println("^=5"); 
-    Serial1.println("^=5"); 
-    }
-  else if (slider_set_speed == 60) { 
-    Serial1.println("^=3"); 
-    Serial1.println("^=3"); 
-    }
-  else if (slider_set_speed == 20) { 
-    Serial1.println("^=1"); 
-    Serial1.println("^=1"); 
-    }
+  if (slider_set_speed == 160) {
+    Serial1.println("^=7");
+    Serial1.println("^=7");
+  } else if (slider_set_speed == 120) {
+    Serial1.println("^=5");
+    Serial1.println("^=5");
+  } else if (slider_set_speed == 60) {
+    Serial1.println("^=3");
+    Serial1.println("^=3");
+  } else if (slider_set_speed == 20) {
+    Serial1.println("^=1");
+    Serial1.println("^=1");
+  }
 
   Serial1.println("Camera Active");
   Serial1.println("-");
@@ -108,14 +105,30 @@ void initPanTilt(void) {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-float panDegreesToSteps(float angle) { return pan_steps_per_degree * angle; }
-float tiltDegreesToSteps(float angle) { return tilt_steps_per_degree * angle; }
-long sliderMillimetresToSteps(float mm) { return round(mm * slider_steps_per_millimetre); }
-float sliderStepsToMillimetres(long steps) { return (float)steps / slider_steps_per_millimetre; }
-float panStepsToDegrees(long steps) { return steps / pan_steps_per_degree; }
-float panStepsToDegrees(float steps) { return steps / pan_steps_per_degree; }
-float tiltStepsToDegrees(long steps) { return steps / tilt_steps_per_degree; }
-float tiltStepsToDegrees(float steps) { return steps / tilt_steps_per_degree; }
+float panDegreesToSteps(float angle) {
+  return pan_steps_per_degree * angle;
+}
+float tiltDegreesToSteps(float angle) {
+  return tilt_steps_per_degree * angle;
+}
+long sliderMillimetresToSteps(float mm) {
+  return round(mm * slider_steps_per_millimetre);
+}
+float sliderStepsToMillimetres(long steps) {
+  return (float)steps / slider_steps_per_millimetre;
+}
+float panStepsToDegrees(long steps) {
+  return steps / pan_steps_per_degree;
+}
+float panStepsToDegrees(float steps) {
+  return steps / pan_steps_per_degree;
+}
+float tiltStepsToDegrees(long steps) {
+  return steps / tilt_steps_per_degree;
+}
+float tiltStepsToDegrees(float steps) {
+  return steps / tilt_steps_per_degree;
+}
 
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -148,6 +161,3 @@ void mainLoop(void) {
     }
   }
 }
-
-
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------*/

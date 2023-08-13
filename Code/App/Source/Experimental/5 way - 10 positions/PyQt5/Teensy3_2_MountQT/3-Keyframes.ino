@@ -16,72 +16,63 @@ void editKeyframe(int keyframeEdit) {
     Serial1.println("#z");
     Serial1.println("#Z");
     Serial1.println("#Z");
-  }
-  else if (keyframeEdit == 2) {
+  } else if (keyframeEdit == 2) {
     pos2set = true;
     atPos2 = true;
     Serial1.println("#x");
     Serial1.println("#x");
     Serial1.println("#X");
     Serial1.println("#X");
-  }
-  else if (keyframeEdit == 3) {
+  } else if (keyframeEdit == 3) {
     pos3set = true;
     atPos3 = true;
     Serial1.println("#c");
     Serial1.println("#c");
     Serial1.println("#C");
     Serial1.println("#C");
-  }
-  else if (keyframeEdit == 4) {
+  } else if (keyframeEdit == 4) {
     pos4set = true;
     atPos4 = true;
     Serial1.println("#v");
     Serial1.println("#v");
     Serial1.println("#V");
     Serial1.println("#V");
-  }
-  else if (keyframeEdit == 5) {
+  } else if (keyframeEdit == 5) {
     pos5set = true;
     atPos5 = true;
     Serial1.println("#b");
     Serial1.println("#b");
     Serial1.println("#B");
     Serial1.println("#B");
-  }
-  else if (keyframeEdit == 6) {
+  } else if (keyframeEdit == 6) {
     pos6set = true;
     atPos6 = true;
     Serial1.println("#n");
     Serial1.println("#n");
     Serial1.println("#N");
     Serial1.println("#N");
-  }
-  else if (keyframeEdit == 7) {
+  } else if (keyframeEdit == 7) {
     pos7set = true;
     atPos7 = true;
     Serial1.println("#m");
     Serial1.println("#m");
     Serial1.println("#M");
     Serial1.println("#M");
-  }
-  else if (keyframeEdit == 8) {
+  } else if (keyframeEdit == 8) {
     pos8set = true;
     atPos8 = true;
     Serial1.println("#,");
     Serial1.println("#,");
     Serial1.println("#<");
     Serial1.println("#<");
-  }
-  else if (keyframeEdit == 9) {
+  } else if (keyframeEdit == 9) {
     pos9set = true;
     atPos9 = true;
     Serial1.println("#.");
     Serial1.println("#.");
     Serial1.println("#>");
     Serial1.println("#>");
-  }
-  else if (keyframeEdit == 10) {
+  } else if (keyframeEdit == 10) {
     pos0set = true;
     atPos0 = true;
     Serial1.println("#/");
@@ -151,44 +142,35 @@ void moveToIndex(int index) {
     return;
   }
 
-  if (index == 1) { 
-    Serial1.println("#A"); 
-    Serial1.println("#A"); 
-    }
-  else if (index == 2) { 
-    Serial1.println("#S"); 
-    Serial1.println("#S"); 
-    }
-  else if (index == 3) { 
-    Serial1.println("#D"); 
-    Serial1.println("#D"); 
-    }
-  else if (index == 4) { 
-    Serial1.println("#F"); 
-    Serial1.println("#F"); 
-    }
-  else if (index == 5) { 
-    Serial1.println("#G"); 
-    Serial1.println("#G"); 
-    }
-  else if (index == 6) { 
-    Serial1.println("#H"); 
+  if (index == 1) {
+    Serial1.println("#A");
+    Serial1.println("#A");
+  } else if (index == 2) {
+    Serial1.println("#S");
+    Serial1.println("#S");
+  } else if (index == 3) {
+    Serial1.println("#D");
+    Serial1.println("#D");
+  } else if (index == 4) {
+    Serial1.println("#F");
+    Serial1.println("#F");
+  } else if (index == 5) {
+    Serial1.println("#G");
+    Serial1.println("#G");
+  } else if (index == 6) {
     Serial1.println("#H");
-  }
-  else if (index == 7) { 
-    Serial1.println("#J"); 
-    Serial1.println("#J"); 
-    }
-  else if (index == 8) { 
-    Serial1.println("#K"); 
-    Serial1.println("#K"); 
-    }
-  else if (index == 9) { 
-    Serial1.println("#L"); 
-    Serial1.println("#L"); 
-    }
-  else if (index == 10) { 
-    Serial1.println("#:"); 
+    Serial1.println("#H");
+  } else if (index == 7) {
+    Serial1.println("#J");
+    Serial1.println("#J");
+  } else if (index == 8) {
+    Serial1.println("#K");
+    Serial1.println("#K");
+  } else if (index == 9) {
+    Serial1.println("#L");
+    Serial1.println("#L");
+  } else if (index == 10) {
+    Serial1.println("#:");
     Serial1.println("#:");
   }
 
@@ -210,7 +192,7 @@ void moveToIndex(int index) {
 
   multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
 
-  Serial1Flush(); 
+  Serial1Flush();
 
   if (index == 1) {
     atIndex = "#z";
@@ -224,8 +206,7 @@ void moveToIndex(int index) {
     atPos8 = false;
     atPos9 = false;
     atPos0 = false;
-  }
-  else if (index == 2) {
+  } else if (index == 2) {
     atIndex = "#x";
     atPos2 = true;
     atPos1 = false;
@@ -237,8 +218,7 @@ void moveToIndex(int index) {
     atPos8 = false;
     atPos9 = false;
     atPos0 = false;
-  }
-  else if (index == 3) {
+  } else if (index == 3) {
     atIndex = "#c";
     atPos3 = true;
     atPos1 = false;
@@ -250,8 +230,7 @@ void moveToIndex(int index) {
     atPos8 = false;
     atPos9 = false;
     atPos0 = false;
-  }
-  else if (index == 4) {
+  } else if (index == 4) {
     atIndex = "#v";
     atPos4 = true;
     atPos1 = false;
@@ -263,8 +242,7 @@ void moveToIndex(int index) {
     atPos8 = false;
     atPos9 = false;
     atPos0 = false;
-  }
-  else if (index == 5) {
+  } else if (index == 5) {
     atIndex = "#b";
     atPos5 = true;
     atPos1 = false;
@@ -276,8 +254,7 @@ void moveToIndex(int index) {
     atPos8 = false;
     atPos9 = false;
     atPos0 = false;
-  }
-  else if (index == 6) {
+  } else if (index == 6) {
     atIndex = "#n";
     atPos6 = true;
     atPos1 = false;
@@ -289,8 +266,7 @@ void moveToIndex(int index) {
     atPos8 = false;
     atPos9 = false;
     atPos0 = false;
-  }
-  else if (index == 7) {
+  } else if (index == 7) {
     atIndex = "#m";
     atPos7 = true;
     atPos1 = false;
@@ -302,8 +278,7 @@ void moveToIndex(int index) {
     atPos8 = false;
     atPos9 = false;
     atPos0 = false;
-  }
-  else if (index == 8) {
+  } else if (index == 8) {
     atIndex = "#,";
     atPos8 = true;
     atPos1 = false;
@@ -315,8 +290,7 @@ void moveToIndex(int index) {
     atPos7 = false;
     atPos9 = false;
     atPos0 = false;
-  }
-  else if (index == 9) {
+  } else if (index == 9) {
     atIndex = "#.";
     atPos9 = true;
     atPos1 = false;
@@ -328,8 +302,7 @@ void moveToIndex(int index) {
     atPos7 = false;
     atPos8 = false;
     atPos0 = false;
-  }
-  else if (index == 10) {
+  } else if (index == 10) {
     atIndex = "#/";
     atPos0 = true;
     atPos1 = false;
@@ -343,7 +316,7 @@ void moveToIndex(int index) {
     atPos9 = false;
   }
 
-  delay(100);     // delay for serial read
+  delay(100);  // delay for serial read
 
   Serial1.println(atIndex);
   Serial1.println(atIndex);
@@ -357,6 +330,3 @@ void moveToIndex(int index) {
   }
   sentMoved = false;
 }
-
-
-/*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
