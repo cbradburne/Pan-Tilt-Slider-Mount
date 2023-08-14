@@ -5275,6 +5275,12 @@ class PTSapp(QMainWindow):
             if editButton == 59: self.pushButton59.setText(newText)
             if editButton == 50: self.pushButton50.setText(newText)
 
+            if editButton == 61: self.pushButtonCam1.setText(newText)
+            if editButton == 62: self.pushButtonCam2.setText(newText)
+            if editButton == 63: self.pushButtonCam3.setText(newText)
+            if editButton == 64: self.pushButtonCam4.setText(newText)
+            if editButton == 65: self.pushButtonCam5.setText(newText)
+
             newText = ""
             
     def resetMessage(self):
@@ -5315,8 +5321,14 @@ class PTSapp(QMainWindow):
     def whichCamSerial1(self):
         global whichCamSerial
         global SetPosToggle
+        global editToggle
+        global editButton
 
-        if SetPosToggle:
+        if editToggle:
+            editButton = 61
+            currentText = self.pushButtonCam1.text()
+            self.openEditWindow(currentText)
+        elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&1D')
         else:
@@ -5330,7 +5342,13 @@ class PTSapp(QMainWindow):
     def whichCamSerial2(self):
         global whichCamSerial
         global SetPosToggle
+        global editToggle
+        global editButton
 
+        if editToggle:
+            editButton = 62
+            currentText = self.pushButtonCam2.text()
+            self.openEditWindow(currentText)
         if SetPosToggle:
             self.setPos(3)
             self.sendSerial('&2D')
@@ -5345,8 +5363,14 @@ class PTSapp(QMainWindow):
     def whichCamSerial3(self):
         global whichCamSerial
         global SetPosToggle
+        global editToggle
+        global editButton
 
-        if SetPosToggle:
+        if editToggle:
+            editButton = 63
+            currentText = self.pushButtonCam3.text()
+            self.openEditWindow(currentText)
+        elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&3D')
         else:
@@ -5360,8 +5384,14 @@ class PTSapp(QMainWindow):
     def whichCamSerial4(self):
         global whichCamSerial
         global SetPosToggle
+        global editToggle
+        global editButton
 
-        if SetPosToggle:
+        if editToggle:
+            editButton = 64
+            currentText = self.pushButtonCam4.text()
+            self.openEditWindow(currentText)
+        elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&4D')
         else:
@@ -5375,8 +5405,14 @@ class PTSapp(QMainWindow):
     def whichCamSerial5(self):
         global whichCamSerial
         global SetPosToggle
+        global editToggle
+        global editButton
 
-        if SetPosToggle:
+        if editToggle:
+            editButton = 65
+            currentText = self.pushButtonCam5.text()
+            self.openEditWindow(currentText)
+        elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&5D')
         else:
