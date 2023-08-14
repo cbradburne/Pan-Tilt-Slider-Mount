@@ -486,7 +486,7 @@ class Ui_editWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.show()
-        #self.move(780, 250)
+        self.move(780, 150)
 
         self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
         self.lineEdit.setFocus()
@@ -1989,7 +1989,7 @@ class PTSapp(QMainWindow):
 
             usb_port = 'usbmodem'
             usb_port2 = 'usb/00'
-            usb_port3 = 'COM6'
+            usb_port3 = 'COM8'
             usb_port4 = 'COM3'
             
             if (usb_port in '\t'.join(device_name_list)):
