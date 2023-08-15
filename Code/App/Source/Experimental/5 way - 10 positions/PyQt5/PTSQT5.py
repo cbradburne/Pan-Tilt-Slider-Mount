@@ -23,15 +23,13 @@
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget
+from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QFileDialog
 from serial.tools import list_ports
 from serial import Serial
-import pyjoystick
+import sys, time, os, subprocess, re, json, pkg_resources, pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
-import sys, time, os, subprocess
 from sys import platform
-import pkg_resources
-import re
+from pathlib import Path
 
 #from qt_thread_updater import ThreadUpdater
 #updater = ThreadUpdater()
@@ -50,6 +48,13 @@ msg = ""
 sendData = ""
 
 manualMove = ""
+
+config = {}
+cam1Label = 'Cam1'
+cam2Label = 'Cam2'
+cam3Label = 'Cam3'
+cam4Label = 'Cam4'
+cam5Label = 'Cam5'
 
 btn_scan_show = False
 
@@ -715,11 +720,10 @@ class PTSapp(QMainWindow):
     def __init__(self, txt):
         self.text = txt
         super(PTSapp, self).__init__()
-
         self.setupUi()
     
-    def openEditWindow(self, text):
 
+    def openEditWindow(self, text):
         self.ui2 = Ui_editWindow()
         self.ui2.setupUi()
         self.ui2.lineEdit.setText(text)
@@ -1504,6 +1508,26 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
+        self.pushButtonFileLoad = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.fileLoad())
+        self.pushButtonFileLoad.setGeometry(QtCore.QRect(40, 990, 120, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonFileLoad.setFont(font)
+        self.pushButtonFileLoad.setStyleSheet("border: 4px solid #FFFC67; background-color: #44d700; border-radius: 10px;")
+        self.pushButtonFileLoad.setFlat(False)
+        self.pushButtonFileLoad.setObjectName("pushButtonFileLoad")
+        self.pushButtonFileLoad.hide()
+        self.pushButtonFileSave = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.fileSave())
+        self.pushButtonFileSave.setGeometry(QtCore.QRect(320, 990, 120, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonFileSave.setFont(font)
+        self.pushButtonFileSave.setStyleSheet("border: 4px solid #d74444; background-color: #F76666; border-radius: 10px;")
+        self.pushButtonFileSave.setFlat(False)
+        self.pushButtonFileSave.setObjectName("pushButtonFileSave")
+        self.pushButtonFileSave.hide()
         self.pushButtonLED = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.resetButtonColours())
         self.pushButtonLED.setGeometry(QtCore.QRect(1500, 990, 120, 51))
         font = QtGui.QFont()
@@ -1524,6 +1548,17 @@ class PTSapp(QMainWindow):
         self.pushButtonExit.setFlat(False)
         self.pushButtonExit.setObjectName("pushButtonExit")
         self.pushButtonExit.hide()
+        self.labelFilename = QtWidgets.QLabel(self.centralwidget)
+        self.labelFilename.setGeometry(QtCore.QRect(460, 990, 400, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(18)
+        self.labelFilename.setFont(font)
+        self.labelFilename.setStyleSheet("color: white; border: 4px solid grey; background-color: #333333; border-radius: 10px;")
+        self.labelFilename.setText("")
+        self.labelFilename.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelFilename.setObjectName("labelFilename")
+        self.labelFilename.setHidden(True)
         self.labelInfo = QtWidgets.QLabel(self.centralwidget)
         self.labelInfo.setGeometry(QtCore.QRect(1360, 50, 371, 41))
         font = QtGui.QFont()
@@ -1578,6 +1613,12 @@ class PTSapp(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def retranslateUi(self):
+        global cam1Label
+        global cam2Label
+        global cam3Label
+        global cam4Label
+        global cam5Label
+
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("MainWindow", "PTSapp"))
         self.pushButton11.setText(_translate("MainWindow", "1"))
@@ -1630,13 +1671,15 @@ class PTSapp(QMainWindow):
         self.pushButton58.setText(_translate("MainWindow", "8"))
         self.pushButton59.setText(_translate("MainWindow", "9"))
         self.pushButton50.setText(_translate("MainWindow", "10"))
-        self.pushButtonCam1.setText(_translate("MainWindow", "Cam1"))
-        self.pushButtonCam2.setText(_translate("MainWindow", "Cam2"))
-        self.pushButtonCam3.setText(_translate("MainWindow", "Cam3"))
-        self.pushButtonCam4.setText(_translate("MainWindow", "Cam4"))
-        self.pushButtonCam5.setText(_translate("MainWindow", "Cam5"))
+        self.pushButtonCam1.setText(_translate("MainWindow", cam1Label))
+        self.pushButtonCam2.setText(_translate("MainWindow", cam2Label))
+        self.pushButtonCam3.setText(_translate("MainWindow", cam3Label))
+        self.pushButtonCam4.setText(_translate("MainWindow", cam4Label))
+        self.pushButtonCam5.setText(_translate("MainWindow", cam5Label))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
+        self.pushButtonFileLoad.setText(_translate("MainWindow", "Load"))
+        self.pushButtonFileSave.setText(_translate("MainWindow", "Save"))
         self.pushButtonLED.setText(_translate("MainWindow", "Reset"))
         self.pushButtonExit.setText(_translate("MainWindow", "Exit"))
         #self.menuFile.setTitle(_translate("MainWindow", "File"))
@@ -1645,9 +1688,9 @@ class PTSapp(QMainWindow):
 
         self.initFlashTimer()
 
-        #self.show()
+        self.show()
         #self.showMaximized()
-        self.showFullScreen()
+        #self.showFullScreen()
 
     def pushToClose(self):
         self.close()
@@ -1737,7 +1780,157 @@ class PTSapp(QMainWindow):
         else:
             editToggle = True
             self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #CC5050; border-radius: 10px;")
+    
+    def fileLoad(self):
+        global config
+        global message
+        global cam1Label
+        global cam2Label
+        global cam3Label
+        global cam4Label
+        global cam5Label
+
+        fname = QFileDialog.getOpenFileName(self, "Openn Config", "", "JSON (*.json)")
+    
+        if fname:
+            self.labelFilename.setText(Path(fname[0]).stem)
+            filename = fname[0]
+            try:
+                with open(filename, 'r') as f:
+                    config = json.load(f)
+
+                self.pushButton11.setText(config['11'])
+                self.pushButton12.setText(config['12'])
+                self.pushButton13.setText(config['13'])
+                self.pushButton14.setText(config['14'])
+                self.pushButton15.setText(config['15'])
+                self.pushButton16.setText(config['16'])
+                self.pushButton17.setText(config['17'])
+                self.pushButton18.setText(config['18'])
+                self.pushButton19.setText(config['19'])
+                self.pushButton10.setText(config['10'])
+                self.pushButton21.setText(config['21'])
+                self.pushButton22.setText(config['22'])
+                self.pushButton23.setText(config['23'])
+                self.pushButton24.setText(config['24'])
+                self.pushButton25.setText(config['25'])
+                self.pushButton26.setText(config['26'])
+                self.pushButton27.setText(config['27'])
+                self.pushButton28.setText(config['28'])
+                self.pushButton29.setText(config['29'])
+                self.pushButton20.setText(config['20'])
+                self.pushButton31.setText(config['31'])
+                self.pushButton32.setText(config['32'])
+                self.pushButton33.setText(config['33'])
+                self.pushButton34.setText(config['34'])
+                self.pushButton35.setText(config['35'])
+                self.pushButton36.setText(config['36'])
+                self.pushButton37.setText(config['37'])
+                self.pushButton38.setText(config['38'])
+                self.pushButton39.setText(config['39'])
+                self.pushButton30.setText(config['30'])
+                self.pushButton41.setText(config['41'])
+                self.pushButton42.setText(config['42'])
+                self.pushButton43.setText(config['43'])
+                self.pushButton44.setText(config['44'])
+                self.pushButton45.setText(config['45'])
+                self.pushButton46.setText(config['46'])
+                self.pushButton47.setText(config['47'])
+                self.pushButton48.setText(config['48'])
+                self.pushButton49.setText(config['49'])
+                self.pushButton40.setText(config['40'])
+                self.pushButton51.setText(config['51'])
+                self.pushButton52.setText(config['52'])
+                self.pushButton53.setText(config['53'])
+                self.pushButton54.setText(config['54'])
+                self.pushButton55.setText(config['55'])
+                self.pushButton56.setText(config['56'])
+                self.pushButton57.setText(config['57'])
+                self.pushButton58.setText(config['58'])
+                self.pushButton59.setText(config['59'])
+                self.pushButton50.setText(config['50'])
+
+                cam1Label = config['Cam1']
+                cam2Label = config['Cam2']
+                cam3Label = config['Cam3']
+                cam4Label = config['Cam4']
+                cam5Label = config['Cam5']
         
+            except:
+                message = "Couldn't Load File"
+
+
+    def fileSave(self):
+        global config
+        global cam1Label
+        global cam2Label
+        global cam3Label
+        global cam4Label
+        global cam5Label
+
+        config['11'] = self.pushButton11.text()
+        config['12'] = self.pushButton12.text()
+        config['13'] = self.pushButton13.text()
+        config['14'] = self.pushButton14.text()
+        config['15'] = self.pushButton15.text()
+        config['16'] = self.pushButton16.text()
+        config['17'] = self.pushButton17.text()
+        config['18'] = self.pushButton18.text()
+        config['19'] = self.pushButton19.text()
+        config['10'] = self.pushButton10.text()
+        config['21'] = self.pushButton21.text()
+        config['22'] = self.pushButton22.text()
+        config['23'] = self.pushButton23.text()
+        config['24'] = self.pushButton24.text()
+        config['25'] = self.pushButton25.text()
+        config['26'] = self.pushButton26.text()
+        config['27'] = self.pushButton27.text()
+        config['28'] = self.pushButton28.text()
+        config['29'] = self.pushButton29.text()
+        config['20'] = self.pushButton20.text()
+        config['31'] = self.pushButton31.text()
+        config['32'] = self.pushButton32.text()
+        config['33'] = self.pushButton33.text()
+        config['34'] = self.pushButton34.text()
+        config['35'] = self.pushButton35.text()
+        config['36'] = self.pushButton36.text()
+        config['37'] = self.pushButton37.text()
+        config['38'] = self.pushButton38.text()
+        config['39'] = self.pushButton39.text()
+        config['30'] = self.pushButton30.text()
+        config['41'] = self.pushButton41.text()
+        config['42'] = self.pushButton42.text()
+        config['43'] = self.pushButton43.text()
+        config['44'] = self.pushButton44.text()
+        config['45'] = self.pushButton45.text()
+        config['46'] = self.pushButton46.text()
+        config['47'] = self.pushButton47.text()
+        config['48'] = self.pushButton48.text()
+        config['49'] = self.pushButton49.text()
+        config['40'] = self.pushButton40.text()
+        config['51'] = self.pushButton51.text()
+        config['52'] = self.pushButton52.text()
+        config['53'] = self.pushButton53.text()
+        config['54'] = self.pushButton54.text()
+        config['55'] = self.pushButton55.text()
+        config['56'] = self.pushButton56.text()
+        config['57'] = self.pushButton57.text()
+        config['58'] = self.pushButton58.text()
+        config['59'] = self.pushButton59.text()
+        config['50'] = self.pushButton50.text()
+        config['Cam1'] = cam1Label
+        config['Cam2'] = cam2Label
+        config['Cam3'] = cam3Label
+        config['Cam4'] = cam4Label
+        config['Cam5'] = cam5Label
+
+        fname, _ = QFileDialog.getSaveFileName(self, "Save Config", "", "JSON (*.json)")
+        
+        if fname:
+            self.labelFilename.setText(Path(fname).stem)
+            with open(fname, 'w') as f:
+                json.dump(config, f)
+
 
     def doJoyMoves(self, dt):
         global axisX
@@ -5068,6 +5261,11 @@ class PTSapp(QMainWindow):
         global editToggle
         global manualMove
         global whichCamSerial
+        global cam1Label
+        global cam2Label
+        global cam3Label
+        global cam4Label
+        global cam5Label
 
         if serialLoop and not isConnected:
             self.comboBox.setStyleSheet("color: white; border: 4px solid grey; background-color: #229922; border-radius: 10px;")
@@ -5275,11 +5473,21 @@ class PTSapp(QMainWindow):
             if editButton == 59: self.pushButton59.setText(newText)
             if editButton == 50: self.pushButton50.setText(newText)
 
-            if editButton == 61: self.pushButtonCam1.setText(newText)
-            if editButton == 62: self.pushButtonCam2.setText(newText)
-            if editButton == 63: self.pushButtonCam3.setText(newText)
-            if editButton == 64: self.pushButtonCam4.setText(newText)
-            if editButton == 65: self.pushButtonCam5.setText(newText)
+            if editButton == 61: 
+                cam1Label = newText
+                self.pushButtonCam1.setText(cam1Label)
+            if editButton == 62: 
+                cam2Label = newText
+                self.pushButtonCam2.setText(cam2Label)
+            if editButton == 63: 
+                cam3Label = newText
+                self.pushButtonCam3.setText(cam3Label)
+            if editButton == 64: 
+                cam4Label = newText
+                self.pushButtonCam4.setText(cam4Label)
+            if editButton == 65: 
+                cam5Label = newText
+                self.pushButtonCam5.setText(cam5Label)
 
             newText = ""
             
@@ -5289,20 +5497,28 @@ class PTSapp(QMainWindow):
     def setPos(self, state):
         global SetPosToggle
         global editToggle
+        global cam1Label
+        global cam2Label
+        global cam3Label
+        global cam4Label
+        global cam5Label
         
         if (SetPosToggle == True and state == 3) or state == 0:
             SetPosToggle = False
             editToggle = False
             self.pushButtonSet.setStyleSheet("border: 4px solid grey; background-color: #bbbbbb; border-radius: 10px;")
-            self.pushButtonCam1.setText("Cam1")
-            self.pushButtonCam2.setText("Cam2")
-            self.pushButtonCam3.setText("Cam3")
-            self.pushButtonCam4.setText("Cam4")
-            self.pushButtonCam5.setText("Cam5")
+            self.pushButtonCam1.setText(cam1Label)
+            self.pushButtonCam2.setText(cam2Label)
+            self.pushButtonCam3.setText(cam3Label)
+            self.pushButtonCam4.setText(cam4Label)
+            self.pushButtonCam5.setText(cam5Label)
             self.pushButtonEdit.setText("Edit")
             self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
             self.pushButtonExit.hide()
             self.pushButtonLED.hide()
+            self.pushButtonFileLoad.hide()
+            self.pushButtonFileSave.hide()
+            self.labelFilename.setHidden(True)
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
             editToggle = False
@@ -5316,6 +5532,9 @@ class PTSapp(QMainWindow):
             self.pushButtonEdit.setStyleSheet("border: 4px solid #FFFC67; background-color: #F7BA00; border-radius: 10px;")
             self.pushButtonExit.show()
             self.pushButtonLED.show()
+            self.pushButtonFileLoad.show()
+            self.pushButtonFileSave.show()
+            self.labelFilename.setHidden(False)
 
 
     def whichCamSerial1(self):
