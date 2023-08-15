@@ -5,8 +5,6 @@
 
 */
 
-#define INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED 4
-#define INPUT_DEADZONE 40
 #define CMDBUFFER_SIZE 32
 #define LANCmodePin 23
 #define lancPin 15
@@ -15,102 +13,18 @@
 
 bool DEBUG = false;
 
-bool buttonState;
-bool lastButtonState = HIGH;
-bool reading = HIGH;
+int zoomDelay = 100;
+
 bool isZooming = false;
 bool isAutoFocus = false;
 bool isPhoto = false;
 bool isRecording = false;
 
-unsigned long lastDebounceTime = 0;
-unsigned long debounceDelay = 50;
-
-int rN = 0;                   // Normal colours (when connected)
-int gN = 0;
-int bN = 255;
-
-int rS = 0;                   // Colours when 'Set Keyframe' complete
-int gS = 255;
-int bS = 0;
-
-int rC = 255;                 // Colours when 'Clear All Keyframes' complete
-int gC = 255;
-int bC = 0;
-
-int rT = 150;                 // Colours when 'Tangent' complete
-int gT = 150;
-int bT = 0;
-
-int rL = 0;                   // Colours when LANC Handshake complete
-int gL = 255;
-int bL = 0;
-
-int rR = 255;                 // Colours when LANC Recording
-int gR = 0;
-int bR = 0;
-
-float in_min = -128;          // PS4 DualShock analogue stick Far Left
-float in_max = 128;           // PS4 DualShock analogue stick Far Right
-float out_min = -255;
-float out_max = 255;
-
-short shortVals[3] = {0, 0, 0};
-short LXShort = 0;
-short RXShort = 0;
-short RYShort = 0;
-short oldShortVal0 = 0;
-short oldShortVal1 = 0;
-short oldShortVal2 = 0;
-
-bool isManualMove = false;
-unsigned long previousMillisMoveCheck = 0;
-unsigned long currentMillisMoveCheck = 0;
-long moveCheckInterval = 300;
-
-bool buttonUP = false;
-bool buttonDOWN = false;
-bool buttonLEFT = false;
-bool buttonRIGHT = false;
-
-bool buttonTRI = false;
-bool buttonCIR = false;
-bool buttonCRO = false;
-bool buttonSQU = false;
-
-bool buttonL1 = false;
-bool buttonR1 = false;
-bool buttonL2 = false;
-bool buttonR2 = false;
-bool buttonL3 = false;
-bool buttonR3 = false;
-
-bool l1andl3 = false;
-bool r1andr3 = false;
-
-bool setUP = false;
-bool setLEFT = false;
-bool setRIGHT = false;
-bool setDOWN = false;
-
-bool buttonSH = false;
-bool buttonOP = false;
-bool buttonPS = false;
-bool buttonTP = false;
-
 bool firstRun = true;
 
 bool isSerialLANC = true;
 
-int LYmapped = 0;
-int zoomCase = 8;
-int oldLY = 0;
 int lancZoom = 0;
-
-long previousMillis = 0;
-long currentMillis;
-const int LED_Interval = 250;
-char instruction = '0';
 
 static char cmdBuffer[CMDBUFFER_SIZE] = "";
 char c;
@@ -249,6 +163,7 @@ void loop() {
           else { lancZoom = 8; }
         }
         isZooming = true;
+        delay(zoomDelay);
       }
       else if (c == 'i' && !isZooming) {
         while (Serial2.available() < 1) { delayMicroseconds(1); }                       //  Wait for 1 byte to be available.
@@ -287,6 +202,7 @@ void loop() {
           else { lancZoom = 18; }
         }
         isZooming = true;
+        delay(zoomDelay);
       }
     }
   }
@@ -315,54 +231,27 @@ void loop() {
   }
 }
 
-void sendSliderPanTiltStepSpeed(int command, short * arr) {
-  byte data[7];                                     // Data array to send
-
-  data[0] = command;
-  data[1] = (arr[0] >> 8);                          // Gets the most significant byte
-  data[2] = (arr[0] & 0xFF);                        // Gets the second most significant byte
-  data[3] = (arr[1] >> 8);
-  data[4] = (arr[1] & 0xFF);
-  data[5] = (arr[2] >> 8);
-  data[6] = (arr[2] & 0xFF);                        // Gets the least significant byte
-
-  if ( DEBUG ) {
-    Serial.print(data[0], HEX);
-    Serial.print(data[1], HEX);
-    Serial.print(data[2], HEX);
-    Serial.print(data[3], HEX);
-    Serial.print(data[4], HEX);
-    Serial.print(data[5], HEX);
-    Serial.println(data[6], HEX);
-  }
-  else {
-    Serial2.write(data, sizeof(data));               // Send the command and the 6 bytes of data
-    Serial2.print("\n");
-  }
-}
-
 void sendCharArray(char *array) {
   int i = 0;
   while (array[i] != 0)
     Serial2.write((uint8_t)array[i++]);
 }
 
-
 void doLANC() {
   while (Serial.available())
   {
     c = processCharInput(cmdBuffer, Serial.read());
 
-    if (strcmp("%000*", cmdBuffer) == 0) {                                           //  Handshake
+    if (strcmp("%000*", cmdBuffer) == 0) {                                      //  Handshake
       Serial.print("&00080*");
       digitalWrite(LED, HIGH);
       cmdBuffer[0] = 0;
     }
-    else if (strcmp("$71000*", cmdBuffer) == 0) {                                     //  Recording pt1
+    else if (strcmp("$71000*", cmdBuffer) == 0) {                               //  Recording pt1
       Serial.print("#7110*");
       cmdBuffer[0] = 0;
     }
-    else if (strcmp("$71100*", cmdBuffer) == 0) cmdBuffer[0] = 0;                     //  Recording pt2
+    else if (strcmp("$71100*", cmdBuffer) == 0) cmdBuffer[0] = 0;               //  Recording pt2
 
     else if (strcmp("%7610*", cmdBuffer) == 0) {
       Serial.print("&76100*");
