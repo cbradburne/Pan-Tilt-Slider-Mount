@@ -1,5 +1,6 @@
 //https://github.com/dmadison/ArduinoXInput
 //https://github.com/dmadison/ArduinoXInput_Teensy
+//https://hardwaretester.com/gamepad
 
 // I used the older Arduino IDE v1.58 along with the older Teensyduino
 
@@ -25,9 +26,7 @@ const int Pin_RightJoyY = 21;
 // Button Pins
 const int Pin_ButtonA = 2;
 
-
 const int deadRange = 100;
-
 
 int XdeadRangeLow = (512 - deadRange);
 int XdeadRangeHigh = (512 + deadRange);
@@ -52,7 +51,7 @@ short YShort = 0;
 short ZShort = 0;
 short WShort = 0;
 
-
+bool debug = false;
 
 void setup() {
   // Set buttons as inputs, using internal pull-up resistors
@@ -76,37 +75,46 @@ void loop() {
   if (UseLeftJoystick == true) {
     int leftJoyX = analogRead(Pin_LeftJoyX);
     int leftJoyY = analogRead(Pin_LeftJoyY);
-
-    if (leftJoyX < XdeadRangeLow) {
-      XShort = map(leftJoyX, X_min, XdeadRangeLow, 0, 512);
-      //Serial.println(XShort);
-      if (XShort < 0) {
-        XShort = 0;
+    if (debug) {
+      XShort = leftJoyX;
+    }
+    else {
+      if (leftJoyX < XdeadRangeLow) {
+        XShort = map(leftJoyX, X_min, XdeadRangeLow, 0, 512);
+        //Serial.println(XShort);
+        if (XShort < 0) {
+          XShort = 0;
+        }
+      } else if (leftJoyX > XdeadRangeHigh) {
+        XShort = map(leftJoyX, XdeadRangeHigh, X_max, 512, 1023);
+        //Serial.println(XShort);
+        if (XShort > 1023) {
+          XShort = 1023;
+        }
+      } else {
+        XShort = 512;
       }
-    } else if (leftJoyX > XdeadRangeHigh) {
-      XShort = map(leftJoyX, XdeadRangeHigh, X_max, 512, 1023);
-      //Serial.println(XShort);
-      if (XShort > 1023) {
-        XShort = 1023;
-      }
-    } else {
-      XShort = 512;
     }
 
-    if (leftJoyY < YdeadRangeLow) {
-      YShort = map(leftJoyY, Y_min, YdeadRangeLow, 0, 512);
-      //Serial.println(YShort);
-      if (YShort < 0) {
-        YShort = 0;
+    if (debug) {
+      YShort = leftJoyY;
+    }
+    else {
+      if (leftJoyY < YdeadRangeLow) {
+        YShort = map(leftJoyY, Y_min, YdeadRangeLow, 0, 512);
+        //Serial.println(YShort);
+        if (YShort < 0) {
+          YShort = 0;
+        }
+      } else if (leftJoyY > YdeadRangeHigh) {
+        YShort = map(leftJoyY, YdeadRangeHigh, Y_max, 512, 1023);
+        //Serial.println(YShort);
+        if (YShort > 1023) {
+          YShort = 1023;
+        }
+      } else {
+        YShort = 512;
       }
-    } else if (leftJoyY > YdeadRangeHigh) {
-      YShort = map(leftJoyY, YdeadRangeHigh, Y_max, 512, 1023);
-      //Serial.println(YShort);
-      if (YShort > 1023) {
-        YShort = 1023;
-      }
-    } else {
-      YShort = 512;
     }
 
     boolean invert = !InvertLeftYAxis;
@@ -120,36 +128,46 @@ void loop() {
     int rightJoyX = analogRead(Pin_RightJoyX);
     int rightJoyY = analogRead(Pin_RightJoyY);
 
-    if (rightJoyX < ZdeadRangeLow) {
-      ZShort = map(rightJoyX, Z_min, ZdeadRangeLow, 0, 512);
-      //Serial.println(ZShort);
-      if (ZShort < 0) {
-        ZShort = 0;
+    if (debug) {
+      ZShort = rightJoyX;
+    }
+    else {
+      if (rightJoyX < ZdeadRangeLow) {
+        ZShort = map(rightJoyX, Z_min, ZdeadRangeLow, 0, 512);
+        //Serial.println(ZShort);
+        if (ZShort < 0) {
+          ZShort = 0;
+        }
+      } else if (rightJoyX > ZdeadRangeHigh) {
+        ZShort = map(rightJoyX, ZdeadRangeHigh, Z_max, 512, 1023);
+        //Serial.println(ZShort);
+        if (ZShort > 1023) {
+          ZShort = 1023;
+        }
+      } else {
+        ZShort = 512;
       }
-    } else if (rightJoyX > ZdeadRangeHigh) {
-      ZShort = map(rightJoyX, ZdeadRangeHigh, Z_max, 512, 1023);
-      //Serial.println(ZShort);
-      if (ZShort > 1023) {
-        ZShort = 1023;
-      }
-    } else {
-      ZShort = 512;
     }
 
-    if (rightJoyY < WdeadRangeLow) {
-      WShort = map(rightJoyY, W_min, WdeadRangeLow, 0, 512);
-      //Serial.println(WShort);
-      if (WShort < 0) {
-        WShort = 0;
+    if (debug) {
+      WShort = rightJoyY;
+    }
+    else {
+      if (rightJoyY < WdeadRangeLow) {
+        WShort = map(rightJoyY, W_min, WdeadRangeLow, 0, 512);
+        //Serial.println(WShort);
+        if (WShort < 0) {
+          WShort = 0;
+        }
+      } else if (rightJoyY > WdeadRangeHigh) {
+        WShort = map(rightJoyY, WdeadRangeHigh, W_max, 512, 1023);
+        //Serial.println(WShort);
+        if (WShort > 1023) {
+          WShort = 1023;
+        }
+      } else {
+        WShort = 512;
       }
-    } else if (rightJoyY > WdeadRangeHigh) {
-      WShort = map(rightJoyY, WdeadRangeHigh, W_max, 512, 1023);
-      //Serial.println(WShort);
-      if (WShort > 1023) {
-        WShort = 1023;
-      }
-    } else {
-      WShort = 512;
     }
 
     boolean invert = !InvertRightYAxis;
