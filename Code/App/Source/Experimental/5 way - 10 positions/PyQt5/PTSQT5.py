@@ -1688,9 +1688,9 @@ class PTSapp(QMainWindow):
 
         self.initFlashTimer()
 
-        self.show()
+        #self.show()
         #self.showMaximized()
-        #self.showFullScreen()
+        self.showFullScreen()
 
     def pushToClose(self):
         self.close()
@@ -1790,7 +1790,7 @@ class PTSapp(QMainWindow):
         global cam4Label
         global cam5Label
 
-        fname = QFileDialog.getOpenFileName(self, "Openn Config", "", "JSON (*.json)")
+        fname = QFileDialog.getOpenFileName(self, "Open Config", "C:\\Users\\Music\\Documents", "JSON (*.json)")
     
         if fname:
             self.labelFilename.setText(Path(fname[0]).stem)
@@ -1924,7 +1924,7 @@ class PTSapp(QMainWindow):
         config['Cam4'] = cam4Label
         config['Cam5'] = cam5Label
 
-        fname, _ = QFileDialog.getSaveFileName(self, "Save Config", "", "JSON (*.json)")
+        fname, _ = QFileDialog.getSaveFileName(self, "Save Config", "C:\\Users\\Music\\Documents", "JSON (*.json)")
         
         if fname:
             self.labelFilename.setText(Path(fname).stem)
