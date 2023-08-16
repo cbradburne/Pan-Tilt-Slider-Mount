@@ -5,7 +5,7 @@
 
 #define BAUD_RATE 38400 //9600 //57600
 
-#define PIN_STEP_PAN  19
+#define PIN_STEP_PAN 19
 #define PIN_DIRECTION_PAN 18
 #define PIN_STEP_TILT 17
 #define PIN_DIRECTION_TILT 16
@@ -25,8 +25,8 @@
 //#define PAN_GEAR_RATIO 8    //  160/40 *2 teeth       - New Mount 0.9 degree steppers
 //#define TILT_GEAR_RATIO 8   //  80/20 *2 teeth        - New Mount
 
-#define PAN_GEAR_RATIO 15    //  270/36 *2 teeth      - New Mount 0.9 degree steppers Pulley drive
-#define TILT_GEAR_RATIO 15   //  120/16 *2 teeth      - New Mount
+#define PAN_GEAR_RATIO 15   //  270/36 *2 teeth      - New Mount 0.9 degree steppers Pulley drive
+#define TILT_GEAR_RATIO 15  //  120/16 *2 teeth      - New Mount
 
 #define MAX_STRING_LENGTH 10
 
