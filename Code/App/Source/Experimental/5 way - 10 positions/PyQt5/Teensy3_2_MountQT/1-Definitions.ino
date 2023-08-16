@@ -31,6 +31,7 @@ elapsedMillis timeElapsed;
 
 void initPanTilt(void) {
   Serial1.begin(BAUD_RATE);
+  Serial2.begin(BAUD_RATE);
 
   pinMode(13, OUTPUT);              // LED
   digitalWrite(13, LOW);            // LED ON
