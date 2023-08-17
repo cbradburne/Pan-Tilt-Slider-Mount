@@ -129,8 +129,6 @@ void loop() {
         c = Serial2.read();
         if (c == '1') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7410*");
           } else {
             lancZoom = 1;
@@ -138,15 +136,13 @@ void loop() {
         } else if (c == '2') {
           if (isSerialLANC) {
             Serial.print("#7590*");
-            delay(zoomDelay);
-            Serial.print("#7420*");
+            //delay(zoomDelay);
+            //Serial.print("#7420*");
           } else {
             lancZoom = 2;
           }
         } else if (c == '3') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7430*");
           } else {
             lancZoom = 3;
@@ -154,15 +150,13 @@ void loop() {
         } else if (c == '4') {
           if (isSerialLANC) {
             Serial.print("#7590*");
-            delay(zoomDelay);
-            Serial.print("#7440*");
+            //delay(zoomDelay);
+            //Serial.print("#7440*");
           } else {
             lancZoom = 4;
           }
         } else if (c == '5') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7450*");
           } else {
             lancZoom = 5;
@@ -170,23 +164,19 @@ void loop() {
         } else if (c == '6') {
           if (isSerialLANC) {
             Serial.print("#7590*");
-            delay(zoomDelay);
-            Serial.print("#7460*");
+            //delay(zoomDelay);
+            //Serial.print("#7460*");
           } else {
             lancZoom = 6;
           }
         } else if (c == '7') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7470*");
           } else {
             lancZoom = 7;
           }
         } else if (c == '8') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7480*");
           } else {
             lancZoom = 8;
@@ -200,8 +190,6 @@ void loop() {
         c = Serial2.read();
         if (c == '1') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7510*");
           } else {
             lancZoom = 11;
@@ -209,15 +197,13 @@ void loop() {
         } else if (c == '2') {
           if (isSerialLANC) {
             Serial.print("#7590*");
-            delay(zoomDelay);
-            Serial.print("#7520*");
+            //delay(zoomDelay);
+            //Serial.print("#7520*");
           } else {
             lancZoom = 12;
           }
         } else if (c == '3') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7530*");
           } else {
             lancZoom = 13;
@@ -225,15 +211,13 @@ void loop() {
         } else if (c == '4') {
           if (isSerialLANC) {
             Serial.print("#7590*");
-            delay(zoomDelay);
-            Serial.print("#7540*");
+            //delay(zoomDelay);
+            //Serial.print("#7540*");
           } else {
             lancZoom = 14;
           }
         } else if (c == '5') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7550*");
           } else {
             lancZoom = 15;
@@ -241,15 +225,13 @@ void loop() {
         } else if (c == '6') {
           if (isSerialLANC) {
             Serial.print("#7590*");
-            delay(zoomDelay);
-            Serial.print("#7560*");
+            //delay(zoomDelay);
+            //Serial.print("#7560*");
           } else {
             lancZoom = 16;
           }
         } else if (c == '7') {
           if (isSerialLANC) {
-            Serial.print("#7590*");
-            delay(zoomDelay);
             Serial.print("#7570*");
           } else {
             lancZoom = 17;
