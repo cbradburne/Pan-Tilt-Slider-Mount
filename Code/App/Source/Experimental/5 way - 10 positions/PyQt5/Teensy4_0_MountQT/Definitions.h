@@ -157,11 +157,11 @@ float pan_accel = 1000;
 float tilt_accel = 1000;
 float slider_accel = 1000;
 
-float panMaxFactor = 1.0;  // Speed factor of joystick moves ( 1 = 100% )
-float tiltMaxFactor = 1.0;
-float sliderMaxFactor = 1.0;
+float panMaxFactor = 10.0;        // Speed factor of joystick moves ( 1 = 100% )
+float tiltMaxFactor = 10.0;
+float sliderMaxFactor = 10.0;
 
-float panAccelJoy = 1;  // Accel factor of joystick moves ( 1 = 100% )
+float panAccelJoy = 1;            // Accel factor of joystick moves ( 1 = 100% )
 float tiltAccelJoy = 1;
 float sliderAccelJoy = 1;
 

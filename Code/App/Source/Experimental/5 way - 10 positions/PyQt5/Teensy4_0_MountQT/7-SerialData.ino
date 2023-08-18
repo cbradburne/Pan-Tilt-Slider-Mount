@@ -88,7 +88,7 @@ void SerialData(void) {
         if (!panRunning) {
           panRunning = true;
           stepper_pan.setAcceleration(10000);
-          stepper_pan.rotateAsync(pan_set_speed * 100);
+          stepper_pan.rotateAsync(pan_set_speed);
         }
         if (upsideDown) {
           speedFactorP = (speedFactorP * -1);
@@ -106,7 +106,7 @@ void SerialData(void) {
         if (!tiltRunning) {
           tiltRunning = true;
           stepper_tilt.setAcceleration(10000);
-          stepper_tilt.rotateAsync(tilt_set_speed * 100);
+          stepper_tilt.rotateAsync(tilt_set_speed);
         }
         if (upsideDown) {
           speedFactorT = (speedFactorT * -1);
@@ -124,7 +124,7 @@ void SerialData(void) {
         if (!sliderRunning) {
           sliderRunning = true;
           stepper_slider.setAcceleration(10000);
-          stepper_slider.rotateAsync(slider_set_speed * 100);
+          stepper_slider.rotateAsync(slider_set_speed);
         }
         if (slideReverse) {
           speedFactorS = (speedFactorS * -1);
