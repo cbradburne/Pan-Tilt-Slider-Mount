@@ -1790,13 +1790,13 @@ class PTSapp(QMainWindow):
         global cam4Label
         global cam5Label
 
-        fname = QFileDialog.getOpenFileName(self, "Open Config", "C:\\Users\\Music\\Documents", "JSON (*.json)")
-
         if sys.platform == "win32":
             os.startfile("C:\\\Windows\\System32\\osk.exe")
         elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
-    
+
+        fname = QFileDialog.getOpenFileName(self, "Open Config", "C:\\Users\\Music\\Documents", "JSON (*.json)")
+
         if fname:
             self.labelFilename.setText(Path(fname[0]).stem)
             filename = fname[0]
@@ -1861,14 +1861,13 @@ class PTSapp(QMainWindow):
                 cam4Label = config['Cam4']
                 cam5Label = config['Cam5']
 
-
-                if sys.platform == "win32":
-                    os.system('wmic process where name="osk.exe" delete')
-                elif sys.platform == "linux" or sys.platform == "linux2":
-                    os.system('/usr/bin/toggle-keyboard.sh')
-        
             except:
                 message = "Couldn't Load File"
+            
+            if sys.platform == "win32":
+                os.system('wmic process where name="osk.exe" delete')
+            elif sys.platform == "linux" or sys.platform == "linux2":
+                os.system('/usr/bin/toggle-keyboard.sh')
 
 
     def fileSave(self):
@@ -1935,23 +1934,22 @@ class PTSapp(QMainWindow):
         config['Cam4'] = cam4Label
         config['Cam5'] = cam5Label
 
-        fname, _ = QFileDialog.getSaveFileName(self, "Save Config", "C:\\Users\\Music\\Documents", "JSON (*.json)")
-        
         if sys.platform == "win32":
             os.startfile("C:\\\Windows\\System32\\osk.exe")
         elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
 
+        fname, _ = QFileDialog.getSaveFileName(self, "Save Config", "C:\\Users\\Music\\Documents", "JSON (*.json)")
+        
         if fname:
             self.labelFilename.setText(Path(fname).stem)
             with open(fname, 'w') as f:
                 json.dump(config, f)
 
-            if sys.platform == "win32":
-                os.system('wmic process where name="osk.exe" delete')
-            elif sys.platform == "linux" or sys.platform == "linux2":
-                os.system('/usr/bin/toggle-keyboard.sh')
-
+        if sys.platform == "win32":
+            os.system('wmic process where name="osk.exe" delete')
+        elif sys.platform == "linux" or sys.platform == "linux2":
+            os.system('/usr/bin/toggle-keyboard.sh')
 
     def doJoyMoves(self, dt):
         global axisX
