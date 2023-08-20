@@ -32,7 +32,6 @@ import sys, time, os, subprocess, re, json, pkg_resources, pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 from sys import platform
 from pathlib import Path
-from pynput.keyboard import Key, Controller
 
 #from qt_thread_updater import ThreadUpdater
 #updater = ThreadUpdater()
@@ -43,7 +42,6 @@ from pynput.keyboard import Key, Controller
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
-keyboard = Controller()
 
 serial_port = None
 
@@ -456,60 +454,60 @@ cam4isRecording = False
 cam5isZooming = False
 cam5isRecording = False
 
-cam1ptAccel = 0
-cam1slAccel = 0
-cam1ptSpeed1 = 0
-cam1ptSpeed2 = 0
-cam1ptSpeed3 = 0
-cam1ptSpeed4 = 0
-cam1slSpeed1 = 0
-cam1slSpeed2 = 0
-cam1slSpeed3 = 0
-cam1slSpeed4 = 0
+cam1ptAccel = ''
+cam1slAccel = ''
+cam1ptSpeed1 = ''
+cam1ptSpeed2 = ''
+cam1ptSpeed3 = ''
+cam1ptSpeed4 = ''
+cam1slSpeed1 = ''
+cam1slSpeed2 = ''
+cam1slSpeed3 = ''
+cam1slSpeed4 = ''
 
-cam2ptAccel = 0
-cam2slAccel = 0
-cam2ptSpeed1 = 0
-cam2ptSpeed2 = 0
-cam2ptSpeed3 = 0
-cam2ptSpeed4 = 0
-cam2slSpeed1 = 0
-cam2slSpeed2 = 0
-cam2slSpeed3 = 0
-cam2slSpeed4 = 0
+cam2ptAccel = ''
+cam2slAccel = ''
+cam2ptSpeed1 = ''
+cam2ptSpeed2 = ''
+cam2ptSpeed3 = ''
+cam2ptSpeed4 = ''
+cam2slSpeed1 = ''
+cam2slSpeed2 = ''
+cam2slSpeed3 = ''
+cam2slSpeed4 = ''
 
-cam3ptAccel = 0
-cam3slAccel = 0
-cam3ptSpeed1 = 0
-cam3ptSpeed2 = 0
-cam3ptSpeed3 = 0
-cam3ptSpeed4 = 0
-cam3slSpeed1 = 0
-cam3slSpeed2 = 0
-cam3slSpeed3 = 0
-cam3slSpeed4 = 0
+cam3ptAccel = ''
+cam3slAccel = ''
+cam3ptSpeed1 = ''
+cam3ptSpeed2 = ''
+cam3ptSpeed3 = ''
+cam3ptSpeed4 = ''
+cam3slSpeed1 = ''
+cam3slSpeed2 = ''
+cam3slSpeed3 = ''
+cam3slSpeed4 = ''
 
-cam4ptAccel = 0
-cam4slAccel = 0
-cam4ptSpeed1 = 0
-cam4ptSpeed2 = 0
-cam4ptSpeed3 = 0
-cam4ptSpeed4 = 0
-cam4slSpeed1 = 0
-cam4slSpeed2 = 0
-cam4slSpeed3 = 0
-cam4slSpeed4 = 0
+cam4ptAccel = ''
+cam4slAccel = ''
+cam4ptSpeed1 = ''
+cam4ptSpeed2 = ''
+cam4ptSpeed3 = ''
+cam4ptSpeed4 = ''
+cam4slSpeed1 = ''
+cam4slSpeed2 = ''
+cam4slSpeed3 = ''
+cam4slSpeed4 = ''
 
-cam5ptAccel = 0
-cam5slAccel = 0
-cam5ptSpeed1 = 0
-cam5ptSpeed2 = 0
-cam5ptSpeed3 = 0
-cam5ptSpeed4 = 1000
-cam5slSpeed1 = 0
-cam5slSpeed2 = 0
-cam5slSpeed3 = 0
-cam5slSpeed4 = 0
+cam5ptAccel = ''
+cam5slAccel = ''
+cam5ptSpeed1 = ''
+cam5ptSpeed2 = ''
+cam5ptSpeed3 = ''
+cam5ptSpeed4 = ''
+cam5slSpeed1 = ''
+cam5slSpeed2 = ''
+cam5slSpeed3 = ''
+cam5slSpeed4 = ''
 
 class Ui_SettingsWindow(QMainWindow):
     def __init__(self):
@@ -981,25 +979,25 @@ class Ui_SettingsWindow(QMainWindow):
         widget = QtWidgets.QApplication.focusWidget()
 
         if widget.objectName() == "labelPTaccel":
-            self.sendSerial('&' + whichCamSerial + 'L' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'L' + widget.text())
         elif widget.objectName() == "labelSLaccel":
-            self.sendSerial('&' + whichCamSerial + 'l' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'l' + widget.text())
         elif widget.objectName() == "labelPTspeed1":
-            self.sendSerial('&' + whichCamSerial + 'F' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'F' + widget.text())
         elif widget.objectName() == "labelPTspeed2":
-            self.sendSerial('&' + whichCamSerial + 'f' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'f' + widget.text())
         elif widget.objectName() == "labelPTspeed3":
-            self.sendSerial('&' + whichCamSerial + 'G' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'G' + widget.text())
         elif widget.objectName() == "labelPTspeed4":
-            self.sendSerial('&' + whichCamSerial + 'g' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'g' + widget.text())
         elif widget.objectName() == "labelSLspeed1":
-            self.sendSerial('&' + whichCamSerial + 'H' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'H' + widget.text())
         elif widget.objectName() == "labelSLspeed2":
-            self.sendSerial('&' + whichCamSerial + 'h' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'h' + widget.text())
         elif widget.objectName() == "labelSLspeed3":
-            self.sendSerial('&' + whichCamSerial + 'J' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'J' + widget.text())
         elif widget.objectName() == "labelSLspeed4":
-            self.sendSerial('&' + whichCamSerial + 'j' + widget.text())
+            self.sendSerial('&' + str(whichCamSerial) + 'j' + widget.text())
 
     
     def pushToClose(self):
@@ -7480,11 +7478,11 @@ class ThreadClass(QtCore.QThread):
                     msg=''
 
                 if sendData != "":
+                    #print(sendData)
                     if type(sendData) is str:
                         data = bytes((sendData + '\n'), 'utf8')
                         try:
                             self.serial_port.write(data)
-                            #print(sendData)
                         except Exception as error:
                             print("Didn't send button :(")
                             print(error)
@@ -7496,7 +7494,6 @@ class ThreadClass(QtCore.QThread):
                         oldAxisY = axisY
                         oldAxisZ = axisZ
                         try:
-                            #print(sendData)
                             self.serial_port.write(sendData)
                             previousMillisMoveCheck = time.time()
                         except:

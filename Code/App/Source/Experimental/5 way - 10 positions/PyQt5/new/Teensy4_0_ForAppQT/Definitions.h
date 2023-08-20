@@ -33,9 +33,6 @@ int whichSerialCam = 1;
 
 int SerialCommandValueInt;
 
-unsigned long previousMillisLEDs = 0;
-unsigned long currentMillisLEDs = 0;
-long LEDsInterval = 2000;
 bool resetLEDs = false;
 bool startLEDs = true;
 bool doLEDrefresh = false;
@@ -46,7 +43,7 @@ bool doLEDrefresh5 = false;
 bool doLEDrefresh6 = false;
 unsigned long previousMillisLED = 0;
 unsigned long currentMillisLED = 0;
-long LEDInterval = 500;
+unsigned long LEDInterval = 500;
 
 bool LEDstate = LOW;
 
