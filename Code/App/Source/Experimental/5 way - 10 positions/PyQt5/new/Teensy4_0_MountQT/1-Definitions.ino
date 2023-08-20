@@ -22,6 +22,7 @@ elapsedMillis timeElapsed;
 
 
 void initPanTilt(void) {
+  Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
 
@@ -49,6 +50,8 @@ void initPanTilt(void) {
   Serial1.println("#a");
   Serial1.println("#%");
   Serial1.println("#%");  // clear remote LEDS
+
+  //Serial1.println(pantilt_set_speed);
 
 
   if (pantilt_set_speed == pantilt_speed1) {
@@ -80,6 +83,7 @@ void initPanTilt(void) {
     Serial1.println("^=7");
   }
 
+  sendCamSettings();
 
   Serial1.println("Camera Active");
   Serial1.println("-");
@@ -133,6 +137,21 @@ void Serial2Flush(void) {
   while (Serial2.available() > 0) {
     c = Serial2.read();
   }
+}
+
+void sendCamSettings() {
+  Serial1.println(String("#d") + pantilt_speed1);
+  Serial1.println(String("#f") + pantilt_speed2);
+  Serial1.println(String("#g") + pantilt_speed3);
+  Serial1.println(String("#h") + pantilt_speed4);
+
+  Serial1.println(String("#j") + slider_speed1);
+  Serial1.println(String("#k") + slider_speed2);
+  Serial1.println(String("#l") + slider_speed3);
+  Serial1.println(String("#;") + slider_speed4);
+
+  Serial1.println(String("#q") + pantilt_accel);
+  Serial1.println(String("#Q") + slider_accel);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/

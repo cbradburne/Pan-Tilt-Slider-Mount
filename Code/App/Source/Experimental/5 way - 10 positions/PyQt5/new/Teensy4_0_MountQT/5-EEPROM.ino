@@ -39,6 +39,12 @@ void setEEPROMVariables(void) {
   //pan_def_speed = pan_set_speed;
   //tilt_def_speed = tilt_set_speed;
   //slider_def_speed = slider_set_speed;
+
+
+  Serial1.println(pantilt_set_speed);
+  Serial1.println(slider_set_speed);
+  Serial1.println(pantilt_accel);
+  Serial1.println(slider_accel);
 }
 
 

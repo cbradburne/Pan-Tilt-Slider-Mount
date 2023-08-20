@@ -704,7 +704,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed3.setText("")
         self.labelSLspeed3.setObjectName("labelSLspeed3")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_2.setGeometry(QtCore.QRect(1370, 670, 571, 341))
+        self.groupBox_2.setGeometry(QtCore.QRect(1350, 670, 551, 341))
         self.groupBox_2.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
@@ -797,7 +797,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNumBS.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNumBS.setObjectName("pushButtonNumBS")
         self.pushButtonNumEnt = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyEnter())
-        self.pushButtonNumEnt.setGeometry(QtCore.QRect(390, 260, 161, 61))
+        self.pushButtonNumEnt.setGeometry(QtCore.QRect(390, 260, 151, 61))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
@@ -805,7 +805,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNumEnt.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNumEnt.setObjectName("pushButtonNumEnt")
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_3.setGeometry(QtCore.QRect(1400, 10, 291, 581))
+        self.groupBox_3.setGeometry(QtCore.QRect(1380, 10, 291, 581))
         self.groupBox_3.setStyleSheet("color: #FFFFFF; background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox_3.setTitle("")
         self.groupBox_3.setObjectName("groupBox_3")
@@ -815,7 +815,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
         self.pushButtonCam1.setFont(font)
-        self.pushButtonCam1.setStyleSheet("border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
         self.pushButtonCam1.setFlat(False)
         self.pushButtonCam1.setObjectName("pushButtonCam1")
         self.pushButtonCam2 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam2GetSettings())
@@ -884,13 +884,6 @@ class Ui_SettingsWindow(QMainWindow):
         self.retranslateUi()
         QtCore.QMetaObject.connectSlotsByName(self)
 
-        #self.sendSerial('&1K')
-        #self.sendSerial('&3K')
-        #self.sendSerial('&4K')
-        #self.sendSerial('&5K')
-        #self.sendSerial('&2K')
-
-
 
     def retranslateUi(self):
         global whichCamSerial
@@ -929,52 +922,15 @@ class Ui_SettingsWindow(QMainWindow):
 
         self.show()
 
+        self.getSettings()
 
-        if whichCamSerial == 1:
-            self.pushButtonCam1.setStyleSheet("border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
-            self.cam1GetSettings()
+    def getSettings(self):
+        self.sendSerial('&1K')
+        self.sendSerial('&2K')
+        self.sendSerial('&3K')
+        self.sendSerial('&4K')
+        self.sendSerial('&5K')
 
-        elif whichCamSerial == 2:
-            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid red; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
-            self.cam2GetSettings()
-
-        elif whichCamSerial == 3:
-            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid red; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
-            self.cam3GetSettings()
-
-        elif whichCamSerial == 4:
-            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid red; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
-            self.cam4GetSettings()
-
-        elif whichCamSerial == 5:
-            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid red; background-color: #8D5395; border-radius: 10px;")
-            self.cam5GetSettings()
-
-        #self.cam2GetSettings()
-        #self.cam1GetSettings()
-        #self.cam3GetSettings()
-        #self.cam4GetSettings()
-        #self.cam5GetSettings()
 
     def emulateKey(self, key):
         widget = QtWidgets.QApplication.focusWidget()
@@ -1016,6 +972,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.close()
 
     def cam1GetSettings(self):
+        global whichCamSerial
         global cam1ptAccel
         global cam1slAccel
         global cam1ptSpeed1
@@ -1026,6 +983,9 @@ class Ui_SettingsWindow(QMainWindow):
         global cam1slSpeed2
         global cam1slSpeed3
         global cam1slSpeed4
+
+        whichCamSerial = 1
+        self.sendSerial('&1K')
 
         self.labelPTaccel.setText(str(cam1ptAccel))
         self.labelSLaccel.setText(str(cam1slAccel))
@@ -1045,6 +1005,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
 
     def cam2GetSettings(self):
+        global whichCamSerial
         global cam2ptAccel
         global cam2slAccel
         global cam2ptSpeed1
@@ -1055,6 +1016,9 @@ class Ui_SettingsWindow(QMainWindow):
         global cam2slSpeed2
         global cam2slSpeed3
         global cam2slSpeed4
+
+        whichCamSerial = 2
+        self.sendSerial('&2K')
 
         self.labelPTaccel.setText(str(cam2ptAccel))
         self.labelSLaccel.setText(str(cam2slAccel))
@@ -1074,6 +1038,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
 
     def cam3GetSettings(self):
+        global whichCamSerial
         global cam3ptAccel
         global cam3slAccel
         global cam3ptSpeed1
@@ -1084,6 +1049,9 @@ class Ui_SettingsWindow(QMainWindow):
         global cam3slSpeed2
         global cam3slSpeed3
         global cam3slSpeed4
+
+        whichCamSerial = 3
+        self.sendSerial('&3K')
 
         self.labelPTaccel.setText(str(cam3ptAccel))
         self.labelSLaccel.setText(str(cam3slAccel))
@@ -1103,6 +1071,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
 
     def cam4GetSettings(self):
+        global whichCamSerial
         global cam4ptAccel
         global cam4slAccel
         global cam4ptSpeed1
@@ -1113,6 +1082,9 @@ class Ui_SettingsWindow(QMainWindow):
         global cam4slSpeed2
         global cam4slSpeed3
         global cam4slSpeed4
+
+        whichCamSerial = 4
+        self.sendSerial('&4K')
 
         self.labelPTaccel.setText(str(cam4ptAccel))
         self.labelSLaccel.setText(str(cam4slAccel))
@@ -1132,6 +1104,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
 
     def cam5GetSettings(self):
+        global whichCamSerial
         global cam5ptAccel
         global cam5slAccel
         global cam5ptSpeed1
@@ -1142,6 +1115,9 @@ class Ui_SettingsWindow(QMainWindow):
         global cam5slSpeed2
         global cam5slSpeed3
         global cam5slSpeed4
+
+        whichCamSerial = 5
+        self.sendSerial('&5K')
 
         self.labelPTaccel.setText(str(cam5ptAccel))
         self.labelSLaccel.setText(str(cam5slAccel))
@@ -1220,7 +1196,6 @@ class Ui_editWindow(QMainWindow):
             os.system('/usr/bin/toggle-keyboard.sh')
 
     def keyPressEvent(self, e):
-        #print(e.key())
         if e.key() == Qt.Key_Return:
             self.editSet()
 
@@ -1353,7 +1328,6 @@ class Ui_MoverWindow(QMainWindow):
         widget = self.geometry()                        # 
         x = (ag.width() / 2) - (widget.width() / 2)
         y = 2 * ag.height() - sg.height() - widget.height() - 50
-        #print(widget.height())
         x = int(x)
         y = int(y)
         self.move(x, y)
@@ -1453,8 +1427,17 @@ class PTSapp(QMainWindow):
 
     
     def openSettingsWindow(self):
-        #self.hide()
-        
+
+        self.sendSerial('&1K')
+        time.sleep(0.1)
+        self.sendSerial('&2K')
+        time.sleep(0.1)
+        self.sendSerial('&3K')
+        time.sleep(0.1)
+        self.sendSerial('&4K')
+        time.sleep(0.1)
+        self.sendSerial('&5K')
+
         self.setPos(3)
         self.ui4 = Ui_SettingsWindow()
         self.ui4.setupUi()
@@ -2322,18 +2305,10 @@ class PTSapp(QMainWindow):
         self.statusbar.setObjectName("statusbar")
         self.setStatusBar(self.statusbar)
 
-        #self.actionMover = QtWidgets.QAction(self)
-        #self.actionMover.setObjectName("actionMover")
-        #self.actionMover.triggered.connect(self.openMoverWindow)
-        #self.menuControl.addAction(self.actionMover)
-        #self.menubar.addAction(self.menuFile.menuAction())
-        #self.menubar.addAction(self.menuControl.menuAction())
-
         self.device_name_list = []
         usb_device_list = list_ports.comports()
         self.device_name_list = [port.device for port in usb_device_list]
         self.device_name_list.insert(0, '-')
-        #print(self.device_name_list)
 
         self.buttonConnect(self.device_name_list)
 
@@ -2413,9 +2388,6 @@ class PTSapp(QMainWindow):
         self.pushButtonSettings.setText(_translate("MainWindow", "Settings"))
         self.pushButtonLED.setText(_translate("MainWindow", "Reset"))
         self.pushButtonExit.setText(_translate("MainWindow", "Exit"))
-        #self.menuFile.setTitle(_translate("MainWindow", "File"))
-        #self.menuControl.setTitle(_translate("MainWindow", "Control"))
-        #self.actionMover.setText(_translate("MainWindow", "Mover"))
 
         self.initFlashTimer()
 
@@ -2429,7 +2401,7 @@ class PTSapp(QMainWindow):
     def initFlashTimer(self):
         global whichCamSerial
         global SetPosToggle
-        # self.timer.singleShot(2000,self.update_function)  # for one time call only
+        # self.timer.singleShot(2000,self.update_function)  # for one time call only (once)
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.flash)
@@ -2488,6 +2460,7 @@ class PTSapp(QMainWindow):
                 elif value == 2: self.sendSerial('&4W2')
                 elif value == 3: self.sendSerial('&4W3')
                 elif value == 4: self.sendSerial('&4W4')
+
         elif cam == 5:
             if ps == 1:
                 if value == 1: self.sendSerial('&5s1')
@@ -3253,7 +3226,15 @@ class PTSapp(QMainWindow):
                 cam1Pos5Set = True
             elif msg[1:4] == "161":
                 cam1Pos6Set = True
-            elif msg[1:4] == "112":
+            elif msg[1:4] == "171":
+                cam1Pos7Set = True
+            elif msg[1:4] == "181":
+                cam1Pos8Set = True
+            elif msg[1:4] == "191":
+                cam1Pos9Set = True
+            elif msg[1:4] == "101":
+                cam1Pos10Set = True
+            elif msg[1:4] == "102":
                 cam1AtPos1 = False
                 cam1AtPos2 = False
                 cam1AtPos3 = False

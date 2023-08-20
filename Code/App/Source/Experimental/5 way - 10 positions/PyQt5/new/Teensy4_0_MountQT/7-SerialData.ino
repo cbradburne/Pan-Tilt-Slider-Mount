@@ -38,6 +38,7 @@ void SerialData(void) {
     }
   } else if (Serial1.available() > 0) {
     instruction = Serial1.read();
+    Serial.print(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
       while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
@@ -199,23 +200,7 @@ void SerialData(void) {
   switch (instruction) {
     case INSTRUCTION_IS_SETTINGS_REQUESTED:
       {
-        Serial1.print("#d");
-        Serial1.println(pantilt_speed1);
-        Serial1.print("#f");
-        Serial1.println(pantilt_speed2);
-        Serial1.print("#g");
-        Serial1.println(pantilt_speed3);
-        Serial1.print("#h");
-        Serial1.println(pantilt_speed4);
-
-        Serial1.print("#j");
-        Serial1.println(slider_speed1);
-        Serial1.print("#k");
-        Serial1.println(slider_speed2);
-        Serial1.print("#l");
-        Serial1.println(slider_speed3);
-        Serial1.print("#;");
-        Serial1.println(slider_speed4);
+        sendCamSettings();
       }
       break;
     case INSTRUCTION_IS_CHANGE_SETTINGS:
@@ -357,6 +342,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_PANTILT_SPEED1:
       {
         pantilt_speed1 = SerialCommandValueInt;
+        Serial1.println(String("#d") + pantilt_speed1);
         Serial1.println(String("Pan/Tilt Speed 1 : ") + pantilt_speed1 + String("°/s"));
         Serial1.println("#$");
       }
@@ -364,6 +350,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_PANTILT_SPEED2:
       {
         pantilt_speed2 = SerialCommandValueInt;
+        Serial1.println(String("#f") + pantilt_speed2);
         Serial1.println(String("Pan/Tilt Speed 2 : ") + pantilt_speed2 + String("°/s"));
         Serial1.println("#$");
       }
@@ -371,6 +358,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_PANTILT_SPEED3:
       {
         pantilt_speed3 = SerialCommandValueInt;
+        Serial1.println(String("#g") + pantilt_speed3);
         Serial1.println(String("Pan/Tilt Speed 3 : ") + pantilt_speed3 + String("°/s"));
         Serial1.println("#$");
       }
@@ -378,6 +366,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_PANTILT_SPEED4:
       {
         pantilt_speed4 = SerialCommandValueInt;
+        Serial1.println(String("#h") + pantilt_speed4);
         Serial1.println(String("Pan/Tilt Speed 4 : ") + pantilt_speed4 + String("°/s"));
         Serial1.println("#$");
       }
@@ -385,6 +374,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_SLIDER_SPEED1:
       {
         slider_speed1 = SerialCommandValueInt;
+        Serial1.println(String("#j") + slider_speed1);
         Serial1.println(String("Silder Speed 1 : ") + slider_speed1 + String("mm/s"));
         Serial1.println("#$");
       }
@@ -392,6 +382,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_SLIDER_SPEED2:
       {
         slider_speed2 = SerialCommandValueInt;
+        Serial1.println(String("#k") + slider_speed2);
         Serial1.println(String("Silder Speed 2 : ") + slider_speed2 + String("mm/s"));
         Serial1.println("#$");
       }
@@ -399,6 +390,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_SLIDER_SPEED3:
       {
         slider_speed3 = SerialCommandValueInt;
+        Serial1.println(String("#l") + slider_speed3);
         Serial1.println(String("Silder Speed 3 : ") + slider_speed3 + String("mm/s"));
         Serial1.println("#$");
       }
@@ -406,6 +398,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_SLIDER_SPEED4:
       {
         slider_speed4 = SerialCommandValueInt;
+        Serial1.println(String("#;") + slider_speed4);
         Serial1.println(String("Silder Speed 4 : ") + slider_speed4 + String("mm/s"));
         Serial1.println("#$");
       }
@@ -413,6 +406,7 @@ void SerialData(void) {
     case INSTRUCTION_PANTILT_ACCEL:
       {
         pantilt_accel = SerialCommandValueInt;
+        Serial1.println(String("#q") + pantilt_accel);
         Serial1.println(String("Pan/Tilt Accel : ") + pantilt_accel + String("steps/s²"));
         Serial1.println("#$");
       }
@@ -420,6 +414,7 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_ACCEL:
       {
         slider_accel = SerialCommandValueInt;
+        Serial1.println(String("#Q") + slider_accel);
         Serial1.println(String("Slider Accel   : ") + slider_accel + String("steps/s²"));
         Serial1.println("#$");
       }
@@ -535,19 +530,19 @@ void SerialData(void) {
     //  break;
     case INSTRUCTION_SET_SLIDER_SPEED:
       {
-        if (slider_set_speed == 1) {
+        if (SerialCommandValueInt == 1) {
           Serial1.println("^=1");
           Serial1.println("^=1");
           slider_set_speed = slider_speed1;
-        } else if (slider_set_speed == 2) {
+        } else if (SerialCommandValueInt == 2) {
           Serial1.println("^=3");
           Serial1.println("^=3");
           slider_set_speed = slider_speed2;
-        } else if (slider_set_speed == 3) {
+        } else if (SerialCommandValueInt == 3) {
           Serial1.println("^=5");
           Serial1.println("^=5");
           slider_set_speed = slider_speed3;
-        } else if (slider_set_speed == 4) {
+        } else if (SerialCommandValueInt == 4) {
           Serial1.println("^=7");
           Serial1.println("^=7");
           slider_set_speed = slider_speed4;

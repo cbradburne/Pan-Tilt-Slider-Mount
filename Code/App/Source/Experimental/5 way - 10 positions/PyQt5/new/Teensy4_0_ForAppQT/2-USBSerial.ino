@@ -818,71 +818,51 @@ void USBSerialData() {
               instruction = Serial.read();
               if (instruction == '1') {
                 if (camNumInst == '1') {
-                  Serial1.print("?s1");
-                  //Serial1.println(speed1);
+                  Serial1.println("?s1");
                 } else if (camNumInst == '2') {
-                  Serial2.print("?s1");
-                  //Serial2.println(speed1);
+                  Serial2.println("?s1");
                 } else if (camNumInst == '3') {
-                  Serial3.print("?s1");
-                  //Serial3.println(speed1);
+                  Serial3.println("?s1");
                 } else if (camNumInst == '4') {
-                  Serial4.print("?s1");
-                  //Serial4.println(speed1);
+                  Serial4.println("?s1");
                 } else if (camNumInst == '5') {
-                  Serial5.print("?s1");
-                  //Serial5.println(speed1);
+                  Serial5.println("?s1");
                 }
               } else if (instruction == '2') {
                 if (camNumInst == '1') {
-                  Serial1.print("?s2");
-                  //Serial1.println(speed2);
+                  Serial1.println("?s2");
                 } else if (camNumInst == '2') {
-                  Serial2.print("?s2");
-                  //Serial2.println(speed2);
+                  Serial2.println("?s2");
                 } else if (camNumInst == '3') {
-                  Serial3.print("?s2");
-                  //Serial3.println(speed2);
+                  Serial3.println("?s2");
                 } else if (camNumInst == '4') {
-                  Serial4.print("?s2");
-                  //Serial4.println(speed2);
+                  Serial4.println("?s2");
                 } else if (camNumInst == '5') {
-                  Serial5.print("?s2");
-                  //Serial5.println(speed2);
+                  Serial5.println("?s2");
                 }
               } else if (instruction == '3') {
                 if (camNumInst == '1') {
-                  Serial1.print("?s3");
-                  //Serial1.println(speed3);
+                  Serial1.println("?s3");
                 } else if (camNumInst == '2') {
-                  Serial2.print("?s3");
-                  //Serial2.println(speed3);
+                  Serial2.println("?s3");
                 } else if (camNumInst == '3') {
-                  Serial3.print("?s3");
-                  //Serial3.println(speed3);
+                  Serial3.println("?s3");
                 } else if (camNumInst == '4') {
-                  Serial4.print("?s3");
-                  //Serial4.println(speed3);
+                  Serial4.println("?s3");
                 } else if (camNumInst == '5') {
-                  Serial5.print("?s3");
-                  //Serial5.println(speed3);
+                  Serial5.println("?s3");
                 }
               } else if (instruction == '4') {
                 if (camNumInst == '1') {
-                  Serial1.print("?s4");
-                  //Serial1.println(speed4);
+                  Serial1.println("?s4");
                 } else if (camNumInst == '2') {
-                  Serial2.print("?s4");
-                  //Serial2.println(speed4);
+                  Serial2.println("?s4");
                 } else if (camNumInst == '3') {
-                  Serial3.print("?s4");
-                  //Serial3.println(speed4);
+                  Serial3.println("?s4");
                 } else if (camNumInst == '4') {
-                  Serial4.print("?s4");
-                  //Serial4.println(speed4);
+                  Serial4.println("?s4");
                 } else if (camNumInst == '5') {
-                  Serial5.print("?s4");
-                  //Serial5.println(speed4);
+                  Serial5.println("?s4");
                 }
               }
             }
@@ -895,71 +875,51 @@ void USBSerialData() {
               instruction = Serial.read();
               if (instruction == '1') {
                 if (camNumInst == '1') {
-                  Serial1.print("?a1");
-                  //Serial1.println(Sspeed1);
+                  Serial1.println("?a1");
                 } else if (camNumInst == '2') {
-                  Serial2.print("?a1");
-                  //Serial2.println(Sspeed1);
+                  Serial2.println("?a1");
                 } else if (camNumInst == '3') {
-                  Serial3.print("?a1");
-                  //Serial3.println(Sspeed1);
+                  Serial3.println("?a1");
                 } else if (camNumInst == '4') {
-                  Serial4.print("?a1");
-                  //Serial4.println(Sspeed1);
+                  Serial4.println("?a1");
                 } else if (camNumInst == '5') {
-                  Serial5.print("?a1");
-                  //Serial5.println(Sspeed1);
+                  Serial5.println("?a1");
                 }
               } else if (instruction == '2') {
                 if (camNumInst == '1') {
-                  Serial1.print("?a2");
-                  //Serial1.println(Sspeed2);
+                  Serial1.println("?a2");
                 } else if (camNumInst == '2') {
-                  Serial2.print("?a2");
-                  //Serial2.println(Sspeed2);
+                  Serial2.println("?a2");
                 } else if (camNumInst == '3') {
-                  Serial3.print("?a2");
-                  //Serial3.println(Sspeed2);
+                  Serial3.println("?a2");
                 } else if (camNumInst == '4') {
-                  Serial4.print("?a2");
-                  //Serial4.println(Sspeed2);
+                  Serial4.println("?a2");
                 } else if (camNumInst == '5') {
-                  Serial5.print("?a2");
-                  //Serial5.println(Sspeed2);
+                  Serial5.println("?a2");
                 }
               } else if (instruction == '3') {
                 if (camNumInst == '1') {
-                  Serial1.print("?a3");
-                  //Serial1.println(Sspeed3);
+                  Serial1.println("?a3");
                 } else if (camNumInst == '2') {
-                  Serial2.print("?a3");
-                  //Serial2.println(Sspeed3);
+                  Serial2.println("?a3");
                 } else if (camNumInst == '3') {
-                  Serial3.print("?a3");
-                  //Serial3.println(Sspeed3);
+                  Serial3.println("?a3");
                 } else if (camNumInst == '4') {
-                  Serial4.print("?a3");
-                  //Serial4.println(Sspeed3);
+                  Serial4.println("?a3");
                 } else if (camNumInst == '5') {
-                  Serial5.print("?a3");
-                  //Serial5.println(Sspeed3);
+                  Serial5.println("?a3");
                 }
               } else if (instruction == '4') {
                 if (camNumInst == '1') {
-                  Serial1.print("?a4");
-                  //Serial1.println(Sspeed4);
+                  Serial1.println("?a4");
                 } else if (camNumInst == '2') {
-                  Serial2.print("?a4");
-                  //Serial2.println(Sspeed4);
+                  Serial2.println("?a4");
                 } else if (camNumInst == '3') {
-                  Serial3.print("?a4");
-                  //Serial3.println(Sspeed4);
+                  Serial3.println("?a4");
                 } else if (camNumInst == '4') {
-                  Serial4.print("?a4");
-                  //Serial4.println(Sspeed4);
+                  Serial4.println("?a4");
                 } else if (camNumInst == '5') {
-                  Serial5.print("?a4");
-                  //Serial5.println(Sspeed4);
+                  Serial5.println("?a4");
                 }
               }
             }
