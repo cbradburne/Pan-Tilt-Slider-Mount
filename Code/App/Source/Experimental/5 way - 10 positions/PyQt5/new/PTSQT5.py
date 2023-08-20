@@ -4,6 +4,7 @@
 #python3 -m pip install pyserial
 #python3 -m pip install pyinstaller
 #python3 -m pip install pysdl2-dll
+#python3 -m pip install pynput
 
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT5.py
 
@@ -20,6 +21,7 @@
 #cd 'C:\Users\Music\Documents\GitHub\Pan-Tilt-Slider-Mount\Code\App\Source\Experimental\5 way - 10 positions\PyQt5'
 #pyinstaller PTSApp-QT.spec
 #pyuic5 -x ptsui5.ui -o ptsui5.py
+#pyuic5 -x serialPage.ui -o serialPage.py
 
 from PyQt5.QtCore import Qt, QTimer
 from PyQt5 import QtCore, QtGui, QtWidgets
@@ -30,6 +32,7 @@ import sys, time, os, subprocess, re, json, pkg_resources, pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 from sys import platform
 from pathlib import Path
+from pynput.keyboard import Key, Controller
 
 #from qt_thread_updater import ThreadUpdater
 #updater = ThreadUpdater()
@@ -39,6 +42,8 @@ from pathlib import Path
 #os.environ["PYSDL2_DLL_PATH"] = "C:\\Users\\Music\\AppData\\Local\\Programs\\Python\\Python39\\Lib\\site-packages\\sdl2dll\\dll"
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
+
+keyboard = Controller()
 
 serial_port = None
 
@@ -65,6 +70,8 @@ isConnected = False
 whichCamRead = 1
 whichCamSerial = 1
 SetPosToggle = False
+
+serialText = ""
 
 message = ""
 
@@ -449,6 +456,706 @@ cam4isRecording = False
 cam5isZooming = False
 cam5isRecording = False
 
+cam1ptAccel = 0
+cam1slAccel = 0
+cam1ptSpeed1 = 0
+cam1ptSpeed2 = 0
+cam1ptSpeed3 = 0
+cam1ptSpeed4 = 0
+cam1slSpeed1 = 0
+cam1slSpeed2 = 0
+cam1slSpeed3 = 0
+cam1slSpeed4 = 0
+
+cam2ptAccel = 0
+cam2slAccel = 0
+cam2ptSpeed1 = 0
+cam2ptSpeed2 = 0
+cam2ptSpeed3 = 0
+cam2ptSpeed4 = 0
+cam2slSpeed1 = 0
+cam2slSpeed2 = 0
+cam2slSpeed3 = 0
+cam2slSpeed4 = 0
+
+cam3ptAccel = 0
+cam3slAccel = 0
+cam3ptSpeed1 = 0
+cam3ptSpeed2 = 0
+cam3ptSpeed3 = 0
+cam3ptSpeed4 = 0
+cam3slSpeed1 = 0
+cam3slSpeed2 = 0
+cam3slSpeed3 = 0
+cam3slSpeed4 = 0
+
+cam4ptAccel = 0
+cam4slAccel = 0
+cam4ptSpeed1 = 0
+cam4ptSpeed2 = 0
+cam4ptSpeed3 = 0
+cam4ptSpeed4 = 0
+cam4slSpeed1 = 0
+cam4slSpeed2 = 0
+cam4slSpeed3 = 0
+cam4slSpeed4 = 0
+
+cam5ptAccel = 0
+cam5slAccel = 0
+cam5ptSpeed1 = 0
+cam5ptSpeed2 = 0
+cam5ptSpeed3 = 0
+cam5ptSpeed4 = 1000
+cam5slSpeed1 = 0
+cam5slSpeed2 = 0
+cam5slSpeed3 = 0
+cam5slSpeed4 = 0
+
+class Ui_SettingsWindow(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
+        #super(Ui_SettingsWindow, self).__init__()
+
+ #   def setupUi(self):
+
+#class Ui_SettingsWindow(QMainWindow):
+#    def __init__(self):
+#        QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
+
+    def setupUi(self):
+        global whichCamSerial
+
+        self.setObjectName("settingsWindow")
+        self.resize(1980, 1080)
+        self.setStyleSheet("background-color: #181e23;")
+        self.centralwidget = QtWidgets.QWidget(self)
+        self.centralwidget.setObjectName("centralwidget")
+        self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox.setGeometry(QtCore.QRect(20, 10, 1311, 1001))
+        self.groupBox.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
+        self.groupBox.setTitle("")
+        self.groupBox.setObjectName("groupBox")
+        self.pushButtonPTS4 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonPTS4.setGeometry(QtCore.QRect(30, 210, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonPTS4.setFont(font)
+        self.pushButtonPTS4.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTS4.setObjectName("pushButtonPTS4")
+        self.pushButtonPTS3 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonPTS3.setGeometry(QtCore.QRect(30, 300, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonPTS3.setFont(font)
+        self.pushButtonPTS3.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTS3.setObjectName("pushButtonPTS3")
+        self.pushButtonPTS2 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonPTS2.setGeometry(QtCore.QRect(30, 390, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonPTS2.setFont(font)
+        self.pushButtonPTS2.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTS2.setObjectName("pushButtonPTS2")
+        self.pushButtonPTS1 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonPTS1.setGeometry(QtCore.QRect(30, 480, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonPTS1.setFont(font)
+        self.pushButtonPTS1.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTS1.setObjectName("pushButtonPTS1")
+        self.pushButtonSS4 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonSS4.setGeometry(QtCore.QRect(710, 210, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonSS4.setFont(font)
+        self.pushButtonSS4.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSS4.setObjectName("pushButtonSS4")
+        self.pushButtonSS3 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonSS3.setGeometry(QtCore.QRect(710, 300, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonSS3.setFont(font)
+        self.pushButtonSS3.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSS3.setObjectName("pushButtonSS3")
+        self.pushButtonSS2 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonSS2.setGeometry(QtCore.QRect(710, 390, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonSS2.setFont(font)
+        self.pushButtonSS2.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSS2.setObjectName("pushButtonSS2")
+        self.pushButtonSS1 = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonSS1.setGeometry(QtCore.QRect(710, 480, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonSS1.setFont(font)
+        self.pushButtonSS1.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSS1.setObjectName("pushButtonSS1")
+        self.pushButtonSA = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.slAccelFocus())
+        self.pushButtonSA.setGeometry(QtCore.QRect(710, 70, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonSA.setFont(font)
+        self.pushButtonSA.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSA.setObjectName("pushButtonSA")
+        self.pushButtonPTA = QtWidgets.QPushButton(self.groupBox)
+        self.pushButtonPTA.setGeometry(QtCore.QRect(30, 70, 301, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(24)
+        self.pushButtonPTA.setFont(font)
+        self.pushButtonPTA.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTA.setObjectName("pushButtonPTA")
+        self.labelPTaccel = QtWidgets.QLineEdit(self.groupBox)
+        self.labelPTaccel.setGeometry(QtCore.QRect(360, 70, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelPTaccel.setFont(font)
+        self.labelPTaccel.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelPTaccel.setText("")
+        self.labelPTaccel.setObjectName("labelPTaccel")
+        self.labelPTspeed4 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelPTspeed4.setGeometry(QtCore.QRect(360, 210, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelPTspeed4.setFont(font)
+        self.labelPTspeed4.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelPTspeed4.setText("")
+        self.labelPTspeed4.setObjectName("labelPTspeed4")
+        self.labelPTspeed3 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelPTspeed3.setGeometry(QtCore.QRect(360, 300, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelPTspeed3.setFont(font)
+        self.labelPTspeed3.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelPTspeed3.setText("")
+        self.labelPTspeed3.setObjectName("labelPTspeed3")
+        self.labelPTspeed2 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelPTspeed2.setGeometry(QtCore.QRect(360, 390, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelPTspeed2.setFont(font)
+        self.labelPTspeed2.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelPTspeed2.setText("")
+        self.labelPTspeed2.setObjectName("labelPTspeed2")
+        self.labelPTspeed1 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelPTspeed1.setGeometry(QtCore.QRect(360, 480, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelPTspeed1.setFont(font)
+        self.labelPTspeed1.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelPTspeed1.setText("")
+        self.labelPTspeed1.setObjectName("labelPTspeed1")
+        self.labelSLaccel = QtWidgets.QLineEdit(self.groupBox)
+        self.labelSLaccel.setGeometry(QtCore.QRect(1040, 70, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelSLaccel.setFont(font)
+        self.labelSLaccel.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelSLaccel.setText("")
+        self.labelSLaccel.setObjectName("labelSLaccel")
+        self.labelSLspeed4 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelSLspeed4.setGeometry(QtCore.QRect(1040, 210, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelSLspeed4.setFont(font)
+        self.labelSLspeed4.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelSLspeed4.setText("")
+        self.labelSLspeed4.setObjectName("labelSLspeed4")
+        self.labelSLspeed2 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelSLspeed2.setGeometry(QtCore.QRect(1040, 390, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelSLspeed2.setFont(font)
+        self.labelSLspeed2.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelSLspeed2.setText("")
+        self.labelSLspeed2.setObjectName("labelSLspeed2")
+        self.labelSLspeed1 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelSLspeed1.setGeometry(QtCore.QRect(1040, 480, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelSLspeed1.setFont(font)
+        self.labelSLspeed1.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelSLspeed1.setText("")
+        self.labelSLspeed1.setObjectName("labelSLspeed1")
+        self.labelSLspeed3 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelSLspeed3.setGeometry(QtCore.QRect(1040, 300, 221, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.labelSLspeed3.setFont(font)
+        self.labelSLspeed3.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelSLspeed3.setText("")
+        self.labelSLspeed3.setObjectName("labelSLspeed3")
+        self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox_2.setGeometry(QtCore.QRect(1370, 670, 571, 341))
+        self.groupBox_2.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
+        self.groupBox_2.setTitle("")
+        self.groupBox_2.setObjectName("groupBox_2")
+        self.pushButtonNum1 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('1'))
+        self.pushButtonNum1.setGeometry(QtCore.QRect(10, 20, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum1.setFont(font)
+        self.pushButtonNum1.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum1.setObjectName("pushButtonNum1")
+        self.pushButtonNum2 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('2'))
+        self.pushButtonNum2.setGeometry(QtCore.QRect(130, 20, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum2.setFont(font)
+        self.pushButtonNum2.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum2.setObjectName("pushButtonNum2")
+        self.pushButtonNum3 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('3'))
+        self.pushButtonNum3.setGeometry(QtCore.QRect(250, 20, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum3.setFont(font)
+        self.pushButtonNum3.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum3.setObjectName("pushButtonNum3")
+        self.pushButtonNum4 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('4'))
+        self.pushButtonNum4.setGeometry(QtCore.QRect(10, 100, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum4.setFont(font)
+        self.pushButtonNum4.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum4.setObjectName("pushButtonNum4")
+        self.pushButtonNum5 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('5'))
+        self.pushButtonNum5.setGeometry(QtCore.QRect(130, 100, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum5.setFont(font)
+        self.pushButtonNum5.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum5.setObjectName("pushButtonNum5")
+        self.pushButtonNum6 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('6'))
+        self.pushButtonNum6.setGeometry(QtCore.QRect(250, 100, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum6.setFont(font)
+        self.pushButtonNum6.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum6.setObjectName("pushButtonNum6")
+        self.pushButtonNum7 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('7'))
+        self.pushButtonNum7.setGeometry(QtCore.QRect(10, 180, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum7.setFont(font)
+        self.pushButtonNum7.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum7.setObjectName("pushButtonNum7")
+        self.pushButtonNum8 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('8'))
+        self.pushButtonNum8.setGeometry(QtCore.QRect(130, 180, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum8.setFont(font)
+        self.pushButtonNum8.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum8.setObjectName("pushButtonNum8")
+        self.pushButtonNum9 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('9'))
+        self.pushButtonNum9.setGeometry(QtCore.QRect(250, 180, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum9.setFont(font)
+        self.pushButtonNum9.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum9.setObjectName("pushButtonNum9")
+        self.pushButtonNum0 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('0'))
+        self.pushButtonNum0.setGeometry(QtCore.QRect(130, 260, 101, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNum0.setFont(font)
+        self.pushButtonNum0.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum0.setObjectName("pushButtonNum0")
+        self.pushButtonNumBS = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyBackSpace())
+        self.pushButtonNumBS.setGeometry(QtCore.QRect(410, 20, 121, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNumBS.setFont(font)
+        self.pushButtonNumBS.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNumBS.setObjectName("pushButtonNumBS")
+        self.pushButtonNumEnt = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyEnter())
+        self.pushButtonNumEnt.setGeometry(QtCore.QRect(390, 260, 161, 61))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonNumEnt.setFont(font)
+        self.pushButtonNumEnt.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNumEnt.setObjectName("pushButtonNumEnt")
+        self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox_3.setGeometry(QtCore.QRect(1400, 10, 291, 581))
+        self.groupBox_3.setStyleSheet("color: #FFFFFF; background-color: #1e252a; border: 4px solid #262d32;")
+        self.groupBox_3.setTitle("")
+        self.groupBox_3.setObjectName("groupBox_3")
+        self.pushButtonCam1 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam1GetSettings())
+        self.pushButtonCam1.setGeometry(QtCore.QRect(60, 30, 171, 81))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonCam1.setFont(font)
+        self.pushButtonCam1.setStyleSheet("border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam1.setFlat(False)
+        self.pushButtonCam1.setObjectName("pushButtonCam1")
+        self.pushButtonCam2 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam2GetSettings())
+        self.pushButtonCam2.setGeometry(QtCore.QRect(60, 140, 171, 81))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonCam2.setFont(font)
+        self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonCam2.setFlat(False)
+        self.pushButtonCam2.setObjectName("pushButtonCam2")
+        self.pushButtonCam3 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam3GetSettings())
+        self.pushButtonCam3.setGeometry(QtCore.QRect(60, 250, 171, 81))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonCam3.setFont(font)
+        self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+        self.pushButtonCam3.setFlat(False)
+        self.pushButtonCam3.setObjectName("pushButtonCam3")
+        self.pushButtonCam4 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam4GetSettings())
+        self.pushButtonCam4.setGeometry(QtCore.QRect(60, 360, 171, 81))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonCam4.setFont(font)
+        self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+        self.pushButtonCam4.setFlat(False)
+        self.pushButtonCam4.setObjectName("pushButtonCam4")
+        self.pushButtonCam5 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam5GetSettings())
+        self.pushButtonCam5.setGeometry(QtCore.QRect(60, 470, 171, 81))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonCam5.setFont(font)
+        self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+        self.pushButtonCam5.setFlat(False)
+        self.pushButtonCam5.setObjectName("pushButtonCam5")
+        self.pushButtonClose = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.pushToClose())
+        self.pushButtonClose.setGeometry(QtCore.QRect(1750, 40, 181, 81))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(48)
+        self.pushButtonClose.setFont(font)
+        self.pushButtonClose.setStyleSheet("color:#ffffff; border: 4px solid red; background-color: #aa4c4C; border-radius: 40px;")
+        self.pushButtonClose.setFlat(False)
+        self.pushButtonClose.setObjectName("pushButtonClose")
+        self.setCentralWidget(self.centralwidget)
+        self.menubar = QtWidgets.QMenuBar(self)
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1980, 24))
+        self.menubar.setObjectName("menubar")
+        self.setMenuBar(self.menubar)
+        self.statusbar = QtWidgets.QStatusBar(self)
+        self.statusbar.setObjectName("statusbar")
+        self.setStatusBar(self.statusbar)
+
+        self.retranslateUi()
+        QtCore.QMetaObject.connectSlotsByName(self)
+
+        #self.sendSerial('&1K')
+        #self.sendSerial('&3K')
+        #self.sendSerial('&4K')
+        #self.sendSerial('&5K')
+        #self.sendSerial('&2K')
+
+
+
+    def retranslateUi(self):
+        global whichCamSerial
+
+        _translate = QtCore.QCoreApplication.translate
+        self.setWindowTitle(_translate("settingsWindow", "MainWindow"))
+        self.pushButtonPTS4.setText(_translate("settingsWindow", "Pan/Tilt Speed - Fastest"))
+        self.pushButtonPTS3.setText(_translate("settingsWindow", "Pan/Tilt Speed - Fast"))
+        self.pushButtonPTS2.setText(_translate("settingsWindow", "Pan/Tilt Speed - Slow"))
+        self.pushButtonPTS1.setText(_translate("settingsWindow", "Pan/Tilt Speed - Slowest"))
+        self.pushButtonSS4.setText(_translate("settingsWindow", "Slider Speed - Fastest"))
+        self.pushButtonSS3.setText(_translate("settingsWindow", "Slider Speed - Fast"))
+        self.pushButtonSS2.setText(_translate("settingsWindow", "Slider Speed - Slow"))
+        self.pushButtonSS1.setText(_translate("settingsWindow", "Slider Speed - Slowest"))
+        self.pushButtonSA.setText(_translate("settingsWindow", "Slider Base Accel"))
+        self.pushButtonPTA.setText(_translate("settingsWindow", "Pan/Tilt Base Accel"))
+        self.pushButtonNum1.setText(_translate("settingsWindow", "1"))
+        self.pushButtonNum2.setText(_translate("settingsWindow", "2"))
+        self.pushButtonNum3.setText(_translate("settingsWindow", "3"))
+        self.pushButtonNum4.setText(_translate("settingsWindow", "4"))
+        self.pushButtonNum5.setText(_translate("settingsWindow", "5"))
+        self.pushButtonNum6.setText(_translate("settingsWindow", "6"))
+        self.pushButtonNum7.setText(_translate("settingsWindow", "7"))
+        self.pushButtonNum8.setText(_translate("settingsWindow", "8"))
+        self.pushButtonNum9.setText(_translate("settingsWindow", "9"))
+        self.pushButtonNum0.setText(_translate("settingsWindow", "0"))
+        self.pushButtonNumBS.setText(_translate("settingsWindow", "⌫"))
+        self.pushButtonNumEnt.setText(_translate("settingsWindow", "↩"))
+        self.pushButtonCam1.setText(_translate("settingsWindow", "Cam1"))
+        self.pushButtonCam2.setText(_translate("settingsWindow", "Cam2"))
+        self.pushButtonCam3.setText(_translate("settingsWindow", "Cam3"))
+        self.pushButtonCam4.setText(_translate("settingsWindow", "Cam4"))
+        self.pushButtonCam5.setText(_translate("settingsWindow", "Cam5"))
+        self.pushButtonClose.setText(_translate("settingsWindow", "Close"))
+
+        self.show()
+
+
+        if whichCamSerial == 1:
+            self.pushButtonCam1.setStyleSheet("border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
+            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+            self.cam1GetSettings()
+
+        elif whichCamSerial == 2:
+            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+            self.pushButtonCam2.setStyleSheet("border: 4px solid red; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+            self.cam2GetSettings()
+
+        elif whichCamSerial == 3:
+            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonCam3.setStyleSheet("border: 4px solid red; background-color: #807100; border-radius: 10px;")
+            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+            self.cam3GetSettings()
+
+        elif whichCamSerial == 4:
+            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+            self.pushButtonCam4.setStyleSheet("border: 4px solid red; background-color: #008071; border-radius: 10px;")
+            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+            self.cam4GetSettings()
+
+        elif whichCamSerial == 5:
+            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+            self.pushButtonCam5.setStyleSheet("border: 4px solid red; background-color: #8D5395; border-radius: 10px;")
+            self.cam5GetSettings()
+
+        #self.cam2GetSettings()
+        #self.cam1GetSettings()
+        #self.cam3GetSettings()
+        #self.cam4GetSettings()
+        #self.cam5GetSettings()
+
+    def emulateKey(self, key):
+        widget = QtWidgets.QApplication.focusWidget()
+        widget.setText(widget.text() + key)
+
+    def keyBackSpace(self):
+        widget = QtWidgets.QApplication.focusWidget()
+        widgetText = widget.text()
+        widget.setText(widgetText[:-1])
+
+    def keyEnter(self):
+        widget = QtWidgets.QApplication.focusWidget()
+
+        if widget.objectName() == "labelPTaccel":
+            self.sendSerial('&' + whichCamSerial + 'L' + widget.text())
+        elif widget.objectName() == "labelSLaccel":
+            self.sendSerial('&' + whichCamSerial + 'l' + widget.text())
+        elif widget.objectName() == "labelPTspeed1":
+            self.sendSerial('&' + whichCamSerial + 'F' + widget.text())
+        elif widget.objectName() == "labelPTspeed2":
+            self.sendSerial('&' + whichCamSerial + 'f' + widget.text())
+        elif widget.objectName() == "labelPTspeed3":
+            self.sendSerial('&' + whichCamSerial + 'G' + widget.text())
+        elif widget.objectName() == "labelPTspeed4":
+            self.sendSerial('&' + whichCamSerial + 'g' + widget.text())
+        elif widget.objectName() == "labelSLspeed1":
+            self.sendSerial('&' + whichCamSerial + 'H' + widget.text())
+        elif widget.objectName() == "labelSLspeed2":
+            self.sendSerial('&' + whichCamSerial + 'h' + widget.text())
+        elif widget.objectName() == "labelSLspeed3":
+            self.sendSerial('&' + whichCamSerial + 'J' + widget.text())
+        elif widget.objectName() == "labelSLspeed4":
+            self.sendSerial('&' + whichCamSerial + 'j' + widget.text())
+
+    
+    def pushToClose(self):
+        self.close()
+
+    def slAccelFocus(self):
+        self.labelSLaccel.setFocus()
+
+    def cam1GetSettings(self):
+        global cam1ptAccel
+        global cam1slAccel
+        global cam1ptSpeed1
+        global cam1ptSpeed2
+        global cam1ptSpeed3
+        global cam1ptSpeed4
+        global cam1slSpeed1
+        global cam1slSpeed2
+        global cam1slSpeed3
+        global cam1slSpeed4
+
+        self.labelPTaccel.setText(str(cam1ptAccel))
+        self.labelSLaccel.setText(str(cam1slAccel))
+        self.labelPTspeed1.setText(str(cam1ptSpeed1))
+        self.labelPTspeed2.setText(str(cam1ptSpeed2))
+        self.labelPTspeed3.setText(str(cam1ptSpeed3))
+        self.labelPTspeed4.setText(str(cam1ptSpeed4))
+        self.labelSLspeed1.setText(str(cam1slSpeed1))
+        self.labelSLspeed2.setText(str(cam1slSpeed2))
+        self.labelSLspeed3.setText(str(cam1slSpeed3))
+        self.labelSLspeed4.setText(str(cam1slSpeed4))
+
+        self.pushButtonCam1.setStyleSheet("border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+        self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+        self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+
+    def cam2GetSettings(self):
+        global cam2ptAccel
+        global cam2slAccel
+        global cam2ptSpeed1
+        global cam2ptSpeed2
+        global cam2ptSpeed3
+        global cam2ptSpeed4
+        global cam2slSpeed1
+        global cam2slSpeed2
+        global cam2slSpeed3
+        global cam2slSpeed4
+
+        self.labelPTaccel.setText(str(cam2ptAccel))
+        self.labelSLaccel.setText(str(cam2slAccel))
+        self.labelPTspeed1.setText(str(cam2ptSpeed1))
+        self.labelPTspeed2.setText(str(cam2ptSpeed2))
+        self.labelPTspeed3.setText(str(cam2ptSpeed3))
+        self.labelPTspeed4.setText(str(cam2ptSpeed4))
+        self.labelSLspeed1.setText(str(cam2slSpeed1))
+        self.labelSLspeed2.setText(str(cam2slSpeed2))
+        self.labelSLspeed3.setText(str(cam2slSpeed3))
+        self.labelSLspeed4.setText(str(cam2slSpeed4))
+
+        self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam2.setStyleSheet("border: 4px solid red; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+        self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+        self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+
+    def cam3GetSettings(self):
+        global cam3ptAccel
+        global cam3slAccel
+        global cam3ptSpeed1
+        global cam3ptSpeed2
+        global cam3ptSpeed3
+        global cam3ptSpeed4
+        global cam3slSpeed1
+        global cam3slSpeed2
+        global cam3slSpeed3
+        global cam3slSpeed4
+
+        self.labelPTaccel.setText(str(cam3ptAccel))
+        self.labelSLaccel.setText(str(cam3slAccel))
+        self.labelPTspeed1.setText(str(cam3ptSpeed1))
+        self.labelPTspeed2.setText(str(cam3ptSpeed2))
+        self.labelPTspeed3.setText(str(cam3ptSpeed3))
+        self.labelPTspeed4.setText(str(cam3ptSpeed4))
+        self.labelSLspeed1.setText(str(cam3slSpeed1))
+        self.labelSLspeed2.setText(str(cam3slSpeed2))
+        self.labelSLspeed3.setText(str(cam3slSpeed3))
+        self.labelSLspeed4.setText(str(cam3slSpeed4))
+
+        self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonCam3.setStyleSheet("border: 4px solid red; background-color: #807100; border-radius: 10px;")
+        self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+        self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+
+    def cam4GetSettings(self):
+        global cam4ptAccel
+        global cam4slAccel
+        global cam4ptSpeed1
+        global cam4ptSpeed2
+        global cam4ptSpeed3
+        global cam4ptSpeed4
+        global cam4slSpeed1
+        global cam4slSpeed2
+        global cam4slSpeed3
+        global cam4slSpeed4
+
+        self.labelPTaccel.setText(str(cam4ptAccel))
+        self.labelSLaccel.setText(str(cam4slAccel))
+        self.labelPTspeed1.setText(str(cam4ptSpeed1))
+        self.labelPTspeed2.setText(str(cam4ptSpeed2))
+        self.labelPTspeed3.setText(str(cam4ptSpeed3))
+        self.labelPTspeed4.setText(str(cam4ptSpeed4))
+        self.labelSLspeed1.setText(str(cam4slSpeed1))
+        self.labelSLspeed2.setText(str(cam4slSpeed2))
+        self.labelSLspeed3.setText(str(cam4slSpeed3))
+        self.labelSLspeed4.setText(str(cam4slSpeed4))
+
+        self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+        self.pushButtonCam4.setStyleSheet("border: 4px solid red; background-color: #008071; border-radius: 10px;")
+        self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+
+    def cam5GetSettings(self):
+        global cam5ptAccel
+        global cam5slAccel
+        global cam5ptSpeed1
+        global cam5ptSpeed2
+        global cam5ptSpeed3
+        global cam5ptSpeed4
+        global cam5slSpeed1
+        global cam5slSpeed2
+        global cam5slSpeed3
+        global cam5slSpeed4
+
+        self.labelPTaccel.setText(str(cam5ptAccel))
+        self.labelSLaccel.setText(str(cam5slAccel))
+        self.labelPTspeed1.setText(str(cam5ptSpeed1))
+        self.labelPTspeed2.setText(str(cam5ptSpeed2))
+        self.labelPTspeed3.setText(str(cam5ptSpeed3))
+        self.labelPTspeed4.setText(str(cam5ptSpeed4))
+        self.labelSLspeed1.setText(str(cam5slSpeed1))
+        self.labelSLspeed2.setText(str(cam5slSpeed2))
+        self.labelSLspeed3.setText(str(cam5slSpeed3))
+        self.labelSLspeed4.setText(str(cam5slSpeed4))
+
+        self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+        self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+        self.pushButtonCam5.setStyleSheet("border: 4px solid red; background-color: #8D5395; border-radius: 10px;")
+
+    def sendSerial(self, toSendData):
+        global sendData
+        sendData = toSendData
 
 class Ui_editWindow(QMainWindow):
     def __init__(self):
@@ -517,7 +1224,6 @@ class Ui_editWindow(QMainWindow):
 
 
 class Ui_MoverWindow(QMainWindow):
-
     def __init__(self):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
 
@@ -647,7 +1353,7 @@ class Ui_MoverWindow(QMainWindow):
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
-        self.setWindowTitle(_translate("MainWindow", "MainWindow"))
+        self.setWindowTitle(_translate("MainWindow", "Mover"))
         self.pushUP10.setText(_translate("MainWindow", "10"))
         self.pushUP1.setText(_translate("MainWindow", "1"))
         self.pushDOWN10.setText(_translate("MainWindow", "10"))
@@ -722,7 +1428,6 @@ class PTSapp(QMainWindow):
         super(PTSapp, self).__init__()
         self.setupUi()
     
-
     def openEditWindow(self, text):
         self.ui2 = Ui_editWindow()
         self.ui2.setupUi()
@@ -739,10 +1444,18 @@ class PTSapp(QMainWindow):
         self.ui3.setupUi()
         self.setPos(3)
 
+    
+    def openSettingsWindow(self):
+        #self.hide()
+        
+        self.setPos(3)
+        self.ui4 = Ui_SettingsWindow()
+        self.ui4.setupUi()
+
 
     def setupUi(self):
         self.setObjectName("PTSapp")
-        self.resize(1920, 997)
+        self.resize(1920, 1080)
         self.setAutoFillBackground(False)
         self.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(self)
@@ -1528,6 +2241,16 @@ class PTSapp(QMainWindow):
         self.pushButtonFileSave.setFlat(False)
         self.pushButtonFileSave.setObjectName("pushButtonFileSave")
         self.pushButtonFileSave.hide()
+        self.pushButtonSerial = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.openSettingsWindow())
+        self.pushButtonSerial.setGeometry(QtCore.QRect(1000, 990, 220, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonSerial.setFont(font)
+        self.pushButtonSerial.setStyleSheet("border: 4px solid #d74444; background-color: #F76666; border-radius: 10px;")
+        self.pushButtonSerial.setFlat(False)
+        self.pushButtonSerial.setObjectName("pushButtonSerial")
+        self.pushButtonSerial.hide()
         self.pushButtonLED = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.resetButtonColours())
         self.pushButtonLED.setGeometry(QtCore.QRect(1500, 990, 120, 51))
         font = QtGui.QFont()
@@ -1680,6 +2403,7 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
         self.pushButtonFileLoad.setText(_translate("MainWindow", "Load"))
         self.pushButtonFileSave.setText(_translate("MainWindow", "Save"))
+        self.pushButtonSerial.setText(_translate("MainWindow", "Settings"))
         self.pushButtonLED.setText(_translate("MainWindow", "Reset"))
         self.pushButtonExit.setText(_translate("MainWindow", "Exit"))
         #self.menuFile.setTitle(_translate("MainWindow", "File"))
@@ -1688,14 +2412,16 @@ class PTSapp(QMainWindow):
 
         self.initFlashTimer()
 
-        #self.show()
+        self.show()
         #self.showMaximized()
-        self.showFullScreen()
+        #self.showFullScreen()
 
     def pushToClose(self):
         self.close()
 
     def initFlashTimer(self):
+        global whichCamSerial
+        global SetPosToggle
         # self.timer.singleShot(2000,self.update_function)  # for one time call only
 
         self.timer = QTimer()
@@ -1705,6 +2431,7 @@ class PTSapp(QMainWindow):
         self.messageTimer = QTimer()
         self.messageTimer.timeout.connect(self.setMessage)
         self.messageTimer.start(10)
+
 
     def setDials(self, cam, ps, value):
         if cam == 1:
@@ -1790,13 +2517,8 @@ class PTSapp(QMainWindow):
         global cam4Label
         global cam5Label
 
-        if sys.platform == "win32":
-            os.startfile("C:\\\Windows\\System32\\osk.exe")
-        elif sys.platform == "linux" or sys.platform == "linux2":
-            os.system('/usr/bin/toggle-keyboard.sh')
-
         fname = QFileDialog.getOpenFileName(self, "Open Config", "C:\\Users\\Music\\Documents", "JSON (*.json)")
-
+    
         if fname:
             self.labelFilename.setText(Path(fname[0]).stem)
             filename = fname[0]
@@ -1860,14 +2582,9 @@ class PTSapp(QMainWindow):
                 cam3Label = config['Cam3']
                 cam4Label = config['Cam4']
                 cam5Label = config['Cam5']
-
+        
             except:
                 message = "Couldn't Load File"
-            
-            if sys.platform == "win32":
-                os.system('wmic process where name="osk.exe" delete')
-            elif sys.platform == "linux" or sys.platform == "linux2":
-                os.system('/usr/bin/toggle-keyboard.sh')
 
 
     def fileSave(self):
@@ -1934,11 +2651,6 @@ class PTSapp(QMainWindow):
         config['Cam4'] = cam4Label
         config['Cam5'] = cam5Label
 
-        if sys.platform == "win32":
-            os.startfile("C:\\\Windows\\System32\\osk.exe")
-        elif sys.platform == "linux" or sys.platform == "linux2":
-            os.system('/usr/bin/toggle-keyboard.sh')
-
         fname, _ = QFileDialog.getSaveFileName(self, "Save Config", "C:\\Users\\Music\\Documents", "JSON (*.json)")
         
         if fname:
@@ -1946,10 +2658,6 @@ class PTSapp(QMainWindow):
             with open(fname, 'w') as f:
                 json.dump(config, f)
 
-        if sys.platform == "win32":
-            os.system('wmic process where name="osk.exe" delete')
-        elif sys.platform == "linux" or sys.platform == "linux2":
-            os.system('/usr/bin/toggle-keyboard.sh')
 
     def doJoyMoves(self, dt):
         global axisX
@@ -1995,22 +2703,22 @@ class PTSapp(QMainWindow):
             elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
             elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
-            if axisW == -8: self.sendSerial(zoomSerial + 'A8')
-            elif axisW == -7: self.sendSerial(zoomSerial + 'A7')
-            elif axisW == -6: self.sendSerial(zoomSerial + 'A6')
-            elif axisW == -5: self.sendSerial(zoomSerial + 'A5')
-            elif axisW == -4: self.sendSerial(zoomSerial + 'A4')
-            elif axisW == -3: self.sendSerial(zoomSerial + 'A3')
-            elif axisW == -2: self.sendSerial(zoomSerial + 'A2')
-            elif axisW == -1: self.sendSerial(zoomSerial + 'A1')
-            elif axisW == 1: self.sendSerial(zoomSerial + 'a1')
-            elif axisW == 2: self.sendSerial(zoomSerial + 'a2')
-            elif axisW == 3: self.sendSerial(zoomSerial + 'a3')
-            elif axisW == 4: self.sendSerial(zoomSerial + 'a4')
-            elif axisW == 5: self.sendSerial(zoomSerial + 'a5')
-            elif axisW == 6: self.sendSerial(zoomSerial + 'a6')
-            elif axisW == 7: self.sendSerial(zoomSerial + 'a7')
-            elif axisW == 8: self.sendSerial(zoomSerial + 'a8')
+            if axisW == -8: self.sendSerial(zoomSerial + 'a8')
+            elif axisW == -7: self.sendSerial(zoomSerial + 'a7')
+            elif axisW == -6: self.sendSerial(zoomSerial + 'a6')
+            elif axisW == -5: self.sendSerial(zoomSerial + 'a5')
+            elif axisW == -4: self.sendSerial(zoomSerial + 'a4')
+            elif axisW == -3: self.sendSerial(zoomSerial + 'a3')
+            elif axisW == -2: self.sendSerial(zoomSerial + 'a2')
+            elif axisW == -1: self.sendSerial(zoomSerial + 'a1')
+            elif axisW == 1: self.sendSerial(zoomSerial + 'A1')
+            elif axisW == 2: self.sendSerial(zoomSerial + 'A2')
+            elif axisW == 3: self.sendSerial(zoomSerial + 'A3')
+            elif axisW == 4: self.sendSerial(zoomSerial + 'A4')
+            elif axisW == 5: self.sendSerial(zoomSerial + 'A5')
+            elif axisW == 6: self.sendSerial(zoomSerial + 'A6')
+            elif axisW == 7: self.sendSerial(zoomSerial + 'A7')
+            elif axisW == 8: self.sendSerial(zoomSerial + 'A8')
             else: self.sendSerial(zoomSerial + 'q')
 
     def sendJoystick(self, arr):
@@ -2449,6 +3157,61 @@ class PTSapp(QMainWindow):
         global Cam3TextColour
         global Cam4TextColour
         global Cam5TextColour
+
+        global cam1ptAccel
+        global cam1slAccel
+        global cam1ptSpeed1
+        global cam1ptSpeed2
+        global cam1ptSpeed3
+        global cam1ptSpeed4
+        global cam1slSpeed1
+        global cam1slSpeed2
+        global cam1slSpeed3
+        global cam1slSpeed4
+
+        global cam2ptAccel
+        global cam2slAccel
+        global cam2ptSpeed1
+        global cam2ptSpeed2
+        global cam2ptSpeed3
+        global cam2ptSpeed4
+        global cam2slSpeed1
+        global cam2slSpeed2
+        global cam2slSpeed3
+        global cam2slSpeed4
+
+        global cam3ptAccel
+        global cam3slAccel
+        global cam3ptSpeed1
+        global cam3ptSpeed2
+        global cam3ptSpeed3
+        global cam3ptSpeed4
+        global cam3slSpeed1
+        global cam3slSpeed2
+        global cam3slSpeed3
+        global cam3slSpeed4
+
+        global cam4ptAccel
+        global cam4slAccel
+        global cam4ptSpeed1
+        global cam4ptSpeed2
+        global cam4ptSpeed3
+        global cam4ptSpeed4
+        global cam4slSpeed1
+        global cam4slSpeed2
+        global cam4slSpeed3
+        global cam4slSpeed4
+
+        global cam5ptAccel
+        global cam5slAccel
+        global cam5ptSpeed1
+        global cam5ptSpeed2
+        global cam5ptSpeed3
+        global cam5ptSpeed4
+        global cam5slSpeed1
+        global cam5slSpeed2
+        global cam5slSpeed3
+        global cam5slSpeed4
 
         global whichCamRead
 
@@ -3593,6 +4356,112 @@ class PTSapp(QMainWindow):
             cam4PTSpeed = int(msg[3])
         elif msg[0:3] == "=@5":
             cam5PTSpeed = int(msg[3])
+
+        elif msg[0:3] == "=a0":
+            cam1ptAccel = int(msg[3:])
+        elif msg[0:3] == "=a1":
+            cam1ptSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=a2":
+            cam1ptSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=a3":
+            cam1ptSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=a4":
+            cam1ptSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=A0":
+            cam1slAccel = int(msg[3:])
+        elif msg[0:3] == "=A1":
+            cam1slSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=A2":
+            cam1slSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=A3":
+            cam1slSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=A4":
+            cam1slSpeed4 = int(msg[3:])
+
+        elif msg[0:3] == "=s0":
+            cam2ptAccel = int(msg[3:])
+        elif msg[0:3] == "=s1":
+            cam2ptSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=s2":
+            cam2ptSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=s3":
+            cam2ptSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=s4":
+            cam2ptSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=S0":
+            cam2slAccel = int(msg[3:])
+        elif msg[0:3] == "=S1":
+            cam2slSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=S2":
+            cam2slSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=S3":
+            cam2slSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=S4":
+            cam2slSpeed4 = int(msg[3:])
+
+        elif msg[0:3] == "=d0":
+            cam3ptAccel = int(msg[3:])
+        elif msg[0:3] == "=d1":
+            cam3ptSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=d2":
+            cam3ptSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=d3":
+            cam3ptSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=d4":
+            cam3ptSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=D0":
+            cam3slAccel = int(msg[3:])
+        elif msg[0:3] == "=D1":
+            cam3slSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=D2":
+            cam3slSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=D3":
+            cam3slSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=D4":
+            cam3slSpeed4 = int(msg[3:])
+
+        elif msg[0:3] == "=f0":
+            cam4ptAccel = int(msg[3:])
+        elif msg[0:3] == "=f1":
+            cam4ptSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=f2":
+            cam4ptSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=f3":
+            cam4ptSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=f4":
+            cam4ptSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=F0":
+            cam4slAccel = int(msg[3:])
+        elif msg[0:3] == "=F1":
+            cam4slSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=F2":
+            cam4slSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=F3":
+            cam4slSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=F4":
+            cam4slSpeed4 = int(msg[3:])
+
+        elif msg[0:3] == "=g0":
+            cam5ptAccel = int(msg[3:])
+        elif msg[0:3] == "=g1":
+            cam5ptSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=g2":
+            cam5ptSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=g3":
+            cam5ptSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=g4":
+            cam5ptSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=G0":
+            cam5slAccel = int(msg[3:])
+        elif msg[0:3] == "=G1":
+            cam5slSpeed1 = int(msg[3:])
+        elif msg[0:3] == "=G2":
+            cam5slSpeed2 = int(msg[3:])
+        elif msg[0:3] == "=G3":
+            cam5slSpeed3 = int(msg[3:])
+        elif msg[0:3] == "=G4":
+            cam5slSpeed4 = int(msg[3:])
+
         elif msg[0:2] == "#$":
             return
         elif msg[0:4] == "Cam1":
@@ -3645,7 +4514,7 @@ class PTSapp(QMainWindow):
         self.doButtonColours()
 
     def flash(self):
-        #print("Flashing")
+        global whichCamSerial
         global cam1Pos1Run
         global cam1Pos2Run
         global cam1Pos3Run
@@ -3864,6 +4733,8 @@ class PTSapp(QMainWindow):
             self.pushButton59.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
         if cam5Pos10Run and not cam5AtPos10:
             self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+
+        
 
     def doButtonColours(self):
         #print("Button Colours")
@@ -5537,6 +6408,7 @@ class PTSapp(QMainWindow):
             self.pushButtonLED.hide()
             self.pushButtonFileLoad.hide()
             self.pushButtonFileSave.hide()
+            self.pushButtonSerial.hide()
             self.labelFilename.setHidden(True)
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
@@ -5553,6 +6425,7 @@ class PTSapp(QMainWindow):
             self.pushButtonLED.show()
             self.pushButtonFileLoad.show()
             self.pushButtonFileSave.show()
+            self.pushButtonSerial.show()
             self.labelFilename.setHidden(False)
 
 
