@@ -924,6 +924,36 @@ void USBSerialData() {
               }
             }
             break;
+          case 'P':
+            {  // Set auto-focus to ON
+              if (camNumInst == '1') {
+                Serial1.println("?F");
+              } else if (camNumInst == '2') {
+                Serial2.println("?F");
+              } else if (camNumInst == '3') {
+                Serial3.println("?F");
+              } else if (camNumInst == '4') {
+                Serial4.println("?F");
+              } else if (camNumInst == '5') {
+                Serial5.println("?F");
+              }
+            }
+            break;
+          case 'p':
+            {  // Set auto-focus to ON
+              if (camNumInst == '1') {
+                Serial1.println("?f");
+              } else if (camNumInst == '2') {
+                Serial2.println("?f");
+              } else if (camNumInst == '3') {
+                Serial3.println("?f");
+              } else if (camNumInst == '4') {
+                Serial4.println("?f");
+              } else if (camNumInst == '5') {
+                Serial5.println("?f");
+              }
+            }
+            break;
           case '$':  // is string command
             {
               while (Serial.available() > 0) {

@@ -38,6 +38,8 @@ void Serial4Data() {
       else if (h == '/') { Serial.println("~403"); }
       else if (h == 'p') { Serial.println("~414"); }
       else if (h == 'P') { Serial.println("~424"); }
+      else if (h == 'O') { Serial.println("~415"); }
+      else if (h == 'o') { Serial.println("~405"); }
       else if (h == 'a') { Serial.println("~400"); }
       else if (h == 's') { Serial.println("~&"); }
       else if (h == '0') {

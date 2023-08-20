@@ -1639,7 +1639,7 @@ border-radius: 40px;</string>
       </font>
      </property>
      <property name="styleSheet">
-      <string notr="true">border: 10px solid #000000; 
+      <string notr="true">border: 10px solid grey; 
 background-color: #8D5395;
 border-radius: 40px;</string>
      </property>
@@ -2049,6 +2049,31 @@ border-radius: 10px;</string>
     </property>
     <property name="currentText">
      <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>620</x>
+      <y>50</y>
+      <width>16</width>
+      <height>16</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Helvetica Neue</family>
+      <pointsize>12</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">color:red;</string>
+    </property>
+    <property name="text">
+     <string>AF</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
     </property>
    </widget>
   </widget>

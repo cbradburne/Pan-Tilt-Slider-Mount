@@ -509,6 +509,12 @@ cam5slSpeed2 = ''
 cam5slSpeed3 = ''
 cam5slSpeed4 = ''
 
+cam1AF = False
+cam2AF = False
+cam3AF = False
+cam4AF = False
+cam5AF = False
+
 class Ui_SettingsWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
@@ -1465,6 +1471,8 @@ class PTSapp(QMainWindow):
             #keytest = key[1]
             #print(key.number)
 
+            global whichCamSerial
+
             global axisX
             global axisY
             global axisZ
@@ -1487,6 +1495,34 @@ class PTSapp(QMainWindow):
                     axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
                     axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
+                elif joyType[-6:] == "Button 1":
+                    if whichCamSerial == 1:
+                        if cam1AF:
+                            self.sendSerial('&' + str(whichCamSerial) + 'P')
+                        else:
+                            self.sendSerial('&' + str(whichCamSerial) + 'p')
+                    elif whichCamSerial == 2:
+                        if cam2AF:
+                            self.sendSerial('&' + str(whichCamSerial) + 'P')
+                        else:
+                            self.sendSerial('&' + str(whichCamSerial) + 'p')
+                    elif whichCamSerial == 3:
+                        if cam3AF:
+                            self.sendSerial('&' + str(whichCamSerial) + 'P')
+                        else:
+                            self.sendSerial('&' + str(whichCamSerial) + 'p')
+                    elif whichCamSerial == 4:
+                        if cam4AF:
+                            self.sendSerial('&' + str(whichCamSerial) + 'P')
+                        else:
+                            self.sendSerial('&' + str(whichCamSerial) + 'p')
+                    elif whichCamSerial == 5:
+                        if cam5AF:
+                            self.sendSerial('&' + str(whichCamSerial) + 'P')
+                        else:
+                            self.sendSerial('&' + str(whichCamSerial) + 'p')
+
+
             
             else:
                 if joyType[-6:] == "Axis 3":
@@ -2194,6 +2230,57 @@ class PTSapp(QMainWindow):
         self.pushButtonCam5.setFlat(False)
         self.pushButtonCam5.setObjectName("pushButtonCam5")
 
+        self.labelCam1AF = QtWidgets.QLabel(self.centralwidget)
+        self.labelCam1AF.setGeometry(QtCore.QRect(620, 110, 16, 16))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(12)
+        self.labelCam1AF.setFont(font)
+        self.labelCam1AF.setStyleSheet("color:red;")
+        self.labelCam1AF.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelCam1AF.setObjectName("labelCam1AF")
+        self.labelCam1AF.hide()
+        self.labelCam2AF = QtWidgets.QLabel(self.centralwidget)
+        self.labelCam2AF.setGeometry(QtCore.QRect(780, 110, 16, 16))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(12)
+        self.labelCam2AF.setFont(font)
+        self.labelCam2AF.setStyleSheet("color:red;")
+        self.labelCam2AF.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelCam2AF.setObjectName("labelCam2AF")
+        self.labelCam2AF.hide()
+        self.labelCam3AF = QtWidgets.QLabel(self.centralwidget)
+        self.labelCam3AF.setGeometry(QtCore.QRect(940, 110, 16, 16))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(12)
+        self.labelCam3AF.setFont(font)
+        self.labelCam3AF.setStyleSheet("color:red;")
+        self.labelCam3AF.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelCam3AF.setObjectName("labelCam3AF")
+        self.labelCam3AF.hide()
+        self.labelCam4AF = QtWidgets.QLabel(self.centralwidget)
+        self.labelCam4AF.setGeometry(QtCore.QRect(1100, 110, 16, 16))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(12)
+        self.labelCam4AF.setFont(font)
+        self.labelCam4AF.setStyleSheet("color:red;")
+        self.labelCam4AF.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelCam4AF.setObjectName("labelCam4AF")
+        self.labelCam4AF.hide()
+        self.labelCam5AF = QtWidgets.QLabel(self.centralwidget)
+        self.labelCam5AF.setGeometry(QtCore.QRect(1260, 110, 16, 16))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(12)
+        self.labelCam5AF.setFont(font)
+        self.labelCam5AF.setStyleSheet("color:red;")
+        self.labelCam5AF.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelCam5AF.setObjectName("labelCam5AF")
+        self.labelCam5AF.hide()
+
         self.pushButtonSet = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setPos(3))
         self.pushButtonSet.setGeometry(QtCore.QRect(1760, 30, 120, 71))
         font = QtGui.QFont()
@@ -2381,6 +2468,11 @@ class PTSapp(QMainWindow):
         self.pushButtonCam3.setText(_translate("MainWindow", cam3Label))
         self.pushButtonCam4.setText(_translate("MainWindow", cam4Label))
         self.pushButtonCam5.setText(_translate("MainWindow", cam5Label))
+        self.labelCam1AF.setText(_translate("MainWindow", "AF"))
+        self.labelCam2AF.setText(_translate("MainWindow", "AF"))
+        self.labelCam3AF.setText(_translate("MainWindow", "AF"))
+        self.labelCam4AF.setText(_translate("MainWindow", "AF"))
+        self.labelCam5AF.setText(_translate("MainWindow", "AF"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
         self.pushButtonFileLoad.setText(_translate("MainWindow", "Load"))
@@ -3193,6 +3285,12 @@ class PTSapp(QMainWindow):
         global cam5slSpeed3
         global cam5slSpeed4
 
+        global cam1AF
+        global cam2AF
+        global cam3AF
+        global cam4AF
+        global cam5AF
+
         global whichCamRead
 
         #textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
@@ -3394,6 +3492,10 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam1Record.background_color = get_color_from_hex("#7D0000")
                 #self.root.get_screen('main').ids.cam1Record.text = "Recording"
                 #client.send_message("/style/bgcolor/4/16", [225, 0, 0])
+            elif msg[1:4] == "115":
+                cam1AF = True
+            elif msg[1:4] == "105":
+                cam1AF = False
             elif msg[1:4] == "100":
                 cam1Pos1Run = False
                 cam1Pos1Set = False
@@ -3605,6 +3707,10 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam2Record.background_color = get_color_from_hex("#7D0000")
                 #self.root.get_screen('main').ids.cam2Record.text = "Recording"
                 #client.send_message("/style/bgcolor/5/16", [225, 0, 0])
+            elif msg[1:4] == "215":
+                cam2AF = True
+            elif msg[1:4] == "205":
+                cam2AF = False
             elif msg[1:4] == "200":
                 cam2Pos1Run = False
                 cam2Pos1Set = False
@@ -3816,6 +3922,10 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam3Record.background_color = get_color_from_hex("#7D0000")
                 #self.root.get_screen('main').ids.cam3Record.text = "Recording"
                 #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
+            elif msg[1:4] == "315":
+                cam3AF = True
+            elif msg[1:4] == "305":
+                cam3AF = False
             elif msg[1:4] == "300":
                 cam3Pos1Run = False
                 cam3Pos1Set = False
@@ -4027,6 +4137,10 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam4Record.background_color = get_color_from_hex("#7D0000")
                 #self.root.get_screen('main').ids.cam4Record.text = "Recording"
                 #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
+            elif msg[1:4] == "415":
+                cam4AF = True
+            elif msg[1:4] == "405":
+                cam4AF = False
             elif msg[1:4] == "400":
                 cam4Pos1Run = False
                 cam4Pos1Set = False
@@ -4238,6 +4352,10 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam5Record.background_color = get_color_from_hex("#7D0000")
                 #self.root.get_screen('main').ids.cam5Record.text = "Recording"
                 #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
+            elif msg[1:4] == "515":
+                cam5AF = True
+            elif msg[1:4] == "505":
+                cam5AF = False
             elif msg[1:4] == "500":
                 cam5Pos1Run = False
                 cam5Pos1Set = False
@@ -5004,6 +5122,12 @@ class PTSapp(QMainWindow):
         global oldcam4PTSpeed
         global oldcam5PTSpeed
 
+        global cam1AF
+        global cam2AF
+        global cam3AF
+        global cam4AF
+        global cam5AF
+
         global resetButtons
 
         buttonColourSet = "#ff0000"
@@ -5731,6 +5855,42 @@ class PTSapp(QMainWindow):
             elif cam5SliderSpeed >= 7:
                 self.dial5s.setValue(4)
                 self.line5s.setGeometry(1820, 10, 20, 141)
+
+        if oldcam1AF != cam1AF:
+            oldcam1AF = cam1AF
+            if cam1AF:
+                self.labelCam1AF.show()
+            else :
+                self.labelCam1AF.hide()
+
+        if oldcam2AF != cam2AF:
+            oldcam2AF = cam2AF
+            if cam2AF:
+                self.labelCam2AF.show()
+            else :
+                self.labelCam2AF.hide()
+
+        if oldcam3AF != cam3AF:
+            oldcam3AF = cam3AF
+            if cam3AF:
+                self.labelCam3AF.show()
+            else :
+                self.labelCam3AF.hide()
+
+        if oldcam4AF != cam4AF:
+            oldcam4AF = cam4AF
+            if cam4AF:
+                self.labelCam4AF.show()
+            else :
+                self.labelCam4AF.hide()
+
+        if oldcam5AF != cam5AF:
+            oldcam5AF = cam5AF
+            if cam5AF:
+                self.labelCam5AF.show()
+            else :
+                self.labelCam5AF.hide()
+
 
         resetButtons = False
 

@@ -112,13 +112,30 @@ void loop() {
         }
       }
 
-      if (c == 'o') {                        // Stop Zooming
+      if (c == 'o') {                                     // Stop Zooming
         if (isSerialLANC) {
           Serial.print("#7590*");
         } else {
           lancZoom = 0;
         }
       }
+
+      if (c == 'F') {                                     // Auto-Focus ON
+        if (isSerialLANC) {
+          Serial.print("$7200*");
+        } else {
+          lancZoom = 0;
+        }
+      }
+
+      if (c == 'f') {                                     // Auto-Focus OFF
+        if (isSerialLANC) {
+          Serial.print("$7210*");
+        } else {
+          lancZoom = 0;
+        }
+      }
+      
 
       if (c == 'I') {
         while (Serial2.available() < 1) {                 //  Wait for 1 byte to be available.
@@ -289,7 +306,7 @@ void doLANC() {
     } else if (strcmp("$71000*", cmdBuffer) == 0) {  //  Recording pt1
       Serial.print("#7110*");
       cmdBuffer[0] = 0;
-    } else if (strcmp("$71100*", cmdBuffer) == 0) cmdBuffer[0] = 0;  //  Recording pt2
+    } else if (strcmp("$71100*", cmdBuffer) == 0) cmdBuffer[0] = 0;       //  Recording pt2
 
     else if (strcmp("%7610*", cmdBuffer) == 0) {
       Serial.print("&76100*");
@@ -303,17 +320,21 @@ void doLANC() {
       Serial2.println("?g");
       isRecording = false;
       cmdBuffer[0] = 0;
-    } else if (strcmp("$73000*", cmdBuffer) == 0) cmdBuffer[0] = 0;  //  Photo Pressed
+    } else if (strcmp("$73000*", cmdBuffer) == 0) cmdBuffer[0] = 0;       //  Photo Pressed
 
-    else if (strcmp("$73100*", cmdBuffer) == 0)  //  Photo Released
+    else if (strcmp("$73100*", cmdBuffer) == 0)                           //  Photo Released
     {
       isPhoto = false;
       cmdBuffer[0] = 0;
-    } else if (strcmp("$72000*", cmdBuffer) == 0) cmdBuffer[0] = 0;  //  Auto Focus ON
+    } else if (strcmp("$72000*", cmdBuffer) == 0) {                       //  Auto Focus ON
+      Serial2.println("?g");
+      cmdBuffer[0] = 0;
 
-    else if (strcmp("$72100*", cmdBuffer) == 0) cmdBuffer[0] = 0;  //  Auto Focus OFF
-
-    else if (strcmp("$74100*", cmdBuffer) == 0) cmdBuffer[0] = 0;  //  Zoom IN
+    } else if (strcmp("$72100*", cmdBuffer) == 0) {                       //  Auto Focus OFF
+      Serial2.println("?g");
+      cmdBuffer[0] = 0;
+      
+    } else if (strcmp("$74100*", cmdBuffer) == 0) cmdBuffer[0] = 0;       //  Zoom IN
 
     else if (strcmp("$74200*", cmdBuffer) == 0) cmdBuffer[0] = 0;
 

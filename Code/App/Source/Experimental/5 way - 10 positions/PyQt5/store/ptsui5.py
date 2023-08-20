@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1917, 997)
+        MainWindow.resize(1680, 997)
         MainWindow.setAutoFillBackground(False)
         MainWindow.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -648,7 +648,7 @@ class Ui_MainWindow(object):
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
         self.pushButton51.setFont(font)
-        self.pushButton51.setStyleSheet("border: 10px solid #000000; \n"
+        self.pushButton51.setStyleSheet("border: 10px solid grey; \n"
 "background-color: #8D5395;\n"
 "border-radius: 40px;")
         self.pushButton51.setFlat(False)
@@ -811,14 +811,32 @@ class Ui_MainWindow(object):
 "border-radius: 10px;")
         self.comboBox.setCurrentText("")
         self.comboBox.setObjectName("comboBox")
+        self.label = QtWidgets.QLabel(self.centralwidget)
+        self.label.setGeometry(QtCore.QRect(620, 50, 16, 16))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(12)
+        self.label.setFont(font)
+        self.label.setStyleSheet("color:red;")
+        self.label.setAlignment(QtCore.Qt.AlignCenter)
+        self.label.setObjectName("label")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1917, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1680, 24))
         self.menubar.setObjectName("menubar")
+        self.menuFile = QtWidgets.QMenu(self.menubar)
+        self.menuFile.setObjectName("menuFile")
+        self.menuControl = QtWidgets.QMenu(self.menubar)
+        self.menuControl.setObjectName("menuControl")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+        self.actionMover = QtWidgets.QAction(MainWindow)
+        self.actionMover.setObjectName("actionMover")
+        self.menuControl.addAction(self.actionMover)
+        self.menubar.addAction(self.menuFile.menuAction())
+        self.menubar.addAction(self.menuControl.menuAction())
 
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
@@ -883,7 +901,10 @@ class Ui_MainWindow(object):
         self.pushButtonCam5.setText(_translate("MainWindow", "Cam5"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
-        self.comboBox.setCurrentText(_translate("MainWindow", "Connect"))
+        self.label.setText(_translate("MainWindow", "AF"))
+        self.menuFile.setTitle(_translate("MainWindow", "File"))
+        self.menuControl.setTitle(_translate("MainWindow", "Control"))
+        self.actionMover.setText(_translate("MainWindow", "Mover"))
 
 
 if __name__ == "__main__":
