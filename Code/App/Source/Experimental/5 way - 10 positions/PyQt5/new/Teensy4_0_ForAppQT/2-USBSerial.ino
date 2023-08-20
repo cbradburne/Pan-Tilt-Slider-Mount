@@ -989,6 +989,21 @@ void USBSerialData() {
               }
             }
             break;
+          case 'U':
+            {  // Store EEPROM
+              if (camNumInst == '1') {
+                Serial1.println("?U");
+              } else if (camNumInst == '2') {
+                Serial2.println("?U");
+              } else if (camNumInst == '3') {
+                Serial3.println("?U");
+              } else if (camNumInst == '4') {
+                Serial4.println("?U");
+              } else if (camNumInst == '5') {
+                Serial5.println("?U");
+              }
+            }
+            break;
         }
       } else if (instruction == '-') {
         resetLEDs = true;
