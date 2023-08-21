@@ -22,7 +22,7 @@ elapsedMillis timeElapsed;
 
 
 void initPanTilt(void) {
-  Serial.begin(BAUD_RATE);
+  //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
 
@@ -50,9 +50,6 @@ void initPanTilt(void) {
   Serial1.println("#a");
   Serial1.println("#%");
   Serial1.println("#%");  // clear remote LEDS
-
-  //Serial1.println(pantilt_set_speed);
-
 
   if (pantilt_set_speed == pantilt_speed1) {
     Serial1.println("^@1");

@@ -3,7 +3,7 @@
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
-#define BAUD_RATE 38400  //9600 //57600
+#define BAUD_RATE 38400 //9600 //57600
 
 #define PIN_STEP_PAN 19
 #define PIN_DIRECTION_PAN 18
@@ -47,26 +47,23 @@
 #define INSTRUCTION_SET_TILT_SPEED 'S'
 #define INSTRUCTION_SET_SLIDER_SPEED 'a'
 
-#define INSTRUCTION_INC_SLIDER_SPEED 'B'
-#define INSTRUCTION_DEC_SLIDER_SPEED 'b'
-#define INSTRUCTION_MAX_SLIDER_SPEED 'C'
-#define INSTRUCTION_MIN_SLIDER_SPEED 'c'
-#define INSTRUCTION_SET_INC_SLIDER_SPEED 'd'
-#define INSTRUCTION_SET_MIN_SLIDER_SPEED 'f'
-#define INSTRUCTION_SET_MAX_SLIDER_SPEED 'F'
+
+#define INSTRUCTION_SET_PANTILT_SPEED1 'B'
+#define INSTRUCTION_SET_PANTILT_SPEED2 'b'
+#define INSTRUCTION_SET_PANTILT_SPEED3 'C'
+#define INSTRUCTION_SET_PANTILT_SPEED4 'c'
+#define INSTRUCTION_SET_SLIDER_SPEED1 'D'
+#define INSTRUCTION_SET_SLIDER_SPEED2 'd'
+#define INSTRUCTION_SET_SLIDER_SPEED3 'E'
+#define INSTRUCTION_SET_SLIDER_SPEED4 'e'
+
+#define INSTRUCTION_IS_SETTINGS_REQUESTED 'F'
+#define INSTRUCTION_IS_CHANGE_SETTINGS 'f'
 
 #define INSTRUCTION_RESTORE_DEFAULT_SPEEDS 'l'
 
-#define INSTRUCTION_PAN_ACCEL 'q'
-#define INSTRUCTION_TILT_ACCEL 'Q'
-#define INSTRUCTION_SLIDER_ACCEL 'w'
-
-#define INSTRUCTION_PAN_JOY_ACCEL 'e'
-#define INSTRUCTION_TILT_JOY_ACCEL 'E'
-#define INSTRUCTION_SLIDER_JOY_ACCEL 'D'
-
-#define INSTRUCTION_SET_FAST_SPEED 'V'
-#define INSTRUCTION_SET_SLOW_SPEED 'v'
+#define INSTRUCTION_PANTILT_ACCEL 'Q'
+#define INSTRUCTION_SLIDER_ACCEL 'q'
 
 #define INSTRUCTION_DEBUG_STATUS 'R'
 #define INSTRUCTION_POSITION_STATUS 'r'
@@ -88,27 +85,56 @@
 #define INSTRUCTION_ZOOM_OUT 'z'
 #define INSTRUCTION_STOP_ZOOM 'N'
 
+#define INSTRUCTION_SET_AUTOFOCUS_ON 'O'
+#define INSTRUCTION_SET_AUTOFOCUS_OFF 'o'
+#define INSTRUCTION_IS_AUTOFOCUS_ON 'I'
+#define INSTRUCTION_IS_AUTOFOCUS_OFF 'i'
+
 #define INSTRUCTION_TOGGLE_RECORDING 'u'
 #define INSTRUCTION_IS_RECORDING 'G'
 #define INSTRUCTION_IS_NOT_RECORDING 'g'
 
-#define EEPROM_ADDRESS_PAN_SET_SPEED 12
-#define EEPROM_ADDRESS_TILT_SET_SPEED 16
-#define EEPROM_ADDRESS_SLIDER_SET_SPEED 20
-#define EEPROM_ADDRESS_PAN_ACCEL 48
-#define EEPROM_ADDRESS_TILT_ACCEL 56
-#define EEPROM_ADDRESS_SLIDER_ACCEL 64
-#define EEPROM_ADDRESS_PAN_JOY_ACCEL 72
-#define EEPROM_ADDRESS_TILT_JOY_ACCEL 80
-#define EEPROM_ADDRESS_SLIDER_JOY_ACCEL 88
+#define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
+#define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
+#define EEPROM_ADDRESS_PANTILT_ACCEL 14
+#define EEPROM_ADDRESS_SLIDER_ACCEL 18
+#define EEPROM_ADDRESS_PANTILT_SPEED1 22
+#define EEPROM_ADDRESS_PANTILT_SPEED2 26
+#define EEPROM_ADDRESS_PANTILT_SPEED3 30
+#define EEPROM_ADDRESS_PANTILT_SPEED4 34
+#define EEPROM_ADDRESS_SLIDER_SPEED1 38
+#define EEPROM_ADDRESS_SLIDER_SPEED2 42
+#define EEPROM_ADDRESS_SLIDER_SPEED3 46
+#define EEPROM_ADDRESS_SLIDER_SPEED4 50
 
 #define VERSION_NUMBER "8 Aug 2023"
+
+#if defined(TEENSYDUINO)
+  #if defined(__MK20DX256__)       
+    #define BOARD "Teensy 3.2"
+    float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
+    float sliderMaxFactor = 1.0;
+  #elif defined(__IMXRT1062__)       
+    #define BOARD "Teensy 4.0"
+    float pantiltMaxFactor = 10.0;    // Speed factor of joystick moves ( 1 = 100% )
+    float sliderMaxFactor = 10.0;
+  #endif
+#endif
 
 bool withSlider = false;
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
 bool upsideDown = false;
 bool slideReverse = false;
+bool startedAsync = false;
+
+bool panAsync = false;
+bool tiltAsync = false;
+bool sliderAsync = false;
+
+bool panRunning = false;
+bool tiltRunning = false;
+bool sliderRunning = false;
 
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
@@ -117,41 +143,24 @@ float pan_steps_per_degree = (200.0 * 16 * PAN_GEAR_RATIO) / 360.0;            /
 float tilt_steps_per_degree = (200.0 * 16 * TILT_GEAR_RATIO) / 360.0;          //  Stepper motor has 200 steps per 360 degrees
 float slider_steps_per_millimetre = (200.0 * 16) / (SLIDER_PULLEY_TEETH * 2);  //  Stepper motor has 200 steps per 360 degrees, the timing pully has 36 teeth and the belt has a pitch of 2mm
 
-float pan_set_speed = 20;     //  degrees/second.
-float tilt_set_speed = 20;    //  degrees/second.
-float slider_set_speed = 60;  //  mm/second.
+float pantilt_set_speed = 20;     //  degrees/second.
+float slider_set_speed = 60;      //  mm/second.
 
-float pan_def_speed = 20;
-float tilt_def_speed = 20;
-float slider_def_speed = 60;
+float pantilt_accel = 200;
+float slider_accel = 20;
 
-int LEDsliderSpeed;
-int LEDpanSpeed;
-int LEDtiltSpeed;
-int LEDPTSpeed;
+float pantilt_speed1 = 1;
+float pantilt_speed2 = 5;
+float pantilt_speed3 = 10;
+float pantilt_speed4 = 20;
 
-float tempPanSpeed = 0;
-float tempTiltSpeed = 0;
-float tempSliderSpeed = 0;
+float slider_speed1 = 20;
+float slider_speed2 = 40;
+float slider_speed3 = 80;
+float slider_speed4 = 120;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
-
-float pan_def_accel = 1000;
-float tilt_def_accel = 1000;
-float slider_def_accel = 1000;
-
-float pan_accel = 1000;
-float tilt_accel = 1000;
-float slider_accel = 1000;
-
-float panMaxFactor = 1.0;  // Speed factor of joystick moves ( 1 = 100% )
-float tiltMaxFactor = 1.0;
-float sliderMaxFactor = 1.0;
-
-float panAccelJoy = 1;  // Accel factor of joystick moves ( 1 = 100% )
-float tiltAccelJoy = 1;
-float sliderAccelJoy = 1;
 
 String atIndex = "";
 
@@ -199,6 +208,8 @@ unsigned long moveCheckInterval = 1000;
 int camDlyNo = 0;
 unsigned long previousTime;
 
+int whichSetting = 0;
+
 int dlyPos = 0;
 
 int dlyPos1Time = 0;
@@ -211,9 +222,8 @@ int dlyPos5Time = 0;
 
 struct KeyframeElement {
   long panStepCount = 0;
-  float panSpeed = 0;
   long tiltStepCount = 0;
-  float tiltSpeed = 0;
+  float panTiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
   int isRecorded = 0;

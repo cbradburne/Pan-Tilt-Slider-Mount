@@ -38,7 +38,6 @@ void SerialData(void) {
     }
   } else if (Serial1.available() > 0) {
     instruction = Serial1.read();
-    Serial.print(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
       while (Serial1.available() < 6) {                     //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
@@ -75,7 +74,6 @@ void SerialData(void) {
       float speedFactorS = map(sliderStepSpeed2, -255, 255, -sliderMaxFactor, sliderMaxFactor);
       float speedFactorP = map(panStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
-
 
       previousMillisMoveCheck = millis();
 
@@ -156,7 +154,6 @@ void SerialData(void) {
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
       delay(2);                                             //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
-
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
         dlyPos = Serial1.read();
@@ -179,7 +176,6 @@ void SerialData(void) {
         Serial1Flush();                                     //Clear any excess data in the Serial1 buffer
         SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
         SerialCommandValueFloat = atof(stringText);         //converts stringText to a float
-
         if (instruction == '+') {                           //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
           delay(100);                                       //wait to make sure all data in the Serial1 message has arived
           Serial1Flush();                                   //Clear any excess data in the Serial1 buffer
@@ -197,6 +193,7 @@ void SerialData(void) {
     Serial1.println("#s");  // not at any set pos
     sentMoved = true;
   }
+  
   switch (instruction) {
     case INSTRUCTION_IS_SETTINGS_REQUESTED:
       {
