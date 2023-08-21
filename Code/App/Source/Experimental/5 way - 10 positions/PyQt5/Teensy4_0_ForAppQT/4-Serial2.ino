@@ -1,119 +1,113 @@
 void Serial2Data() {
-    if (Serial2.available()) {                                   // If anything comes in Serial2 (pins 0 & 1)
+  if (Serial2.available()) {                                    // If anything comes in Serial2 (pins 0 & 1)
     char e = Serial2.read();
     if (e == '#') {
-      while (Serial2.available() < 1) {                        //  Wait for 1 byte to be available.
+      while (Serial2.available() < 1) {                         //  Wait for 1 byte to be available.
         delayMicroseconds(200);
       }
       char f = Serial2.read();
-      if (f == 'Z') {
-        Serial.println("~211");
-      }
-      else if (f == 'X') {
-        Serial.println("~221");
-      }
-      else if (f == 'C') {
-        Serial.println("~231");
-      }
-      else if (f == 'V') {
-        Serial.println("~241");
-      }
-      else if (f == 'B') {
-        Serial.println("~251");
-      }
-      else if (f == 'N') {
-        Serial.println("~261");
-      }
-      else if (f == 'M') {
-        Serial.println("~271");
-      }
-      else if (f == '<') {
-        Serial.println("~281");
-      }
-      else if (f == '>') {
-        Serial.println("~291");
-      }
-      else if (f == '?') {
-        Serial.println("~201");
-      }
-      else if (f == 'A') {
-        Serial.println("~212");
-      }
-      else if (f == 'S') {
-        Serial.println("~222");
-      }
-      else if (f == 'D') {
-        Serial.println("~232");
-      }
-      else if (f == 'F') {
-        Serial.println("~242");
-      }
-      else if (f == 'G') {
-        Serial.println("~252");
-      }
-      else if (f == 'H') {
-        Serial.println("~262");
-      }
-      else if (f == 'J') {
-        Serial.println("~272");
-      }
-      else if (f == 'K') {
-        Serial.println("~282");
-      }
-      else if (f == 'L') {
-        Serial.println("~292");
-      }
-      else if (f == ':') {
-        Serial.println("~202");
-      }
-      else if (f == 'z') {
-        Serial.println("~213");
-      }
-      else if (f == 'x') {
-        Serial.println("~223");
-      }
-      else if (f == 'c') {
-        Serial.println("~233");
-      }
-      else if (f == 'v') {
-        Serial.println("~243");
-      }
-      else if (f == 'b') {
-        Serial.println("~253");
-      }
-      else if (f == 'n') {
-        Serial.println("~263");
-      }
-      else if (f == 'm') {
-        Serial.println("~273");
-      }
-      else if (f == ',') {
-        Serial.println("~283");
-      }
-      else if (f == '.') {
-        Serial.println("~293");
-      }
-      else if (f == '/') {
-        Serial.println("~203");
-      }
-      else if (f == 'p') {
-        Serial.println("~214");
-      }
-      else if (f == 'P') {
-        Serial.println("~224");
-      }
-      else if (f == 'a') {
-        Serial.println("~200");
-      }
-      else if (f == 's') {
-        Serial.println("~!");
-      }
+      if (f == 'Z') { Serial.println("~211"); }
+      else if (f == 'X') { Serial.println("~221"); }
+      else if (f == 'C') { Serial.println("~231"); }
+      else if (f == 'V') { Serial.println("~241"); }
+      else if (f == 'B') { Serial.println("~251"); }
+      else if (f == 'N') { Serial.println("~261"); }
+      else if (f == 'M') { Serial.println("~271"); }
+      else if (f == '<') { Serial.println("~281"); }
+      else if (f == '>') { Serial.println("~291"); }
+      else if (f == '?') { Serial.println("~201"); }
+      else if (f == 'A') { Serial.println("~212"); }
+      else if (f == 'S') { Serial.println("~222"); }
+      else if (f == 'D') { Serial.println("~232"); }
+      else if (f == 'F') { Serial.println("~242"); }
+      else if (f == 'G') { Serial.println("~252"); }
+      else if (f == 'H') { Serial.println("~262"); }
+      else if (f == 'J') { Serial.println("~272"); }
+      else if (f == 'K') { Serial.println("~282"); }
+      else if (f == 'L') { Serial.println("~292"); }
+      else if (f == ':') { Serial.println("~202"); }
+      else if (f == 'z') { Serial.println("~213"); }
+      else if (f == 'x') { Serial.println("~223"); }
+      else if (f == 'c') { Serial.println("~233"); }
+      else if (f == 'v') { Serial.println("~243"); }
+      else if (f == 'b') { Serial.println("~253"); }
+      else if (f == 'n') { Serial.println("~263"); }
+      else if (f == 'm') { Serial.println("~273"); }
+      else if (f == ',') { Serial.println("~283"); }
+      else if (f == '.') { Serial.println("~293"); }
+      else if (f == '/') { Serial.println("~203"); }
+      else if (f == 'p') { Serial.println("~214"); }
+      else if (f == 'P') { Serial.println("~224"); }
+      else if (f == 'O') { Serial.println("~215"); }
+      else if (f == 'o') { Serial.println("~205"); }
+      else if (f == 'a') { Serial.println("~200"); }
+      else if (f == 's') { Serial.println("~!"); }
       else if (f == '0') {
         Serial.println("~100");
         Serial.println("~200");
         Serial.println("~300");
         Serial.println("~400");
         Serial.println("~500");
+      }
+      else if (f == 'd') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=s1");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == 'f') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=s2");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == 'g') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=s3");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == 'h') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=s4");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == 'j') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=S1");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == 'k') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=S2");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == 'l') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=S3");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == ';') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=S4");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == 'q') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=s0");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (f == 'Q') {
+        String stringText = Serial2.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=S0");
+        Serial.println(SerialCommandValueInt);
       }
     }
     else if (e == '^') {

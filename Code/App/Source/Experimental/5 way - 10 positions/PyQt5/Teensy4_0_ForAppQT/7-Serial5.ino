@@ -1,8 +1,8 @@
 void Serial5Data() {
-    if (Serial5.available()) {                                   // If anything comes in Serial5 (pins 0 & 1)
+  if (Serial5.available()) {                                    // If anything comes in Serial5 (pins 0 & 1)
     char g = Serial5.read();
     if (g == '#') {
-      while (Serial5.available() < 1) {                        //  Wait for 1 byte to be available.
+      while (Serial5.available() < 1) {                         //  Wait for 1 byte to be available.
         delayMicroseconds(200);
       }
       char h = Serial5.read();
@@ -38,14 +38,76 @@ void Serial5Data() {
       else if (h == '/') { Serial.println("~503"); }
       else if (h == 'p') { Serial.println("~514"); }
       else if (h == 'P') { Serial.println("~524"); }
+      else if (h == 'O') { Serial.println("~515"); }
+      else if (h == 'o') { Serial.println("~505"); }
       else if (h == 'a') { Serial.println("~500"); }
-      else if (h == 's') { Serial.println("~&");  }
+      else if (h == 's') { Serial.println("~&"); }
       else if (h == '0') {
         Serial.println("~100");
         Serial.println("~200");
         Serial.println("~300");
         Serial.println("~400");
         Serial.println("~500");
+      }
+      else if (h == 'd') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=g1");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == 'f') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=g2");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == 'g') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=g3");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == 'h') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=g4");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == 'j') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=G1");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == 'k') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=G2");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == 'l') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=G3");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == ';') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=G4");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == 'q') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=g0");
+        Serial.println(SerialCommandValueInt);
+      }
+      else if (h == 'Q') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=G0");
+        Serial.println(SerialCommandValueInt);
       }
     }
     else if (g == '^') {

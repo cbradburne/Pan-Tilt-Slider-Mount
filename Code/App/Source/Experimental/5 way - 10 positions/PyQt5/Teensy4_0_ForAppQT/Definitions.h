@@ -19,21 +19,20 @@ String inData3Temp;
 String inData4Temp;
 String inData5Temp;
 
-int speed1 = 1;                         //  Pan & Tilt speed settings
-int speed2 = 5;
-int speed3 = 10;
-int speed4 = 20;
+//int speed1 = 1;                         //  Pan & Tilt speed settings
+//int speed2 = 5;
+//int speed3 = 10;
+//int speed4 = 20;
 
-int Sspeed1 = 20;
-int Sspeed2 = 60;
-int Sspeed3 = 120;
-int Sspeed4 = 160;
+//int Sspeed1 = 20;
+//int Sspeed2 = 60;
+//int Sspeed3 = 120;
+//int Sspeed4 = 160;
 
 int whichSerialCam = 1;
 
-unsigned long previousMillisLEDs = 0;
-unsigned long currentMillisLEDs = 0;
-long LEDsInterval = 2000;
+int SerialCommandValueInt;
+
 bool resetLEDs = false;
 bool startLEDs = true;
 bool doLEDrefresh = false;
@@ -44,7 +43,7 @@ bool doLEDrefresh5 = false;
 bool doLEDrefresh6 = false;
 unsigned long previousMillisLED = 0;
 unsigned long currentMillisLED = 0;
-long LEDInterval = 500;
+unsigned long LEDInterval = 500;
 
 bool LEDstate = LOW;
 

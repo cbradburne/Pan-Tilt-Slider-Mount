@@ -81,7 +81,7 @@ void SerialData(void) {
         rotate_stepperS.stopAsync();
       } else {
         rotate_stepperS.rotateAsync(stepper_slider);
-        rotate_stepperS.overrideAcceleration(1000);         // to make accel faster when using joystick
+        rotate_stepperS.overrideAcceleration(slider_accel * slider_set_speed);         // to make accel faster when using joystick
         rotate_stepperS.overrideSpeed(speedFactorS);
       }
 
