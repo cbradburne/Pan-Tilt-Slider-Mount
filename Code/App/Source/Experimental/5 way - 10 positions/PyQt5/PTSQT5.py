@@ -42,6 +42,7 @@ from pathlib import Path
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
+debug = False
 
 serial_port = None
 
@@ -3054,7 +3055,7 @@ class PTSapp(QMainWindow):
         sendData = toSendData
 
     def readSerial(self, msg):
-        #print(msg)
+        global debug
         global cam1AtPos1
         global cam1AtPos2
         global cam1AtPos3
@@ -3310,6 +3311,9 @@ class PTSapp(QMainWindow):
         global cam5AF
 
         global whichCamRead
+
+        if debug:
+            print(msg)
 
         #textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
         #if textLength > 8000:
@@ -7616,6 +7620,7 @@ class ThreadClass(QtCore.QThread):
         self.is_running = True
 
     def run(self):
+        global debug
         global msg
         global serialLoop
         global sendData
@@ -7652,7 +7657,9 @@ class ThreadClass(QtCore.QThread):
                     msg=''
 
                 if sendData != "":
-                    #print(sendData)
+                    if debug:
+                        print(sendData)
+
                     if type(sendData) is str:
                         data = bytes((sendData + '\n'), 'utf8')
                         try:
