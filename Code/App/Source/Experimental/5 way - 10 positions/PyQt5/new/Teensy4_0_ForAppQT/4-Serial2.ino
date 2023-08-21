@@ -50,61 +50,61 @@ void Serial2Data() {
         Serial.println("~500");
       }
       else if (f == 'd') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=s1");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'f') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=s2");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'g') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=s3");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'h') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=s4");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'j') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=S1");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'k') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=S2");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'l') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=S3");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == ';') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=S4");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'q') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=s0");
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'Q') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=S0");
         Serial.println(SerialCommandValueInt);
