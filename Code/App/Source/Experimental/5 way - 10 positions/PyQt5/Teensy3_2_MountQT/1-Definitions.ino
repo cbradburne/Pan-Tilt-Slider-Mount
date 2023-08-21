@@ -30,11 +30,12 @@ elapsedMillis timeElapsed;
 
 
 void initPanTilt(void) {
+  //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
 
   pinMode(13, OUTPUT);              // LED
-  digitalWrite(13, LOW);            // LED ON
+  digitalWrite(13, LOW);            // LED OFF
 
   pinMode(PIN_SW1, INPUT_PULLUP);   // Dip Switch 1
   pinMode(PIN_SW2, INPUT_PULLUP);   // Dip Switch 2
@@ -42,11 +43,11 @@ void initPanTilt(void) {
 
   setEEPROMVariables();
 
-  stepper_pan.setMaxSpeed(panDegreesToSteps(pan_set_speed));
-  stepper_tilt.setMaxSpeed(tiltDegreesToSteps(tilt_set_speed));
+  stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
+  stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-  stepper_pan.setAcceleration(pan_accel);
-  stepper_tilt.setAcceleration(tilt_accel);
+  stepper_pan.setAcceleration(pantilt_accel);
+  stepper_tilt.setAcceleration(pantilt_accel);
   stepper_slider.setAcceleration(slider_accel);
 
   delay(200);
@@ -56,33 +57,36 @@ void initPanTilt(void) {
   Serial1.println("#%");
   Serial1.println("#%");  // clear remote LEDS
 
-  if (pan_set_speed == 20) {
-    Serial1.println("^@7");
-    Serial1.println("^@7");
-  } else if (pan_set_speed == 10) {
-    Serial1.println("^@5");
-    Serial1.println("^@5");
-  } else if (pan_set_speed == 5) {
-    Serial1.println("^@3");
-    Serial1.println("^@3");
-  } else if (pan_set_speed == 1) {
+if (pantilt_set_speed == pantilt_speed1) {
     Serial1.println("^@1");
     Serial1.println("^@1");
+  } else if (pantilt_set_speed == pantilt_speed2) {
+    Serial1.println("^@3");
+    Serial1.println("^@3");
+  } else if (pantilt_set_speed == pantilt_speed3) {
+    Serial1.println("^@5");
+    Serial1.println("^@5");
+  } else if (pantilt_set_speed == pantilt_speed4) {
+    Serial1.println("^@7");
+    Serial1.println("^@7");
   }
 
-  if (slider_set_speed == 160) {
-    Serial1.println("^=7");
-    Serial1.println("^=7");
-  } else if (slider_set_speed == 120) {
-    Serial1.println("^=5");
-    Serial1.println("^=5");
-  } else if (slider_set_speed == 60) {
-    Serial1.println("^=3");
-    Serial1.println("^=3");
-  } else if (slider_set_speed == 20) {
+
+  if (slider_set_speed == slider_speed1) {
     Serial1.println("^=1");
     Serial1.println("^=1");
+  } else if (slider_set_speed == slider_speed2) {
+    Serial1.println("^=3");
+    Serial1.println("^=3");
+  } else if (slider_set_speed == slider_speed3) {
+    Serial1.println("^=5");
+    Serial1.println("^=5");
+  } else if (slider_set_speed == slider_speed4) {
+    Serial1.println("^=7");
+    Serial1.println("^=7");
   }
+
+  sendCamSettings();
 
   Serial1.println("Camera Active");
   Serial1.println("-");
@@ -90,7 +94,7 @@ void initPanTilt(void) {
 
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
-  withSlider = digitalRead(PIN_SW3);  // pin 10 to gnd if no slider used
+  withSlider = digitalRead(PIN_SW3);
 
   if (upsideDown) {
     stepper_pan.setInverseRotation(true);
@@ -140,10 +144,26 @@ void Serial1Flush(void) {
     c = Serial1.read();
   }
 }
+
 void Serial2Flush(void) {
   while (Serial2.available() > 0) {
     c = Serial2.read();
   }
+}
+
+void sendCamSettings() {
+  Serial1.println(String("#d") + pantilt_speed1);
+  Serial1.println(String("#f") + pantilt_speed2);
+  Serial1.println(String("#g") + pantilt_speed3);
+  Serial1.println(String("#h") + pantilt_speed4);
+
+  Serial1.println(String("#j") + slider_speed1);
+  Serial1.println(String("#k") + slider_speed2);
+  Serial1.println(String("#l") + slider_speed3);
+  Serial1.println(String("#;") + slider_speed4);
+
+  Serial1.println(String("#q") + pantilt_accel);
+  Serial1.println(String("#Q") + slider_accel);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -159,6 +179,7 @@ void mainLoop(void) {
       rotate_stepperS.stopAsync();
       rotate_stepperP.stopAsync();
       rotate_stepperT.stopAsync();
+      isManualMove = false;
     }
   }
 }

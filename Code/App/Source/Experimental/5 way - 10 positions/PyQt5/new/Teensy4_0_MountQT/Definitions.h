@@ -14,7 +14,7 @@
 
 #define PIN_SW1 11
 #define PIN_SW2 12
-#define PIN_SW3 10
+#define PIN_SW3 6
 
 #define SLIDER_PULLEY_TEETH 36.0
 //#define PAN_GEAR_RATIO 8.4705882352941176470588235294118  //  144/17 teeth      - Original Mount

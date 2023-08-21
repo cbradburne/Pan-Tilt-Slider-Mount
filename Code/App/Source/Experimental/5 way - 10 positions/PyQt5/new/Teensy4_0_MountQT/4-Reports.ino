@@ -6,7 +6,6 @@ void debugReport(void) {
   Serial1.println(String("Tilt angle          : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
   Serial1.println(String("Slider position     : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm\n"));
   Serial1.println(String("Pan/TILT steps      : ") + panDegreesToSteps(pantilt_set_speed) + String(" steps/s"));
-  //Serial1.println(String("Tilt steps          : ") + tiltDegreesToSteps(tilt_set_speed) + String(" steps/s"));
   Serial1.println(String("Slider steps        : ") + sliderMillimetresToSteps(slider_set_speed) + String(" steps/s\n"));
   Serial1.println(String("Pan/Tilt set speed  : ") + pantilt_set_speed + String("°/s"));
   Serial1.println(String("Slider set speed    : ") + slider_set_speed + String("mm/s\n"));
@@ -48,7 +47,6 @@ void printKeyframeElements(void) {
     Serial1.print(String("Tilt  : ") + tiltStepsToDegrees(keyframe_array[row].tiltStepCount) + String("°\t"));
     Serial1.print(String("Slider: ") + sliderStepsToMillimetres(keyframe_array[row].sliderStepCount) + String("mm\t"));
     Serial1.print(String("Pan/Tilt Speed : ") + panStepsToDegrees(keyframe_array[row].panTiltSpeed) + String(" °/s\t"));
-    //Serial1.print(String("Tilt Speed  : ") + tiltStepsToDegrees(keyframe_array[row].tiltSpeed) + String(" °/s\t"));
     Serial1.print(String("Slider Speed : ") + sliderStepsToMillimetres(keyframe_array[row].sliderSpeed) + String(" mm/s\n"));
 
     row++;

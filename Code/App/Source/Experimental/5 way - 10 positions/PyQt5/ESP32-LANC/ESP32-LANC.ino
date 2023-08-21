@@ -327,11 +327,11 @@ void doLANC() {
       isPhoto = false;
       cmdBuffer[0] = 0;
     } else if (strcmp("$72000*", cmdBuffer) == 0) {                       //  Auto Focus ON
-      Serial2.println("?g");
+      Serial2.println("?O");
       cmdBuffer[0] = 0;
 
     } else if (strcmp("$72100*", cmdBuffer) == 0) {                       //  Auto Focus OFF
-      Serial2.println("?g");
+      Serial2.println("?o");
       cmdBuffer[0] = 0;
       
     } else if (strcmp("$74100*", cmdBuffer) == 0) cmdBuffer[0] = 0;       //  Zoom IN

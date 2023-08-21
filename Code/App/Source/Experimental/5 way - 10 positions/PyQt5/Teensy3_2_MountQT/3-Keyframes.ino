@@ -3,9 +3,8 @@
 void editKeyframe(int keyframeEdit) {
   keyframe_array[(keyframeEdit - 1)].panStepCount = stepper_pan.getPosition();
   keyframe_array[(keyframeEdit - 1)].tiltStepCount = stepper_tilt.getPosition();
+  keyframe_array[(keyframeEdit - 1)].panTiltSpeed = panDegreesToSteps(pantilt_set_speed);
   keyframe_array[(keyframeEdit - 1)].sliderStepCount = stepper_slider.getPosition();
-  keyframe_array[(keyframeEdit - 1)].panSpeed = panDegreesToSteps(pan_set_speed);
-  keyframe_array[(keyframeEdit - 1)].tiltSpeed = tiltDegreesToSteps(tilt_set_speed);
   keyframe_array[(keyframeEdit - 1)].sliderSpeed = sliderMillimetresToSteps(slider_set_speed);
   keyframe_array[(keyframeEdit - 1)].isRecorded = 1;
 
@@ -98,9 +97,8 @@ void clearKeyframes(void) {
   for (int i = 0; i < 10; i++) {
     keyframe_array[i].panStepCount = 0;
     keyframe_array[i].tiltStepCount = 0;
+    keyframe_array[i].panTiltSpeed = 0;
     keyframe_array[i].sliderStepCount = 0;
-    keyframe_array[i].panSpeed = 0;
-    keyframe_array[i].tiltSpeed = 0;
     keyframe_array[i].sliderSpeed = 0;
     keyframe_array[i].isRecorded = 0;
   }
@@ -181,8 +179,8 @@ void moveToIndex(int index) {
   Serial1.println("#$");
 
   if (useKeyframeSpeeds) {
-    stepper_pan.setMaxSpeed(keyframe_array[index - 1].panSpeed);
-    stepper_tilt.setMaxSpeed(keyframe_array[index - 1].tiltSpeed);
+    stepper_pan.setMaxSpeed(keyframe_array[index - 1].panTiltSpeed);
+    stepper_tilt.setMaxSpeed(keyframe_array[index - 1].panTiltSpeed);
     stepper_slider.setMaxSpeed(keyframe_array[index - 1].sliderSpeed);
   }
 
@@ -316,7 +314,7 @@ void moveToIndex(int index) {
     atPos9 = false;
   }
 
-  delay(100);  // delay for serial read
+  delay(100);     // delay for serial read
 
   Serial1.println(atIndex);
   Serial1.println(atIndex);
@@ -324,8 +322,8 @@ void moveToIndex(int index) {
   Serial1.println("#$");
 
   if (useKeyframeSpeeds) {
-    stepper_pan.setMaxSpeed(panDegreesToSteps(pan_set_speed));
-    stepper_tilt.setMaxSpeed(tiltDegreesToSteps(tilt_set_speed));
+    stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
+    stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
     stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
   }
   sentMoved = false;

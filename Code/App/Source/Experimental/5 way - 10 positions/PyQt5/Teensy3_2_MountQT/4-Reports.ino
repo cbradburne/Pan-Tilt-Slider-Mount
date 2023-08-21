@@ -2,21 +2,25 @@
 
 void debugReport(void) {
   Serial1.println("Debug Report:");
-  Serial1.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
-  Serial1.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
-  Serial1.println(String("Slider position   : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm\n"));
-  Serial1.println(String("Pan steps         : ") + panDegreesToSteps(pan_set_speed) + String(" steps/s"));
-  Serial1.println(String("Tilt steps        : ") + tiltDegreesToSteps(tilt_set_speed) + String(" steps/s"));
-  Serial1.println(String("Slider steps      : ") + sliderMillimetresToSteps(slider_set_speed) + String(" steps/s\n"));
-  Serial1.println(String("Pan set speed     : ") + pan_set_speed + String("°/s"));
-  Serial1.println(String("Tilt set speed    : ") + tilt_set_speed + String("°/s"));
-  Serial1.println(String("Slider set speed  : ") + slider_set_speed + String("mm/s\n"));
-  Serial1.println(String("Pan Accel         : ") + pan_accel + String(" steps/s²"));
-  Serial1.println(String("Tilt Accel        : ") + tilt_accel + String(" steps/s²"));
-  Serial1.println(String("Slider Accel      : ") + slider_accel + String(" steps/s²\n"));
-  Serial1.println(String("Pan Joy Accel Factor    : ") + panAccelJoy);
-  Serial1.println(String("Tilt Joy Accel Factor   : ") + tiltAccelJoy);
-  Serial1.println(String("Slider Joy Accel Factor : ") + sliderAccelJoy + String("\n"));
+  Serial1.println(String("Pan angle           : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
+  Serial1.println(String("Tilt angle          : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
+  Serial1.println(String("Slider position     : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm\n"));
+  
+  Serial1.println(String("Pan/TILT steps      : ") + panDegreesToSteps(pantilt_set_speed) + String(" steps/s"));
+  Serial1.println(String("Slider steps        : ") + sliderMillimetresToSteps(slider_set_speed) + String(" steps/s\n"));
+
+  Serial1.println(String("Pan/Tilt set speed  : ") + pantilt_set_speed + String("°/s"));
+  Serial1.println(String("Slider set speed    : ") + slider_set_speed + String("mm/s\n"));
+  Serial1.println(String("Pan/Tilt Base Accel : ") + pantilt_accel + String(" steps/s²"));
+  Serial1.println(String("Slider Base Accel   : ") + slider_accel + String(" steps/s²\n"));
+  Serial1.println(String("Pan/Tilt Speed 1    : ") + pantilt_speed1 + String("°/s"));
+  Serial1.println(String("Pan/Tilt Speed 2    : ") + pantilt_speed2 + String("°/s"));
+  Serial1.println(String("Pan/Tilt Speed 3    : ") + pantilt_speed3 + String("°/s"));
+  Serial1.println(String("Pan/Tilt Speed 4    : ") + pantilt_speed4 + String("°/s"));
+  Serial1.println(String("Slider Speed 1      : ") + slider_speed1 + String("mm/s"));
+  Serial1.println(String("Slider Speed 2      : ") + slider_speed2 + String("mm/s"));
+  Serial1.println(String("Slider Speed 3      : ") + slider_speed3 + String("mm/s"));
+  Serial1.println(String("Slider Speed 4      : ") + slider_speed4 + String("mm/s"));
 
   printEEPROM();
 }
@@ -40,14 +44,12 @@ void positionReport(void) {
 void printKeyframeElements(void) {
   int row = 0;
   do {
-    Serial1.println(String("Keyframe index: ") + (row + 1));
+    Serial1.print(String("Keyframe index: ") + (row + 1) + "\n");
     Serial1.print(String("Pan   : ") + panStepsToDegrees(keyframe_array[row].panStepCount) + String("°\t"));
     Serial1.print(String("Tilt  : ") + tiltStepsToDegrees(keyframe_array[row].tiltStepCount) + String("°\t"));
-    Serial1.println(String("Slider: ") + sliderStepsToMillimetres(keyframe_array[row].sliderStepCount) + String("mm\t"));
-    Serial1.print(String("Pan Speed   : ") + panStepsToDegrees(keyframe_array[row].panSpeed) + String(" °/s\t"));
-    Serial1.print(String("Tilt Speed  : ") + tiltStepsToDegrees(keyframe_array[row].tiltSpeed) + String(" °/s\t"));
-    Serial1.println(String("Slider Speed: ") + sliderStepsToMillimetres(keyframe_array[row].sliderSpeed) + String(" mm/s"));
-    Serial1.println("-");
+    Serial1.print(String("Slider: ") + sliderStepsToMillimetres(keyframe_array[row].sliderStepCount) + String("mm\t"));
+    Serial1.print(String("Pan/Tilt Speed : ") + panStepsToDegrees(keyframe_array[row].panTiltSpeed) + String(" °/s\t"));
+    Serial1.print(String("Slider Speed : ") + sliderStepsToMillimetres(keyframe_array[row].sliderSpeed) + String(" mm/s\n"));
 
     row++;
   } while (row < 10);
