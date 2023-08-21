@@ -968,8 +968,6 @@ class Ui_SettingsWindow(QMainWindow):
     def keyEnter(self):
         widget = QtWidgets.QApplication.focusWidget()
 
-        print(widget.objectName())
-
         if widget.objectName() == "labelPTaccel":
             self.sendSerial('&' + str(whichCamSerial) + 'L' + widget.text())
         elif widget.objectName() == "labelSLaccel":
@@ -1514,7 +1512,7 @@ class PTSapp(QMainWindow):
                 elif joyType[-6:] == "Axis 0":
                     axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
-                    axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
+                    axisW = int(self.scale(key.value, (-1, 1), (8,-8)))
                 elif joyType[-6:] == "tton 0":
                     if whichCamSerial == 1:
                         if cam1AF:
@@ -2503,9 +2501,9 @@ class PTSapp(QMainWindow):
 
         self.initFlashTimer()
 
-        self.show()
+        #self.show()
         #self.showMaximized()
-        #self.showFullScreen()
+        self.showFullScreen()
 
     def pushToClose(self):
         self.close()
