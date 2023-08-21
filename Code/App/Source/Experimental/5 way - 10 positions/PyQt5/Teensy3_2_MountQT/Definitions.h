@@ -47,7 +47,6 @@
 #define INSTRUCTION_SET_TILT_SPEED 'S'
 #define INSTRUCTION_SET_SLIDER_SPEED 'a'
 
-
 #define INSTRUCTION_SET_PANTILT_SPEED1 'B'
 #define INSTRUCTION_SET_PANTILT_SPEED2 'b'
 #define INSTRUCTION_SET_PANTILT_SPEED3 'C'
@@ -109,18 +108,6 @@
 
 #define VERSION_NUMBER "8 Aug 2023"
 
-#if defined(TEENSYDUINO)
-  #if defined(__MK20DX256__)       
-    #define BOARD "Teensy 3.2"
-    float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
-    float sliderMaxFactor = 1.0;
-  #elif defined(__IMXRT1062__)       
-    #define BOARD "Teensy 4.0"
-    float pantiltMaxFactor = 10.0;    // Speed factor of joystick moves ( 1 = 100% )
-    float sliderMaxFactor = 10.0;
-  #endif
-#endif
-
 bool withSlider = false;
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
@@ -158,6 +145,9 @@ float slider_speed1 = 20;
 float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
+
+float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
+float sliderMaxFactor = 1.0;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
