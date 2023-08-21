@@ -515,6 +515,12 @@ cam3AF = False
 cam4AF = False
 cam5AF = False
 
+oldcam1AF = False
+oldcam2AF = False
+oldcam3AF = False
+oldcam4AF = False
+oldcam5AF = False
+
 class Ui_SettingsWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
@@ -722,6 +728,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum1.setFont(font)
         self.pushButtonNum1.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum1.setObjectName("pushButtonNum1")
+        self.pushButtonNum1.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum2 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('2'))
         self.pushButtonNum2.setGeometry(QtCore.QRect(130, 20, 101, 61))
         font = QtGui.QFont()
@@ -730,6 +737,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum2.setFont(font)
         self.pushButtonNum2.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum2.setObjectName("pushButtonNum2")
+        self.pushButtonNum2.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum3 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('3'))
         self.pushButtonNum3.setGeometry(QtCore.QRect(250, 20, 101, 61))
         font = QtGui.QFont()
@@ -738,6 +746,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum3.setFont(font)
         self.pushButtonNum3.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum3.setObjectName("pushButtonNum3")
+        self.pushButtonNum3.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum4 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('4'))
         self.pushButtonNum4.setGeometry(QtCore.QRect(10, 100, 101, 61))
         font = QtGui.QFont()
@@ -746,6 +755,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum4.setFont(font)
         self.pushButtonNum4.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum4.setObjectName("pushButtonNum4")
+        self.pushButtonNum4.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum5 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('5'))
         self.pushButtonNum5.setGeometry(QtCore.QRect(130, 100, 101, 61))
         font = QtGui.QFont()
@@ -754,6 +764,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum5.setFont(font)
         self.pushButtonNum5.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum5.setObjectName("pushButtonNum5")
+        self.pushButtonNum5.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum6 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('6'))
         self.pushButtonNum6.setGeometry(QtCore.QRect(250, 100, 101, 61))
         font = QtGui.QFont()
@@ -762,6 +773,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum6.setFont(font)
         self.pushButtonNum6.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum6.setObjectName("pushButtonNum6")
+        self.pushButtonNum6.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum7 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('7'))
         self.pushButtonNum7.setGeometry(QtCore.QRect(10, 180, 101, 61))
         font = QtGui.QFont()
@@ -770,6 +782,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum7.setFont(font)
         self.pushButtonNum7.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum7.setObjectName("pushButtonNum7")
+        self.pushButtonNum7.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum8 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('8'))
         self.pushButtonNum8.setGeometry(QtCore.QRect(130, 180, 101, 61))
         font = QtGui.QFont()
@@ -778,6 +791,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum8.setFont(font)
         self.pushButtonNum8.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum8.setObjectName("pushButtonNum8")
+        self.pushButtonNum8.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum9 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('9'))
         self.pushButtonNum9.setGeometry(QtCore.QRect(250, 180, 101, 61))
         font = QtGui.QFont()
@@ -786,6 +800,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum9.setFont(font)
         self.pushButtonNum9.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum9.setObjectName("pushButtonNum9")
+        self.pushButtonNum9.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum0 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('0'))
         self.pushButtonNum0.setGeometry(QtCore.QRect(130, 260, 101, 61))
         font = QtGui.QFont()
@@ -794,6 +809,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum0.setFont(font)
         self.pushButtonNum0.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNum0.setObjectName("pushButtonNum0")
+        self.pushButtonNum0.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNumBS = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyBackSpace())
         self.pushButtonNumBS.setGeometry(QtCore.QRect(410, 20, 121, 61))
         font = QtGui.QFont()
@@ -802,6 +818,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNumBS.setFont(font)
         self.pushButtonNumBS.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNumBS.setObjectName("pushButtonNumBS")
+        self.pushButtonNumBS.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNumEnt = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyEnter())
         self.pushButtonNumEnt.setGeometry(QtCore.QRect(390, 260, 151, 61))
         font = QtGui.QFont()
@@ -810,6 +827,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNumEnt.setFont(font)
         self.pushButtonNumEnt.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
         self.pushButtonNumEnt.setObjectName("pushButtonNumEnt")
+        self.pushButtonNumEnt.setFocusPolicy(Qt.NoFocus)
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setGeometry(QtCore.QRect(1380, 10, 291, 581))
         self.groupBox_3.setStyleSheet("color: #FFFFFF; background-color: #1e252a; border: 4px solid #262d32;")
@@ -949,6 +967,8 @@ class Ui_SettingsWindow(QMainWindow):
 
     def keyEnter(self):
         widget = QtWidgets.QApplication.focusWidget()
+
+        print(widget.objectName())
 
         if widget.objectName() == "labelPTaccel":
             self.sendSerial('&' + str(whichCamSerial) + 'L' + widget.text())
@@ -1495,7 +1515,7 @@ class PTSapp(QMainWindow):
                     axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
                     axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
-                elif joyType[-6:] == "Button 1":
+                elif joyType[-6:] == "tton 0":
                     if whichCamSerial == 1:
                         if cam1AF:
                             self.sendSerial('&' + str(whichCamSerial) + 'P')
@@ -5127,6 +5147,12 @@ class PTSapp(QMainWindow):
         global cam3AF
         global cam4AF
         global cam5AF
+
+        global oldcam1AF
+        global oldcam2AF
+        global oldcam3AF
+        global oldcam4AF
+        global oldcam5AF
 
         global resetButtons
 
