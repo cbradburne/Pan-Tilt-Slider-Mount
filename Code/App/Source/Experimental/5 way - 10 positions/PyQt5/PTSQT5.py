@@ -2826,6 +2826,82 @@ class PTSapp(QMainWindow):
                 json.dump(config, f)
 
 
+    def autoFileLoad(self):
+        global config
+        global message
+        global cam1Label
+        global cam2Label
+        global cam3Label
+        global cam4Label
+        global cam5Label
+
+        if sys.platform == "win32":
+            filename = os.path('C:\\Users\\Music\\Documents\\mobiledefault.json')
+            try:
+                with open(filename, 'r') as f:
+                    config = json.load(f)
+
+                self.pushButton11.setText(config['11'])
+                self.pushButton12.setText(config['12'])
+                self.pushButton13.setText(config['13'])
+                self.pushButton14.setText(config['14'])
+                self.pushButton15.setText(config['15'])
+                self.pushButton16.setText(config['16'])
+                self.pushButton17.setText(config['17'])
+                self.pushButton18.setText(config['18'])
+                self.pushButton19.setText(config['19'])
+                self.pushButton10.setText(config['10'])
+                self.pushButton21.setText(config['21'])
+                self.pushButton22.setText(config['22'])
+                self.pushButton23.setText(config['23'])
+                self.pushButton24.setText(config['24'])
+                self.pushButton25.setText(config['25'])
+                self.pushButton26.setText(config['26'])
+                self.pushButton27.setText(config['27'])
+                self.pushButton28.setText(config['28'])
+                self.pushButton29.setText(config['29'])
+                self.pushButton20.setText(config['20'])
+                self.pushButton31.setText(config['31'])
+                self.pushButton32.setText(config['32'])
+                self.pushButton33.setText(config['33'])
+                self.pushButton34.setText(config['34'])
+                self.pushButton35.setText(config['35'])
+                self.pushButton36.setText(config['36'])
+                self.pushButton37.setText(config['37'])
+                self.pushButton38.setText(config['38'])
+                self.pushButton39.setText(config['39'])
+                self.pushButton30.setText(config['30'])
+                self.pushButton41.setText(config['41'])
+                self.pushButton42.setText(config['42'])
+                self.pushButton43.setText(config['43'])
+                self.pushButton44.setText(config['44'])
+                self.pushButton45.setText(config['45'])
+                self.pushButton46.setText(config['46'])
+                self.pushButton47.setText(config['47'])
+                self.pushButton48.setText(config['48'])
+                self.pushButton49.setText(config['49'])
+                self.pushButton40.setText(config['40'])
+                self.pushButton51.setText(config['51'])
+                self.pushButton52.setText(config['52'])
+                self.pushButton53.setText(config['53'])
+                self.pushButton54.setText(config['54'])
+                self.pushButton55.setText(config['55'])
+                self.pushButton56.setText(config['56'])
+                self.pushButton57.setText(config['57'])
+                self.pushButton58.setText(config['58'])
+                self.pushButton59.setText(config['59'])
+                self.pushButton50.setText(config['50'])
+
+                cam1Label = config['Cam1']
+                cam2Label = config['Cam2']
+                cam3Label = config['Cam3']
+                cam4Label = config['Cam4']
+                cam5Label = config['Cam5']
+        
+            except:
+                message = "Couldn't Load File"
+
+
     def doJoyMoves(self, dt):
         global axisX
         global axisY
