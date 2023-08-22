@@ -41,8 +41,8 @@ void initPanTilt(void) {
   stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-  stepper_pan.setAcceleration(antilt_accel * pantilt_set_speed);
-  stepper_tilt.setAcceleration(antilt_accel * pantilt_set_speed);
+  stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+  stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
   stepper_slider.setAcceleration(slider_accel * slider_set_speed);
 
   delay(200);
