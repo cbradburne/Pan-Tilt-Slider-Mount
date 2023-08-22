@@ -134,7 +134,7 @@ float pantilt_set_speed = 20;     //  degrees/second.
 float slider_set_speed = 60;      //  mm/second.
 
 float pantilt_accel = 200;
-float slider_accel = 20;
+float slider_accel = 200;
 
 float pantilt_speed1 = 1;
 float pantilt_speed2 = 5;
@@ -263,7 +263,7 @@ void editKeyframe(void);
 void printKeyframeElements(void);
 void saveEEPROM(void);
 void printEEPROM(void);
-void setEEPROMVariables(void);
+void getEEPROMVariables(void);
 void scaleKeyframeSpeed(float);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
