@@ -81,7 +81,7 @@ void SerialData(void) {
         rotate_stepperS.stopAsync();
       } else {
         rotate_stepperS.rotateAsync(stepper_slider);
-        rotate_stepperS.overrideAcceleration(slider_accel * slider_set_speed);         // to make accel faster when using joystick
+        rotate_stepperS.overrideAcceleration(3);         // to make accel faster when using joystick
         rotate_stepperS.overrideSpeed(speedFactorS);
       }
 
@@ -89,7 +89,7 @@ void SerialData(void) {
         rotate_stepperP.stopAsync();
       } else {
         rotate_stepperP.rotateAsync(stepper_pan);
-        rotate_stepperP.overrideAcceleration(1000);         // to make accel faster when using joystick
+        rotate_stepperP.overrideAcceleration(10);         // to make accel faster when using joystick
         rotate_stepperP.overrideSpeed(speedFactorP);
       }
 
@@ -97,7 +97,7 @@ void SerialData(void) {
         rotate_stepperT.stopAsync();
       } else {
         rotate_stepperT.rotateAsync(stepper_tilt);
-        rotate_stepperT.overrideAcceleration(1000);         // to make accel faster when using joystick
+        rotate_stepperT.overrideAcceleration(10);         // to make accel faster when using joystick
         rotate_stepperT.overrideSpeed(speedFactorT);
       }
 
@@ -367,6 +367,9 @@ void SerialData(void) {
     case INSTRUCTION_PANTILT_ACCEL:
       {
         pantilt_accel = SerialCommandValueInt;
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+
         Serial1.println(String("#q") + pantilt_accel);
         Serial1.println(String("Pan/Tilt Accel : ") + pantilt_accel + String("steps/s²"));
         Serial1.println("#$");
@@ -375,6 +378,8 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_ACCEL:
       {
         slider_accel = SerialCommandValueInt;
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
+        
         Serial1.println(String("#Q") + slider_accel);
         Serial1.println(String("Slider Accel   : ") + slider_accel + String("steps/s²"));
         Serial1.println("#$");

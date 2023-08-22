@@ -126,7 +126,6 @@ void loop() {
           if (toggleFocus == false) {
             //toggleFocus = true;
             Serial.print("#7200*");
-            digitalWrite(LED, HIGH);
           }
           else {
             //toggleFocus = false;
@@ -310,7 +309,7 @@ void doLANC() {
 
     if (strcmp("%000*", cmdBuffer) == 0) {  //  Handshake
       Serial.print("&00080*");
-      //digitalWrite(LED, HIGH);
+      digitalWrite(LED, HIGH);
       cmdBuffer[0] = 0;
     } else if (strcmp("$71000*", cmdBuffer) == 0) {  //  Recording pt1
       Serial.print("#7110*");
@@ -337,12 +336,12 @@ void doLANC() {
       cmdBuffer[0] = 0;
     } else if (strcmp("$72000*", cmdBuffer) == 0) {                       //  Auto Focus ON
       toggleFocus = true;
-      Serial2.println("?O");
+      Serial2.println("?I");
       cmdBuffer[0] = 0;
 
     } else if (strcmp("$72100*", cmdBuffer) == 0) {                       //  Auto Focus OFF
       toggleFocus = false;
-      Serial2.println("?o");
+      Serial2.println("?i");
       cmdBuffer[0] = 0;
       
     } else if (strcmp("$74100*", cmdBuffer) == 0) cmdBuffer[0] = 0;       //  Zoom IN

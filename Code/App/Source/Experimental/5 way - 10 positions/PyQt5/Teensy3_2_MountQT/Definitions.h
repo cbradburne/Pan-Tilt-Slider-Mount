@@ -263,7 +263,7 @@ void editKeyframe(void);
 void printKeyframeElements(void);
 void saveEEPROM(void);
 void printEEPROM(void);
-void setEEPROMVariables(void);
+void getEEPROMVariables(void);
 void scaleKeyframeSpeed(float);
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
