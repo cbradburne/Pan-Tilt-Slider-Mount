@@ -86,7 +86,7 @@ void SerialData(void) {
       } else {
         if (!panRunning) {
           panRunning = true;
-          stepper_pan.setAcceleration(10000);
+          stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed * 10);
           stepper_pan.rotateAsync(pantilt_set_speed);
         }
         if (upsideDown) {
@@ -104,7 +104,7 @@ void SerialData(void) {
       } else {
         if (!tiltRunning) {
           tiltRunning = true;
-          stepper_tilt.setAcceleration(10000);
+          stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed * 10);
           stepper_tilt.rotateAsync(pantilt_set_speed);
         }
         if (upsideDown) {
@@ -122,7 +122,7 @@ void SerialData(void) {
       } else {
         if (!sliderRunning) {
           sliderRunning = true;
-          stepper_slider.setAcceleration(10000);
+          stepper_slider.setAcceleration(slider_accel * slider_set_speed * 3);
           stepper_slider.rotateAsync(slider_set_speed);
         }
         if (slideReverse) {
@@ -190,7 +190,7 @@ void SerialData(void) {
   }
 
   if (!atPos1 && !atPos2 && !atPos3 && !atPos4 && !atPos5 && !atPos6 && !atPos7 && !atPos8 && !atPos9 && !atPos0 && !sentMoved) {
-    Serial1.println("#s");  // not at any set pos
+    Serial1.println("#s");                                  // not at any set pos
     sentMoved = true;
   }
   
@@ -403,6 +403,9 @@ void SerialData(void) {
     case INSTRUCTION_PANTILT_ACCEL:
       {
         pantilt_accel = SerialCommandValueInt;
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+
         Serial1.println(String("#q") + pantilt_accel);
         Serial1.println(String("Pan/Tilt Accel : ") + pantilt_accel + String("steps/s²"));
         Serial1.println("#$");
@@ -411,6 +414,8 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_ACCEL:
       {
         slider_accel = SerialCommandValueInt;
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
+        
         Serial1.println(String("#Q") + slider_accel);
         Serial1.println(String("Slider Accel   : ") + slider_accel + String("steps/s²"));
         Serial1.println("#$");

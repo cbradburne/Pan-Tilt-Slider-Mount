@@ -22,6 +22,8 @@ elapsedMillis timeElapsed;
 
 
 void initPanTilt(void) {
+  getEEPROMVariables();
+
   //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
@@ -35,14 +37,13 @@ void initPanTilt(void) {
   pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2
   pinMode(PIN_SW3, INPUT_PULLUP);  // pin 10 to gnd if no slider used
 
-  setEEPROMVariables();
 
   stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-  stepper_pan.setAcceleration(pantilt_accel);
-  stepper_tilt.setAcceleration(pantilt_accel);
-  stepper_slider.setAcceleration(slider_accel);
+  stepper_pan.setAcceleration(antilt_accel * pantilt_set_speed);
+  stepper_tilt.setAcceleration(antilt_accel * pantilt_set_speed);
+  stepper_slider.setAcceleration(slider_accel * slider_set_speed);
 
   delay(200);
 

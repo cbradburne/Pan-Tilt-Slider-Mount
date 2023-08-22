@@ -22,7 +22,7 @@ void saveEEPROM(void) {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
-void setEEPROMVariables(void) {
+void getEEPROMVariables(void) {
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SET_SPEED, pantilt_set_speed);
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SET_SPEED, slider_set_speed);
   EEPROM.get(EEPROM_ADDRESS_PANTILT_ACCEL, pantilt_accel);
