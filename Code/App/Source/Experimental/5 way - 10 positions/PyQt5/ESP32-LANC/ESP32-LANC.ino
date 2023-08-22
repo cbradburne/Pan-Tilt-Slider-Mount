@@ -16,6 +16,7 @@ int zoomDelay = 100;
 bool isAutoFocus = false;
 bool isPhoto = false;
 bool isRecording = false;
+bool toggleFocus = false;
 
 bool firstRun = true;
 
@@ -122,19 +123,27 @@ void loop() {
 
       if (c == 'F') {                                     // Auto-Focus ON
         if (isSerialLANC) {
-          Serial.print("$7200*");
+          if (toggleFocus == false) {
+            //toggleFocus = true;
+            Serial.print("#7200*");
+            digitalWrite(LED, HIGH);
+          }
+          else {
+            //toggleFocus = false;
+            Serial.print("#7210*");
+          }
         } else {
           lancZoom = 0;
         }
       }
 
-      if (c == 'f') {                                     // Auto-Focus OFF
-        if (isSerialLANC) {
-          Serial.print("$7210*");
-        } else {
-          lancZoom = 0;
-        }
-      }
+      //if (c == 'f') {                                     // Auto-Focus OFF
+      //  if (isSerialLANC) {
+      //    Serial.print("#7210*");
+      //  } else {
+      //    lancZoom = 0;
+      //  }
+      //}
       
 
       if (c == 'I') {
@@ -301,7 +310,7 @@ void doLANC() {
 
     if (strcmp("%000*", cmdBuffer) == 0) {  //  Handshake
       Serial.print("&00080*");
-      digitalWrite(LED, HIGH);
+      //digitalWrite(LED, HIGH);
       cmdBuffer[0] = 0;
     } else if (strcmp("$71000*", cmdBuffer) == 0) {  //  Recording pt1
       Serial.print("#7110*");
@@ -327,10 +336,12 @@ void doLANC() {
       isPhoto = false;
       cmdBuffer[0] = 0;
     } else if (strcmp("$72000*", cmdBuffer) == 0) {                       //  Auto Focus ON
+      toggleFocus = true;
       Serial2.println("?O");
       cmdBuffer[0] = 0;
 
     } else if (strcmp("$72100*", cmdBuffer) == 0) {                       //  Auto Focus OFF
+      toggleFocus = false;
       Serial2.println("?o");
       cmdBuffer[0] = 0;
       
