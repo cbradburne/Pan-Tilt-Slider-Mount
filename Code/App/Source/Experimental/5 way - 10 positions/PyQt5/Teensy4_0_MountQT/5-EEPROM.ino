@@ -35,16 +35,6 @@ void setEEPROMVariables(void) {
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED2, slider_speed2);
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED3, slider_speed3);
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED4, slider_speed4);
-
-  //pan_def_speed = pan_set_speed;
-  //tilt_def_speed = tilt_set_speed;
-  //slider_def_speed = slider_set_speed;
-
-
-  //Serial1.println(pantilt_set_speed);
-  //Serial1.println(slider_set_speed);
-  //Serial1.println(pantilt_accel);
-  //Serial1.println(slider_accel);
 }
 
 

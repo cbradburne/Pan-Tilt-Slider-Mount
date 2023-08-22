@@ -516,15 +516,6 @@ void SerialData(void) {
         Serial1.println("#$");
       }
       break;
-    //case INSTRUCTION_SET_TILT_SPEED:
-    //  {
-    //    tilt_set_speed = SerialCommandValueFloat;
-    //    tilt_def_speed = tilt_set_speed;  //  set default speeds
-    //    stepper_tilt.setMaxSpeed(tiltDegreesToSteps(tilt_set_speed));
-    //    Serial1.println(String("Set Tilt Speed to: ") + tilt_set_speed + String("°/s.\n"));
-    //    Serial1.println("#$");
-    //  }
-    //  break;
     case INSTRUCTION_SET_SLIDER_SPEED:
       {
         if (SerialCommandValueInt == 1) {
@@ -636,20 +627,6 @@ void SerialData(void) {
         stepper_slider.setPosition(0);
       }
       break;
-    //case INSTRUCTION_RESTORE_DEFAULT_SPEEDS:
-    //  {
-    //    pantilt_set_speed = pantilt_def_speed;
-    //    slider_set_speed = slider_def_speed;
-
-    //    Serial1.print("^=");
-    //    Serial1.println(slider_set_speed);
-
-    //    Serial1.println("#d");
-
-    //    Serial1.println(String("Default Speed Restored: ") + slider_set_speed + String("mm/s.\n"));
-    //    Serial1.println("#$");
-    //  }
-    //  break;
     default:
       break;  // if unrecognised charater, do nothing
   }

@@ -5,8 +5,10 @@ void debugReport(void) {
   Serial1.println(String("Pan angle           : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial1.println(String("Tilt angle          : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
   Serial1.println(String("Slider position     : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm\n"));
+
   Serial1.println(String("Pan/TILT steps      : ") + panDegreesToSteps(pantilt_set_speed) + String(" steps/s"));
   Serial1.println(String("Slider steps        : ") + sliderMillimetresToSteps(slider_set_speed) + String(" steps/s\n"));
+  
   Serial1.println(String("Pan/Tilt set speed  : ") + pantilt_set_speed + String("°/s"));
   Serial1.println(String("Slider set speed    : ") + slider_set_speed + String("mm/s\n"));
   Serial1.println(String("Pan/Tilt Base Accel : ") + pantilt_accel + String(" steps/s²"));

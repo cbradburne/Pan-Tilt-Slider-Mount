@@ -133,30 +133,24 @@ float slider_steps_per_millimetre = (200.0 * 16) / (SLIDER_PULLEY_TEETH * 2);  /
 float pantilt_set_speed = 20;     //  degrees/second.
 float slider_set_speed = 60;      //  mm/second.
 
+float pantilt_accel = 200;
+float slider_accel = 20;
+
 float pantilt_speed1 = 1;
 float pantilt_speed2 = 5;
 float pantilt_speed3 = 10;
 float pantilt_speed4 = 20;
 
 float slider_speed1 = 20;
-float slider_speed2 = 60;
-float slider_speed3 = 100;
-float slider_speed4 = 140;
-
-float pantilt_def_speed = 20;
-float slider_def_speed = 60;
-
-int SerialCommandValueInt;
-float SerialCommandValueFloat;
-
-float pantilt_accel = 200;
-float slider_accel = 20;
-
-float pantilt_def_accel = 200;
-float slider_def_accel = 20;
+float slider_speed2 = 40;
+float slider_speed3 = 80;
+float slider_speed4 = 120;
 
 float pantiltMaxFactor = 10.0;    // Speed factor of joystick moves ( 1 = 100% )
 float sliderMaxFactor = 10.0;
+
+int SerialCommandValueInt;
+float SerialCommandValueFloat;
 
 String atIndex = "";
 
@@ -220,7 +214,6 @@ struct KeyframeElement {
   long panStepCount = 0;
   long tiltStepCount = 0;
   float panTiltSpeed = 0;
-  //float tiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
   int isRecorded = 0;
