@@ -925,7 +925,7 @@ void USBSerialData() {
             }
             break;
           case 'P':
-            {  // Set auto-focus to ON
+            {  // Toggle auto-focus
               if (camNumInst == '1') {
                 Serial1.println("?O");
               } else if (camNumInst == '2') {
@@ -939,21 +939,6 @@ void USBSerialData() {
               }
             }
             break;
-          //case 'p':
-          //  {  // Set auto-focus to OFF
-          //    if (camNumInst == '1') {
-          //      Serial1.println("?f");
-          //    } else if (camNumInst == '2') {
-          //      Serial2.println("?f");
-          //    } else if (camNumInst == '3') {
-          //      Serial3.println("?f");
-          //    } else if (camNumInst == '4') {
-          //      Serial4.println("?f");
-          //    } else if (camNumInst == '5') {
-          //      Serial5.println("?f");
-          //    }
-          //  }
-          //  break;
           case '$':  // is string command
             {
               while (Serial.available() > 0) {
