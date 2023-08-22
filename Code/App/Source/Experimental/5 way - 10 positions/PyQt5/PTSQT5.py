@@ -1590,7 +1590,7 @@ class PTSapp(QMainWindow):
                     axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
                     axisW = int(self.scale(key.value, (-1, 1), (8,-8)))
-                elif joyType[-6:] == "tton 0":
+                elif joyType[-6:] == "tton 0" and (key.value == 0):
                     if whichCamSerial == 1:
                         if cam1AF:
                             self.sendSerial('&' + str(whichCamSerial) + 'P')
@@ -1610,7 +1610,7 @@ class PTSapp(QMainWindow):
                         if cam4AF:
                             self.sendSerial('&' + str(whichCamSerial) + 'P')
                         else:
-                            self.sendSerial('&' + str(whichCamSerial) + 'p')
+                            self.sendSerial('&' + str(whichCamSerial) + 'P')
                     elif whichCamSerial == 5:
                         if cam5AF:
                             self.sendSerial('&' + str(whichCamSerial) + 'P')
