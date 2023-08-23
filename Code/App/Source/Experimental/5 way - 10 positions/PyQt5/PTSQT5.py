@@ -2581,6 +2581,8 @@ class PTSapp(QMainWindow):
         #self.show()
         #self.showMaximized()
         self.showFullScreen()
+        
+        self.autoFileLoad()
 
     def pushToClose(self):
         self.close()
@@ -2836,7 +2838,7 @@ class PTSapp(QMainWindow):
         global cam5Label
 
         if sys.platform == "win32":
-            filename = os.path('C:\\Users\\Music\\Documents\\mobiledefault.json')
+            filename = 'C:\\Users\\Music\\Documents\\default.json'
             try:
                 with open(filename, 'r') as f:
                     config = json.load(f)
@@ -2897,6 +2899,12 @@ class PTSapp(QMainWindow):
                 cam3Label = config['Cam3']
                 cam4Label = config['Cam4']
                 cam5Label = config['Cam5']
+            
+                self.pushButtonCam1.setText(cam1Label)
+                self.pushButtonCam2.setText(cam2Label)
+                self.pushButtonCam3.setText(cam3Label)
+                self.pushButtonCam4.setText(cam4Label)
+                self.pushButtonCam5.setText(cam5Label)
         
             except:
                 message = "Couldn't Load File"
