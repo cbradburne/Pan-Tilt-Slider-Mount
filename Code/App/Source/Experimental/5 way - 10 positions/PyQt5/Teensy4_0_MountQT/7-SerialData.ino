@@ -122,7 +122,7 @@ void SerialData(void) {
       } else {
         if (!sliderRunning) {
           sliderRunning = true;
-          stepper_slider.setAcceleration(slider_accel * slider_set_speed * 3);
+          stepper_slider.setAcceleration(slider_accel * slider_set_speed * 4);
           stepper_slider.rotateAsync(slider_set_speed);
         }
         if (slideReverse) {
