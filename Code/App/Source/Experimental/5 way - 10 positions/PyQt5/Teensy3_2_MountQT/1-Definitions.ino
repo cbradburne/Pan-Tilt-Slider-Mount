@@ -30,6 +30,7 @@ elapsedMillis timeElapsed;
 
 
 void initPanTilt(void) {
+  getEEPROMVariables();
 
   //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
