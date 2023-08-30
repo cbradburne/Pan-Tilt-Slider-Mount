@@ -78,6 +78,8 @@ newText = ""
 editButton = 0
 editToggle = False
 
+slideToggle = False
+
 arr = []
 oldAxisX = 0
 oldAxisY = 0
@@ -2393,6 +2395,15 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
+        self.pushButtonSLonly = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.slideOnlyToggle())
+        self.pushButtonSLonly.setGeometry(QtCore.QRect(1740, 990, 120, 51))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonSLonly.setFont(font)
+        self.pushButtonSLonly.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonSLonly.setFlat(False)
+        self.pushButtonSLonly.setObjectName("pushButtonSLonly")
         self.pushButtonFileLoad = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.fileLoad())
         self.pushButtonFileLoad.setGeometry(QtCore.QRect(40, 990, 120, 51))
         font = QtGui.QFont()
@@ -2570,6 +2581,7 @@ class PTSapp(QMainWindow):
         self.labelCam5AF.setText(_translate("MainWindow", "AF"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
+        self.pushButtonSLonly.setText(_translate("MainWindow", "SL"))
         self.pushButtonFileLoad.setText(_translate("MainWindow", "Load"))
         self.pushButtonFileSave.setText(_translate("MainWindow", "Save"))
         self.pushButtonSettings.setText(_translate("MainWindow", "Settings"))
@@ -2676,6 +2688,94 @@ class PTSapp(QMainWindow):
         else:
             editToggle = True
             self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #CC5050; border-radius: 10px;")
+
+    def slideOnlyToggle(self):
+        global slideToggle
+        global cam4Pos1Set
+        global cam4Pos1Run
+        global cam4AtPos1
+        global cam4Pos10Set
+        global cam4Pos10Run
+        global cam4AtPos10
+        global cam5Pos1Set
+        global cam5Pos1Run
+        global cam5AtPos1
+        global cam5Pos10Set
+        global cam5Pos10Run
+        global cam5AtPos10
+
+        buttonColourSet = "#ff0000"
+        buttonColourAt = "#00ff00"
+
+        if (slideToggle):
+            slideToggle = False
+
+            self.pushButtonSLonly.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+
+            if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
+                self.pushButton41.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+            elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
+                self.pushButton41.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+            elif not cam4Pos1Set:
+                self.pushButton41.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+
+            if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:                                  # Position LEDs cam4
+                self.pushButton40.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+            elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
+                self.pushButton40.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+            elif not cam4Pos10Set:
+                self.pushButton40.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+
+
+            
+            if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
+                self.pushButton51.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+            elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:                                    # Set & At, not Run
+                self.pushButton51.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+            elif not cam5Pos1Set:
+                self.pushButton51.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+
+            if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:                                  # Position LEDs cam5
+                self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+            elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
+                self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+            elif not cam5Pos10Set:
+                self.pushButton50.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+
+        else:
+            slideToggle = True
+
+            self.pushButtonSLonly.setStyleSheet("border: 4px solid grey; background-color: #01E6CC; border-radius: 10px;")
+
+            if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
+                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+            elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
+                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+            elif not cam4Pos1Set:
+                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+
+            if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:                                  # Position LEDs cam4
+                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+            elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
+                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+            elif not cam4Pos10Set:
+                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+
+
+            
+            if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
+                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+            elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:                                    # Set & At, not Run
+                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+            elif not cam5Pos1Set:
+                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+
+            if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:                                  # Position LEDs cam5
+                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+            elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
+                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+            elif not cam5Pos10Set:
+                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
     
     def fileLoad(self):
         global config
@@ -6745,6 +6845,7 @@ class PTSapp(QMainWindow):
             self.pushButtonFileLoad.hide()
             self.pushButtonFileSave.hide()
             self.pushButtonSettings.hide()
+            self.pushButtonSLonly.show()
             self.labelFilename.setHidden(True)
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
@@ -6762,6 +6863,7 @@ class PTSapp(QMainWindow):
             self.pushButtonFileLoad.show()
             self.pushButtonFileSave.show()
             self.pushButtonSettings.show()
+            self.pushButtonSLonly.hide()
             self.labelFilename.setHidden(False)
 
 
@@ -7415,6 +7517,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos1Set
         global cam4AtPos1
 
@@ -7426,8 +7529,10 @@ class PTSapp(QMainWindow):
             self.setPos(3)
             self.sendSerial('&4Z')
             return
-        elif cam4Pos1Set and not cam4AtPos1:
+        elif cam4Pos1Set and not cam4AtPos1 and not slideToggle:
             self.sendSerial('&4z')
+        elif cam4Pos1Set and not cam4AtPos1 and slideToggle:
+            self.sendSerial('&4y')
 
     def Cam4Go2(self):
         global SetPosToggle
@@ -7588,8 +7693,10 @@ class PTSapp(QMainWindow):
             self.setPos(3)
             self.sendSerial('&4?')
             return
-        elif cam4Pos10Set and not cam4AtPos10:
+        elif cam4Pos10Set and not cam4AtPos10 and not slideToggle:
             self.sendSerial('&4/')
+        elif cam4Pos10Set and not cam4AtPos10 and slideToggle:
+            self.sendSerial('&4Y')
 
     def Cam5Go1(self):
         global SetPosToggle
@@ -7606,8 +7713,10 @@ class PTSapp(QMainWindow):
             self.setPos(3)
             self.sendSerial('&5Z')
             return
-        elif cam5Pos1Set and not cam5AtPos1:
+        elif cam5Pos1Set and not cam5AtPos1 and not slideToggle:
             self.sendSerial('&5z')
+        elif cam5Pos1Set and not cam5AtPos1 and slideToggle:
+            self.sendSerial('&5y')
 
     def Cam5Go2(self):
         global SetPosToggle
@@ -7768,8 +7877,10 @@ class PTSapp(QMainWindow):
             self.setPos(3)
             self.sendSerial('&5?')
             return
-        elif cam5Pos10Set and not cam5AtPos10:
+        elif cam5Pos10Set and not cam5AtPos10 and not slideToggle:
             self.sendSerial('&5/')
+        elif cam5Pos10Set and not cam5AtPos10 and slideToggle:
+            self.sendSerial('&5Y')
 
 class ThreadClass(QtCore.QThread):
     any_signal = QtCore.pyqtSignal(str)

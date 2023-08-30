@@ -135,6 +135,29 @@ void clearKeyframes(void) {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
+void moveSliderToEnd1(){
+  //Serial1.println("#A"); 
+  //Serial1.println("#A"); 
+
+  if (keyframe_array[0].isRecorded == 0) {
+    return;
+  }
+  stepper_slider.setTargetAbs(keyframe_array[0].sliderStepCount);
+  step_stepperS.moveAsync(stepper_slider);
+}
+
+void moveSliderToEnd2(){
+  //Serial1.println("#:");
+  //Serial1.println("#:");
+
+  if (keyframe_array[9].isRecorded == 0) {
+    return;
+  }
+  stepper_slider.setTargetAbs(keyframe_array[9].sliderStepCount);
+  step_stepperS.moveAsync(stepper_slider);
+}
+
+
 void moveToIndex(int index) {
   if (keyframe_array[index - 1].isRecorded == 0) {
     return;

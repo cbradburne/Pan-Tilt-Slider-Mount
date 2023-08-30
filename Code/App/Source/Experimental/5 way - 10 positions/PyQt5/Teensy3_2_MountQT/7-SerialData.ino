@@ -295,6 +295,16 @@ void SerialData(void) {
         editKeyframe(SerialCommandValueInt);
       }
       break;
+    case INSTRUCTION_SLIDE_END1:
+      {
+        moveSliderToEnd1();
+      }
+      break;
+    case INSTRUCTION_SLIDE_END2:
+      {
+        moveSliderToEnd2();
+      }
+      break;
     case INSTRUCTION_CLEAR_ARRAY:
       {
         clearKeyframes();

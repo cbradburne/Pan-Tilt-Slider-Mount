@@ -41,7 +41,7 @@ void Serial5Data() {
       else if (h == 'O') { Serial.println("~515"); }
       else if (h == 'o') { Serial.println("~505"); }
       else if (h == 'a') { Serial.println("~500"); }
-      else if (h == 's') { Serial.println("~&"); }
+      else if (h == 's') { Serial.println("~*"); }
       else if (h == '0') {
         Serial.println("~100");
         Serial.println("~200");

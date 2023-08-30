@@ -135,6 +135,19 @@ void clearKeyframes(void) {
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
+void moveSliderToEnd1(){
+  //Serial1.println("#A"); 
+  //Serial1.println("#A"); 
+  stepper_slider.moveAbsAsync(keyframe_array[0].sliderStepCount);
+}
+
+void moveSliderToEnd2(){
+  //Serial1.println("#:");
+  //Serial1.println("#:");
+  stepper_slider.moveAbsAsync(keyframe_array[9].sliderStepCount);
+}
+
+
 void moveToIndex(int index) {
   if (keyframe_array[index - 1].isRecorded == 0) {
     return;

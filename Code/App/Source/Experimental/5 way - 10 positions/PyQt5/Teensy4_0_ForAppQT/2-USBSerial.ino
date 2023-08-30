@@ -331,6 +331,24 @@ void USBSerialData() {
               }
             }
             break;
+          case 'y':  // Move to pos 1    - Slider Only
+            {
+              if (camNumInst == '4') {
+                Serial4.println("?v");
+              } else if (camNumInst == '5') {
+                Serial5.println("?v");
+              }
+            }
+            break;
+          case 'Y':  // Move to pos 10   - Slider Only
+            {
+              if (camNumInst == '4') {
+                Serial4.println("?V");
+              } else if (camNumInst == '5') {
+                Serial5.println("?V");
+              }
+            }
+            break;
           case 'a':  // Zoom out
             {
               instruction = Serial.read();
