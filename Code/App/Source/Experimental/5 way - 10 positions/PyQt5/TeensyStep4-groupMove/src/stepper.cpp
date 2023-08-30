@@ -1,0 +1,96 @@
+#include "Arduino.h"
+
+#pragma push_macro("abs")
+#undef abs
+
+#include "stepper.h"
+#include <algorithm>
+
+namespace TS4
+{
+    Stepper& Stepper::setMaxSpeed(int32_t speed)
+    {
+        vMax = constrain(speed, -vMaxMax, vMaxMax);
+        return *this;
+    }
+
+    Stepper& Stepper::setAcceleration(uint32_t a)
+    {
+        avMax = ((vMax*vMax)/2);
+        acc = std::min(a, avMax);
+        return *this;
+    }
+
+    void Stepper::rotateAsync(int32_t v)
+    {   
+        mode = mode_t::async;
+        StepperBase::startRotate(v == 0 ? vMax : v, acc);
+    }
+
+    void Stepper::moveAbsAsync(int32_t target, uint32_t v)
+    {
+        mode = mode_t::async;
+        StepperBase::startMoveTo(target, 0, (v == 0 ? vMax : v), acc);
+    }
+
+    void Stepper::moveRelAsync(int32_t delta, uint32_t v)
+    {
+        mode = mode_t::async;
+        int32_t deltaT = pos + delta;
+        
+        bool deltaDir = true;
+        if (delta < 0)
+        {
+            deltaDir = false;
+        }
+        if (isMoving && dir != deltaDir)
+        {
+            StepperBase::startStopping(0, acc);
+            while (isMoving)
+            {
+                delay(10);
+            }
+        }
+        
+        StepperBase::startMoveTo(deltaT, 0, (v == 0 ? std::abs(vMax) : v), acc);
+    }
+
+    void Stepper::stopAsync()
+    {
+        StepperBase::startStopping(0, acc);
+    }
+
+    void Stepper::moveAsync()
+    {
+        mode = mode_t::async;
+        StepperBase::startMoveTo(target, 0, std::abs(vMax), acc);
+    }
+
+    void Stepper::moveGroup()
+    {
+        StepperBase::startMoveToGroup(target, 0, std::abs(vMax), acc);
+    }
+
+    void Stepper::moveAbs(int32_t target, uint32_t v)
+    {
+        moveAbsAsync(target, v);
+        while (isMoving)
+        {
+            delay(10);
+        }
+    }
+
+    void Stepper::moveRel(int32_t delta, uint32_t v)
+    {
+        moveRelAsync(delta, v);
+        while (isMoving)
+        {
+            delay(10);
+        }
+    }
+
+    void Stepper::stop()
+    {
+        StepperBase::startStopping(0, acc);
+    }
+}
