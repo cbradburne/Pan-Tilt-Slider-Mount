@@ -100,7 +100,7 @@ namespace TS4
             stpTimer->setPulseParams(8, stepPin);
             isMoving = true;
             v_sqr    = 200 * 200;
-            mode     = mode_t::target;
+            //mode     = mode_t::group;
             stpTimer->start();
         }
     }

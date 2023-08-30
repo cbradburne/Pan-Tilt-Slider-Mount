@@ -62,10 +62,10 @@ namespace TS4
         inline void resetGroupISR();
 
         enum class mode_t {
-            target,
+            group,
             async,
             stopping,
-        } mode = mode_t::target;
+        } mode = mode_t::async;
 
         // Bresenham:
         StepperBase* next = nullptr; // linked list of steppers, maintained from outside
@@ -83,6 +83,22 @@ namespace TS4
         digitalWriteFast(stepPin, HIGH);
         s += 1;
         pos += dir;
+
+        if (mode = mode_t::group) {
+            StepperBase* stepper = next;
+
+            while (stepper != nullptr)                              // move slave motors if required
+            {
+                if (stepper->B >= 0)
+                {
+                    digitalWriteFast(stepper->stepPin, HIGH);
+                    stepper->pos += stepper->dir;
+                    stepper->B -= this->A;
+                }
+                stepper->B += stepper->A;
+                stepper = stepper->next;
+            }
+        }
     }
 
     void StepperBase::doGroupStep()
@@ -150,7 +166,7 @@ namespace TS4
     void StepperBase::stepGroupISR()
     {
         if (mode == mode_t::stopping){
-            mode = mode_t::target;
+            mode = mode_t::group;
             if (s < accEnd)                                     // still accelerating
             { 
                 accEnd = decStart = 0;                          // start deceleration
@@ -223,7 +239,7 @@ namespace TS4
                 isMoving = false;
                 v_sqr = 0;
                 
-                mode = mode_t::target;
+                //mode = mode_t::group;
             }
         }
     }
