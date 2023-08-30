@@ -70,41 +70,6 @@ namespace TS4
         }
     }
 
-    void StepperBase::startMoveToGroup(int32_t _s_tgt, int32_t v_e, uint32_t v_tgt, uint32_t a)
-    {
-        s          = 0;
-        int32_t ds = std::abs(_s_tgt - pos);
-        s_tgt      = ds;
-
-        dir = signum(_s_tgt - pos);
-        digitalWriteFast(dirPin, dir > 0 ? HIGH : LOW);
-        delayMicroseconds(5);
-
-        twoA = 2 * a;
-        v_sqr     = 0;
-        v         = 0;
-        v_tgt_orig = v_tgt;
-        v_tgt_sqr = (int64_t)v_tgt * v_tgt;
-
-        int64_t accLength = (v_tgt_sqr - v_sqr) / twoA + 1;
-        if (accLength >= ds / 2) accLength = ds / 2;
-
-        accEnd   = accLength - 1;
-        decStart = s_tgt - accLength;
-
-        if (!isMoving)
-        {
-            stpTimer = TimerFactory::makeTimer();
-
-            stpTimer->attachCallbacks([this] { stepGroupISR(); }, [this] { resetGroupISR(); });
-            stpTimer->setPulseParams(8, stepPin);
-            isMoving = true;
-            v_sqr    = 200 * 200;
-            //mode     = mode_t::group;
-            stpTimer->start();
-        }
-    }
-
     void StepperBase::startStopping(int32_t v_end, uint32_t a)
     {
         if (mode == mode_t::async){

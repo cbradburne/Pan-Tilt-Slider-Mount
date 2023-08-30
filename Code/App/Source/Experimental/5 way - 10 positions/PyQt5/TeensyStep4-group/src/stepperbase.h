@@ -26,7 +26,6 @@ namespace TS4
         StepperBase(const int stepPin, const int dirPin);
 
         void startMoveTo(int32_t s_tgt, int32_t v_e, uint32_t v_max, uint32_t a);
-        void startMoveToGroup(int32_t s_tgt, int32_t v_e, uint32_t v_max, uint32_t a);
         void startRotate(int32_t v_max, uint32_t a);
         void startStopping(int32_t va_end, uint32_t a);
 
@@ -50,16 +49,13 @@ namespace TS4
         volatile int64_t v_sqr;
 
         inline void doStep();
-        inline void doGroupStep();
 
         const int stepPin, dirPin;
 
         ITimer* stpTimer;
         inline void stepISR();
-        inline void stepGroupISR();
         inline void rotISR();
         inline void resetISR();
-        inline void resetGroupISR();
 
         enum class mode_t {
             group,
@@ -84,7 +80,7 @@ namespace TS4
         s += 1;
         pos += dir;
 
-        if (mode = mode_t::group) {
+        if (mode == mode_t::group) {
             StepperBase* stepper = next;
 
             while (stepper != nullptr)                              // move slave motors if required
@@ -98,27 +94,6 @@ namespace TS4
                 stepper->B += stepper->A;
                 stepper = stepper->next;
             }
-        }
-    }
-
-    void StepperBase::doGroupStep()
-    {
-        digitalWriteFast(stepPin, HIGH);
-        s += 1;
-        pos += dir;
-
-        StepperBase* stepper = next;
-
-        while (stepper != nullptr)                              // move slave motors if required
-        {
-            if (stepper->B >= 0)
-            {
-                digitalWriteFast(stepper->stepPin, HIGH);
-                stepper->pos += stepper->dir;
-                stepper->B -= this->A;
-            }
-            stepper->B += stepper->A;
-            stepper = stepper->next;
         }
     }
 
@@ -163,47 +138,6 @@ namespace TS4
         }
     }
 
-    void StepperBase::stepGroupISR()
-    {
-        if (mode == mode_t::stopping){
-            mode = mode_t::group;
-            if (s < accEnd)                                     // still accelerating
-            { 
-                accEnd = decStart = 0;                          // start deceleration
-                s_tgt             = 2 * s;                      // we need the same way to decelerate as we traveled so far
-            } else if (s < decStart)                            // constant speed phase
-            {
-                decStart = 0;                                   // start deceleration
-                s_tgt    = s + accEnd;                          // normal deceleration distance  ds = distance to end
-            }
-        }
-
-        if (s < accEnd)                                         // accelerating
-        {
-            v = signum(v_sqr) * sqrtf(std::abs(v_sqr));
-            v_sqr += twoA;
-            stpTimer->updateFrequency(std::abs(v));
-            doGroupStep();
-        } else if (s < decStart)                                // constant speed
-        {
-            v = std::min(sqrtf(v_sqr), sqrtf(v_tgt_sqr));
-            stpTimer->updateFrequency(v);
-            doGroupStep();
-        } else if (s < s_tgt)                                   // decelerating
-        {
-            v_sqr -= twoA;
-            v = signum(v_sqr) * sqrtf(std::abs(v_sqr));
-            stpTimer->updateFrequency(std::abs(v));
-            doGroupStep();
-        } else                                                  // target reached
-        {
-            stpTimer->stop();
-            TimerFactory::returnTimer(stpTimer);
-            stpTimer = nullptr;
-            isMoving = false;
-        }
-    }
-
     void StepperBase::rotISR()
     {
         mode = mode_t::async;
@@ -238,22 +172,11 @@ namespace TS4
                 stpTimer = nullptr;
                 isMoving = false;
                 v_sqr = 0;
-                
-                //mode = mode_t::group;
             }
         }
     }
 
     void StepperBase::resetISR()
-    {
-        StepperBase* stepper = this;
-        while (stepper != nullptr)
-        {
-            digitalWriteFast(stepper->stepPin, LOW);
-            stepper = stepper->next;
-        }
-    }
-    void StepperBase::resetGroupISR()
     {
         StepperBase* stepper = this;
         while (stepper != nullptr)

@@ -69,8 +69,7 @@ namespace TS4
     void Stepper::moveGroup()
     {
         mode = mode_t::group;
-        StepperBase::startMoveToGroup(target, 0, std::abs(vMax), acc);
-        //StepperBase::startMoveToGroup(target, 0, std::abs(vMax), acc);
+        StepperBase::startMoveTo(target, 0, std::abs(vMax), acc);
     }
 
     void Stepper::moveAbs(int32_t target, uint32_t v)
