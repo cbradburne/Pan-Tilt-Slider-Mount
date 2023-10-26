@@ -98,7 +98,7 @@ if (pantilt_set_speed == pantilt_speed1) {
 
   if (upsideDown) {
     stepper_pan.setInverseRotation(true);
-    stepper_tilt.setInverseRotation(true);
+    //stepper_tilt.setInverseRotation(true);
   }
 
   if (slideReverse) {
