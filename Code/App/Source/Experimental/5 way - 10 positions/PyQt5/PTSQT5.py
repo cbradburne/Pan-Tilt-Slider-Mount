@@ -1582,16 +1582,46 @@ class PTSapp(QMainWindow):
             joyType = str(key)
             #print(joyType[-6:])
 
+            deadRange = 0.1
+
             if re.search('xbox', joyName):
                 #print(key.number)
                 if joyType[-6:] == "Axis 3":
-                    axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
+                    if (key.value < -deadRange):
+                        axisX = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                    elif (key.value > deadRange):
+                        axisX = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                    else:
+                        axisX = 0
+                    
+                    #axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 4":
-                    axisY = int(self.scale(key.value, (-1, 1), (255,-255)))
+                    if (key.value < -deadRange):
+                        axisY = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                    elif (key.value > deadRange):
+                        axisY = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                    else:
+                        axisY = 0
+
+                    #axisY = int(self.scale(key.value, (-1, 1), (255,-255)))
                 elif joyType[-6:] == "Axis 0":
-                    axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
+                    if (key.value < -deadRange):
+                        axisZ = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                    elif (key.value > deadRange):
+                        axisZ = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                    else:
+                        axisZ = 0
+
+                    #axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
-                    axisW = int(self.scale(key.value, (-1, 1), (8,-8)))
+                    if (key.value < -deadRange):
+                        axisW = int(self.scale(key.value, (-1, -(deadRange*2)), (-8, 0)))
+                    elif (key.value > deadRange):
+                        axisW = int(self.scale(key.value, (1, (deadRange*2)), (8, 0)))
+                    else:
+                        axisW = 0
+
+                    #axisW = int(self.scale(key.value, (-1, 1), (8,-8)))
                 elif joyType[-6:] == "tton 0" and (key.value == 0):
                     if whichCamSerial == 1:
                         if cam1AF:
