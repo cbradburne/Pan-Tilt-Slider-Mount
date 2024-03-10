@@ -1,0 +1,198 @@
+#include "Definitions.h"
+#include <Iibrary.h>  //A library I created for Arduino that contains some simple functions I commonly use. Library available at: https://github.com/isaac879/Iibrary
+#include "teensystep4.h"
+#include <EEPROM.h>  //To be able to save values when powered off
+#include <elapsedMillis.h>
+
+using namespace TS4;
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+//Global scope
+
+Stepper stepper_pan(PIN_STEP_PAN, PIN_DIRECTION_PAN);
+Stepper stepper_tilt(PIN_STEP_TILT, PIN_DIRECTION_TILT);
+Stepper stepper_slider(PIN_STEP_SLIDER, PIN_DIRECTION_SLIDER);
+Stepper stepper_zoom(PIN_STEP_ZOOM, PIN_DIRECTION_ZOOM);
+
+KeyframeElement keyframe_array[10];
+
+elapsedMillis timeElapsed;
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+void initPanTilt(void) {
+  getEEPROMVariables();
+
+  //Serial.begin(BAUD_RATE);
+  Serial1.begin(BAUD_RATE);
+  Serial3.begin(BAUD_RATE);
+
+  TS4::begin();
+
+  pinMode(13, OUTPUT);    // LED
+  digitalWrite(13, LOW);  // LED OFF
+
+  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1
+  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2
+  pinMode(PIN_SW3, INPUT_PULLUP);  // pin 10 to gnd if no slider used
+
+
+  stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
+  stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
+  stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
+  stepper_zoom.setMaxSpeed(zoom_set_speed);
+  stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+  stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+  stepper_slider.setAcceleration(slider_accel * slider_set_speed);
+  stepper_zoom.setAcceleration(zoom_accel);
+
+  delay(200);
+
+  Serial1.println("#a");
+  Serial1.println("#a");
+  Serial1.println("#%");
+  Serial1.println("#%");  // clear remote LEDS
+
+  if (pantilt_set_speed == pantilt_speed1) {
+    Serial1.println("^@1");
+    Serial1.println("^@1");
+  } else if (pantilt_set_speed == pantilt_speed2) {
+    Serial1.println("^@3");
+    Serial1.println("^@3");
+  } else if (pantilt_set_speed == pantilt_speed3) {
+    Serial1.println("^@5");
+    Serial1.println("^@5");
+  } else if (pantilt_set_speed == pantilt_speed4) {
+    Serial1.println("^@7");
+    Serial1.println("^@7");
+  }
+
+
+  if (slider_set_speed == slider_speed1) {
+    Serial1.println("^=1");
+    Serial1.println("^=1");
+  } else if (slider_set_speed == slider_speed2) {
+    Serial1.println("^=3");
+    Serial1.println("^=3");
+  } else if (slider_set_speed == slider_speed3) {
+    Serial1.println("^=5");
+    Serial1.println("^=5");
+  } else if (slider_set_speed == slider_speed4) {
+    Serial1.println("^=7");
+    Serial1.println("^=7");
+  }
+
+  sendCamSettings();
+
+  Serial1.println("Camera Active");
+  Serial1.println("-");
+  Serial1.println("#$");
+
+  upsideDown = digitalRead(PIN_SW1);
+  slideReverse = digitalRead(PIN_SW2);
+  withSlider = digitalRead(PIN_SW3);
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+float panDegreesToSteps(float angle) {
+  return pan_steps_per_degree * angle;
+}
+float tiltDegreesToSteps(float angle) {
+  return tilt_steps_per_degree * angle;
+}
+long sliderMillimetresToSteps(float mm) {
+  return round(mm * slider_steps_per_millimetre);
+}
+float sliderStepsToMillimetres(long steps) {
+  return (float)steps / slider_steps_per_millimetre;
+}
+float panStepsToDegrees(long steps) {
+  return steps / pan_steps_per_degree;
+}
+float panStepsToDegrees(float steps) {
+  return steps / pan_steps_per_degree;
+}
+float tiltStepsToDegrees(long steps) {
+  return steps / tilt_steps_per_degree;
+}
+float tiltStepsToDegrees(float steps) {
+  return steps / tilt_steps_per_degree;
+}
+
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+void Serial1Flush(void) {
+  while (Serial1.available() > 0) {
+    c = Serial1.read();
+  }
+}
+
+void Serial3Flush(void) {
+  while (Serial3.available() > 0) {
+    c = Serial3.read();
+  }
+}
+
+void sendCamSettings() {
+  Serial1.println(String("#d") + pantilt_speed1);
+  Serial1.println(String("#f") + pantilt_speed2);
+  Serial1.println(String("#g") + pantilt_speed3);
+  Serial1.println(String("#h") + pantilt_speed4);
+
+  Serial1.println(String("#j") + slider_speed1);
+  Serial1.println(String("#k") + slider_speed2);
+  Serial1.println(String("#l") + slider_speed3);
+  Serial1.println(String("#;") + slider_speed4);
+
+  Serial1.println(String("#q") + pantilt_accel);
+  Serial1.println(String("#Q") + slider_accel);
+}
+
+/*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
+
+void mainLoop(void) {
+  SerialData();
+
+  if (isManualMove) {
+    unsigned long currentMillisMoveCheck = millis();
+    if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval) {
+      previousMillisMoveCheck = currentMillisMoveCheck;
+      if (stepper_pan.isMoving) {
+        panRunning = false;
+        stepper_pan.overrideSpeed(0);
+        stepper_pan.stopAsync();
+        delay(10);
+      }
+
+      if (stepper_tilt.isMoving) {
+        tiltRunning = false;
+        stepper_tilt.overrideSpeed(0);
+        stepper_tilt.stopAsync();
+        delay(10);
+      }
+
+      if (stepper_slider.isMoving) {
+        sliderRunning = false;
+        stepper_slider.overrideSpeed(0);
+        stepper_slider.stopAsync();
+        delay(10);
+      }
+
+      if (stepper_zoom.isMoving) {
+        stepper_zoom.overrideSpeed(0);
+        stepper_zoom.stopAsync();
+        delay(10);
+      }
+
+      isManualMove = false;
+    }
+  }
+}

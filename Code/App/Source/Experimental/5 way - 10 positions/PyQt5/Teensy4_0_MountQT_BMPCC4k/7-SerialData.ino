@@ -118,15 +118,23 @@ void SerialData(void) {
           sliderRunning = false;
           stepper_slider.overrideSpeed(0);
           stepper_slider.stopAsync();
+
+          stepper_slider.setAcceleration(slider_accel * slider_set_speed * 4);
         }
       } else {
         if (!sliderRunning) {
           sliderRunning = true;
-          stepper_slider.setAcceleration(slider_accel * slider_set_speed * 4);
           stepper_slider.rotateAsync(slider_set_speed);
         }
         if (slideReverse) {
           speedFactorS = (speedFactorS * -1);
+        }
+        if ((stepper_slider.getPosition() <= 1000) && (stepper_slider.getPosition() >= 0)) {
+          stepper_slider.setAcceleration(10000);
+          stepper_slider.overrideSpeed(speedFactorS);
+        }
+        else {
+          stepper_slider.emergencyStop();
         }
       }
 
