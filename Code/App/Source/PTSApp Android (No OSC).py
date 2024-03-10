@@ -3,24 +3,26 @@
 #python3 -m pip install "kivy[base] @ https://github.com/kivy/kivy/archive/master.zip"
 #
 #KivyMD
+# python3 -m pip install kivymd
+# or
 #git clone https://github.com/kivymd/KivyMD.git --depth 1
 #cd KivyMD
 #pip install .
 #
 #Other
-#python3 -m pip install pygame==2.0.1
-#python3 -m pip install usbserial4a
-#python3 -m pip install python-osc
-#python3 -m pip install pyserial
-#python3 -m pip install pyjnius
-#python3 -m pip install pynput
+# python3 -m pip install pygame==2.0.1
+# python3 -m pip install usbserial4a
+# python3 -m pip install python-osc
+# python3 -m pip install pyserial
+# python3 -m pip install pyjnius
+# python3 -m pip install pynput
 
-#python3 -m pip install pyinstaller
+# python3 -m pip install pyinstaller
 #macOS
-#pyinstaller --onefile --windowed --icon PTSApp-Icon.icns --osx-bundle-identifier 'com.bradders' --name PTSApp PTSApp.py
+# pyinstaller --onefile --windowed --icon PTSApp-Icon.icns --osx-bundle-identifier 'com.bradders' --name PTSApp PTSApp.py
 #
 #Windows
-#pyinstaller --onefile --windowed --icon="PTSApp-Icon.ico" PTSApp.py
+# pyinstaller --onefile --windowed --icon="PTSApp-Icon.ico" PTSApp.py
 
 import asyncio
 import threading

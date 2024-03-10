@@ -6630,8 +6630,6 @@ class PTSapp(QMainWindow):
         if isConnected:
             #print("joy")
             self.doJoyMoves(1)
-
-        if message != "":
             self.labelInfo.setText(message)
             self.messageTimerReset = QTimer()
             self.messageTimerReset.singleShot(2000,self.resetMessage)  # for one time call only. (once)

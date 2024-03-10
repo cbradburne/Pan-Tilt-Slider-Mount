@@ -3396,7 +3396,6 @@ WindowManager:
             pos: (app.xDiv*59), (app.yDiv*14)
             size_hint: None, None
             size: (app.xDiv*80), (app.yDiv*60)
-            #size_hint_x: 1 if self.visible else 0
             opacity: 1 if self.visible else 0
             halign: "left"
             valign: "top"
