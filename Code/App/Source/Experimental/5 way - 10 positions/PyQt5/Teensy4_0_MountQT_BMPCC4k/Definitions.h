@@ -5,8 +5,8 @@
 
 #define BAUD_RATE 38400 //9600 //57600
 
-#define PIN_STEP_ZOOM 21
-#define PIN_DIRECTION_ZOOM 20
+//#define PIN_STEP_ZOOM 21
+//#define PIN_DIRECTION_ZOOM 20
 #define PIN_STEP_PAN 19
 #define PIN_DIRECTION_PAN 18
 #define PIN_STEP_TILT 17
@@ -99,10 +99,10 @@
 
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
-#define EEPROM_ADDRESS_ZOOM_SET_SPEED 62
+//#define EEPROM_ADDRESS_ZOOM_SET_SPEED 62
 #define EEPROM_ADDRESS_PANTILT_ACCEL 14
 #define EEPROM_ADDRESS_SLIDER_ACCEL 18
-#define EEPROM_ADDRESS_ZOOM_ACCEL 66
+//#define EEPROM_ADDRESS_ZOOM_ACCEL 66
 #define EEPROM_ADDRESS_PANTILT_SPEED1 22
 #define EEPROM_ADDRESS_PANTILT_SPEED2 26
 #define EEPROM_ADDRESS_PANTILT_SPEED3 30
@@ -225,7 +225,7 @@ struct KeyframeElement {
   float panTiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
-  long zoomStepCount = 0;
+  //long zoomStepCount = 0;
   int isRecorded = 0;
 };
 

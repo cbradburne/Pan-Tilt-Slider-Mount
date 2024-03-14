@@ -81,6 +81,12 @@ void SerialData(void) {
 
       previousMillisMoveCheck = millis();
 
+      //Serial.print(speedFactorP);
+      //Serial.print(" - ");
+      //Serial.print(speedFactorT);
+      //Serial.print(" - ");
+      //Serial.println(speedFactorS);
+
       if (speedFactorP == 0.0) {
         if (panRunning) {
           panRunning = false;
@@ -123,9 +129,18 @@ void SerialData(void) {
           stepper_slider.overrideSpeed(0);
           stepper_slider.stopAsync();
 
-          stepper_slider.setAcceleration(slider_accel * slider_set_speed * 4);
+          //stepper_slider.setAcceleration(slider_accel * slider_set_speed * 4);
         }
       } else {
+        if (!sliderRunning) {
+          sliderRunning = true;
+          stepper_slider.setAcceleration(slider_accel * slider_set_speed * 4);
+          stepper_slider.rotateAsync(slider_set_speed);
+        }
+        if (slideReverse) {
+          speedFactorS = (speedFactorS * -1);
+        }
+        /*
         if (!sliderRunning) {
           sliderRunning = true;
           stepper_slider.rotateAsync(slider_set_speed);
@@ -139,7 +154,7 @@ void SerialData(void) {
         }
         else {
           stepper_slider.emergencyStop();
-        }
+        }*/
       }
 
       if (speedFactorP == 0.0) {
