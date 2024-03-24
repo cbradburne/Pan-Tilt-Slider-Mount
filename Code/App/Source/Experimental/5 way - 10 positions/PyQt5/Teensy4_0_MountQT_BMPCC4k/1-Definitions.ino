@@ -19,6 +19,8 @@ KeyframeElement keyframe_array[10];
 
 elapsedMillis timeElapsed;
 
+IntervalTimer zoomLimitTimer;
+
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
 
@@ -27,7 +29,7 @@ void initPanTilt(void) {
 
   //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
-  // Serial3.begin(BAUD_RATE);
+  //Serial2.begin(BAUD_RATE);
 
   TS4::begin();
 
@@ -38,6 +40,9 @@ void initPanTilt(void) {
   pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2
   pinMode(PIN_SW3, INPUT_PULLUP);  // pin 10 to gnd if no slider used
 
+  
+  zoomLimitTimer.begin(zoomLimitCheck, 250);
+  zoomLimitTimer.priority(255);             
 
   stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
@@ -134,9 +139,9 @@ void Serial1Flush(void) {
   }
 }
 
-//void Serial3Flush(void) {
-//  while (Serial3.available() > 0) {
-//    c = Serial3.read();
+//void Serial2Flush(void) {
+//  while (Serial2.available() > 0) {
+//    c = Serial2.read();
 //  }
 //}
 
@@ -195,4 +200,19 @@ void mainLoop(void) {
       isManualMove = false;
     }
   }
+}
+
+void zoomLimitCheck() {
+
+  if ((stepper_slider.getPosition() > zoomLimit) && (sliderRunning == true)) {
+    stepper_slider.emergencyStop();
+    sliderRunning = false;
+    stepper_slider.moveRel(-20);
+  } 
+  else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true)) {
+    stepper_slider.emergencyStop();
+    sliderRunning = false;
+    stepper_slider.moveRel(20);
+  }
+
 }

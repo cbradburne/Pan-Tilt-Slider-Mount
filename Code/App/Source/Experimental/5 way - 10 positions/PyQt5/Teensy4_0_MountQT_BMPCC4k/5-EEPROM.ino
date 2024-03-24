@@ -45,35 +45,35 @@ void getEEPROMVariables(void) {
 
 void printEEPROM(void) {
   float ftemp;
-  Serial1.println("EEPROM:");
+  Serial1.println("\nEEPROM:");
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SET_SPEED, ftemp);
-  Serial1.println(String("Pan/Tilt Speed          : ") + ftemp + String("°/s"));
+  Serial1.println(String("Pan/Tilt Speed      : ") + ftemp + String(" deg/s"));
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SET_SPEED, ftemp);
-  Serial1.println(String("Slider Speed            : ") + ftemp + String("mm/s\n"));
+  Serial1.println(String("Slider Speed        : ") + ftemp + String(" mm/s\n"));
   //EEPROM.get(EEPROM_ADDRESS_ZOOM_SET_SPEED, ftemp);
   //Serial1.println(String("Zoom Speed              : ") + ftemp);
   EEPROM.get(EEPROM_ADDRESS_PANTILT_ACCEL, ftemp);
-  Serial1.println(String("Pan/Tilt accel          : ") + ftemp + String(" steps/s²"));
+  Serial1.println(String("Pan/Tilt accel      : ") + ftemp + String(" steps/sSq"));
   EEPROM.get(EEPROM_ADDRESS_SLIDER_ACCEL, ftemp);
-  Serial1.println(String("Slider accel            : ") + ftemp + String(" steps/s²\n"));
+  Serial1.println(String("Slider accel        : ") + ftemp + String(" steps/sSq\n"));
   //EEPROM.get(EEPROM_ADDRESS_ZOOM_ACCEL, ftemp);
   //Serial1.println(String("Zoom   accel            : ") + ftemp);
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SPEED1, ftemp);
-  Serial1.println(String("Pan/Tilt Speed 1        : ") + ftemp + String("°/s"));
+  Serial1.println(String("Pan/Tilt Speed 1    : ") + ftemp + String(" deg/s"));
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SPEED2, ftemp);
-  Serial1.println(String("Pan/Tilt Speed 2        : ") + ftemp + String("°/s"));
+  Serial1.println(String("Pan/Tilt Speed 2    : ") + ftemp + String(" deg/s"));
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SPEED3, ftemp);
-  Serial1.println(String("Pan/Tilt Speed 3        : ") + ftemp + String("°/s"));
+  Serial1.println(String("Pan/Tilt Speed 3    : ") + ftemp + String(" deg/s"));
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SPEED4, ftemp);
-  Serial1.println(String("Pan/Tilt Speed 4        : ") + ftemp + String("°/s\n"));
+  Serial1.println(String("Pan/Tilt Speed 4    : ") + ftemp + String(" deg/s\n"));
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED1, ftemp);
-  Serial1.println(String("Slider Speed 1          : ") + ftemp + String("mm/s"));
+  Serial1.println(String("Slider Speed 1      : ") + ftemp + String(" mm/s"));
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED2, ftemp);
-  Serial1.println(String("Slider Speed 2          : ") + ftemp + String("mm/s"));
+  Serial1.println(String("Slider Speed 2      : ") + ftemp + String(" mm/s"));
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED3, ftemp);
-  Serial1.println(String("Slider Speed 3          : ") + ftemp + String("mm/s"));
+  Serial1.println(String("Slider Speed 3      : ") + ftemp + String(" mm/s"));
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED4, ftemp);
-  Serial1.println(String("Slider Speed 4          : ") + ftemp + String("mm/s\n"));
+  Serial1.println(String("Slider Speed 4      : ") + ftemp + String(" mm/s\n"));
 
   Serial1.print("\n");
   Serial1.println("#$");

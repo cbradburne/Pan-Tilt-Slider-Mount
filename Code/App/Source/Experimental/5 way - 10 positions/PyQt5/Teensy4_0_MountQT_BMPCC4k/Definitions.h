@@ -155,8 +155,10 @@ float slider_speed4 = 120;
 float zoom_set_speed = 20;
 float zoom_accel = 10000;
 
-float pantiltMaxFactor = 10.0;    // Speed factor of joystick moves ( 1 = 100% )
-float sliderMaxFactor = 10.0;
+int zoomLimit = 1000;
+
+float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
+float sliderMaxFactor = 1.0;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
