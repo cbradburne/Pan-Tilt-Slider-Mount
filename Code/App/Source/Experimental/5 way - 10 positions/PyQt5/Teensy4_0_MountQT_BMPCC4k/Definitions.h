@@ -5,8 +5,8 @@
 
 #define BAUD_RATE 38400 //9600 //57600
 
-//#define PIN_STEP_ZOOM 21
-//#define PIN_DIRECTION_ZOOM 20
+#define PIN_STEP_ZOOM 10
+#define PIN_DIRECTION_ZOOM 9
 #define PIN_STEP_PAN 19
 #define PIN_DIRECTION_PAN 18
 #define PIN_STEP_TILT 17
@@ -101,10 +101,10 @@ int zoomLimit = 5550;       //  12 - 35mm
 
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
-//#define EEPROM_ADDRESS_ZOOM_SET_SPEED 62
+#define EEPROM_ADDRESS_ZOOM_SET_SPEED 62
 #define EEPROM_ADDRESS_PANTILT_ACCEL 14
 #define EEPROM_ADDRESS_SLIDER_ACCEL 18
-//#define EEPROM_ADDRESS_ZOOM_ACCEL 66
+#define EEPROM_ADDRESS_ZOOM_ACCEL 66
 #define EEPROM_ADDRESS_PANTILT_SPEED1 22
 #define EEPROM_ADDRESS_PANTILT_SPEED2 26
 #define EEPROM_ADDRESS_PANTILT_SPEED3 30
@@ -126,10 +126,12 @@ bool startedAsync = false;
 bool panAsync = false;
 bool tiltAsync = false;
 bool sliderAsync = false;
+bool zoomAsync = false;
 
 bool panRunning = false;
 bool tiltRunning = false;
 bool sliderRunning = false;
+bool zoomRunning = false;
 
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
@@ -154,11 +156,12 @@ float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
 
-float zoom_set_speed = 20;
-float zoom_accel = 10000;
+float zoom_set_speed = 60;
+float zoom_accel = 4000;
 
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
 float sliderMaxFactor = 1.0;
+float zoomMaxFactor = 1.0;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
@@ -168,6 +171,7 @@ String atIndex = "";
 float speedFactorS = 0.0;
 float speedFactorP = 0.0;
 float speedFactorT = 0.0;
+float speedFactorZ = 0.0;
 
 bool sentMoved = false;
 
@@ -227,7 +231,7 @@ struct KeyframeElement {
   float panTiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
-  //long zoomStepCount = 0;
+  long zoomStepCount = 0;
   int isRecorded = 0;
 };
 

@@ -590,8 +590,28 @@ void SerialData(void) {
         zoomIN = true;
         zoomOUT = false;
 
-        //Serial2.print("#I");
-        //Serial2.println(zoom_speed);
+
+        float speedFactorZ = map(zoom_speed, 0, 6, 0, zoomMaxFactor);
+
+        if (!zoomRunning) {
+          zoomRunning = true;
+          stepper_zoom.setAcceleration(4000); //slider_accel * slider_set_speed);
+          stepper_zoom.rotateAsync(zoom_set_speed);
+          stepper_zoom.overrideSpeed(0);
+        }
+
+        if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {\
+          stepper_zoom.overrideSpeed(speedFactorZ);
+        }
+        else {
+          zoomRunning = false;
+          stepper_zoom.overrideSpeed(0);
+          stepper_zoom.stopAsync();
+        }
+        if (speedFactorZ == 0.0) {
+          stepper_zoom.setAcceleration(zoom_accel * zoom_set_speed);
+        }
+
 
         Serial1.println("Zoom IN.");
         Serial1.println("#$");
@@ -603,8 +623,28 @@ void SerialData(void) {
         zoomIN = false;
         zoomOUT = true;
 
-        //Serial2.print("#i");
-        //Serial2.println(zoom_speed);
+
+        float speedFactorZ = map(zoom_speed, -6, 0, -zoomMaxFactor, 0);
+
+        if (!zoomRunning) {
+          zoomRunning = true;
+          stepper_zoom.setAcceleration(4000); //slider_accel * slider_set_speed);
+          stepper_zoom.rotateAsync(zoom_set_speed);
+          stepper_zoom.overrideSpeed(0);
+        }
+
+        if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {\
+          stepper_zoom.overrideSpeed(speedFactorZ);
+        }
+        else {
+          zoomRunning = false;
+          stepper_zoom.overrideSpeed(0);
+          stepper_zoom.stopAsync();
+        }
+        if (speedFactorZ == 0.0) {
+          stepper_zoom.setAcceleration(zoom_accel * zoom_set_speed);
+        }
+
 
         Serial1.println("Zoom OUT.");
         Serial1.println("#$");

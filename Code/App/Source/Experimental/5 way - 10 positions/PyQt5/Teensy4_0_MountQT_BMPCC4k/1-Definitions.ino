@@ -13,7 +13,7 @@ using namespace TS4;
 Stepper stepper_pan(PIN_STEP_PAN, PIN_DIRECTION_PAN);
 Stepper stepper_tilt(PIN_STEP_TILT, PIN_DIRECTION_TILT);
 Stepper stepper_slider(PIN_STEP_SLIDER, PIN_DIRECTION_SLIDER);
-//Stepper stepper_zoom(PIN_STEP_ZOOM, PIN_DIRECTION_ZOOM);
+Stepper stepper_zoom(PIN_STEP_ZOOM, PIN_DIRECTION_ZOOM);
 
 KeyframeElement keyframe_array[10];
 
@@ -47,11 +47,11 @@ void initPanTilt(void) {
   stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-  //stepper_zoom.setMaxSpeed(zoom_set_speed);
+  stepper_zoom.setMaxSpeed(zoom_set_speed);
   stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
   stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
   stepper_slider.setAcceleration(slider_accel * slider_set_speed);
-  //stepper_zoom.setAcceleration(zoom_accel);
+  stepper_zoom.setAcceleration(zoom_accel);
 
   delay(200);
 
@@ -191,11 +191,12 @@ void mainLoop(void) {
         delay(10);
       }
 
-      //if (stepper_zoom.isMoving) {
-      //  stepper_zoom.overrideSpeed(0);
-      //  stepper_zoom.stopAsync();
-      //  delay(10);
-      //}
+      if (stepper_zoom.isMoving) {
+        zoomRunning = false;
+        stepper_zoom.overrideSpeed(0);
+        stepper_zoom.stopAsync();
+        delay(10);
+      }
 
       isManualMove = false;
     }
@@ -204,15 +205,15 @@ void mainLoop(void) {
 
 void zoomLimitCheck() {
 
-  if ((stepper_slider.getPosition() > zoomLimit) && (sliderRunning == true)) {
-    stepper_slider.emergencyStop();
-    sliderRunning = false;
-    stepper_slider.moveRel(-10);
+  if ((stepper_zoom.getPosition() > zoomLimit) && (zoomRunning == true)) {
+    stepper_zoom.emergencyStop();
+    zoomRunning = false;
+    stepper_zoom.moveRel(-10);
   } 
-  else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true)) {
-    stepper_slider.emergencyStop();
-    sliderRunning = false;
-    stepper_slider.moveRel(10);
+  else if ((stepper_zoom.getPosition() < 0) && (zoomRunning == true)) {
+    stepper_zoom.emergencyStop();
+    zoomRunning = false;
+    stepper_zoom.moveRel(10);
   }
 
 }
