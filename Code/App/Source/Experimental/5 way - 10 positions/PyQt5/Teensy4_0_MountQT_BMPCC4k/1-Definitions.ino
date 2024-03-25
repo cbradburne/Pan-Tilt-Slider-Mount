@@ -207,12 +207,12 @@ void zoomLimitCheck() {
   if ((stepper_slider.getPosition() > zoomLimit) && (sliderRunning == true)) {
     stepper_slider.emergencyStop();
     sliderRunning = false;
-    stepper_slider.moveRel(-20);
+    stepper_slider.moveRel(-10);
   } 
   else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true)) {
     stepper_slider.emergencyStop();
     sliderRunning = false;
-    stepper_slider.moveRel(20);
+    stepper_slider.moveRel(10);
   }
 
 }

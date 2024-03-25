@@ -14,6 +14,8 @@
 #define PIN_STEP_SLIDER 15
 #define PIN_DIRECTION_SLIDER 14
 
+int zoomLimit = 5550;       //  12 - 35mm
+
 #define PIN_SW1 11
 #define PIN_SW2 12
 #define PIN_SW3 6
@@ -154,8 +156,6 @@ float slider_speed4 = 120;
 
 float zoom_set_speed = 20;
 float zoom_accel = 10000;
-
-int zoomLimit = 1000;
 
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
 float sliderMaxFactor = 1.0;
