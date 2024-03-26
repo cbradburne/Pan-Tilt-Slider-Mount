@@ -5,12 +5,16 @@
 
 #define BAUD_RATE 38400 //9600 //57600
 
+#define PIN_STEP_ZOOM 10
+#define PIN_DIRECTION_ZOOM 9
 #define PIN_STEP_PAN 19
 #define PIN_DIRECTION_PAN 18
 #define PIN_STEP_TILT 17
 #define PIN_DIRECTION_TILT 16
 #define PIN_STEP_SLIDER 15
 #define PIN_DIRECTION_SLIDER 14
+
+int zoomLimit = 5550;       //  12 - 35mm
 
 #define PIN_SW1 11
 #define PIN_SW2 12
@@ -97,8 +101,10 @@
 
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
+#define EEPROM_ADDRESS_ZOOM_SET_SPEED 62
 #define EEPROM_ADDRESS_PANTILT_ACCEL 14
 #define EEPROM_ADDRESS_SLIDER_ACCEL 18
+#define EEPROM_ADDRESS_ZOOM_ACCEL 66
 #define EEPROM_ADDRESS_PANTILT_SPEED1 22
 #define EEPROM_ADDRESS_PANTILT_SPEED2 26
 #define EEPROM_ADDRESS_PANTILT_SPEED3 30
@@ -108,7 +114,7 @@
 #define EEPROM_ADDRESS_SLIDER_SPEED3 46
 #define EEPROM_ADDRESS_SLIDER_SPEED4 50
 
-#define VERSION_NUMBER "8 Aug 2023"
+#define VERSION_NUMBER "10 Mar 2024"
 
 bool withSlider = false;
 bool DEBUG1 = false;
@@ -120,10 +126,12 @@ bool startedAsync = false;
 bool panAsync = false;
 bool tiltAsync = false;
 bool sliderAsync = false;
+bool zoomAsync = false;
 
 bool panRunning = false;
 bool tiltRunning = false;
 bool sliderRunning = false;
+bool zoomRunning = false;
 
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
@@ -148,8 +156,12 @@ float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
 
-float pantiltMaxFactor = 10.0;    // Speed factor of joystick moves ( 1 = 100% )
-float sliderMaxFactor = 10.0;
+float zoom_set_speed = 1000;
+float zoom_accel = 8000;
+
+float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
+float sliderMaxFactor = 1.0;
+float zoomMaxFactor = 1.0;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
@@ -159,6 +171,7 @@ String atIndex = "";
 float speedFactorS = 0.0;
 float speedFactorP = 0.0;
 float speedFactorT = 0.0;
+float speedFactorZ = 0.0;
 
 bool sentMoved = false;
 
@@ -168,7 +181,7 @@ unsigned long previousMillis = 0;
 const long zoomInterval = 50;
 bool zoomIN = false;
 bool zoomOUT = false;
-int zoom_speed;
+float zoom_speed;
 
 bool pos1set = false;
 bool pos2set = false;
@@ -218,6 +231,7 @@ struct KeyframeElement {
   float panTiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
+  long zoomStepCount = 0;
   int isRecorded = 0;
 };
 

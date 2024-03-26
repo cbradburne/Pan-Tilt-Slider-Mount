@@ -240,7 +240,8 @@ oldAxisZ = 0
 axisX = 0
 axisY = 0
 axisZ = 0
-data = bytearray(8)
+#data = bytearray(8)
+data = bytearray(7)
 hat = ()
 oldHatX = 0
 oldHatY = 0
@@ -2453,10 +2454,10 @@ class PTSApp(MDApp):
             data[5] = 0
             data[6] = 0
 
-        if whichCamOSC > 3:
-            data[7] = whichCamOSC - 3
-        else:
-            data[7] = whichCamSerial
+        #if whichCamOSC > 3:
+        #    data[7] = whichCamOSC - 3
+        #else:
+        #    data[7] = whichCamSerial
         
         if not self.serial_port:
             pass

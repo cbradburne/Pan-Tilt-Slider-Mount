@@ -1,8 +1,10 @@
 #include "Definitions.h"
 #include <Iibrary.h>  //A library I created for Arduino that contains some simple functions I commonly use. Library available at: https://github.com/isaac879/Iibrary
-#include "TeensyStep.h"
+#include "teensystep4.h"
 #include <EEPROM.h>  //To be able to save values when powered off
 #include <elapsedMillis.h>
+
+using namespace TS4;
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -11,20 +13,13 @@
 Stepper stepper_pan(PIN_STEP_PAN, PIN_DIRECTION_PAN);
 Stepper stepper_tilt(PIN_STEP_TILT, PIN_DIRECTION_TILT);
 Stepper stepper_slider(PIN_STEP_SLIDER, PIN_DIRECTION_SLIDER);
-
-StepControl multi_stepper;
-
-StepControl step_stepperP;
-StepControl step_stepperT;
-StepControl step_stepperS;
-
-RotateControl rotate_stepperP;
-RotateControl rotate_stepperT;
-RotateControl rotate_stepperS;
+Stepper stepper_zoom(PIN_STEP_ZOOM, PIN_DIRECTION_ZOOM);
 
 KeyframeElement keyframe_array[10];
 
 elapsedMillis timeElapsed;
+
+IntervalTimer zoomLimitTimer;
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -34,21 +29,29 @@ void initPanTilt(void) {
 
   //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
-  Serial2.begin(BAUD_RATE);
+  //Serial2.begin(BAUD_RATE);
 
-  pinMode(13, OUTPUT);              // LED
-  digitalWrite(13, LOW);            // LED OFF
+  TS4::begin();
 
-  pinMode(PIN_SW1, INPUT_PULLUP);   // Dip Switch 1
-  pinMode(PIN_SW2, INPUT_PULLUP);   // Dip Switch 2
-  pinMode(PIN_SW3, INPUT_PULLUP);   // pin 10 to gnd if no slider used
+  pinMode(13, OUTPUT);    // LED
+  digitalWrite(13, LOW);  // LED OFF
+
+  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1
+  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2
+  pinMode(PIN_SW3, INPUT_PULLUP);  // pin 10 to gnd if no slider used
+
+  
+  zoomLimitTimer.begin(zoomLimitCheck, 250);
+  zoomLimitTimer.priority(255);             
 
   stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
+  stepper_zoom.setMaxSpeed(zoom_set_speed);
   stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
   stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
   stepper_slider.setAcceleration(slider_accel * slider_set_speed);
+  stepper_zoom.setAcceleration(zoom_accel);
 
   delay(200);
 
@@ -57,7 +60,7 @@ void initPanTilt(void) {
   Serial1.println("#%");
   Serial1.println("#%");  // clear remote LEDS
 
-if (pantilt_set_speed == pantilt_speed1) {
+  if (pantilt_set_speed == pantilt_speed1) {
     Serial1.println("^@1");
     Serial1.println("^@1");
   } else if (pantilt_set_speed == pantilt_speed2) {
@@ -95,15 +98,6 @@ if (pantilt_set_speed == pantilt_speed1) {
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
   withSlider = digitalRead(PIN_SW3);
-
-  if (upsideDown) {
-    stepper_pan.setInverseRotation(true);
-    //stepper_tilt.setInverseRotation(true);
-  }
-
-  if (slideReverse) {
-    stepper_slider.setInverseRotation(true);
-  }
 }
 
 
@@ -145,11 +139,11 @@ void Serial1Flush(void) {
   }
 }
 
-void Serial2Flush(void) {
-  while (Serial2.available() > 0) {
-    c = Serial2.read();
-  }
-}
+//void Serial2Flush(void) {
+//  while (Serial2.available() > 0) {
+//    c = Serial2.read();
+//  }
+//}
 
 void sendCamSettings() {
   Serial1.println(String("#d") + pantilt_speed1);
@@ -176,10 +170,50 @@ void mainLoop(void) {
     unsigned long currentMillisMoveCheck = millis();
     if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval) {
       previousMillisMoveCheck = currentMillisMoveCheck;
-      rotate_stepperS.stopAsync();
-      rotate_stepperP.stopAsync();
-      rotate_stepperT.stopAsync();
+      if (stepper_pan.isMoving) {
+        panRunning = false;
+        stepper_pan.overrideSpeed(0);
+        stepper_pan.stopAsync();
+        delay(10);
+      }
+
+      if (stepper_tilt.isMoving) {
+        tiltRunning = false;
+        stepper_tilt.overrideSpeed(0);
+        stepper_tilt.stopAsync();
+        delay(10);
+      }
+
+      if (stepper_slider.isMoving) {
+        sliderRunning = false;
+        stepper_slider.overrideSpeed(0);
+        stepper_slider.stopAsync();
+        delay(10);
+      }
+
+      if (stepper_zoom.isMoving) {
+        zoomRunning = false;
+        stepper_zoom.overrideSpeed(0);
+        stepper_zoom.stopAsync();
+        delay(10);
+      }
+
       isManualMove = false;
     }
   }
+}
+
+void zoomLimitCheck() {
+
+  if ((stepper_zoom.getPosition() > zoomLimit) && (zoomRunning == true)) {
+    stepper_zoom.emergencyStop();
+    zoomRunning = false;
+    stepper_zoom.moveRel(-10);
+  } 
+  else if ((stepper_zoom.getPosition() < 0) && (zoomRunning == true)) {
+    stepper_zoom.emergencyStop();
+    zoomRunning = false;
+    stepper_zoom.moveRel(10);
+  }
+
 }
