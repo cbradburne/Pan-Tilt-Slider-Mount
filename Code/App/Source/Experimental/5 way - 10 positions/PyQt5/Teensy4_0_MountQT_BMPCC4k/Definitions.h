@@ -156,8 +156,8 @@ float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
 
-float zoom_set_speed = 60;
-float zoom_accel = 4000;
+float zoom_set_speed = 1000;
+float zoom_accel = 8000;
 
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
 float sliderMaxFactor = 1.0;
@@ -181,7 +181,7 @@ unsigned long previousMillis = 0;
 const long zoomInterval = 50;
 bool zoomIN = false;
 bool zoomOUT = false;
-int zoom_speed;
+float zoom_speed;
 
 bool pos1set = false;
 bool pos2set = false;

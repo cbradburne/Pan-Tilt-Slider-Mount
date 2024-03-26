@@ -25,10 +25,10 @@ void saveEEPROM(void) {
 void getEEPROMVariables(void) {
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SET_SPEED, pantilt_set_speed);
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SET_SPEED, slider_set_speed);
-  EEPROM.get(EEPROM_ADDRESS_ZOOM_SET_SPEED, zoom_set_speed);
+  //EEPROM.get(EEPROM_ADDRESS_ZOOM_SET_SPEED, zoom_set_speed);
   EEPROM.get(EEPROM_ADDRESS_PANTILT_ACCEL, pantilt_accel);
   EEPROM.get(EEPROM_ADDRESS_SLIDER_ACCEL, slider_accel);
-  EEPROM.get(EEPROM_ADDRESS_ZOOM_ACCEL, zoom_accel);
+  //EEPROM.get(EEPROM_ADDRESS_ZOOM_ACCEL, zoom_accel);
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SPEED1, pantilt_speed1);
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SPEED2, pantilt_speed2);
   EEPROM.get(EEPROM_ADDRESS_PANTILT_SPEED3, pantilt_speed3);
