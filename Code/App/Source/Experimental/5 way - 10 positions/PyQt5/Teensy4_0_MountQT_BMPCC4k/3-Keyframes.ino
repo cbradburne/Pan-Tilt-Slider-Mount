@@ -192,7 +192,7 @@ void moveToIndex(int index) {
   Serial1.println(String("Pan   : ") + panStepsToDegrees(keyframe_array[index - 1].panStepCount) + String("°"));
   Serial1.println(String("Tilt  : ") + tiltStepsToDegrees(keyframe_array[index - 1].tiltStepCount) + String("°"));
   Serial1.println(String("Slider: ") + sliderStepsToMillimetres(keyframe_array[index - 1].sliderStepCount) + String("mm"));
-  Serial1.println(String("Zoom position : ") + (keyframe_array[index - 1].zoomStepCount));
+  Serial1.println(String("Zoom  : ") + (keyframe_array[index - 1].zoomStepCount));
   Serial1.println("#$");
 
   if (useKeyframeSpeeds) {
@@ -206,7 +206,7 @@ void moveToIndex(int index) {
   stepper_slider.setTargetAbs(keyframe_array[index - 1].sliderStepCount);
   stepper_zoom.setTargetAbs(keyframe_array[index - 1].zoomStepCount);
 
-  StepperGroup ({stepper_pan, stepper_tilt, stepper_slider}).move();
+  StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
 
   Serial1Flush(); 
 
