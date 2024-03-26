@@ -51,6 +51,8 @@ int zoomLimit = 5550;       //  12 - 35mm
 #define INSTRUCTION_SET_TILT_SPEED 'S'
 #define INSTRUCTION_SET_SLIDER_SPEED 'a'
 
+#define INSTRUCTION_SET_ZOOM_LIMIT 'w'
+
 #define INSTRUCTION_SET_PANTILT_SPEED1 'B'
 #define INSTRUCTION_SET_PANTILT_SPEED2 'b'
 #define INSTRUCTION_SET_PANTILT_SPEED3 'C'
@@ -101,10 +103,9 @@ int zoomLimit = 5550;       //  12 - 35mm
 
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
-#define EEPROM_ADDRESS_ZOOM_SET_SPEED 62
+#define EEPROM_ADDRESS_ZOOM_LIMIT 62
 #define EEPROM_ADDRESS_PANTILT_ACCEL 14
 #define EEPROM_ADDRESS_SLIDER_ACCEL 18
-#define EEPROM_ADDRESS_ZOOM_ACCEL 66
 #define EEPROM_ADDRESS_PANTILT_SPEED1 22
 #define EEPROM_ADDRESS_PANTILT_SPEED2 26
 #define EEPROM_ADDRESS_PANTILT_SPEED3 30
@@ -233,19 +234,6 @@ struct KeyframeElement {
   float sliderSpeed = 0;
   long zoomStepCount = 0;
   int isRecorded = 0;
-};
-
-struct FloatCoordinate {
-  float x;
-  float y;
-  float z;
-};
-
-struct LinePoints {
-  float x0;
-  float y0;
-  float x1;
-  float y1;
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/
