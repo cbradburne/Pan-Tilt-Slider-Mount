@@ -3070,7 +3070,11 @@ class PTSapp(QMainWindow):
             elif axisW == 6: self.sendSerial(zoomSerial + 'A6')
             elif axisW == 7: self.sendSerial(zoomSerial + 'A7')
             elif axisW == 8: self.sendSerial(zoomSerial + 'A8')
-            else: self.sendSerial(zoomSerial + 'q')
+            else: 
+                self.sendSerial(zoomSerial + 'q')
+                self.sendSerial(zoomSerial + 'q')
+                self.sendSerial(zoomSerial + 'q')
+                self.sendSerial(zoomSerial + 'q')
 
     def sendJoystick(self, arr):
         global data
