@@ -109,6 +109,12 @@ void Serial4Data() {
         Serial.print("=F0");
         Serial.println(SerialCommandValueInt);
       }
+      else if (h == 'w') {
+        String stringText = Serial1.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=F5");
+        Serial.println(SerialCommandValueInt);
+      }
     }
     else if (g == '^') {
       while (Serial4.available() < 2) {                        //  Wait for 1 byts to be available

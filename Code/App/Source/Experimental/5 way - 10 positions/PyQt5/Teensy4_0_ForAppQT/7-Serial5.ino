@@ -109,6 +109,12 @@ void Serial5Data() {
         Serial.print("=G0");
         Serial.println(SerialCommandValueInt);
       }
+      else if (h == 'w') {
+        String stringText = Serial1.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=G5");
+        Serial.println(SerialCommandValueInt);
+      }
     }
     else if (g == '^') {
       while (Serial5.available() < 2) {                        //  Wait for 1 byts to be available

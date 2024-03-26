@@ -158,6 +158,8 @@ void sendCamSettings() {
 
   Serial1.println(String("#q") + pantilt_accel);
   Serial1.println(String("#Q") + slider_accel);
+
+  Serial1.println(String("#w") + zoomLimit);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
