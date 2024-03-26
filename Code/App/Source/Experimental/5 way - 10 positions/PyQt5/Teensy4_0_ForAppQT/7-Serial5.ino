@@ -124,8 +124,8 @@ void Serial5Data() {
       if (g == '=') {
         cam5SlSpeed = Serial5.read();
         cam5SlSpeed -= 48;
-        //Serial.print("=5");
-        //Serial.println(cam5SlSpeed);
+        Serial.print("=5");
+        Serial.println(cam5SlSpeed);
       }
 
       else if (g == '@') {

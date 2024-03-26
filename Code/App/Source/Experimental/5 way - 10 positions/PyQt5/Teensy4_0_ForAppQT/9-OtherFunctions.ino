@@ -46,15 +46,15 @@ void RefreshLEDs() {
     if (currentMillisLED - previousMillisLED > LEDInterval) {
 
       Serial.print("=1");
-      Serial.println(s1Speed);
+      Serial.println(cam1SlSpeed);
       Serial.print("=2");
-      Serial.println(s2Speed);
+      Serial.println(cam2SlSpeed);
       Serial.print("=3");
-      Serial.println(s3Speed);
+      Serial.println(cam3SlSpeed);
       Serial.print("=4");
-      Serial.println(s4Speed);
+      Serial.println(cam4SlSpeed);
       Serial.print("=5");
-      Serial.println(s5Speed);
+      Serial.println(cam5SlSpeed);
 
       doLEDrefresh6 = false;
     }
