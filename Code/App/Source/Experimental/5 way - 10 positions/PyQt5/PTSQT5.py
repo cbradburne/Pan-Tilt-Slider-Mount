@@ -7526,7 +7526,7 @@ class PTSapp(QMainWindow):
             self.sendSerial('&3N')
             return
         elif cam3Pos6Set and not cam3AtPos6:
-            self.sendSerial('&3N')
+            self.sendSerial('&3n')
 
     def Cam3Go7(self):
         global SetPosToggle
