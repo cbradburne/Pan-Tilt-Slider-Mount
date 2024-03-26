@@ -122,10 +122,10 @@ void Serial1Data() {
       }
       c = Serial1.read();
       if (c == '=') {
-        s1Speed = Serial1.read();
-        s1Speed -= 48;
+        cam1SlSpeed = Serial1.read();
+        cam1SlSpeed -= 48;
         Serial.print("=1");
-        Serial.println(s1Speed);
+        Serial.println(cam1SlSpeed);
       }
 
       else if (c == '@') {

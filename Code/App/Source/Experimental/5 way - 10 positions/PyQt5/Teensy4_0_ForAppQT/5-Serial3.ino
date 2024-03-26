@@ -122,10 +122,10 @@ void Serial3Data() {
       }
       g = Serial3.read();
       if (g == '=') {
-        s3Speed = Serial3.read();
-        s3Speed -= 48;
+        cam3SlSpeed = Serial3.read();
+        cam3SlSpeed -= 48;
         Serial.print("=3");
-        Serial.println(s3Speed);
+        Serial.println(cam3SlSpeed);
       }
 
       else if (g == '@') {

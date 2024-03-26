@@ -122,10 +122,10 @@ void Serial4Data() {
       }
       g = Serial4.read();
       if (g == '=') {
-        s4Speed = Serial4.read();
-        s4Speed -= 48;
+        cam4SlSpeed = Serial4.read();
+        cam4SlSpeed -= 48;
         Serial.print("=4");
-        Serial.println(s4Speed);
+        Serial.println(cam4SlSpeed);
       }
 
       else if (g == '@') {

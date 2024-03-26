@@ -122,10 +122,10 @@ void Serial2Data() {
       }
       e = Serial2.read();
       if (e == '=') {
-        s2Speed = Serial2.read();
-        s2Speed -= 48;
+        cam2SlSpeed = Serial2.read();
+        cam2SlSpeed -= 48;
         Serial.print("=2");
-        Serial.println(s2Speed);
+        Serial.println(cam2SlSpeed);
       }
 
       else if (e == '@') {
