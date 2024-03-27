@@ -14,8 +14,6 @@
 #define PIN_STEP_SLIDER 15
 #define PIN_DIRECTION_SLIDER 14
 
-int zoomLimit = 2500; //5550;       //  12 - 35mm
-
 #define PIN_SW1 11
 #define PIN_SW2 12
 #define PIN_SW3 6
@@ -103,7 +101,7 @@ int zoomLimit = 2500; //5550;       //  12 - 35mm
 
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
-#define EEPROM_ADDRESS_ZOOM_LIMIT 4
+#define EEPROM_ADDRESS_ZOOM_LIMIT 62
 #define EEPROM_ADDRESS_PANTILT_ACCEL 14
 #define EEPROM_ADDRESS_SLIDER_ACCEL 18
 #define EEPROM_ADDRESS_PANTILT_SPEED1 22
@@ -116,6 +114,8 @@ int zoomLimit = 2500; //5550;       //  12 - 35mm
 #define EEPROM_ADDRESS_SLIDER_SPEED4 50
 
 #define VERSION_NUMBER "27 Mar 2024"
+
+float zoomLimit = 5550;       //  12 - 35mm
 
 bool withSlider = false;
 bool DEBUG1 = false;

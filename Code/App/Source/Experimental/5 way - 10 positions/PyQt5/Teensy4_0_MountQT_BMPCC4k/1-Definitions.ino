@@ -146,6 +146,7 @@ void Serial1Flush(void) {
 //}
 
 void sendCamSettings() {
+
   Serial1.println(String("#d") + pantilt_speed1);
   Serial1.println(String("#f") + pantilt_speed2);
   Serial1.println(String("#g") + pantilt_speed3);
@@ -159,7 +160,7 @@ void sendCamSettings() {
   Serial1.println(String("#q") + pantilt_accel);
   Serial1.println(String("#Q") + slider_accel);
 
-  Serial1.println(String("#w") + zoomLimit);
+  Serial1.println(String("#e") + zoomLimit);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/

@@ -438,7 +438,7 @@ void SerialData(void) {
     case INSTRUCTION_SET_ZOOM_LIMIT:
       {
         zoomLimit = SerialCommandValueInt;
-        Serial1.println(String("Zoom Limit : ") + zoomLimit);
+        Serial1.println(String("Zoom Limit Set: ") + zoomLimit);
         Serial1.println("#$");
       }
       break;
