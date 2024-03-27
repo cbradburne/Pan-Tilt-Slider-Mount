@@ -108,15 +108,22 @@ void Serial5Data() {
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=G0");
         Serial.println(SerialCommandValueInt);
+        delay(10);
       }
-      else if (h == 'w') {
-        String stringText = Serial1.readStringUntil('\n');
-        SerialCommandValueInt = stringText.toInt();
-        Serial.print("=G5");
-        Serial.println(SerialCommandValueInt);
-
-        Serial.print("the Zoom Limit = ");
-        Serial.println(SerialCommandValueInt);
+      else if (h == 'e') {
+        //String stringText = Serial1.readStringUntil('\n');
+        //SerialCommandValueInt = stringText.toInt();
+        //Serial.print("=G5");
+        //Serial.println(SerialCommandValueInt);
+        //while (Serial5.available() > 0) {
+          inData5 = Serial5.readStringUntil('\n');
+          //if (inData5 == "#$\r") {
+          //  break;
+          //}
+          Serial.println(String("=G5") + inData5 + String("\n"));
+          inData5 = "";
+          //delay(2);
+        //} 
       }
     }
     else if (g == '^') {
