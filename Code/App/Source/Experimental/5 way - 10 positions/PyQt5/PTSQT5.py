@@ -42,7 +42,7 @@ from pathlib import Path
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
-debug = True
+debug = False
 
 serial_port = None
 
