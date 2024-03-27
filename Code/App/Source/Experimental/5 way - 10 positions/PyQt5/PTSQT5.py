@@ -42,7 +42,7 @@ from pathlib import Path
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
-debug = False
+debug = True
 
 serial_port = None
 
@@ -2450,7 +2450,7 @@ class PTSapp(QMainWindow):
 
 
         self.labelDialPT = QtWidgets.QLabel(self.centralwidget)
-        self.labelDialPT.setGeometry(QtCore.QRect(1540, 120, 100, 16))
+        self.labelDialPT.setGeometry(QtCore.QRect(1530, 120, 120, 16))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(12)
