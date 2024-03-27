@@ -100,7 +100,7 @@ void SerialData(void) {
       } else {
         if (!panRunning) {
           panRunning = true;
-          stepper_pan.setAcceleration(10000);
+          stepper_pan.setAcceleration(8000);
           stepper_pan.rotateAsync(panDegreesToSteps(pantilt_set_speed));
         }
         if (upsideDown) {
@@ -118,12 +118,12 @@ void SerialData(void) {
       } else {
         if (!tiltRunning) {
           tiltRunning = true;
-          stepper_tilt.setAcceleration(10000);
+          stepper_tilt.setAcceleration(8000);
           stepper_tilt.rotateAsync(panDegreesToSteps(pantilt_set_speed));
         }
-        if (upsideDown) {
-          speedFactorT = (speedFactorT * -1);
-        }
+        //if (upsideDown) {
+        //  speedFactorT = (speedFactorT * -1);
+        //}
         stepper_tilt.overrideSpeed(speedFactorT);
       }
 
@@ -596,8 +596,7 @@ void SerialData(void) {
         zoomIN = true;
         zoomOUT = false;
 
-
-        float speedFactorZ = map(zoom_speed, 0, 8, 0, zoomMaxFactor);
+        float speedFactorZ = map(zoom_speed, -8, 0, -zoomMaxFactor, 0);
 
         if (!zoomRunning) {
           zoomRunning = true;
@@ -632,7 +631,7 @@ void SerialData(void) {
         zoomOUT = true;
 
 
-        float speedFactorZ = map(zoom_speed, -8, 0, -zoomMaxFactor, 0);
+        float speedFactorZ = map(zoom_speed, 0, 8, 0, zoomMaxFactor);
 
         if (!zoomRunning) {
           zoomRunning = true;

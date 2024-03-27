@@ -114,6 +114,9 @@ void Serial5Data() {
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=G5");
         Serial.println(SerialCommandValueInt);
+
+        Serial.print("the Zoom Limit = ");
+        Serial.println(SerialCommandValueInt);
       }
     }
     else if (g == '^') {
