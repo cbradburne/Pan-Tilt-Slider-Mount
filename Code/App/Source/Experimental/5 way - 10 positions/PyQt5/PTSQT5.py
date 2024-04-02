@@ -4965,7 +4965,7 @@ class PTSapp(QMainWindow):
         elif msg[0:3] == "=G4":
             cam5slSpeed4 = int(msg[3:])
         elif msg[0:3] == "=G5":
-            cam5ZoomLimit = int(msg[3:-5])
+            cam5ZoomLimit = int(msg[3:])
 
         elif msg[0:2] == "#$":
             return

@@ -110,7 +110,7 @@ void Serial2Data() {
         Serial.println(SerialCommandValueInt);
       }
       else if (f == 'w') {
-        String stringText = Serial1.readStringUntil('\n');
+        String stringText = Serial2.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=S5");
         Serial.println(SerialCommandValueInt);

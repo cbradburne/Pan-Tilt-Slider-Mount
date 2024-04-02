@@ -111,19 +111,10 @@ void Serial5Data() {
         delay(10);
       }
       else if (h == 'e') {
-        //String stringText = Serial1.readStringUntil('\n');
-        //SerialCommandValueInt = stringText.toInt();
-        //Serial.print("=G5");
-        //Serial.println(SerialCommandValueInt);
-        //while (Serial5.available() > 0) {
-          inData5 = Serial5.readStringUntil('\n');
-          //if (inData5 == "#$\r") {
-          //  break;
-          //}
-          Serial.println(String("=G5") + inData5 + String("\n"));
-          inData5 = "";
-          //delay(2);
-        //} 
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=G5");
+        Serial.println(SerialCommandValueInt);
       }
     }
     else if (g == '^') {
