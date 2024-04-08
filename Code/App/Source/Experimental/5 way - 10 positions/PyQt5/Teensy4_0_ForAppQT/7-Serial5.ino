@@ -110,7 +110,7 @@ void Serial5Data() {
         Serial.println(SerialCommandValueInt);
         delay(10);
       }
-      else if (h == 'e') {
+      else if (h == 'w') {
         String stringText = Serial5.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=G5");
