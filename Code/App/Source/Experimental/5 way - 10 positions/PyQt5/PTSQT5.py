@@ -1469,7 +1469,7 @@ class Ui_MoverWindow(QMainWindow):
         elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
         elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
-        if speed == -8: self.sendSerial(zoomSerial + 'a8')
+        if speed == -8: self.sendSerial(zoomSerial + 'a8')      # Zoom Out Fastest
         elif speed == -7: self.sendSerial(zoomSerial + 'a7')
         elif speed == -6: self.sendSerial(zoomSerial + 'a6')
         elif speed == -5: self.sendSerial(zoomSerial + 'a5')
@@ -1484,7 +1484,7 @@ class Ui_MoverWindow(QMainWindow):
         elif speed == 5: self.sendSerial(zoomSerial + 'A5')
         elif speed == 6: self.sendSerial(zoomSerial + 'A6')
         elif speed == 7: self.sendSerial(zoomSerial + 'A7')
-        elif speed == 8: self.sendSerial(zoomSerial + 'A8')
+        elif speed == 8: self.sendSerial(zoomSerial + 'A8')      # Zoom In Fastest
         else: 
             self.sendSerial(zoomSerial + 'q')
             self.sendSerial(zoomSerial + 'q')
@@ -3152,22 +3152,22 @@ class PTSapp(QMainWindow):
             elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
             elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
-            if axisW == -8: self.sendSerial(zoomSerial + 'A8')
-            elif axisW == -7: self.sendSerial(zoomSerial + 'A7')
-            elif axisW == -6: self.sendSerial(zoomSerial + 'A6')
-            elif axisW == -5: self.sendSerial(zoomSerial + 'A5')
-            elif axisW == -4: self.sendSerial(zoomSerial + 'A4')
-            elif axisW == -3: self.sendSerial(zoomSerial + 'A3')
-            elif axisW == -2: self.sendSerial(zoomSerial + 'A2')
-            elif axisW == -1: self.sendSerial(zoomSerial + 'A1')
-            elif axisW == 1: self.sendSerial(zoomSerial + 'a1')
-            elif axisW == 2: self.sendSerial(zoomSerial + 'a2')
-            elif axisW == 3: self.sendSerial(zoomSerial + 'a3')
-            elif axisW == 4: self.sendSerial(zoomSerial + 'a4')
-            elif axisW == 5: self.sendSerial(zoomSerial + 'a5')
-            elif axisW == 6: self.sendSerial(zoomSerial + 'a6')
-            elif axisW == 7: self.sendSerial(zoomSerial + 'a7')
-            elif axisW == 8: self.sendSerial(zoomSerial + 'a8')
+            if axisW == -8: self.sendSerial(zoomSerial + 'a8')      # Zoom Out Fastest
+            elif axisW == -7: self.sendSerial(zoomSerial + 'a7')
+            elif axisW == -6: self.sendSerial(zoomSerial + 'a6')
+            elif axisW == -5: self.sendSerial(zoomSerial + 'a5')
+            elif axisW == -4: self.sendSerial(zoomSerial + 'a4')
+            elif axisW == -3: self.sendSerial(zoomSerial + 'a3')
+            elif axisW == -2: self.sendSerial(zoomSerial + 'a2')
+            elif axisW == -1: self.sendSerial(zoomSerial + 'a1')
+            elif axisW == 1: self.sendSerial(zoomSerial + 'A1')
+            elif axisW == 2: self.sendSerial(zoomSerial + 'A2')
+            elif axisW == 3: self.sendSerial(zoomSerial + 'A3')
+            elif axisW == 4: self.sendSerial(zoomSerial + 'A4')
+            elif axisW == 5: self.sendSerial(zoomSerial + 'A5')
+            elif axisW == 6: self.sendSerial(zoomSerial + 'A6')
+            elif axisW == 7: self.sendSerial(zoomSerial + 'A7')
+            elif axisW == 8: self.sendSerial(zoomSerial + 'A8')      # Zoom In Fastest
             else: 
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
