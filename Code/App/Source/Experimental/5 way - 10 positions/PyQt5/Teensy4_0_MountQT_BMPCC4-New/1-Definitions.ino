@@ -38,8 +38,8 @@ void initPanTilt(void) {
 
   pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1.                   OFF = Up-side Down
   pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   OFF = Slider Reverse
-  pinMode(PIN_SW3, INPUT_PULLUP);  // pin 6 to gnd if no slider used  OFF = Slider Used
-
+  pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   OFF = Slider Used
+  pinMode(PIN_SW4, INPUT_PULLUP);  // Dip Switch 4.                   OFF = 
   
   zoomLimitTimer.begin(zoomLimitCheck, 250);
   zoomLimitTimer.priority(255);             
