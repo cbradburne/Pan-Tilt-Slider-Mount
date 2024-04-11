@@ -1469,8 +1469,8 @@ class Ui_MoverWindow(QMainWindow):
         self.show()
     
         #ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()       # 1920 x 1080
-        sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()          # 1920 x 1080
-
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()          # 1920 x 1080
+        sg = self.screen()[0].size().toTuple()
 
         widget = self.geometry()                        # 
         x = (ag.width() / 2) - (widget.width() / 2)
@@ -1610,7 +1610,7 @@ class PTSapp(QMainWindow):
     
 
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+        sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
         agX = ag.width()
         agY = ag.height()

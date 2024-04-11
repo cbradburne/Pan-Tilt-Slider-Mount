@@ -6,6 +6,9 @@
 #python3 -m pip install pysdl2-dll
 #python3 -m pip install pynput
 
+#python3 -m pip install pyside6
+#python3 -m pip install inputs
+
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT5.py
 
 #Windows
@@ -23,9 +26,9 @@
 #pyuic5 -x ptsui5.ui -o ptsui5.py
 #pyuic5 -x serialPage.ui -o serialPage.py
 
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QFileDialog
+from PySide6.QtCore import Qt, QTimer, Signal
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog #, QDesktopWidget
 from serial.tools import list_ports
 from serial import Serial
 import sys, time, os, subprocess, re, json, pkg_resources, pyjoystick
@@ -523,16 +526,10 @@ class Ui_SettingsWindow(QMainWindow):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
         #super(Ui_SettingsWindow, self).__init__()
 
-    #def setupUi(self):
-
-#class Ui_SettingsWindow(QMainWindow):
-#    def __init__(self):
-#        QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
-
     def setupUi(self):
         global whichCamSerial
-        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
-        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
         agX = ag.width()
         agY = ag.height()
@@ -545,6 +542,10 @@ class Ui_SettingsWindow(QMainWindow):
         butttonLayoutX = agX * 0.01042      # 20 / 1920
         butttonLayoutY = agY * 0.01852      # 20 / 1080
 
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         self.setObjectName("settingsWindow")
         self.resize(1980, 1080)
@@ -552,8 +553,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 0.5, (buttonGoY * 10.9166666667)+1, (buttonGoY * 8.3333333333)+1))
-        self.groupBox.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
+        self.groupBox.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 0.5, (buttonGoX * 10.917)+1, (buttonGoY * 8.3333333333)+1))
+        self.groupBox.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32;")
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
         self.pushButtonZoomLimit = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelZoomLimit.setFocus())
@@ -562,7 +563,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonZoomLimit.setFont(font)
-        self.pushButtonZoomLimit.setStyleSheet("border: 5px solid grey; background-color: #40805C; border-radius: 30px;")
+        self.pushButtonZoomLimit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonZoomLimit.setObjectName("pushButtonZoomLimit")
         self.pushButtonPTS4 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed4.setFocus())
         self.pushButtonPTS4.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -570,7 +571,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonPTS4.setFont(font)
-        self.pushButtonPTS4.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTS4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTS4.setObjectName("pushButtonPTS4")
         self.pushButtonPTS3 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed3.setFocus())
         self.pushButtonPTS3.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 15, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -578,7 +579,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonPTS3.setFont(font)
-        self.pushButtonPTS3.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTS3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTS3.setObjectName("pushButtonPTS3")
         self.pushButtonPTS2 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed2.setFocus())
         self.pushButtonPTS2.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 19.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -586,7 +587,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonPTS2.setFont(font)
-        self.pushButtonPTS2.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTS2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTS2.setObjectName("pushButtonPTS2")
         self.pushButtonPTS1 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed1.setFocus())
         self.pushButtonPTS1.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 24, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -594,7 +595,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonPTS1.setFont(font)
-        self.pushButtonPTS1.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTS1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTS1.setObjectName("pushButtonPTS1")
         self.pushButtonSS4 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLspeed4.setFocus())
         self.pushButtonSS4.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -602,7 +603,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonSS4.setFont(font)
-        self.pushButtonSS4.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSS4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSS4.setObjectName("pushButtonSS4")
         self.pushButtonSS3 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLspeed3.setFocus())
         self.pushButtonSS3.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 15, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -610,7 +611,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonSS3.setFont(font)
-        self.pushButtonSS3.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSS3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSS3.setObjectName("pushButtonSS3")
         self.pushButtonSS2 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLspeed2.setFocus())
         self.pushButtonSS2.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 19.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -618,7 +619,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonSS2.setFont(font)
-        self.pushButtonSS2.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSS2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSS2.setObjectName("pushButtonSS2")
         self.pushButtonSS1 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLspeed1.setFocus())
         self.pushButtonSS1.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 24, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -626,7 +627,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonSS1.setFont(font)
-        self.pushButtonSS1.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSS1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSS1.setObjectName("pushButtonSS1")
         self.pushButtonSA = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLaccel.setFocus())
         self.pushButtonSA.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 3.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -634,7 +635,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonSA.setFont(font)
-        self.pushButtonSA.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
+        self.pushButtonSA.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSA.setObjectName("pushButtonSA")
         self.pushButtonPTA = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTaccel.setFocus())
         self.pushButtonPTA.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 3.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
@@ -642,7 +643,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
         self.pushButtonPTA.setFont(font)
-        self.pushButtonPTA.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
+        self.pushButtonPTA.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTA.setObjectName("pushButtonPTA")
         self.labelPTaccel = QtWidgets.QLineEdit(self.groupBox)
         self.labelPTaccel.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 3.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
@@ -745,7 +746,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed1.setObjectName("labelSLspeed1")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(butttonLayoutX * 67.5, butttonLayoutY * 33.5, (buttonGoX * 4.5833333333)+1, (buttonGoY * 2.8333333333)+1))
-        self.groupBox_2.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
+        self.groupBox_2.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32;")
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
         self.pushButtonNum1 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('1'))
@@ -754,7 +755,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum1.setFont(font)
-        self.pushButtonNum1.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum1.setObjectName("pushButtonNum1")
         self.pushButtonNum1.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum2 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('2'))
@@ -763,7 +764,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum2.setFont(font)
-        self.pushButtonNum2.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum2.setObjectName("pushButtonNum2")
         self.pushButtonNum2.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum3 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('3'))
@@ -772,7 +773,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum3.setFont(font)
-        self.pushButtonNum3.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum3.setObjectName("pushButtonNum3")
         self.pushButtonNum3.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum4 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('4'))
@@ -781,7 +782,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum4.setFont(font)
-        self.pushButtonNum4.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum4.setObjectName("pushButtonNum4")
         self.pushButtonNum4.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum5 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('5'))
@@ -790,7 +791,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum5.setFont(font)
-        self.pushButtonNum5.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum5.setObjectName("pushButtonNum5")
         self.pushButtonNum5.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum6 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('6'))
@@ -799,7 +800,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum6.setFont(font)
-        self.pushButtonNum6.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum6.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum6.setObjectName("pushButtonNum6")
         self.pushButtonNum6.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum7 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('7'))
@@ -808,7 +809,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum7.setFont(font)
-        self.pushButtonNum7.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum7.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum7.setObjectName("pushButtonNum7")
         self.pushButtonNum7.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum8 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('8'))
@@ -817,7 +818,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum8.setFont(font)
-        self.pushButtonNum8.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum8.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum8.setObjectName("pushButtonNum8")
         self.pushButtonNum8.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum9 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('9'))
@@ -826,7 +827,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum9.setFont(font)
-        self.pushButtonNum9.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum9.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum9.setObjectName("pushButtonNum9")
         self.pushButtonNum9.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum0 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('0'))
@@ -835,7 +836,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonNum0.setFont(font)
-        self.pushButtonNum0.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNum0.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum0.setObjectName("pushButtonNum0")
         self.pushButtonNum0.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNumBS = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyBackSpace())
@@ -844,7 +845,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(28)
         self.pushButtonNumBS.setFont(font)
-        self.pushButtonNumBS.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNumBS.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNumBS.setObjectName("pushButtonNumBS")
         self.pushButtonNumBS.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNumEnt = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyEnter())
@@ -853,12 +854,12 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
         self.pushButtonNumEnt.setFont(font)
-        self.pushButtonNumEnt.setStyleSheet("border: 5px solid grey; background-color: #008071; border-radius: 30px;")
+        self.pushButtonNumEnt.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNumEnt.setObjectName("pushButtonNumEnt")
         self.pushButtonNumEnt.setFocusPolicy(Qt.NoFocus)
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setGeometry(QtCore.QRect(butttonLayoutX * 69, butttonLayoutY * 0.5, (buttonGoX * 2.417)+1, (buttonGoY * 4.83333)+1))
-        self.groupBox_3.setStyleSheet("color: #FFFFFF; background-color: #1e252a; border: 4px solid #262d32;")
+        self.groupBox_3.setStyleSheet(f"color: #FFFFFF; background-color: #1e252a; border: {borderSize2}px solid #262d32;")
         self.groupBox_3.setTitle("")
         self.groupBox_3.setObjectName("groupBox_3")
         self.pushButtonCam1 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam1GetSettings())
@@ -867,7 +868,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonCam1.setFont(font)
-        self.pushButtonCam1.setStyleSheet("color:black; border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam1.setFlat(False)
         self.pushButtonCam1.setObjectName("pushButtonCam1")
         self.pushButtonCam2 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam2GetSettings())
@@ -876,7 +877,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonCam2.setFont(font)
-        self.pushButtonCam2.setStyleSheet("color:black; border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonCam2.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setFlat(False)
         self.pushButtonCam2.setObjectName("pushButtonCam2")
         self.pushButtonCam3 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam3GetSettings())
@@ -885,7 +886,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonCam3.setFont(font)
-        self.pushButtonCam3.setStyleSheet("color:black; border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+        self.pushButtonCam3.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonCam3.setFlat(False)
         self.pushButtonCam3.setObjectName("pushButtonCam3")
         self.pushButtonCam4 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam4GetSettings())
@@ -894,7 +895,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonCam4.setFont(font)
-        self.pushButtonCam4.setStyleSheet("color:black; border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+        self.pushButtonCam4.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam4.setFlat(False)
         self.pushButtonCam4.setObjectName("pushButtonCam4")
         self.pushButtonCam5 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam5GetSettings())
@@ -903,7 +904,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonCam5.setFont(font)
-        self.pushButtonCam5.setStyleSheet("color:black; border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+        self.pushButtonCam5.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setFlat(False)
         self.pushButtonCam5.setObjectName("pushButtonCam5")
         self.pushButtonClose = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.pushToClose())
@@ -912,7 +913,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonClose.setFont(font)
-        self.pushButtonClose.setStyleSheet("border: 4px solid red; background-color: #aa4c4C; border-radius: 40px;")
+        self.pushButtonClose.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #aa4c4C; border-radius: {borderRadius}px;")
         self.pushButtonClose.setFlat(False)
         self.pushButtonClose.setObjectName("pushButtonClose")
         self.pushButtonStore = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.sendStoreEEPROM())
@@ -921,7 +922,7 @@ class Ui_SettingsWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushButtonStore.setFont(font)
-        self.pushButtonStore.setStyleSheet("border: 4px solid red; background-color: #4caa4C; border-radius: 40px;")
+        self.pushButtonStore.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #4caa4C; border-radius: {borderRadius}px;")
         self.pushButtonStore.setFlat(False)
         self.pushButtonStore.setObjectName("pushButtonStore")
         self.setCentralWidget(self.centralwidget)
@@ -1046,6 +1047,25 @@ class Ui_SettingsWindow(QMainWindow):
         global cam1slSpeed4
         global cam1ZoomLimit
 
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
+
         whichCamSerial = 1
         self.sendSerial('&1K')
 
@@ -1061,11 +1081,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed4.setText(str(cam1slSpeed4))
         self.labelZoomLimit.setText(str(cam1ZoomLimit))
 
-        self.pushButtonCam1.setStyleSheet("color: black; border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
-        self.pushButtonCam2.setStyleSheet("color: black; border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-        self.pushButtonCam3.setStyleSheet("color: black; border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-        self.pushButtonCam4.setStyleSheet("color: black; border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-        self.pushButtonCam5.setStyleSheet("color: black; border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+        self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+        self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+        self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+        self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def cam2GetSettings(self):
         global whichCamSerial
@@ -1080,6 +1100,25 @@ class Ui_SettingsWindow(QMainWindow):
         global cam2slSpeed3
         global cam2slSpeed4
         global cam2ZoomLimit
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         whichCamSerial = 2
         self.sendSerial('&2K')
@@ -1096,11 +1135,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed4.setText(str(cam2slSpeed4))
         self.labelZoomLimit.setText(str(cam2ZoomLimit))
 
-        self.pushButtonCam1.setStyleSheet("color: black; border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-        self.pushButtonCam2.setStyleSheet("color: black; border: 4px solid red; background-color: #405C80; border-radius: 10px;")
-        self.pushButtonCam3.setStyleSheet("color: black; border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-        self.pushButtonCam4.setStyleSheet("color: black; border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-        self.pushButtonCam5.setStyleSheet("color: black; border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+        self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #405C80; border-radius: {borderRadius2}px;")
+        self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+        self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+        self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def cam3GetSettings(self):
         global whichCamSerial
@@ -1115,6 +1154,25 @@ class Ui_SettingsWindow(QMainWindow):
         global cam3slSpeed3
         global cam3slSpeed4
         global cam3ZoomLimit
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         whichCamSerial = 3
         self.sendSerial('&3K')
@@ -1131,11 +1189,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed4.setText(str(cam3slSpeed4))
         self.labelZoomLimit.setText(str(cam3ZoomLimit))
 
-        self.pushButtonCam1.setStyleSheet("color: black; border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-        self.pushButtonCam2.setStyleSheet("color: black; border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-        self.pushButtonCam3.setStyleSheet("color: black; border: 4px solid red; background-color: #807100; border-radius: 10px;")
-        self.pushButtonCam4.setStyleSheet("color: black; border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-        self.pushButtonCam5.setStyleSheet("color: black; border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+        self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+        self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #807100; border-radius: {borderRadius2}px;")
+        self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+        self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def cam4GetSettings(self):
         global whichCamSerial
@@ -1150,6 +1208,25 @@ class Ui_SettingsWindow(QMainWindow):
         global cam4slSpeed3
         global cam4slSpeed4
         global cam4ZoomLimit
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         whichCamSerial = 4
         self.sendSerial('&4K')
@@ -1166,11 +1243,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed4.setText(str(cam4slSpeed4))
         self.labelZoomLimit.setText(str(cam4ZoomLimit))
 
-        self.pushButtonCam1.setStyleSheet("color: black; border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-        self.pushButtonCam2.setStyleSheet("color: black; border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-        self.pushButtonCam3.setStyleSheet("color: black; border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-        self.pushButtonCam4.setStyleSheet("color: black; border: 4px solid red; background-color: #008071; border-radius: 10px;")
-        self.pushButtonCam5.setStyleSheet("color: black; border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+        self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+        self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+        self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #008071; border-radius: {borderRadius2}px;")
+        self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def cam5GetSettings(self):
         global whichCamSerial
@@ -1185,6 +1262,25 @@ class Ui_SettingsWindow(QMainWindow):
         global cam5slSpeed3
         global cam5slSpeed4
         global cam5ZoomLimit
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         whichCamSerial = 5
         self.sendSerial('&5K')
@@ -1201,11 +1297,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed4.setText(str(cam5slSpeed4))
         self.labelZoomLimit.setText(str(cam5ZoomLimit))
 
-        self.pushButtonCam1.setStyleSheet("color: black; border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-        self.pushButtonCam2.setStyleSheet("color: black; border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-        self.pushButtonCam3.setStyleSheet("color: black; border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-        self.pushButtonCam4.setStyleSheet("color: black; border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-        self.pushButtonCam5.setStyleSheet("color: black; border: 4px solid red; background-color: #8D5395; border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+        self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+        self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+        self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+        self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def sendSerial(self, toSendData):
         global sendData
@@ -1214,10 +1310,12 @@ class Ui_SettingsWindow(QMainWindow):
 class Ui_editWindow(QMainWindow):
     def __init__(self):
         super(Ui_editWindow, self).__init__()
+        self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
+        self.setWindowFlag(Qt.FramelessWindowHint, True)
 
     def setupUi(self):
-        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
-        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
         agX = ag.width()
         agY = ag.height()
@@ -1230,6 +1328,10 @@ class Ui_editWindow(QMainWindow):
         butttonLayoutX = agX * 0.01042      # 20 / 1920
         butttonLayoutY = agY * 0.01852      # 20 / 1080
 
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         self.setObjectName("editWindow")
         self.resize(buttonGoX * 2.7666666667, buttonGoY* 1.5416666667)
@@ -1243,7 +1345,7 @@ class Ui_editWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.lineEdit.setFont(font)
-        self.lineEdit.setStyleSheet("border: 10px solid grey; background-color: #cccccc; border-radius: 40px;")
+        self.lineEdit.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #cccccc; border-radius: {borderRadius}px;")
         self.lineEdit.setText("")
         self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit.setObjectName("lineEdit")
@@ -1296,8 +1398,8 @@ class Ui_MoverWindow(QMainWindow):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
 
     def setupUi(self):
-        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
-        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
         agX = ag.width()
         agY = ag.height()
@@ -1310,6 +1412,11 @@ class Ui_MoverWindow(QMainWindow):
         butttonLayoutX = agX * 0.01042      # 20 / 1920
         butttonLayoutY = agY * 0.01852      # 20 / 1080
 
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
+
         self.setObjectName("MainWindow")
         self.resize((buttonGoX * 7.1666666667)+1 , (buttonGoY * 6.6666666667)+1)
         self.setStyleSheet("background-color: #181e23;")
@@ -1321,7 +1428,7 @@ class Ui_MoverWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
         self.pushUP10.setFont(font)
-        self.pushUP10.setStyleSheet("border: 10px solid grey; background-color: #33aa33; border-radius: 50px;")
+        self.pushUP10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #33aa33; border-radius: {borderRadius}px;")
         self.pushUP10.setObjectName("pushUP10")
         self.pushUP1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.up1())
         self.pushUP1.setGeometry(QtCore.QRect(butttonLayoutX * 12, butttonLayoutY * 6.5, buttonGoX + 1, buttonGoY + 1))
@@ -1329,77 +1436,77 @@ class Ui_MoverWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
         self.pushUP1.setFont(font)
-        self.pushUP1.setStyleSheet("border: 10px solid grey; background-color: #77ff77; border-radius: 50px;")
+        self.pushUP1.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #77ff77; border-radius: {borderRadius}px;")
         self.pushUP1.setObjectName("pushUP1")
         self.pushDOWN1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.down1())
-        self.pushDOWN1.setGeometry(QtCore.QRect(butttonLayoutX * 12, 350, buttonGoX + 1, buttonGoY + 1))
+        self.pushDOWN1.setGeometry(QtCore.QRect(butttonLayoutX * 12, butttonLayoutY * 17.5, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushDOWN1.setFont(font)
-        self.pushDOWN1.setStyleSheet("border: 10px solid grey; background-color: #77ff77; border-radius: 50px;")
+        self.pushDOWN1.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #77ff77; border-radius: {borderRadius}px;")
         self.pushDOWN1.setObjectName("pushDOWN1")
         self.pushDOWN10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.down10())
-        self.pushDOWN10.setGeometry(QtCore.QRect(butttonLayoutX * 12, 480, buttonGoX + 1, buttonGoY + 1))
+        self.pushDOWN10.setGeometry(QtCore.QRect(butttonLayoutX * 12, butttonLayoutY * 24, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushDOWN10.setFont(font)
-        self.pushDOWN10.setStyleSheet("border: 10px solid grey; background-color: #33aa33; border-radius: 50px;")
+        self.pushDOWN10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #33aa33; border-radius: {borderRadius}px;")
         self.pushDOWN10.setObjectName("pushDOWN10")
         self.pushLEFT10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.left10())
         self.pushLEFT10.setGeometry(QtCore.QRect(0, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushLEFT10.setFont(font)
-        self.pushLEFT10.setStyleSheet("border: 10px solid grey; background-color: #aaaa33; border-radius: 50px;")
+        self.pushLEFT10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #aaaa33; border-radius: {borderRadius}px;")
         self.pushLEFT10.setObjectName("pushLEFT10")
         self.pushLEFT1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.left1())
         self.pushLEFT1.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushLEFT1.setFont(font)
-        self.pushLEFT1.setStyleSheet("border: 10px solid grey; background-color: #ffff77; border-radius: 50px;")
+        self.pushLEFT1.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #ffff77; border-radius: {borderRadius}px;")
         self.pushLEFT1.setObjectName("pushLEFT1")
         self.pushRIGHT1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.right1())
         self.pushRIGHT1.setGeometry(QtCore.QRect(butttonLayoutX * 17.5, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushRIGHT1.setFont(font)
-        self.pushRIGHT1.setStyleSheet("border: 10px solid grey; background-color: #ffff77; border-radius: 50px;")
+        self.pushRIGHT1.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #ffff77; border-radius: {borderRadius}px;")
         self.pushRIGHT1.setObjectName("pushRIGHT1")
         self.pushRIGHT10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.right10())
-        self.pushRIGHT10.setGeometry(QtCore.QRect(480, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
+        self.pushRIGHT10.setGeometry(QtCore.QRect(butttonLayoutX * 24, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushRIGHT10.setFont(font)
-        self.pushRIGHT10.setStyleSheet("border: 10px solid grey; background-color: #aaaa33; border-radius: 50px;")
+        self.pushRIGHT10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #aaaa33; border-radius: {borderRadius}px;")
         self.pushRIGHT10.setObjectName("pushRIGHT10")
         self.pushSlideLeft100 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideLeft100())
         self.pushSlideLeft100.setGeometry(QtCore.QRect(0, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushSlideLeft100.setFont(font)
-        self.pushSlideLeft100.setStyleSheet("border: 10px solid grey; background-color: #aa3333; border-radius: 50px;")
+        self.pushSlideLeft100.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #aa3333; border-radius: {borderRadius}px;")
         self.pushSlideLeft100.setObjectName("pushSlideLeft100")
         self.pushSlideLeft10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideLeft10())
         self.pushSlideLeft10.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushSlideLeft10.setFont(font)
-        self.pushSlideLeft10.setStyleSheet("border: 10px solid grey; background-color: #ff7777; border-radius: 50px;")
+        self.pushSlideLeft10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #ff7777; border-radius: {borderRadius}px;")
         self.pushSlideLeft10.setObjectName("pushSlideLeft10")
         self.pushSlideRight10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideRight10())
         self.pushSlideRight10.setGeometry(QtCore.QRect(butttonLayoutX * 17.5, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushSlideRight10.setFont(font)
-        self.pushSlideRight10.setStyleSheet("border: 10px solid grey; background-color: #ff7777; border-radius: 50px;")
+        self.pushSlideRight10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #ff7777; border-radius: {borderRadius}px;")
         self.pushSlideRight10.setObjectName("pushSlideRight10")
         self.pushSlideRight100 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideRight100())
         self.pushSlideRight100.setGeometry(QtCore.QRect(butttonLayoutX * 24, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushSlideRight100.setFont(font)
-        self.pushSlideRight100.setStyleSheet("border: 10px solid grey; background-color: #aa3333; border-radius: 50px;")
+        self.pushSlideRight100.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #aa3333; border-radius: {borderRadius}px;")
         self.pushSlideRight100.setObjectName("pushSlideRight100")
         self.pushZoomInFast = QtWidgets.QPushButton(self.centralwidget, pressed= lambda: self.zoomMove(6), released= lambda: self.zoomMove(0))
         self.pushZoomInFast.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 2.5, buttonGoX + 1, buttonGoY + 1))
@@ -1407,7 +1514,7 @@ class Ui_MoverWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushZoomInFast.setFont(font)
-        self.pushZoomInFast.setStyleSheet("border: 10px solid grey; background-color: #3333aa; border-radius: 50px;")
+        self.pushZoomInFast.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #3333aa; border-radius: {borderRadius}px;")
         self.pushZoomInFast.setObjectName("pushZoomInFast")
         self.pushZoomInSlow = QtWidgets.QPushButton(self.centralwidget, pressed= lambda: self.zoomMove(1), released= lambda: self.zoomMove(0))
         self.pushZoomInSlow.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 9, buttonGoX + 1, buttonGoY + 1))
@@ -1415,7 +1522,7 @@ class Ui_MoverWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushZoomInSlow.setFont(font)
-        self.pushZoomInSlow.setStyleSheet("border: 10px solid grey; background-color: #7777ff; border-radius: 50px;")
+        self.pushZoomInSlow.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #7777ff; border-radius: {borderRadius}px;")
         self.pushZoomInSlow.setObjectName("pushZoomInSlow")
         self.pushZoomOutSlow = QtWidgets.QPushButton(self.centralwidget, pressed= lambda: self.zoomMove(-1), released= lambda: self.zoomMove(0))
         self.pushZoomOutSlow.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 20, buttonGoX + 1, buttonGoY + 1))
@@ -1423,7 +1530,7 @@ class Ui_MoverWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushZoomOutSlow.setFont(font)
-        self.pushZoomOutSlow.setStyleSheet("border: 10px solid grey; background-color: #7777ff; border-radius: 50px;")
+        self.pushZoomOutSlow.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #7777ff; border-radius: {borderRadius}px;")
         self.pushZoomOutSlow.setObjectName("pushZoomOutSlow")
         self.pushZoomOutFast = QtWidgets.QPushButton(self.centralwidget, pressed= lambda: self.zoomMove(-6), released= lambda: self.zoomMove(0))
         self.pushZoomOutFast.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 26.5, buttonGoX + 1, buttonGoY + 1))
@@ -1431,7 +1538,7 @@ class Ui_MoverWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
         self.pushZoomOutFast.setFont(font)
-        self.pushZoomOutFast.setStyleSheet("border: 10px solid grey; background-color: #3333aa; border-radius: 50px;")
+        self.pushZoomOutFast.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #3333aa; border-radius: {borderRadius}px;")
         self.pushZoomOutFast.setObjectName("pushZoomOutFast")
         self.pushClose = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.pushToClose())
         self.pushClose.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, 0, (buttonGoX * 0.8333333333)+1, (buttonGoY * 0.8333333333)+1))
@@ -1439,7 +1546,7 @@ class Ui_MoverWindow(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
         self.pushClose.setFont(font)
-        self.pushClose.setStyleSheet("border: 10px solid grey; background-color: #cc7777; border-radius: 50px;")
+        self.pushClose.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #cc7777; border-radius: {borderRadius}px;")
         self.pushClose.setObjectName("pushClose")
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
@@ -1455,13 +1562,13 @@ class Ui_MoverWindow(QMainWindow):
 
         self.show()
     
-        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
-        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
-
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+        #sg = self.screen()[0].size().toTuple()
 
         widget = self.geometry()                        # 
         x = (ag.width() / 2) - (widget.width() / 2)
-        y = 2 * ag.height() - sg.height() - widget.height() - 50
+        y = 2 * ag.height() - ag.height() - widget.height() - 50
         x = int(x)
         y = int(y)
         self.move(x, y)
@@ -1595,8 +1702,8 @@ class PTSapp(QMainWindow):
         super(PTSapp, self).__init__()
         self.setupUi()
 
-        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
-        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
         agX = ag.width()
         agY = ag.height()
@@ -1661,8 +1768,8 @@ class PTSapp(QMainWindow):
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
 
-        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
-        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
         agX = ag.width()
         agY = ag.height()
@@ -1675,10 +1782,14 @@ class PTSapp(QMainWindow):
         butttonLayoutX = agX * 0.01042      # 20 / 1920
         butttonLayoutY = agY * 0.01852      # 20 / 1080
 
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 7, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
-        self.groupBox.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
+        self.groupBox.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32; ")
         self.groupBox.setTitle("")
         self.groupBox.setFlat(False)
         self.groupBox.setObjectName("groupBox")
@@ -1786,12 +1897,13 @@ class PTSapp(QMainWindow):
                     axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
 
 
-        #mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
-        #mngr.start()
+        mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
+        mngr.start()
 
         #def QAnalogAxisInput(self):
 
-
+        borderSize = butttonLayoutX / 2
+        borderRadius = butttonLayoutX * 1.8
 
         self.pushButton11 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go1())
         self.pushButton11.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
@@ -1799,7 +1911,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton11.setFont(font)
-        self.pushButton11.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton11.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton11.setFlat(False)
         self.pushButton11.setObjectName("pushButton11")
         self.pushButton12 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go2())
@@ -1808,7 +1920,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton12.setFont(font)
-        self.pushButton12.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton12.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton12.setFlat(False)
         self.pushButton12.setObjectName("pushButton12")
         self.pushButton13 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go3())
@@ -1817,7 +1929,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton13.setFont(font)
-        self.pushButton13.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton13.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton13.setFlat(False)
         self.pushButton13.setObjectName("pushButton13")
         self.pushButton14 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go4())
@@ -1826,7 +1938,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton14.setFont(font)
-        self.pushButton14.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton14.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton14.setFlat(False)
         self.pushButton14.setObjectName("pushButton14")
         self.pushButton15 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go5())
@@ -1835,7 +1947,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton15.setFont(font)
-        self.pushButton15.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton15.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton15.setFlat(False)
         self.pushButton15.setObjectName("pushButton15")
         self.pushButton16 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go6())
@@ -1844,7 +1956,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton16.setFont(font)
-        self.pushButton16.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton16.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton16.setFlat(False)
         self.pushButton16.setObjectName("pushButton16")
         self.pushButton17 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go7())
@@ -1853,7 +1965,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton17.setFont(font)
-        self.pushButton17.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton17.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton17.setFlat(False)
         self.pushButton17.setObjectName("pushButton17")
         self.pushButton18 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go8())
@@ -1862,7 +1974,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton18.setFont(font)
-        self.pushButton18.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton18.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton18.setFlat(False)
         self.pushButton18.setObjectName("pushButton18")
         self.pushButton19 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go9())
@@ -1871,7 +1983,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton19.setFont(font)
-        self.pushButton19.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton19.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton19.setFlat(False)
         self.pushButton19.setObjectName("pushButton19")
         self.pushButton10 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go10())
@@ -1880,7 +1992,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton10.setFont(font)
-        self.pushButton10.setStyleSheet("border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;")
+        self.pushButton10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton10.setFlat(False)
         self.pushButton10.setObjectName("pushButton10")
         self.dial1p = QtWidgets.QDial(self.groupBox, sliderPressed= lambda: self.setDials(1, 1, self.dial1p.value()))
@@ -1904,14 +2016,14 @@ class PTSapp(QMainWindow):
         self.dial1s.setObjectName("dial1s")
         self.line1p = QtWidgets.QFrame(self.groupBox)
         self.line1p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
-        self.line1p.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line1p.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line1p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line1p.setLineWidth(20)
         self.line1p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line1p.setObjectName("line1p")
         self.line1s = QtWidgets.QFrame(self.groupBox)
         self.line1s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))
-        self.line1s.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line1s.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line1s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line1s.setLineWidth(20)
         self.line1s.setFrameShape(QtWidgets.QFrame.VLine)
@@ -1919,7 +2031,7 @@ class PTSapp(QMainWindow):
 
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 15.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 310, 1881, 160))
-        self.groupBox_2.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
+        self.groupBox_2.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32;")
         self.groupBox_2.setTitle("")
         self.groupBox_2.setFlat(False)
         self.groupBox_2.setObjectName("groupBox_2")
@@ -1929,7 +2041,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton21.setFont(font)
-        self.pushButton21.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton21.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton21.setFlat(False)
         self.pushButton21.setObjectName("pushButton21")
         self.pushButton22 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go2())
@@ -1938,7 +2050,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton22.setFont(font)
-        self.pushButton22.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton22.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton22.setFlat(False)
         self.pushButton22.setObjectName("pushButton22")
         self.pushButton23 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go3())
@@ -1947,7 +2059,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton23.setFont(font)
-        self.pushButton23.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton23.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton23.setFlat(False)
         self.pushButton23.setObjectName("pushButton23")
         self.pushButton24 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go4())
@@ -1956,7 +2068,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton24.setFont(font)
-        self.pushButton24.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton24.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton24.setFlat(False)
         self.pushButton24.setObjectName("pushButton24")
         self.pushButton25 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go5())
@@ -1965,7 +2077,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton25.setFont(font)
-        self.pushButton25.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton25.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton25.setFlat(False)
         self.pushButton25.setObjectName("pushButton25")
         self.pushButton26 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go6())
@@ -1974,7 +2086,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton26.setFont(font)
-        self.pushButton26.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton26.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton26.setFlat(False)
         self.pushButton26.setObjectName("pushButton26")
         self.pushButton27 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go7())
@@ -1983,7 +2095,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton27.setFont(font)
-        self.pushButton27.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton27.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton27.setFlat(False)
         self.pushButton27.setObjectName("pushButton27")
         self.pushButton28 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go8())
@@ -1992,7 +2104,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton28.setFont(font)
-        self.pushButton28.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton28.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton28.setFlat(False)
         self.pushButton28.setObjectName("pushButton28")
         self.pushButton29 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go9())
@@ -2001,7 +2113,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton29.setFont(font)
-        self.pushButton29.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton29.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton29.setFlat(False)
         self.pushButton29.setObjectName("pushButton29")
         self.pushButton20 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go10())
@@ -2010,7 +2122,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton20.setFont(font)
-        self.pushButton20.setStyleSheet("border: 10px solid grey; background-color: #405C80; border-radius: 40px;")
+        self.pushButton20.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton20.setFlat(False)
         self.pushButton20.setObjectName("pushButton20")
         self.dial2p = QtWidgets.QDial(self.groupBox_2, sliderPressed= lambda: self.setDials(2, 1, self.dial2p.value()))
@@ -2035,14 +2147,14 @@ class PTSapp(QMainWindow):
         self.dial2s.setObjectName("dial2s")
         self.line2p = QtWidgets.QFrame(self.groupBox_2)
         self.line2p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))   #(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
-        self.line2p.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line2p.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line2p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line2p.setLineWidth(20)
         self.line2p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line2p.setObjectName("line2p")
         self.line2s = QtWidgets.QFrame(self.groupBox_2)
         self.line2s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)) #(1820, 115, 20, 36))
-        self.line2s.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line2s.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line2s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line2s.setLineWidth(20)
         self.line2s.setFrameShape(QtWidgets.QFrame.VLine)
@@ -2050,7 +2162,7 @@ class PTSapp(QMainWindow):
 
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 24, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 480, 1881, 160))
-        self.groupBox_3.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
+        self.groupBox_3.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32; ")
         self.groupBox_3.setTitle("")
         self.groupBox_3.setFlat(False)
         self.groupBox_3.setObjectName("groupBox_3")
@@ -2060,7 +2172,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton31.setFont(font)
-        self.pushButton31.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton31.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton31.setFlat(False)
         self.pushButton31.setObjectName("pushButton31")
         self.pushButton32 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go2())
@@ -2069,7 +2181,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton32.setFont(font)
-        self.pushButton32.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton32.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton32.setFlat(False)
         self.pushButton32.setObjectName("pushButton32")
         self.pushButton33 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go3())
@@ -2078,7 +2190,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton33.setFont(font)
-        self.pushButton33.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton33.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton33.setFlat(False)
         self.pushButton33.setObjectName("pushButton33")
         self.pushButton34 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go4())
@@ -2087,7 +2199,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton34.setFont(font)
-        self.pushButton34.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton34.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton34.setFlat(False)
         self.pushButton34.setObjectName("pushButton34")
         self.pushButton35 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go5())
@@ -2096,7 +2208,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton35.setFont(font)
-        self.pushButton35.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton35.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton35.setFlat(False)
         self.pushButton35.setObjectName("pushButton35")
         self.pushButton36 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go6())
@@ -2105,7 +2217,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton36.setFont(font)
-        self.pushButton36.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton36.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton36.setFlat(False)
         self.pushButton36.setObjectName("pushButton36")
         self.pushButton37 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go7())
@@ -2114,7 +2226,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton37.setFont(font)
-        self.pushButton37.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton37.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton37.setFlat(False)
         self.pushButton37.setObjectName("pushButton37")
         self.pushButton38 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go8())
@@ -2123,7 +2235,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton38.setFont(font)
-        self.pushButton38.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton38.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton38.setFlat(False)
         self.pushButton38.setObjectName("pushButton38")
         self.pushButton39 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go9())
@@ -2132,7 +2244,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton39.setFont(font)
-        self.pushButton39.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton39.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton39.setFlat(False)
         self.pushButton39.setObjectName("pushButton39")
         self.pushButton30 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go10())
@@ -2141,7 +2253,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton30.setFont(font)
-        self.pushButton30.setStyleSheet("border: 10px solid grey; background-color: #807100; border-radius: 40px;")
+        self.pushButton30.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton30.setFlat(False)
         self.pushButton30.setObjectName("pushButton30")
         self.dial3p = QtWidgets.QDial(self.groupBox_3, sliderPressed= lambda: self.setDials(3, 1, self.dial3p.value()))
@@ -2165,14 +2277,14 @@ class PTSapp(QMainWindow):
         self.dial3s.setObjectName("dial3s")
         self.line3p = QtWidgets.QFrame(self.groupBox_3)
         self.line3p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))   #(1470, 115, buttonGoX, buttonGoY * 1.8))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
-        self.line3p.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line3p.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line3p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line3p.setLineWidth(20)
         self.line3p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line3p.setObjectName("line3p")
         self.line3s = QtWidgets.QFrame(self.groupBox_3)
         self.line3s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)) #(1820, 115, buttonGoX, buttonGoY * 1.8))
-        self.line3s.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line3s.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line3s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line3s.setLineWidth(20)
         self.line3s.setFrameShape(QtWidgets.QFrame.VLine)
@@ -2180,7 +2292,7 @@ class PTSapp(QMainWindow):
 
         self.groupBox_4 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_4.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 32.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 650, 1881, 160))
-        self.groupBox_4.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
+        self.groupBox_4.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32; ")
         self.groupBox_4.setTitle("")
         self.groupBox_4.setFlat(False)
         self.groupBox_4.setObjectName("groupBox_4")
@@ -2190,7 +2302,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton41.setFont(font)
-        self.pushButton41.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton41.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton41.setFlat(False)
         self.pushButton41.setObjectName("pushButton41")
         self.pushButton42 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go2())
@@ -2199,7 +2311,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton42.setFont(font)
-        self.pushButton42.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton42.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton42.setFlat(False)
         self.pushButton42.setObjectName("pushButton42")
         self.pushButton43 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go3())
@@ -2208,7 +2320,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton43.setFont(font)
-        self.pushButton43.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton43.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton43.setFlat(False)
         self.pushButton43.setObjectName("pushButton43")
         self.pushButton44 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go4())
@@ -2217,7 +2329,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton44.setFont(font)
-        self.pushButton44.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton44.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton44.setFlat(False)
         self.pushButton44.setObjectName("pushButton44")
         self.pushButton45 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go5())
@@ -2226,7 +2338,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton45.setFont(font)
-        self.pushButton45.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton45.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton45.setFlat(False)
         self.pushButton45.setObjectName("pushButton45")
         self.pushButton46 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go6())
@@ -2235,7 +2347,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton46.setFont(font)
-        self.pushButton46.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton46.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton46.setFlat(False)
         self.pushButton46.setObjectName("pushButton46")
         self.pushButton47 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go7())
@@ -2244,7 +2356,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton47.setFont(font)
-        self.pushButton47.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton47.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton47.setFlat(False)
         self.pushButton47.setObjectName("pushButton47")
         self.pushButton48 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go8())
@@ -2253,7 +2365,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton48.setFont(font)
-        self.pushButton48.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton48.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton48.setFlat(False)
         self.pushButton48.setObjectName("pushButton48")
         self.pushButton49 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go9())
@@ -2262,7 +2374,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton49.setFont(font)
-        self.pushButton49.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton49.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton49.setFlat(False)
         self.pushButton49.setObjectName("pushButton49")
         self.pushButton40 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go10())
@@ -2271,7 +2383,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton40.setFont(font)
-        self.pushButton40.setStyleSheet("border: 10px solid grey; background-color: #008071; border-radius: 40px;")
+        self.pushButton40.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton40.setFlat(False)
         self.pushButton40.setObjectName("pushButton40")
         self.dial4p = QtWidgets.QDial(self.groupBox_4, sliderPressed= lambda: self.setDials(4, 1, self.dial4p.value()))
@@ -2295,14 +2407,14 @@ class PTSapp(QMainWindow):
         self.dial4s.setObjectName("dial4s")
         self.line4p = QtWidgets.QFrame(self.groupBox_4)
         self.line4p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))   #(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
-        self.line4p.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line4p.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line4p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line4p.setLineWidth(20)
         self.line4p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line4p.setObjectName("line4p")
         self.line4s = QtWidgets.QFrame(self.groupBox_4)
         self.line4s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)) #(1820, 115, 20, 36))
-        self.line4s.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line4s.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line4s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line4s.setLineWidth(20)
         self.line4s.setFrameShape(QtWidgets.QFrame.VLine)
@@ -2310,7 +2422,7 @@ class PTSapp(QMainWindow):
 
         self.groupBox_5 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_5.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 41, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 820, 1881, 160))
-        self.groupBox_5.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
+        self.groupBox_5.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32;")
         self.groupBox_5.setTitle("")
         self.groupBox_5.setFlat(False)
         self.groupBox_5.setObjectName("groupBox_5")
@@ -2320,7 +2432,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton51.setFont(font)
-        self.pushButton51.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton51.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton51.setFlat(False)
         self.pushButton51.setObjectName("pushButton51")
         self.pushButton52 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go2())
@@ -2329,7 +2441,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton52.setFont(font)
-        self.pushButton52.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton52.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton52.setFlat(False)
         self.pushButton52.setObjectName("pushButton52")
         self.pushButton53 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go3())
@@ -2338,7 +2450,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton53.setFont(font)
-        self.pushButton53.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton53.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton53.setFlat(False)
         self.pushButton53.setObjectName("pushButton53")
         self.pushButton54 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go4())
@@ -2347,7 +2459,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton54.setFont(font)
-        self.pushButton54.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton54.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton54.setFlat(False)
         self.pushButton54.setObjectName("pushButton54")
         self.pushButton55 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go5())
@@ -2356,7 +2468,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton55.setFont(font)
-        self.pushButton55.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton55.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton55.setFlat(False)
         self.pushButton55.setObjectName("pushButton55")
         self.pushButton56 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go6())
@@ -2365,7 +2477,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton56.setFont(font)
-        self.pushButton56.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton56.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton56.setFlat(False)
         self.pushButton56.setObjectName("pushButton56")
         self.pushButton57 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go7())
@@ -2375,7 +2487,7 @@ class PTSapp(QMainWindow):
         font.setPointSize(32)
         self.pushButton57.setFont(font)
         self.pushButton57.setAutoFillBackground(False)
-        self.pushButton57.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton57.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton57.setFlat(False)
         self.pushButton57.setObjectName("pushButton57")
         self.pushButton58 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go8())
@@ -2384,7 +2496,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton58.setFont(font)
-        self.pushButton58.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton58.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton58.setFlat(False)
         self.pushButton58.setObjectName("pushButton58")
         self.pushButton59 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go9())
@@ -2393,7 +2505,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton59.setFont(font)
-        self.pushButton59.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton59.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton59.setFlat(False)
         self.pushButton59.setObjectName("pushButton59")
         self.pushButton50 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go10())
@@ -2402,7 +2514,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
         self.pushButton50.setFont(font)
-        self.pushButton50.setStyleSheet("border: 10px solid grey; background-color: #8D5395; border-radius: 40px;")
+        self.pushButton50.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton50.setFlat(False)
         self.pushButton50.setObjectName("pushButton50")
         self.dial5p = QtWidgets.QDial(self.groupBox_5, sliderPressed= lambda: self.setDials(5, 1, self.dial5p.value()))
@@ -2426,14 +2538,14 @@ class PTSapp(QMainWindow):
         self.dial5s.setObjectName("dial5s")
         self.line5p = QtWidgets.QFrame(self.groupBox_5)
         self.line5p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))   #(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
-        self.line5p.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line5p.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line5p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line5p.setLineWidth(20)
         self.line5p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line5p.setObjectName("line5p")
         self.line5s = QtWidgets.QFrame(self.groupBox_5)
         self.line5s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)) #(1820, 115, 20, 36))
-        self.line5s.setStyleSheet("border: 10px solid #aaaa00;")
+        self.line5s.setStyleSheet(f"border: {borderSize}px solid #aaaa00;")
         self.line5s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line5s.setLineWidth(20)
         self.line5s.setFrameShape(QtWidgets.QFrame.VLine)
@@ -2445,7 +2557,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam1.setFont(font)
-        self.pushButtonCam1.setStyleSheet("border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
+        self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam1.setFlat(False)
         self.pushButtonCam1.setObjectName("pushButtonCam1")
         self.pushButtonCam2 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial2())
@@ -2454,7 +2566,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam2.setFont(font)
-        self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setFlat(False)
         self.pushButtonCam2.setObjectName("pushButtonCam2")
         self.pushButtonCam3 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial3())
@@ -2463,7 +2575,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam3.setFont(font)
-        self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
+        self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonCam3.setFlat(False)
         self.pushButtonCam3.setObjectName("pushButtonCam3")
         self.pushButtonCam4 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial4())
@@ -2472,7 +2584,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam4.setFont(font)
-        self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
+        self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam4.setFlat(False)
         self.pushButtonCam4.setObjectName("pushButtonCam4")
         self.pushButtonCam5 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial5())
@@ -2481,7 +2593,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
         self.pushButtonCam5.setFont(font)
-        self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+        self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setFlat(False)
         self.pushButtonCam5.setObjectName("pushButtonCam5")
 
@@ -2512,7 +2624,7 @@ class PTSapp(QMainWindow):
         font = QtGui.QFont()
         font.setPointSize(23)
         self.pushButtonSet.setFont(font)
-        self.pushButtonSet.setStyleSheet("border: 4px solid grey; background-color: #bbbbbb; border-radius: 10px;")
+        self.pushButtonSet.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #bbbbbb; border-radius: {borderRadius2}px;")
         self.pushButtonSet.setFlat(False)
         self.pushButtonSet.setObjectName("pushButtonSet")
         self.pushButtonEdit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setEditToggle())
@@ -2521,7 +2633,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonEdit.setFont(font)
-        self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonEdit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
         self.pushButtonSLonly = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.slideOnlyToggle())
@@ -2530,7 +2642,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonSLonly.setFont(font)
-        self.pushButtonSLonly.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+        self.pushButtonSLonly.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonSLonly.setFlat(False)
         self.pushButtonSLonly.setObjectName("pushButtonSLonly")
         self.pushButtonFileLoad = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.fileLoad())
@@ -2539,7 +2651,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonFileLoad.setFont(font)
-        self.pushButtonFileLoad.setStyleSheet("border: 4px solid #FFFC67; background-color: #44d700; border-radius: 10px;")
+        self.pushButtonFileLoad.setStyleSheet(f"border: {borderSize2}px solid #FFFC67; background-color: #44d700; border-radius: {borderRadius2}px;")
         self.pushButtonFileLoad.setFlat(False)
         self.pushButtonFileLoad.setObjectName("pushButtonFileLoad")
         self.pushButtonFileLoad.hide()
@@ -2549,7 +2661,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonFileSave.setFont(font)
-        self.pushButtonFileSave.setStyleSheet("border: 4px solid #d74444; background-color: #F76666; border-radius: 10px;")
+        self.pushButtonFileSave.setStyleSheet(f"border: {borderSize2}px solid #d74444; background-color: #F76666; border-radius: {borderRadius2}px;")
         self.pushButtonFileSave.setFlat(False)
         self.pushButtonFileSave.setObjectName("pushButtonFileSave")
         self.pushButtonFileSave.hide()
@@ -2559,7 +2671,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonSettings.setFont(font)
-        self.pushButtonSettings.setStyleSheet("border: 4px solid #44a744; background-color: #66F766; border-radius: 10px;")
+        self.pushButtonSettings.setStyleSheet(f"border: {borderSize2}px solid #44a744; background-color: #66F766; border-radius: {borderRadius2}px;")
         self.pushButtonSettings.setFlat(False)
         self.pushButtonSettings.setObjectName("pushButtonSettings")
         self.pushButtonSettings.hide()
@@ -2569,7 +2681,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonLED.setFont(font)
-        self.pushButtonLED.setStyleSheet("border: 4px solid #FFFC67; background-color: #F7BA00; border-radius: 10px;")
+        self.pushButtonLED.setStyleSheet(f"border: {borderSize2}px solid #FFFC67; background-color: #F7BA00; border-radius: {borderRadius2}px;")
         self.pushButtonLED.setFlat(False)
         self.pushButtonLED.setObjectName("pushButtonLED")
         self.pushButtonLED.hide()
@@ -2579,7 +2691,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
         self.pushButtonExit.setFont(font)
-        self.pushButtonExit.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
+        self.pushButtonExit.setStyleSheet(f"border: {borderSize2}px solid #ff0000; background-color: #CC5050; border-radius: {borderRadius2}px;")
         self.pushButtonExit.setFlat(False)
         self.pushButtonExit.setObjectName("pushButtonExit")
         self.pushButtonExit.hide()
@@ -2589,7 +2701,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(18)
         self.labelFilename.setFont(font)
-        self.labelFilename.setStyleSheet("color: white; border: 4px solid grey; background-color: #333333; border-radius: 10px;")
+        self.labelFilename.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #333333; border-radius: {borderRadius2}px;")
         self.labelFilename.setText("")
         self.labelFilename.setAlignment(QtCore.Qt.AlignCenter)
         self.labelFilename.setObjectName("labelFilename")
@@ -2600,7 +2712,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(18)
         self.labelInfo.setFont(font)
-        self.labelInfo.setStyleSheet("color: white; border: 4px solid grey; background-color: #333333; border-radius: 10px;")
+        self.labelInfo.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #333333; border-radius: {borderRadius2}px;")
         self.labelInfo.setText("")
         self.labelInfo.setAlignment(QtCore.Qt.AlignCenter)
         self.labelInfo.setObjectName("labelInfo")
@@ -2610,7 +2722,7 @@ class PTSapp(QMainWindow):
         font.setFamily("Helvetica Neue")
         font.setPointSize(18)
         self.comboBox.setFont(font)
-        self.comboBox.setStyleSheet("color: white; border: 4px solid grey; background-color: #333333; border-radius: 10px;")
+        self.comboBox.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #333333; border-radius: {borderRadius2}px;")
         self.comboBox.setCurrentText("")
         self.comboBox.setObjectName("comboBox")
         self.comboBox.activated.connect(self.autoSerial)
@@ -2717,8 +2829,8 @@ class PTSapp(QMainWindow):
         self.initFlashTimer()
 
         #self.show()
-        #self.showMaximized()
-        self.showFullScreen()
+        self.showMaximized()
+        #self.showFullScreen()
         
         self.autoFileLoad()
 
@@ -2804,16 +2916,35 @@ class PTSapp(QMainWindow):
         global editToggle
         global SetPosToggle
 
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
+
         if SetPosToggle:
             self.openMoverWindow()
 
         elif editToggle:
             editToggle = False
-            self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         
         else:
             editToggle = True
-            self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #CC5050; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #CC5050; border-radius: {borderRadius2}px;")
 
     def slideOnlyToggle(self):
         global slideToggle
@@ -2833,75 +2964,94 @@ class PTSapp(QMainWindow):
         buttonColourSet = "#ff0000"
         buttonColourAt = "#00ff00"
 
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
+
         if (slideToggle):
             slideToggle = False
 
-            self.pushButtonSLonly.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonSLonly.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
 
             if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
-                self.pushButton41.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
-                self.pushButton41.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos1Set:
-                self.pushButton41.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
             if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:                                  # Position LEDs cam4
-                self.pushButton40.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
-                self.pushButton40.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos10Set:
-                self.pushButton40.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
 
             
             if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
-                self.pushButton51.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:                                    # Set & At, not Run
-                self.pushButton51.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos1Set:
-                self.pushButton51.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
             if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:                                  # Position LEDs cam5
-                self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
-                self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos10Set:
-                self.pushButton50.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         else:
             slideToggle = True
 
-            self.pushButtonSLonly.setStyleSheet("border: 4px solid grey; background-color: #01E6CC; border-radius: 10px;")
+            self.pushButtonSLonly.setStyleSheet(f"border:  {borderSize2}px solid grey; background-color: #01E6CC; border-radius: {borderRadius2}px;")
 
             if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
-                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
             elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
-                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
             elif not cam4Pos1Set:
-                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
 
             if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:                                  # Position LEDs cam4
-                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
             elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
-                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
             elif not cam4Pos10Set:
-                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: 2px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
 
 
             
             if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
-                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
             elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:                                    # Set & At, not Run
-                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
             elif not cam5Pos1Set:
-                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
 
             if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:                                  # Position LEDs cam5
-                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
             elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
-                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
             elif not cam5Pos10Set:
-                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: 2px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
     
     def fileLoad(self):
         global config
@@ -5155,6 +5305,25 @@ class PTSapp(QMainWindow):
 
         global flashTick
 
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
+
         if flashTick:
             flashTick = False
             buttonColourFlash = "#ffff00"
@@ -5163,113 +5332,113 @@ class PTSapp(QMainWindow):
             buttonColourFlash = "#000000"
 
         if cam1Pos1Run and not cam1AtPos1:
-            self.pushButton11.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos2Run and not cam1AtPos2:
-            self.pushButton12.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton12.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos3Run and not cam1AtPos3:
-            self.pushButton13.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton13.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos4Run and not cam1AtPos4:
-            self.pushButton14.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton14.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos5Run and not cam1AtPos5:
-            self.pushButton15.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton15.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos6Run and not cam1AtPos6:
-            self.pushButton16.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton16.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos7Run and not cam1AtPos7:
-            self.pushButton17.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton17.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos8Run and not cam1AtPos8:
-            self.pushButton18.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton18.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos9Run and not cam1AtPos9:
-            self.pushButton19.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton19.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos10Run and not cam1AtPos10:
-            self.pushButton10.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: 40px;')
+            self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         
         if cam2Pos1Run and not cam2AtPos1:
-            self.pushButton21.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos2Run and not cam2AtPos2:
-            self.pushButton22.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton22.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos3Run and not cam2AtPos3:
-            self.pushButton23.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton23.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos4Run and not cam2AtPos4:
-            self.pushButton24.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton24.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos5Run and not cam2AtPos5:
-            self.pushButton25.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton25.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos6Run and not cam2AtPos6:
-            self.pushButton26.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton26.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos7Run and not cam2AtPos7:
-            self.pushButton27.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton27.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos8Run and not cam2AtPos8:
-            self.pushButton28.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton28.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos9Run and not cam2AtPos9:
-            self.pushButton29.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton29.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos10Run and not cam2AtPos10:
-            self.pushButton20.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #405C80; border-radius: 40px;')
+            self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
 
         
         if cam3Pos1Run and not cam3AtPos1:
-            self.pushButton31.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos2Run and not cam3AtPos2:
-            self.pushButton32.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton32.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos3Run and not cam3AtPos3:
-            self.pushButton33.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton33.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos4Run and not cam3AtPos4:
-            self.pushButton34.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton34.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos5Run and not cam3AtPos5:
-            self.pushButton35.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton35.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos6Run and not cam3AtPos6:
-            self.pushButton36.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton36.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos7Run and not cam3AtPos7:
-            self.pushButton37.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton37.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos8Run and not cam3AtPos8:
-            self.pushButton38.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton38.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos9Run and not cam3AtPos9:
-            self.pushButton39.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton39.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos10Run and not cam3AtPos10:
-            self.pushButton30.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #807100; border-radius: 40px;')
+            self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
 
         
         if cam4Pos1Run and not cam4AtPos1:
-            self.pushButton41.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos2Run and not cam4AtPos2:
-            self.pushButton42.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton42.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos3Run and not cam4AtPos3:
-            self.pushButton43.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton43.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos4Run and not cam4AtPos4:
-            self.pushButton44.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton44.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos5Run and not cam4AtPos5:
-            self.pushButton45.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton45.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos6Run and not cam4AtPos6:
-            self.pushButton46.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton46.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos7Run and not cam4AtPos7:
-            self.pushButton47.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton47.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos8Run and not cam4AtPos8:
-            self.pushButton48.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton48.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos9Run and not cam4AtPos9:
-            self.pushButton49.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton49.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos10Run and not cam4AtPos10:
-            self.pushButton40.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #008071; border-radius: 40px;')
+            self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
 
         
         if cam5Pos1Run and not cam5AtPos1:
-            self.pushButton51.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos2Run and not cam5AtPos2:
-            self.pushButton52.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton52.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos3Run and not cam5AtPos3:
-            self.pushButton53.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton53.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos4Run and not cam5AtPos4:
-            self.pushButton54.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton54.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos5Run and not cam5AtPos5:
-            self.pushButton55.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton55.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos6Run and not cam5AtPos6:
-            self.pushButton56.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton56.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos7Run and not cam5AtPos7:
-            self.pushButton57.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton57.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos8Run and not cam5AtPos8:
-            self.pushButton58.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton58.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos9Run and not cam5AtPos9:
-            self.pushButton59.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton59.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos10Run and not cam5AtPos10:
-            self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourFlash}; background-color: #8D5395; border-radius: 40px;')
+            self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         
 
@@ -5555,6 +5724,25 @@ class PTSapp(QMainWindow):
 
         global resetButtons
 
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
+
         buttonColourSet = "#ff0000"
         buttonColourAt = "#00ff00"
 
@@ -5563,110 +5751,110 @@ class PTSapp(QMainWindow):
             OLDcam1Pos1Run = cam1Pos1Run
             OLDcam1AtPos1 = cam1AtPos1
             if cam1Pos1Set and not cam1Pos1Run and not cam1AtPos1:                                  # Set , not Run or At
-                self.pushButton11.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos1Set and not cam1Pos1Run and cam1AtPos1:                                    # Set & At, not Run
-                self.pushButton11.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos1Set:
-                self.pushButton11.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton11.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos2Set != OLDcam1Pos2Set or cam1Pos2Run != OLDcam1Pos2Run or cam1AtPos2 != OLDcam1AtPos2 or resetButtons:
             OLDcam1Pos2Set = cam1Pos2Set
             OLDcam1Pos2Run = cam1Pos2Run
             OLDcam1AtPos2 = cam1AtPos2
             if cam1Pos2Set and not cam1Pos2Run and not cam1AtPos2:                                  # Position LEDs Cam1
-                self.pushButton12.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton12.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos2Set and not cam1Pos2Run and cam1AtPos2:
-                self.pushButton12.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton12.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos2Set:
-                self.pushButton12.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton12.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos3Set != OLDcam1Pos3Set or cam1Pos3Run != OLDcam1Pos3Run or cam1AtPos3 != OLDcam1AtPos3 or resetButtons:
             OLDcam1Pos3Set = cam1Pos3Set
             OLDcam1Pos3Run = cam1Pos3Run
             OLDcam1AtPos3 = cam1AtPos3
             if cam1Pos3Set and not cam1Pos3Run and not cam1AtPos3:                                  # Position LEDs Cam1
-                self.pushButton13.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton13.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos3Set and not cam1Pos3Run and cam1AtPos3:
-                self.pushButton13.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton13.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos3Set:
-                self.pushButton13.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton13.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos4Set != OLDcam1Pos4Set or cam1Pos4Run != OLDcam1Pos4Run or cam1AtPos4 != OLDcam1AtPos4 or resetButtons:
             OLDcam1Pos4Set = cam1Pos4Set
             OLDcam1Pos4Run = cam1Pos4Run
             OLDcam1AtPos4 = cam1AtPos4
             if cam1Pos4Set and not cam1Pos4Run and not cam1AtPos4:                                  # Position LEDs Cam1
-                self.pushButton14.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton14.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos4Set and not cam1Pos4Run and cam1AtPos4:
-                self.pushButton14.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton14.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos4Set:
-                self.pushButton14.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton14.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos5Set != OLDcam1Pos5Set or cam1Pos5Run != OLDcam1Pos5Run or cam1AtPos5 != OLDcam1AtPos5 or resetButtons:
             OLDcam1Pos5Set = cam1Pos5Set
             OLDcam1Pos5Run = cam1Pos5Run
             OLDcam1AtPos5 = cam1AtPos5
             if cam1Pos5Set and not cam1Pos5Run and not cam1AtPos5:                                  # Position LEDs Cam1
-                self.pushButton15.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton15.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos5Set and not cam1Pos5Run and cam1AtPos5:
-                self.pushButton15.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton15.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos5Set:
-                self.pushButton15.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton15.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos6Set != OLDcam1Pos6Set or cam1Pos6Run != OLDcam1Pos6Run or cam1AtPos6 != OLDcam1AtPos6 or resetButtons:
             OLDcam1Pos6Set = cam1Pos6Set
             OLDcam1Pos6Run = cam1Pos6Run
             OLDcam1AtPos6 = cam1AtPos6
             if cam1Pos6Set and not cam1Pos6Run and not cam1AtPos6:                                  # Position LEDs Cam1
-                self.pushButton16.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton16.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos6Set and not cam1Pos6Run and cam1AtPos6:
-                self.pushButton16.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton16.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos6Set:
-                self.pushButton16.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton16.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos7Set != OLDcam1Pos7Set or cam1Pos7Run != OLDcam1Pos7Run or cam1AtPos7 != OLDcam1AtPos7 or resetButtons:
             OLDcam1Pos7Set = cam1Pos7Set
             OLDcam1Pos7Run = cam1Pos7Run
             OLDcam1AtPos7 = cam1AtPos7
             if cam1Pos7Set and not cam1Pos7Run and not cam1AtPos7:                                  # Position LEDs Cam1
-                self.pushButton17.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton17.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos7Set and not cam1Pos7Run and cam1AtPos7:
-                self.pushButton17.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton17.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos7Set:
-                self.pushButton17.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton17.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos8Set != OLDcam1Pos8Set or cam1Pos8Run != OLDcam1Pos8Run or cam1AtPos8 != OLDcam1AtPos8 or resetButtons:
             OLDcam1Pos8Set = cam1Pos8Set
             OLDcam1Pos8Run = cam1Pos8Run
             OLDcam1AtPos8 = cam1AtPos8
             if cam1Pos8Set and not cam1Pos8Run and not cam1AtPos8:                                  # Position LEDs Cam1
-                self.pushButton18.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton18.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos8Set and not cam1Pos8Run and cam1AtPos8:
-                self.pushButton18.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton18.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos8Set:
-                self.pushButton18.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton18.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos9Set != OLDcam1Pos9Set or cam1Pos9Run != OLDcam1Pos9Run or cam1AtPos9 != OLDcam1AtPos9 or resetButtons:
             OLDcam1Pos9Set = cam1Pos9Set
             OLDcam1Pos9Run = cam1Pos9Run
             OLDcam1AtPos9 = cam1AtPos9
             if cam1Pos9Set and not cam1Pos9Run and not cam1AtPos9:                                  # Position LEDs Cam1
-                self.pushButton19.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton19.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos9Set and not cam1Pos9Run and cam1AtPos9:
-                self.pushButton19.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton19.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos9Set:
-                self.pushButton19.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton19.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos10Set != OLDcam1Pos10Set or cam1Pos10Run != OLDcam1Pos10Run or cam1AtPos10 != OLDcam1AtPos10 or resetButtons:
             OLDcam1Pos10Set = cam1Pos10Set
             OLDcam1Pos10Run = cam1Pos10Run
             OLDcam1AtPos10 = cam1AtPos10
             if cam1Pos10Set and not cam1Pos10Run and not cam1AtPos10:                                  # Position LEDs Cam1
-                self.pushButton10.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif cam1Pos10Set and not cam1Pos10Run and cam1AtPos10:
-                self.pushButton10.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
             elif not cam1Pos10Set:
-                self.pushButton10.setStyleSheet(f'border: 10px solid grey; background-color: #4C8A4C; border-radius: 40px;')
+                self.pushButton10.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
 
 
@@ -5678,110 +5866,110 @@ class PTSapp(QMainWindow):
             OLDcam2Pos1Run = cam2Pos1Run
             OLDcam2AtPos1 = cam2AtPos1
             if cam2Pos1Set and not cam2Pos1Run and not cam2AtPos1:                                  # Set , not Run or At
-                self.pushButton21.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos1Set and not cam2Pos1Run and cam2AtPos1:                                    # Set & At, not Run
-                self.pushButton21.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos1Set:
-                self.pushButton21.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton21.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos2Set != OLDcam2Pos2Set or cam2Pos2Run != OLDcam2Pos2Run or cam2AtPos2 != OLDcam2AtPos2 or resetButtons:
             OLDcam2Pos2Set = cam2Pos2Set
             OLDcam2Pos2Run = cam2Pos2Run
             OLDcam2AtPos2 = cam2AtPos2
             if cam2Pos2Set and not cam2Pos2Run and not cam2AtPos2:                                  # Position LEDs cam2
-                self.pushButton22.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton22.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos2Set and not cam2Pos2Run and cam2AtPos2:
-                self.pushButton22.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton22.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos2Set:
-                self.pushButton22.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton22.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos3Set != OLDcam2Pos3Set or cam2Pos3Run != OLDcam2Pos3Run or cam2AtPos3 != OLDcam2AtPos3 or resetButtons:
             OLDcam2Pos3Set = cam2Pos3Set
             OLDcam2Pos3Run = cam2Pos3Run
             OLDcam2AtPos3 = cam2AtPos3
             if cam2Pos3Set and not cam2Pos3Run and not cam2AtPos3:                                  # Position LEDs cam2
-                self.pushButton23.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton23.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos3Set and not cam2Pos3Run and cam2AtPos3:
-                self.pushButton23.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton23.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos3Set:
-                self.pushButton23.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton23.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos4Set != OLDcam2Pos4Set or cam2Pos4Run != OLDcam2Pos4Run or cam2AtPos4 != OLDcam2AtPos4 or resetButtons:
             OLDcam2Pos4Set = cam2Pos4Set
             OLDcam2Pos4Run = cam2Pos4Run
             OLDcam2AtPos4 = cam2AtPos4
             if cam2Pos4Set and not cam2Pos4Run and not cam2AtPos4:                                  # Position LEDs cam2
-                self.pushButton24.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton24.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos4Set and not cam2Pos4Run and cam2AtPos4:
-                self.pushButton24.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton24.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos4Set:
-                self.pushButton24.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton24.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos5Set != OLDcam2Pos5Set or cam2Pos5Run != OLDcam2Pos5Run or cam2AtPos5 != OLDcam2AtPos5 or resetButtons:
             OLDcam2Pos5Set = cam2Pos5Set
             OLDcam2Pos5Run = cam2Pos5Run
             OLDcam2AtPos5 = cam2AtPos5
             if cam2Pos5Set and not cam2Pos5Run and not cam2AtPos5:                                  # Position LEDs cam2
-                self.pushButton25.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton25.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos5Set and not cam2Pos5Run and cam2AtPos5:
-                self.pushButton25.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton25.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos5Set:
-                self.pushButton25.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton25.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos6Set != OLDcam2Pos6Set or cam2Pos6Run != OLDcam2Pos6Run or cam2AtPos6 != OLDcam2AtPos6 or resetButtons:
             OLDcam2Pos6Set = cam2Pos6Set
             OLDcam2Pos6Run = cam2Pos6Run
             OLDcam2AtPos6 = cam2AtPos6
             if cam2Pos6Set and not cam2Pos6Run and not cam2AtPos6:                                  # Position LEDs cam2
-                self.pushButton26.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton26.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos6Set and not cam2Pos6Run and cam2AtPos6:
-                self.pushButton26.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton26.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos6Set:
-                self.pushButton26.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton26.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos7Set != OLDcam2Pos7Set or cam2Pos7Run != OLDcam2Pos7Run or cam2AtPos7 != OLDcam2AtPos7 or resetButtons:
             OLDcam2Pos7Set = cam2Pos7Set
             OLDcam2Pos7Run = cam2Pos7Run
             OLDcam2AtPos7 = cam2AtPos7
             if cam2Pos7Set and not cam2Pos7Run and not cam2AtPos7:                                  # Position LEDs cam2
-                self.pushButton27.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton27.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos7Set and not cam2Pos7Run and cam2AtPos7:
-                self.pushButton27.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton27.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos7Set:
-                self.pushButton27.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton27.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos8Set != OLDcam2Pos8Set or cam2Pos8Run != OLDcam2Pos8Run or cam2AtPos8 != OLDcam2AtPos8 or resetButtons:
             OLDcam2Pos8Set = cam2Pos8Set
             OLDcam2Pos8Run = cam2Pos8Run
             OLDcam2AtPos8 = cam2AtPos8
             if cam2Pos8Set and not cam2Pos8Run and not cam2AtPos8:                                  # Position LEDs cam2
-                self.pushButton28.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton28.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos8Set and not cam2Pos8Run and cam2AtPos8:
-                self.pushButton28.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton28.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos8Set:
-                self.pushButton28.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton28.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos9Set != OLDcam2Pos9Set or cam2Pos9Run != OLDcam2Pos9Run or cam2AtPos9 != OLDcam2AtPos9 or resetButtons:
             OLDcam2Pos9Set = cam2Pos9Set
             OLDcam2Pos9Run = cam2Pos9Run
             OLDcam2AtPos9 = cam2AtPos9
             if cam2Pos9Set and not cam2Pos9Run and not cam2AtPos9:                                  # Position LEDs cam2
-                self.pushButton29.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton29.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos9Set and not cam2Pos9Run and cam2AtPos9:
-                self.pushButton29.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton29.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos9Set:
-                self.pushButton29.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton29.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos10Set != OLDcam2Pos10Set or cam2Pos10Run != OLDcam2Pos10Run or cam2AtPos10 != OLDcam2AtPos10 or resetButtons:
             OLDcam2Pos10Set = cam2Pos10Set
             OLDcam2Pos10Run = cam2Pos10Run
             OLDcam2AtPos10 = cam2AtPos10
             if cam2Pos10Set and not cam2Pos10Run and not cam2AtPos10:                                  # Position LEDs cam2
-                self.pushButton20.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif cam2Pos10Set and not cam2Pos10Run and cam2AtPos10:
-                self.pushButton20.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #405C80; border-radius: 40px;')
+                self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
             elif not cam2Pos10Set:
-                self.pushButton20.setStyleSheet(f'border: 10px solid grey; background-color: #405C80; border-radius: 40px;')
+                self.pushButton20.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
 
 
@@ -5791,110 +5979,110 @@ class PTSapp(QMainWindow):
             OLDcam3Pos1Run = cam3Pos1Run
             OLDcam3AtPos1 = cam3AtPos1
             if cam3Pos1Set and not cam3Pos1Run and not cam3AtPos1:                                  # Set , not Run or At
-                self.pushButton31.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos1Set and not cam3Pos1Run and cam3AtPos1:                                    # Set & At, not Run
-                self.pushButton31.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos1Set:
-                self.pushButton31.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton31.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos2Set != OLDcam3Pos2Set or cam3Pos2Run != OLDcam3Pos2Run or cam3AtPos2 != OLDcam3AtPos2 or resetButtons:
             OLDcam3Pos2Set = cam3Pos2Set
             OLDcam3Pos2Run = cam3Pos2Run
             OLDcam3AtPos2 = cam3AtPos2
             if cam3Pos2Set and not cam3Pos2Run and not cam3AtPos2:                                  # Position LEDs cam3
-                self.pushButton32.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton32.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos2Set and not cam3Pos2Run and cam3AtPos2:
-                self.pushButton32.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton32.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos2Set:
-                self.pushButton32.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton32.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos3Set != OLDcam3Pos3Set or cam3Pos3Run != OLDcam3Pos3Run or cam3AtPos3 != OLDcam3AtPos3 or resetButtons:
             OLDcam3Pos3Set = cam3Pos3Set
             OLDcam3Pos3Run = cam3Pos3Run
             OLDcam3AtPos3 = cam3AtPos3
             if cam3Pos3Set and not cam3Pos3Run and not cam3AtPos3:                                  # Position LEDs cam3
-                self.pushButton33.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton33.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos3Set and not cam3Pos3Run and cam3AtPos3:
-                self.pushButton33.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton33.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos3Set:
-                self.pushButton33.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton33.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos4Set != OLDcam3Pos4Set or cam3Pos4Run != OLDcam3Pos4Run or cam3AtPos4 != OLDcam3AtPos4 or resetButtons:
             OLDcam3Pos4Set = cam3Pos4Set
             OLDcam3Pos4Run = cam3Pos4Run
             OLDcam3AtPos4 = cam3AtPos4
             if cam3Pos4Set and not cam3Pos4Run and not cam3AtPos4:                                  # Position LEDs cam3
-                self.pushButton34.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton34.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos4Set and not cam3Pos4Run and cam3AtPos4:
-                self.pushButton34.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton34.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos4Set:
-                self.pushButton34.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton34.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos5Set != OLDcam3Pos5Set or cam3Pos5Run != OLDcam3Pos5Run or cam3AtPos5 != OLDcam3AtPos5 or resetButtons:
             OLDcam3Pos5Set = cam3Pos5Set
             OLDcam3Pos5Run = cam3Pos5Run
             OLDcam3AtPos5 = cam3AtPos5
             if cam3Pos5Set and not cam3Pos5Run and not cam3AtPos5:                                  # Position LEDs cam3
-                self.pushButton35.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton35.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos5Set and not cam3Pos5Run and cam3AtPos5:
-                self.pushButton35.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton35.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos5Set:
-                self.pushButton35.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton35.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos6Set != OLDcam3Pos6Set or cam3Pos6Run != OLDcam3Pos6Run or cam3AtPos6 != OLDcam3AtPos6 or resetButtons:
             OLDcam3Pos6Set = cam3Pos6Set
             OLDcam3Pos6Run = cam3Pos6Run
             OLDcam3AtPos6 = cam3AtPos6
             if cam3Pos6Set and not cam3Pos6Run and not cam3AtPos6:                                  # Position LEDs cam3
-                self.pushButton36.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton36.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos6Set and not cam3Pos6Run and cam3AtPos6:
-                self.pushButton36.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton36.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos6Set:
-                self.pushButton36.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton36.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos7Set != OLDcam3Pos7Set or cam3Pos7Run != OLDcam3Pos7Run or cam3AtPos7 != OLDcam3AtPos7 or resetButtons:
             OLDcam3Pos7Set = cam3Pos7Set
             OLDcam3Pos7Run = cam3Pos7Run
             OLDcam3AtPos7 = cam3AtPos7
             if cam3Pos7Set and not cam3Pos7Run and not cam3AtPos7:                                  # Position LEDs cam3
-                self.pushButton37.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton37.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos7Set and not cam3Pos7Run and cam3AtPos7:
-                self.pushButton37.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton37.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos7Set:
-                self.pushButton37.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton37.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos8Set != OLDcam3Pos8Set or cam3Pos8Run != OLDcam3Pos8Run or cam3AtPos8 != OLDcam3AtPos8 or resetButtons:
             OLDcam3Pos8Set = cam3Pos8Set
             OLDcam3Pos8Run = cam3Pos8Run
             OLDcam3AtPos8 = cam3AtPos8
             if cam3Pos8Set and not cam3Pos8Run and not cam3AtPos8:                                  # Position LEDs cam3
-                self.pushButton38.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton38.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos8Set and not cam3Pos8Run and cam3AtPos8:
-                self.pushButton38.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton38.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos8Set:
-                self.pushButton38.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton38.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos9Set != OLDcam3Pos9Set or cam3Pos9Run != OLDcam3Pos9Run or cam3AtPos9 != OLDcam3AtPos9 or resetButtons:
             OLDcam3Pos9Set = cam3Pos9Set
             OLDcam3Pos9Run = cam3Pos9Run
             OLDcam3AtPos9 = cam3AtPos9
             if cam3Pos9Set and not cam3Pos9Run and not cam3AtPos9:                                  # Position LEDs cam3
-                self.pushButton39.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton39.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos9Set and not cam3Pos9Run and cam3AtPos9:
-                self.pushButton39.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton39.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos9Set:
-                self.pushButton39.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton39.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos10Set != OLDcam3Pos10Set or cam3Pos10Run != OLDcam3Pos10Run or cam3AtPos10 != OLDcam3AtPos10 or resetButtons:
             OLDcam3Pos10Set = cam3Pos10Set
             OLDcam3Pos10Run = cam3Pos10Run
             OLDcam3AtPos10 = cam3AtPos10
             if cam3Pos10Set and not cam3Pos10Run and not cam3AtPos10:                                  # Position LEDs cam3
-                self.pushButton30.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #807100; border-radius: 40px;')
+                self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
             elif cam3Pos10Set and not cam3Pos10Run and cam3AtPos10:
-                self.pushButton30.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #807100; border-radius: 40px;')
+                self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
             elif not cam3Pos10Set:
-                self.pushButton30.setStyleSheet(f'border: 10px solid grey; background-color: #807100; border-radius: 40px;')
+                self.pushButton30.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
 
 
@@ -5904,110 +6092,110 @@ class PTSapp(QMainWindow):
             OLDcam4Pos1Run = cam4Pos1Run
             OLDcam4AtPos1 = cam4AtPos1
             if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
-                self.pushButton41.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
-                self.pushButton41.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos1Set:
-                self.pushButton41.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos2Set != OLDcam4Pos2Set or cam4Pos2Run != OLDcam4Pos2Run or cam4AtPos2 != OLDcam4AtPos2 or resetButtons:
             OLDcam4Pos2Set = cam4Pos2Set
             OLDcam4Pos2Run = cam4Pos2Run
             OLDcam4AtPos2 = cam4AtPos2
             if cam4Pos2Set and not cam4Pos2Run and not cam4AtPos2:                                  # Position LEDs cam4
-                self.pushButton42.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton42.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos2Set and not cam4Pos2Run and cam4AtPos2:
-                self.pushButton42.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton42.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos2Set:
-                self.pushButton42.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton42.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos3Set != OLDcam4Pos3Set or cam4Pos3Run != OLDcam4Pos3Run or cam4AtPos3 != OLDcam4AtPos3 or resetButtons:
             OLDcam4Pos3Set = cam4Pos3Set
             OLDcam4Pos3Run = cam4Pos3Run
             OLDcam4AtPos3 = cam4AtPos3
             if cam4Pos3Set and not cam4Pos3Run and not cam4AtPos3:                                  # Position LEDs cam4
-                self.pushButton43.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton43.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos3Set and not cam4Pos3Run and cam4AtPos3:
-                self.pushButton43.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton43.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos3Set:
-                self.pushButton43.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton43.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos4Set != OLDcam4Pos4Set or cam4Pos4Run != OLDcam4Pos4Run or cam4AtPos4 != OLDcam4AtPos4 or resetButtons:
             OLDcam4Pos4Set = cam4Pos4Set
             OLDcam4Pos4Run = cam4Pos4Run
             OLDcam4AtPos4 = cam4AtPos4
             if cam4Pos4Set and not cam4Pos4Run and not cam4AtPos4:                                  # Position LEDs cam4
-                self.pushButton44.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton44.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos4Set and not cam4Pos4Run and cam4AtPos4:
-                self.pushButton44.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton44.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos4Set:
-                self.pushButton44.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton44.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos5Set != OLDcam4Pos5Set or cam4Pos5Run != OLDcam4Pos5Run or cam4AtPos5 != OLDcam4AtPos5 or resetButtons:
             OLDcam4Pos5Set = cam4Pos5Set
             OLDcam4Pos5Run = cam4Pos5Run
             OLDcam4AtPos5 = cam4AtPos5
             if cam4Pos5Set and not cam4Pos5Run and not cam4AtPos5:                                  # Position LEDs cam4
-                self.pushButton45.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton45.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos5Set and not cam4Pos5Run and cam4AtPos5:
-                self.pushButton45.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton45.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos5Set:
-                self.pushButton45.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton45.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos6Set != OLDcam4Pos6Set or cam4Pos6Run != OLDcam4Pos6Run or cam4AtPos6 != OLDcam4AtPos6 or resetButtons:
             OLDcam4Pos6Set = cam4Pos6Set
             OLDcam4Pos6Run = cam4Pos6Run
             OLDcam4AtPos6 = cam4AtPos6
             if cam4Pos6Set and not cam4Pos6Run and not cam4AtPos6:                                  # Position LEDs cam4
-                self.pushButton46.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton46.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos6Set and not cam4Pos6Run and cam4AtPos6:
-                self.pushButton46.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton46.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos6Set:
-                self.pushButton46.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton46.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos7Set != OLDcam4Pos7Set or cam4Pos7Run != OLDcam4Pos7Run or cam4AtPos7 != OLDcam4AtPos7 or resetButtons:
             OLDcam4Pos7Set = cam4Pos7Set
             OLDcam4Pos7Run = cam4Pos7Run
             OLDcam4AtPos7 = cam4AtPos7
             if cam4Pos7Set and not cam4Pos7Run and not cam4AtPos7:                                  # Position LEDs cam4
-                self.pushButton47.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton47.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos7Set and not cam4Pos7Run and cam4AtPos7:
-                self.pushButton47.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton47.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos7Set:
-                self.pushButton47.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton47.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos8Set != OLDcam4Pos8Set or cam4Pos8Run != OLDcam4Pos8Run or cam4AtPos8 != OLDcam4AtPos8 or resetButtons:
             OLDcam4Pos8Set = cam4Pos8Set
             OLDcam4Pos8Run = cam4Pos8Run
             OLDcam4AtPos8 = cam4AtPos8
             if cam4Pos8Set and not cam4Pos8Run and not cam4AtPos8:                                  # Position LEDs cam4
-                self.pushButton48.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton48.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos8Set and not cam4Pos8Run and cam4AtPos8:
-                self.pushButton48.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton48.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos8Set:
-                self.pushButton48.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton48.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos9Set != OLDcam4Pos9Set or cam4Pos9Run != OLDcam4Pos9Run or cam4AtPos9 != OLDcam4AtPos9 or resetButtons:
             OLDcam4Pos9Set = cam4Pos9Set
             OLDcam4Pos9Run = cam4Pos9Run
             OLDcam4AtPos9 = cam4AtPos9
             if cam4Pos9Set and not cam4Pos9Run and not cam4AtPos9:                                  # Position LEDs cam4
-                self.pushButton49.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton49.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos9Set and not cam4Pos9Run and cam4AtPos9:
-                self.pushButton49.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton49.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos9Set:
-                self.pushButton49.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton49.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos10Set != OLDcam4Pos10Set or cam4Pos10Run != OLDcam4Pos10Run or cam4AtPos10 != OLDcam4AtPos10 or resetButtons:
             OLDcam4Pos10Set = cam4Pos10Set
             OLDcam4Pos10Run = cam4Pos10Run
             OLDcam4AtPos10 = cam4AtPos10
             if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:                                  # Position LEDs cam4
-                self.pushButton40.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #008071; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
             elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
-                self.pushButton40.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #008071; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos10Set:
-                self.pushButton40.setStyleSheet(f'border: 10px solid grey; background-color: #008071; border-radius: 40px;')
+                self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
 
 
@@ -6019,110 +6207,110 @@ class PTSapp(QMainWindow):
             OLDcam5Pos1Run = cam5Pos1Run
             OLDcam5AtPos1 = cam5AtPos1
             if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
-                self.pushButton51.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:                                    # Set & At, not Run
-                self.pushButton51.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos1Set:
-                self.pushButton51.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton51.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos2Set != OLDcam5Pos2Set or cam5Pos2Run != OLDcam5Pos2Run or cam5AtPos2 != OLDcam5AtPos2 or resetButtons:
             OLDcam5Pos2Set = cam5Pos2Set
             OLDcam5Pos2Run = cam5Pos2Run
             OLDcam5AtPos2 = cam5AtPos2
             if cam5Pos2Set and not cam5Pos2Run and not cam5AtPos2:                                  # Position LEDs cam5
-                self.pushButton52.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton52.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos2Set and not cam5Pos2Run and cam5AtPos2:
-                self.pushButton52.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton52.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos2Set:
-                self.pushButton52.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton52.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos3Set != OLDcam5Pos3Set or cam5Pos3Run != OLDcam5Pos3Run or cam5AtPos3 != OLDcam5AtPos3 or resetButtons:
             OLDcam5Pos3Set = cam5Pos3Set
             OLDcam5Pos3Run = cam5Pos3Run
             OLDcam5AtPos3 = cam5AtPos3
             if cam5Pos3Set and not cam5Pos3Run and not cam5AtPos3:                                  # Position LEDs cam5
-                self.pushButton53.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton53.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos3Set and not cam5Pos3Run and cam5AtPos3:
-                self.pushButton53.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton53.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos3Set:
-                self.pushButton53.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton53.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos4Set != OLDcam5Pos4Set or cam5Pos4Run != OLDcam5Pos4Run or cam5AtPos4 != OLDcam5AtPos4 or resetButtons:
             OLDcam5Pos4Set = cam5Pos4Set
             OLDcam5Pos4Run = cam5Pos4Run
             OLDcam5AtPos4 = cam5AtPos4
             if cam5Pos4Set and not cam5Pos4Run and not cam5AtPos4:                                  # Position LEDs cam5
-                self.pushButton54.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton54.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos4Set and not cam5Pos4Run and cam5AtPos4:
-                self.pushButton54.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton54.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos4Set:
-                self.pushButton54.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton54.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos5Set != OLDcam5Pos5Set or cam5Pos5Run != OLDcam5Pos5Run or cam5AtPos5 != OLDcam5AtPos5 or resetButtons:
             OLDcam5Pos5Set = cam5Pos5Set
             OLDcam5Pos5Run = cam5Pos5Run
             OLDcam5AtPos5 = cam5AtPos5
             if cam5Pos5Set and not cam5Pos5Run and not cam5AtPos5:                                  # Position LEDs cam5
-                self.pushButton55.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton55.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos5Set and not cam5Pos5Run and cam5AtPos5:
-                self.pushButton55.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton55.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos5Set:
-                self.pushButton55.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton55.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos6Set != OLDcam5Pos6Set or cam5Pos6Run != OLDcam5Pos6Run or cam5AtPos6 != OLDcam5AtPos6 or resetButtons:
             OLDcam5Pos6Set = cam5Pos6Set
             OLDcam5Pos6Run = cam5Pos6Run
             OLDcam5AtPos6 = cam5AtPos6
             if cam5Pos6Set and not cam5Pos6Run and not cam5AtPos6:                                  # Position LEDs cam5
-                self.pushButton56.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton56.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos6Set and not cam5Pos6Run and cam5AtPos6:
-                self.pushButton56.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton56.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos6Set:
-                self.pushButton56.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton56.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos7Set != OLDcam5Pos7Set or cam5Pos7Run != OLDcam5Pos7Run or cam5AtPos7 != OLDcam5AtPos7 or resetButtons:
             OLDcam5Pos7Set = cam5Pos7Set
             OLDcam5Pos7Run = cam5Pos7Run
             OLDcam5AtPos7 = cam5AtPos7
             if cam5Pos7Set and not cam5Pos7Run and not cam5AtPos7:                                  # Position LEDs cam5
-                self.pushButton57.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton57.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos7Set and not cam5Pos7Run and cam5AtPos7:
-                self.pushButton57.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton57.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos7Set:
-                self.pushButton57.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton57.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos8Set != OLDcam5Pos8Set or cam5Pos8Run != OLDcam5Pos8Run or cam5AtPos8 != OLDcam5AtPos8 or resetButtons:
             OLDcam5Pos8Set = cam5Pos8Set
             OLDcam5Pos8Run = cam5Pos8Run
             OLDcam5AtPos8 = cam5AtPos8
             if cam5Pos8Set and not cam5Pos8Run and not cam5AtPos8:                                  # Position LEDs cam5
-                self.pushButton58.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton58.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos8Set and not cam5Pos8Run and cam5AtPos8:
-                self.pushButton58.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton58.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos8Set:
-                self.pushButton58.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton58.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos9Set != OLDcam5Pos9Set or cam5Pos9Run != OLDcam5Pos9Run or cam5AtPos9 != OLDcam5AtPos9 or resetButtons:
             OLDcam5Pos9Set = cam5Pos9Set
             OLDcam5Pos9Run = cam5Pos9Run
             OLDcam5AtPos9 = cam5AtPos9
             if cam5Pos9Set and not cam5Pos9Run and not cam5AtPos9:                                  # Position LEDs cam5
-                self.pushButton59.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton59.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos9Set and not cam5Pos9Run and cam5AtPos9:
-                self.pushButton59.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton59.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos9Set:
-                self.pushButton59.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton59.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam5Pos10Set != OLDcam5Pos10Set or cam5Pos10Run != OLDcam5Pos10Run or cam5AtPos10 != OLDcam5AtPos10 or resetButtons:
             OLDcam5Pos10Set = cam5Pos10Set
             OLDcam5Pos10Run = cam5Pos10Run
             OLDcam5AtPos10 = cam5AtPos10
             if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:                                  # Position LEDs cam5
-                self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourSet}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
-                self.pushButton50.setStyleSheet(f'border: 10px solid {buttonColourAt}; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
             elif not cam5Pos10Set:
-                self.pushButton50.setStyleSheet(f'border: 10px solid grey; background-color: #8D5395; border-radius: 40px;')
+                self.pushButton50.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
 
 
 
@@ -6695,8 +6883,27 @@ class PTSapp(QMainWindow):
         global cam4Label
         global cam5Label
 
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
+
         if serialLoop and not isConnected:
-            self.comboBox.setStyleSheet("color: white; border: 4px solid grey; background-color: #229922; border-radius: 10px;")
+            self.comboBox.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #229922; border-radius: {borderRadius2}px;")
             isConnected = True
 
         if isConnected:
@@ -6928,18 +7135,37 @@ class PTSapp(QMainWindow):
         global cam3Label
         global cam4Label
         global cam5Label
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
         
         if (SetPosToggle == True and state == 3) or state == 0:
             SetPosToggle = False
             editToggle = False
-            self.pushButtonSet.setStyleSheet("border: 4px solid grey; background-color: #bbbbbb; border-radius: 10px;")
+            self.pushButtonSet.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #bbbbbb; border-radius: {borderRadius2}px;")
             self.pushButtonCam1.setText(cam1Label)
             self.pushButtonCam2.setText(cam2Label)
             self.pushButtonCam3.setText(cam3Label)
             self.pushButtonCam4.setText(cam4Label)
             self.pushButtonCam5.setText(cam5Label)
             self.pushButtonEdit.setText("Edit")
-            self.pushButtonEdit.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
             self.pushButtonExit.hide()
             self.pushButtonLED.hide()
             self.pushButtonFileLoad.hide()
@@ -6950,14 +7176,14 @@ class PTSapp(QMainWindow):
         elif (SetPosToggle == False and state == 3) or state == 1:
             SetPosToggle = True
             editToggle = False
-            self.pushButtonSet.setStyleSheet("border: 4px solid #ff0000; background-color: #CC5050; border-radius: 10px;")
+            self.pushButtonSet.setStyleSheet(f"border: {borderSize2}px solid #ff0000; background-color: #CC5050; border-radius: {borderRadius2}px;")
             self.pushButtonCam1.setText("Clear")
             self.pushButtonCam2.setText("Clear")
             self.pushButtonCam3.setText("Clear")
             self.pushButtonCam4.setText("Clear")
             self.pushButtonCam5.setText("Clear")
             self.pushButtonEdit.setText("Move")
-            self.pushButtonEdit.setStyleSheet("border: 4px solid #FFFC67; background-color: #F7BA00; border-radius: 10px;")
+            self.pushButtonEdit.setStyleSheet(f"border: {borderSize2}px solid #FFFC67; background-color: #F7BA00; border-radius: {borderRadius2}px;")
             self.pushButtonExit.show()
             self.pushButtonLED.show()
             self.pushButtonFileLoad.show()
@@ -6973,6 +7199,25 @@ class PTSapp(QMainWindow):
         global editToggle
         global editButton
 
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
+
         if editToggle:
             editButton = 61
             currentText = self.pushButtonCam1.text()
@@ -6982,17 +7227,36 @@ class PTSapp(QMainWindow):
             self.sendSerial('&1D')
         else:
             whichCamSerial = 1
-            self.pushButtonCam1.setStyleSheet("border: 4px solid red; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+            self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+            self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+            self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+            self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+            self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def whichCamSerial2(self):
         global whichCamSerial
         global SetPosToggle
         global editToggle
         global editButton
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         if editToggle:
             editButton = 62
@@ -7003,17 +7267,36 @@ class PTSapp(QMainWindow):
             self.sendSerial('&2D')
         else:
             whichCamSerial = 2
-            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid red; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+            self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+            self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #405C80; border-radius: {borderRadius2}px;")
+            self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+            self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+            self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def whichCamSerial3(self):
         global whichCamSerial
         global SetPosToggle
         global editToggle
         global editButton
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         if editToggle:
             editButton = 63
@@ -7024,17 +7307,36 @@ class PTSapp(QMainWindow):
             self.sendSerial('&3D')
         else:
             whichCamSerial = 3
-            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid red; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+            self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+            self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+            self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #807100; border-radius: {borderRadius2}px;")
+            self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+            self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def whichCamSerial4(self):
         global whichCamSerial
         global SetPosToggle
         global editToggle
         global editButton
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         if editToggle:
             editButton = 64
@@ -7045,17 +7347,36 @@ class PTSapp(QMainWindow):
             self.sendSerial('&4D')
         else:
             whichCamSerial = 4
-            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid red; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid grey; background-color: #8D5395; border-radius: 10px;")
+            self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+            self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+            self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+            self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #008071; border-radius: {borderRadius2}px;")
+            self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
     def whichCamSerial5(self):
         global whichCamSerial
         global SetPosToggle
         global editToggle
         global editButton
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        borderSize = butttonLayoutX / 2
+        borderSize2 = borderSize / 2
+        borderRadius = butttonLayoutX * 1.8
+        borderRadius2 = borderRadius * 0.5
 
         if editToggle:
             editButton = 65
@@ -7066,11 +7387,11 @@ class PTSapp(QMainWindow):
             self.sendSerial('&5D')
         else:
             whichCamSerial = 5
-            self.pushButtonCam1.setStyleSheet("border: 4px solid grey; background-color: #4C8A4C; border-radius: 10px;")
-            self.pushButtonCam2.setStyleSheet("border: 4px solid grey; background-color: #405C80; border-radius: 10px;")
-            self.pushButtonCam3.setStyleSheet("border: 4px solid grey; background-color: #807100; border-radius: 10px;")
-            self.pushButtonCam4.setStyleSheet("border: 4px solid grey; background-color: #008071; border-radius: 10px;")
-            self.pushButtonCam5.setStyleSheet("border: 4px solid red; background-color: #8D5395; border-radius: 10px;")
+            self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+            self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+            self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+            self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+            self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
 
     def Cam1Go1(self):
@@ -7983,7 +8304,7 @@ class PTSapp(QMainWindow):
             self.sendSerial('&5Y')
 
 class ThreadClass(QtCore.QThread):
-    any_signal = QtCore.pyqtSignal(str)
+    any_signal = QtCore.Signal(str)
 
     def __init__(self, parent=None,index=0):
         super(ThreadClass, self).__init__(parent)
@@ -8075,4 +8396,4 @@ if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = PTSapp("")
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
