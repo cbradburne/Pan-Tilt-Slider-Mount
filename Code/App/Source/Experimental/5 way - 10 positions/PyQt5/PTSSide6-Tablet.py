@@ -6,6 +6,9 @@
 #python3 -m pip install pysdl2-dll
 #python3 -m pip install pynput
 
+#python3 -m pip install pyside6
+#python3 -m pip install inputs
+
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT5.py
 
 #Windows
@@ -23,15 +26,18 @@
 #pyuic5 -x ptsui5.ui -o ptsui5.py
 #pyuic5 -x serialPage.ui -o serialPage.py
 
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QFileDialog
+from PySide6.QtCore import Qt, QTimer, Signal
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog #, QDesktopWidget
 from serial.tools import list_ports
 from serial import Serial
 import sys, time, os, subprocess, re, json, pkg_resources, pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 from sys import platform
 from pathlib import Path
+
+from inputs import get_gamepad
+from inputs import devices
 
 #from qt_thread_updater import ThreadUpdater
 #updater = ThreadUpdater()
@@ -42,7 +48,13 @@ from pathlib import Path
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
-debug = True
+debug = False
+
+#ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+#sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+agX = 20
+agY = 18
 
 serial_port = None
 
@@ -518,9 +530,11 @@ cam5slSpeed2 = ''
 cam5slSpeed3 = ''
 cam5slSpeed4 = ''
 
+
 class Ui_SettingsWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
+        
         #super(Ui_SettingsWindow, self).__init__()
 
  #   def setupUi(self):
@@ -531,6 +545,20 @@ class Ui_SettingsWindow(QMainWindow):
 
     def setupUi(self):
         global whichCamSerial
+        
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
 
         self.setObjectName("settingsWindow")
         self.resize(1980, 1080)
@@ -538,12 +566,12 @@ class Ui_SettingsWindow(QMainWindow):
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(20, 10, 1311, 1001))
+        self.groupBox.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 0.5, (buttonGoY * 10.9166666667)+1, (buttonGoY * 8.3333333333)+1))
         self.groupBox.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox.setTitle("")
         self.groupBox.setObjectName("groupBox")
         self.pushButtonZoomLimit = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelZoomLimit.setFocus())
-        self.pushButtonZoomLimit.setGeometry(QtCore.QRect(30, 650, 301, 61))
+        self.pushButtonZoomLimit.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 32.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -551,7 +579,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonZoomLimit.setStyleSheet("border: 5px solid grey; background-color: #40805C; border-radius: 30px;")
         self.pushButtonZoomLimit.setObjectName("pushButtonZoomLimit")
         self.pushButtonPTS4 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed4.setFocus())
-        self.pushButtonPTS4.setGeometry(QtCore.QRect(30, 210, 301, 61))
+        self.pushButtonPTS4.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -559,7 +587,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTS4.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
         self.pushButtonPTS4.setObjectName("pushButtonPTS4")
         self.pushButtonPTS3 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed3.setFocus())
-        self.pushButtonPTS3.setGeometry(QtCore.QRect(30, 300, 301, 61))
+        self.pushButtonPTS3.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 15, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -567,7 +595,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTS3.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
         self.pushButtonPTS3.setObjectName("pushButtonPTS3")
         self.pushButtonPTS2 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed2.setFocus())
-        self.pushButtonPTS2.setGeometry(QtCore.QRect(30, 390, 301, 61))
+        self.pushButtonPTS2.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 19.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -575,7 +603,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTS2.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
         self.pushButtonPTS2.setObjectName("pushButtonPTS2")
         self.pushButtonPTS1 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed1.setFocus())
-        self.pushButtonPTS1.setGeometry(QtCore.QRect(30, 480, 301, 61))
+        self.pushButtonPTS1.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 24, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -583,7 +611,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTS1.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
         self.pushButtonPTS1.setObjectName("pushButtonPTS1")
         self.pushButtonSS4 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLspeed4.setFocus())
-        self.pushButtonSS4.setGeometry(QtCore.QRect(710, 210, 301, 61))
+        self.pushButtonSS4.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -591,7 +619,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSS4.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
         self.pushButtonSS4.setObjectName("pushButtonSS4")
         self.pushButtonSS3 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLspeed3.setFocus())
-        self.pushButtonSS3.setGeometry(QtCore.QRect(710, 300, 301, 61))
+        self.pushButtonSS3.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 15, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -599,7 +627,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSS3.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
         self.pushButtonSS3.setObjectName("pushButtonSS3")
         self.pushButtonSS2 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLspeed2.setFocus())
-        self.pushButtonSS2.setGeometry(QtCore.QRect(710, 390, 301, 61))
+        self.pushButtonSS2.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 19.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -607,7 +635,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSS2.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
         self.pushButtonSS2.setObjectName("pushButtonSS2")
         self.pushButtonSS1 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLspeed1.setFocus())
-        self.pushButtonSS1.setGeometry(QtCore.QRect(710, 480, 301, 61))
+        self.pushButtonSS1.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 24, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -615,7 +643,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSS1.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
         self.pushButtonSS1.setObjectName("pushButtonSS1")
         self.pushButtonSA = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelSLaccel.setFocus())
-        self.pushButtonSA.setGeometry(QtCore.QRect(710, 70, 301, 61))
+        self.pushButtonSA.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 3.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -623,7 +651,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSA.setStyleSheet("border: 5px solid grey; background-color: #807100; border-radius: 30px;")
         self.pushButtonSA.setObjectName("pushButtonSA")
         self.pushButtonPTA = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTaccel.setFocus())
-        self.pushButtonPTA.setGeometry(QtCore.QRect(30, 70, 301, 61))
+        self.pushButtonPTA.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 3.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(20)
@@ -631,7 +659,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTA.setStyleSheet("border: 5px solid grey; background-color: #405C80; border-radius: 30px;")
         self.pushButtonPTA.setObjectName("pushButtonPTA")
         self.labelPTaccel = QtWidgets.QLineEdit(self.groupBox)
-        self.labelPTaccel.setGeometry(QtCore.QRect(360, 70, 221, 61))
+        self.labelPTaccel.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 3.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -640,7 +668,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTaccel.setText("")
         self.labelPTaccel.setObjectName("labelPTaccel")
         self.labelZoomLimit = QtWidgets.QLineEdit(self.groupBox)
-        self.labelZoomLimit.setGeometry(QtCore.QRect(360, 650, 221, 61))
+        self.labelZoomLimit.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 32.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -649,7 +677,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setText("")
         self.labelZoomLimit.setObjectName("labelZoomLimit")
         self.labelPTspeed4 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelPTspeed4.setGeometry(QtCore.QRect(360, 210, 221, 61))
+        self.labelPTspeed4.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 105, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -658,7 +686,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTspeed4.setText("")
         self.labelPTspeed4.setObjectName("labelPTspeed4")
         self.labelPTspeed3 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelPTspeed3.setGeometry(QtCore.QRect(360, 300, 221, 61))
+        self.labelPTspeed3.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 15, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -667,7 +695,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTspeed3.setText("")
         self.labelPTspeed3.setObjectName("labelPTspeed3")
         self.labelPTspeed2 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelPTspeed2.setGeometry(QtCore.QRect(360, 390, 221, 61))
+        self.labelPTspeed2.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 19.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -676,7 +704,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTspeed2.setText("")
         self.labelPTspeed2.setObjectName("labelPTspeed2")
         self.labelPTspeed1 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelPTspeed1.setGeometry(QtCore.QRect(360, 480, 221, 61))
+        self.labelPTspeed1.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 24, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -685,7 +713,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTspeed1.setText("")
         self.labelPTspeed1.setObjectName("labelPTspeed1")
         self.labelSLaccel = QtWidgets.QLineEdit(self.groupBox)
-        self.labelSLaccel.setGeometry(QtCore.QRect(1040, 70, 221, 61))
+        self.labelSLaccel.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 3.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -694,7 +722,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLaccel.setText("")
         self.labelSLaccel.setObjectName("labelSLaccel")
         self.labelSLspeed4 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelSLspeed4.setGeometry(QtCore.QRect(1040, 210, 221, 61))
+        self.labelSLspeed4.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 10.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -702,8 +730,17 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed4.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSLspeed4.setText("")
         self.labelSLspeed4.setObjectName("labelSLspeed4")
+        self.labelSLspeed3 = QtWidgets.QLineEdit(self.groupBox)
+        self.labelSLspeed3.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 15, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(40)
+        self.labelSLspeed3.setFont(font)
+        self.labelSLspeed3.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelSLspeed3.setText("")
+        self.labelSLspeed3.setObjectName("labelSLspeed3")
         self.labelSLspeed2 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelSLspeed2.setGeometry(QtCore.QRect(1040, 390, 221, 61))
+        self.labelSLspeed2.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 19.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -712,7 +749,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed2.setText("")
         self.labelSLspeed2.setObjectName("labelSLspeed2")
         self.labelSLspeed1 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelSLspeed1.setGeometry(QtCore.QRect(1040, 480, 221, 61))
+        self.labelSLspeed1.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 24, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -720,22 +757,13 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed1.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSLspeed1.setText("")
         self.labelSLspeed1.setObjectName("labelSLspeed1")
-        self.labelSLspeed3 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelSLspeed3.setGeometry(QtCore.QRect(1040, 300, 221, 61))
-        font = QtGui.QFont()
-        font.setFamily("Helvetica Neue")
-        font.setPointSize(40)
-        self.labelSLspeed3.setFont(font)
-        self.labelSLspeed3.setStyleSheet("color:#ffffff;border: 2px solid grey;")
-        self.labelSLspeed3.setText("")
-        self.labelSLspeed3.setObjectName("labelSLspeed3")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_2.setGeometry(QtCore.QRect(1350, 670, 551, 341))
+        self.groupBox_2.setGeometry(QtCore.QRect(butttonLayoutX * 67.5, butttonLayoutY * 33.5, (buttonGoX * 4.5833333333)+1, (buttonGoY * 2.8333333333)+1))
         self.groupBox_2.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox_2.setTitle("")
         self.groupBox_2.setObjectName("groupBox_2")
         self.pushButtonNum1 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('1'))
-        self.pushButtonNum1.setGeometry(QtCore.QRect(10, 20, 101, 61))
+        self.pushButtonNum1.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, butttonLayoutY, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -744,7 +772,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum1.setObjectName("pushButtonNum1")
         self.pushButtonNum1.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum2 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('2'))
-        self.pushButtonNum2.setGeometry(QtCore.QRect(130, 20, 101, 61))
+        self.pushButtonNum2.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -753,7 +781,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum2.setObjectName("pushButtonNum2")
         self.pushButtonNum2.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum3 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('3'))
-        self.pushButtonNum3.setGeometry(QtCore.QRect(250, 20, 101, 61))
+        self.pushButtonNum3.setGeometry(QtCore.QRect(butttonLayoutX * 12.5, butttonLayoutY, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -762,7 +790,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum3.setObjectName("pushButtonNum3")
         self.pushButtonNum3.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum4 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('4'))
-        self.pushButtonNum4.setGeometry(QtCore.QRect(10, 100, 101, 61))
+        self.pushButtonNum4.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, butttonLayoutY * 5, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -771,7 +799,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum4.setObjectName("pushButtonNum4")
         self.pushButtonNum4.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum5 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('5'))
-        self.pushButtonNum5.setGeometry(QtCore.QRect(130, 100, 101, 61))
+        self.pushButtonNum5.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 5, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -780,7 +808,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum5.setObjectName("pushButtonNum5")
         self.pushButtonNum5.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum6 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('6'))
-        self.pushButtonNum6.setGeometry(QtCore.QRect(250, 100, 101, 61))
+        self.pushButtonNum6.setGeometry(QtCore.QRect(butttonLayoutX * 12.5, butttonLayoutY * 5, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -789,7 +817,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum6.setObjectName("pushButtonNum6")
         self.pushButtonNum6.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum7 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('7'))
-        self.pushButtonNum7.setGeometry(QtCore.QRect(10, 180, 101, 61))
+        self.pushButtonNum7.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, butttonLayoutY * 9, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -798,7 +826,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum7.setObjectName("pushButtonNum7")
         self.pushButtonNum7.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum8 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('8'))
-        self.pushButtonNum8.setGeometry(QtCore.QRect(130, 180, 101, 61))
+        self.pushButtonNum8.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 9, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -807,7 +835,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum8.setObjectName("pushButtonNum8")
         self.pushButtonNum8.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum9 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('9'))
-        self.pushButtonNum9.setGeometry(QtCore.QRect(250, 180, 101, 61))
+        self.pushButtonNum9.setGeometry(QtCore.QRect(butttonLayoutX * 12.5, butttonLayoutY * 9, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -816,7 +844,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum9.setObjectName("pushButtonNum9")
         self.pushButtonNum9.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNum0 = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.emulateKey('0'))
-        self.pushButtonNum0.setGeometry(QtCore.QRect(130, 260, 101, 61))
+        self.pushButtonNum0.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 13, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -825,7 +853,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum0.setObjectName("pushButtonNum0")
         self.pushButtonNum0.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNumBS = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyBackSpace())
-        self.pushButtonNumBS.setGeometry(QtCore.QRect(410, 20, 121, 61))
+        self.pushButtonNumBS.setGeometry(QtCore.QRect(butttonLayoutX * 20.5, butttonLayoutY, buttonGoX + 1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(28)
@@ -834,7 +862,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNumBS.setObjectName("pushButtonNumBS")
         self.pushButtonNumBS.setFocusPolicy(Qt.NoFocus)
         self.pushButtonNumEnt = QtWidgets.QPushButton(self.groupBox_2, clicked = lambda: self.keyEnter())
-        self.pushButtonNumEnt.setGeometry(QtCore.QRect(390, 260, 151, 61))
+        self.pushButtonNumEnt.setGeometry(QtCore.QRect(butttonLayoutX * 19.5, butttonLayoutY * 13, (buttonGoX * 1.25)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
@@ -843,12 +871,12 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNumEnt.setObjectName("pushButtonNumEnt")
         self.pushButtonNumEnt.setFocusPolicy(Qt.NoFocus)
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_3.setGeometry(QtCore.QRect(1380, 10, 291, 581))
+        self.groupBox_3.setGeometry(QtCore.QRect(butttonLayoutX * 69, butttonLayoutY * 0.5, (buttonGoX * 2.417)+1, (buttonGoY * 4.83333)+1))
         self.groupBox_3.setStyleSheet("color: #FFFFFF; background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox_3.setTitle("")
         self.groupBox_3.setObjectName("groupBox_3")
         self.pushButtonCam1 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam1GetSettings())
-        self.pushButtonCam1.setGeometry(QtCore.QRect(60, 30, 171, 81))
+        self.pushButtonCam1.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 1.5, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -857,7 +885,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam1.setFlat(False)
         self.pushButtonCam1.setObjectName("pushButtonCam1")
         self.pushButtonCam2 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam2GetSettings())
-        self.pushButtonCam2.setGeometry(QtCore.QRect(60, 140, 171, 81))
+        self.pushButtonCam2.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 7, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -866,7 +894,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam2.setFlat(False)
         self.pushButtonCam2.setObjectName("pushButtonCam2")
         self.pushButtonCam3 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam3GetSettings())
-        self.pushButtonCam3.setGeometry(QtCore.QRect(60, 250, 171, 81))
+        self.pushButtonCam3.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 12.5, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -875,7 +903,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam3.setFlat(False)
         self.pushButtonCam3.setObjectName("pushButtonCam3")
         self.pushButtonCam4 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam4GetSettings())
-        self.pushButtonCam4.setGeometry(QtCore.QRect(60, 360, 171, 81))
+        self.pushButtonCam4.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 18, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -884,7 +912,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam4.setFlat(False)
         self.pushButtonCam4.setObjectName("pushButtonCam4")
         self.pushButtonCam5 = QtWidgets.QPushButton(self.groupBox_3, clicked = lambda: self.cam5GetSettings())
-        self.pushButtonCam5.setGeometry(QtCore.QRect(60, 470, 171, 81))
+        self.pushButtonCam5.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 23.5, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -893,7 +921,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam5.setFlat(False)
         self.pushButtonCam5.setObjectName("pushButtonCam5")
         self.pushButtonClose = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.pushToClose())
-        self.pushButtonClose.setGeometry(QtCore.QRect(1720, 40, 181, 81))
+        self.pushButtonClose.setGeometry(QtCore.QRect(butttonLayoutX * 86, butttonLayoutY * 2, (buttonGoX * 1.5)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -902,7 +930,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonClose.setFlat(False)
         self.pushButtonClose.setObjectName("pushButtonClose")
         self.pushButtonStore = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.sendStoreEEPROM())
-        self.pushButtonStore.setGeometry(QtCore.QRect(1720, 480, 181, 81))
+        self.pushButtonStore.setGeometry(QtCore.QRect(butttonLayoutX * 86, butttonLayoutY * 23.5, (buttonGoX * 1.5)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -912,7 +940,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonStore.setObjectName("pushButtonStore")
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1980, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, buttonGoX * 16.5, (buttonGoY * 0.2)+1))
         self.menubar.setObjectName("menubar")
         self.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(self)
@@ -1202,14 +1230,29 @@ class Ui_editWindow(QMainWindow):
         super(Ui_editWindow, self).__init__()
 
     def setupUi(self):
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+
         self.setObjectName("editWindow")
-        self.resize(332, 185)
+        self.resize(buttonGoX * 2.7666666667, buttonGoY* 1.5416666667)
         self.setAutoFillBackground(False)
         self.setStyleSheet("background-color: #7593BC;")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.lineEdit = QtWidgets.QLineEdit(self.centralwidget)
-        self.lineEdit.setGeometry(QtCore.QRect(40, 30, 120, 120))
+        self.lineEdit.setGeometry(QtCore.QRect(butttonLayoutX * 2, butttonLayoutY * 1.5, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1219,7 +1262,7 @@ class Ui_editWindow(QMainWindow):
         self.lineEdit.setAlignment(QtCore.Qt.AlignCenter)
         self.lineEdit.setObjectName("lineEdit")
         self.pushButton = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.editSet())
-        self.pushButton.setGeometry(QtCore.QRect(200, 50, 91, 81))
+        self.pushButton.setGeometry(QtCore.QRect(butttonLayoutX *10, butttonLayoutY * 2.5, (buttonGoX * 0.75)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setPointSize(20)
         self.pushButton.setFont(font)
@@ -1227,7 +1270,7 @@ class Ui_editWindow(QMainWindow):
         self.pushButton.setObjectName("pushButton")
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 332, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, buttonGoX * 2.7666666667, buttonGoY * 0.2))
         self.menubar.setObjectName("menubar")
         self.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(self)
@@ -1238,7 +1281,7 @@ class Ui_editWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.show()
-        self.move(780, 150)
+        self.move(buttonGoX * 6.5, buttonGoY * 1.25)
 
         self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
         self.lineEdit.setFocus()
@@ -1267,13 +1310,26 @@ class Ui_MoverWindow(QMainWindow):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
 
     def setupUi(self):
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
         self.setObjectName("MainWindow")
-        self.resize(861, 801)
+        self.resize((buttonGoX * 7.1666666667)+1 , (buttonGoY * 6.6666666667)+1)
         self.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
         self.pushUP10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.up10())
-        self.pushUP10.setGeometry(QtCore.QRect(240, 0, 121, 121))
+        self.pushUP10.setGeometry(QtCore.QRect(butttonLayoutX * 12, 0, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
@@ -1281,7 +1337,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushUP10.setStyleSheet("border: 10px solid grey; background-color: #33aa33; border-radius: 50px;")
         self.pushUP10.setObjectName("pushUP10")
         self.pushUP1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.up1())
-        self.pushUP1.setGeometry(QtCore.QRect(240, 130, 121, 121))
+        self.pushUP1.setGeometry(QtCore.QRect(butttonLayoutX * 12, butttonLayoutY * 6.5, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
@@ -1289,77 +1345,77 @@ class Ui_MoverWindow(QMainWindow):
         self.pushUP1.setStyleSheet("border: 10px solid grey; background-color: #77ff77; border-radius: 50px;")
         self.pushUP1.setObjectName("pushUP1")
         self.pushDOWN1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.down1())
-        self.pushDOWN1.setGeometry(QtCore.QRect(240, 350, 121, 121))
+        self.pushDOWN1.setGeometry(QtCore.QRect(butttonLayoutX * 12, 350, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushDOWN1.setFont(font)
         self.pushDOWN1.setStyleSheet("border: 10px solid grey; background-color: #77ff77; border-radius: 50px;")
         self.pushDOWN1.setObjectName("pushDOWN1")
         self.pushDOWN10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.down10())
-        self.pushDOWN10.setGeometry(QtCore.QRect(240, 480, 121, 121))
+        self.pushDOWN10.setGeometry(QtCore.QRect(butttonLayoutX * 12, 480, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushDOWN10.setFont(font)
         self.pushDOWN10.setStyleSheet("border: 10px solid grey; background-color: #33aa33; border-radius: 50px;")
         self.pushDOWN10.setObjectName("pushDOWN10")
         self.pushLEFT10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.left10())
-        self.pushLEFT10.setGeometry(QtCore.QRect(0, 240, 121, 121))
+        self.pushLEFT10.setGeometry(QtCore.QRect(0, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushLEFT10.setFont(font)
         self.pushLEFT10.setStyleSheet("border: 10px solid grey; background-color: #aaaa33; border-radius: 50px;")
         self.pushLEFT10.setObjectName("pushLEFT10")
         self.pushLEFT1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.left1())
-        self.pushLEFT1.setGeometry(QtCore.QRect(130, 240, 121, 121))
+        self.pushLEFT1.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushLEFT1.setFont(font)
         self.pushLEFT1.setStyleSheet("border: 10px solid grey; background-color: #ffff77; border-radius: 50px;")
         self.pushLEFT1.setObjectName("pushLEFT1")
         self.pushRIGHT1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.right1())
-        self.pushRIGHT1.setGeometry(QtCore.QRect(350, 240, 121, 121))
+        self.pushRIGHT1.setGeometry(QtCore.QRect(butttonLayoutX * 17.5, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushRIGHT1.setFont(font)
         self.pushRIGHT1.setStyleSheet("border: 10px solid grey; background-color: #ffff77; border-radius: 50px;")
         self.pushRIGHT1.setObjectName("pushRIGHT1")
         self.pushRIGHT10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.right10())
-        self.pushRIGHT10.setGeometry(QtCore.QRect(480, 240, 121, 121))
+        self.pushRIGHT10.setGeometry(QtCore.QRect(480, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushRIGHT10.setFont(font)
         self.pushRIGHT10.setStyleSheet("border: 10px solid grey; background-color: #aaaa33; border-radius: 50px;")
         self.pushRIGHT10.setObjectName("pushRIGHT10")
         self.pushSlideLeft100 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideLeft100())
-        self.pushSlideLeft100.setGeometry(QtCore.QRect(0, 640, 121, 121))
+        self.pushSlideLeft100.setGeometry(QtCore.QRect(0, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushSlideLeft100.setFont(font)
         self.pushSlideLeft100.setStyleSheet("border: 10px solid grey; background-color: #aa3333; border-radius: 50px;")
         self.pushSlideLeft100.setObjectName("pushSlideLeft100")
         self.pushSlideLeft10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideLeft10())
-        self.pushSlideLeft10.setGeometry(QtCore.QRect(130, 640, 121, 121))
+        self.pushSlideLeft10.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushSlideLeft10.setFont(font)
         self.pushSlideLeft10.setStyleSheet("border: 10px solid grey; background-color: #ff7777; border-radius: 50px;")
         self.pushSlideLeft10.setObjectName("pushSlideLeft10")
         self.pushSlideRight10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideRight10())
-        self.pushSlideRight10.setGeometry(QtCore.QRect(350, 640, 121, 121))
+        self.pushSlideRight10.setGeometry(QtCore.QRect(butttonLayoutX * 17.5, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushSlideRight10.setFont(font)
         self.pushSlideRight10.setStyleSheet("border: 10px solid grey; background-color: #ff7777; border-radius: 50px;")
         self.pushSlideRight10.setObjectName("pushSlideRight10")
         self.pushSlideRight100 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideRight100())
-        self.pushSlideRight100.setGeometry(QtCore.QRect(480, 640, 121, 121))
+        self.pushSlideRight100.setGeometry(QtCore.QRect(butttonLayoutX * 24, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setPointSize(48)
         self.pushSlideRight100.setFont(font)
         self.pushSlideRight100.setStyleSheet("border: 10px solid grey; background-color: #aa3333; border-radius: 50px;")
         self.pushSlideRight100.setObjectName("pushSlideRight100")
         self.pushZoomInFast = QtWidgets.QPushButton(self.centralwidget, pressed= lambda: self.zoomMove(6), released= lambda: self.zoomMove(0))
-        self.pushZoomInFast.setGeometry(QtCore.QRect(740, 50, 121, 121))
+        self.pushZoomInFast.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 2.5, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -1367,7 +1423,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushZoomInFast.setStyleSheet("border: 10px solid grey; background-color: #3333aa; border-radius: 50px;")
         self.pushZoomInFast.setObjectName("pushZoomInFast")
         self.pushZoomInSlow = QtWidgets.QPushButton(self.centralwidget, pressed= lambda: self.zoomMove(1), released= lambda: self.zoomMove(0))
-        self.pushZoomInSlow.setGeometry(QtCore.QRect(740, 180, 121, 121))
+        self.pushZoomInSlow.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 9, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -1375,7 +1431,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushZoomInSlow.setStyleSheet("border: 10px solid grey; background-color: #7777ff; border-radius: 50px;")
         self.pushZoomInSlow.setObjectName("pushZoomInSlow")
         self.pushZoomOutSlow = QtWidgets.QPushButton(self.centralwidget, pressed= lambda: self.zoomMove(-1), released= lambda: self.zoomMove(0))
-        self.pushZoomOutSlow.setGeometry(QtCore.QRect(740, 400, 121, 121))
+        self.pushZoomOutSlow.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 20, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -1383,7 +1439,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushZoomOutSlow.setStyleSheet("border: 10px solid grey; background-color: #7777ff; border-radius: 50px;")
         self.pushZoomOutSlow.setObjectName("pushZoomOutSlow")
         self.pushZoomOutFast = QtWidgets.QPushButton(self.centralwidget, pressed= lambda: self.zoomMove(-6), released= lambda: self.zoomMove(0))
-        self.pushZoomOutFast.setGeometry(QtCore.QRect(740, 530, 121, 121))
+        self.pushZoomOutFast.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 26.5, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(36)
@@ -1391,7 +1447,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushZoomOutFast.setStyleSheet("border: 10px solid grey; background-color: #3333aa; border-radius: 50px;")
         self.pushZoomOutFast.setObjectName("pushZoomOutFast")
         self.pushClose = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.pushToClose())
-        self.pushClose.setGeometry(QtCore.QRect(10, 0, 101, 101))
+        self.pushClose.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, 0, (buttonGoX * 0.8333333333)+1, (buttonGoY * 0.8333333333)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(48)
@@ -1400,7 +1456,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushClose.setObjectName("pushClose")
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 603, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, (buttonGoX * 5)+3, buttonGoY * 0.2))
         self.menubar.setObjectName("menubar")
         self.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(self)
@@ -1412,8 +1468,10 @@ class Ui_MoverWindow(QMainWindow):
 
         self.show()
     
-        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
-        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        #ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()       # 1920 x 1080
+        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()          # 1920 x 1080
+        sg = self.screen()[0].size().toTuple()
+
         widget = self.geometry()                        # 
         x = (ag.width() / 2) - (widget.width() / 2)
         y = 2 * ag.height() - sg.height() - widget.height() - 50
@@ -1458,7 +1516,7 @@ class Ui_MoverWindow(QMainWindow):
         elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
         elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
-        if speed == -8: self.sendSerial(zoomSerial + 'a8')      # Zoom Out Fastest
+        if speed == -8: self.sendSerial(zoomSerial + 'a8')
         elif speed == -7: self.sendSerial(zoomSerial + 'a7')
         elif speed == -6: self.sendSerial(zoomSerial + 'a6')
         elif speed == -5: self.sendSerial(zoomSerial + 'a5')
@@ -1473,7 +1531,7 @@ class Ui_MoverWindow(QMainWindow):
         elif speed == 5: self.sendSerial(zoomSerial + 'A5')
         elif speed == 6: self.sendSerial(zoomSerial + 'A6')
         elif speed == 7: self.sendSerial(zoomSerial + 'A7')
-        elif speed == 8: self.sendSerial(zoomSerial + 'A8')      # Zoom In Fastest
+        elif speed == 8: self.sendSerial(zoomSerial + 'A8')
         else: 
             self.sendSerial(zoomSerial + 'q')
             self.sendSerial(zoomSerial + 'q')
@@ -1541,10 +1599,37 @@ class Ui_MoverWindow(QMainWindow):
 
 
 class PTSapp(QMainWindow):
+    global agX
+    global agY
+    global debug
+
     def __init__(self, txt):
         self.text = txt
         super(PTSapp, self).__init__()
         self.setupUi()
+    
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+        if debug:
+            print(agX)
+            print(agY)
+
+        self.createWorkerThread()
+
+    
+    def createWorkerThread(self):
+        # Setup the worker object and the worker_thread.
+        self.worker = WorkerObject()
+        self.worker_thread = QtCore.QThread()
+        self.worker.moveToThread(self.worker_thread)
+        self.worker_thread.start()
+
+        # Connect any worker signals
+        self.worker.startWork
     
     def openEditWindow(self, text):
         self.ui2 = Ui_editWindow()
@@ -1556,6 +1641,8 @@ class PTSapp(QMainWindow):
         elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
 
+
+
     
     def openMoverWindow(self):
         self.ui3 = Ui_MoverWindow()
@@ -1564,7 +1651,6 @@ class PTSapp(QMainWindow):
 
     
     def openSettingsWindow(self):
-
         self.sendSerial('&1K')
         time.sleep(0.1)
         self.sendSerial('&2K')
@@ -1587,8 +1673,23 @@ class PTSapp(QMainWindow):
         self.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+
+        agX = ag.width()
+        agY = ag.height()
+
+        buttonGoX = agX * 0.0625        # 120,  120/1920
+        buttonGoY = agY * 0.1111        # 120,  120/1080
+
+        buttonCamY = agY * 0.06574       # 71,   71/1080
+
+        butttonLayoutX = agX * 0.01042      # 20 / 1920
+        butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox.setGeometry(QtCore.QRect(20, 140, 1881, 160))
+        self.groupBox.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 7, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
         self.groupBox.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
         self.groupBox.setTitle("")
         self.groupBox.setFlat(False)
@@ -1609,8 +1710,6 @@ class PTSapp(QMainWindow):
             global axisZ
             global axisW
             
-            global debug
-            
             #updater.now_call_latest()
             joyName = str(key.joystick)
             joyName = joyName.lower()
@@ -1621,8 +1720,7 @@ class PTSapp(QMainWindow):
             deadRange = 0.1
 
             if re.search('xbox', joyName):
-                if debug:
-                    print(joyName)        #key.number
+                #print(key.number)
                 if joyType[-6:] == "Axis 3":
                     if (key.value < -deadRange):
                         axisX = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
@@ -1700,11 +1798,15 @@ class PTSapp(QMainWindow):
                     axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
 
 
-        mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
-        mngr.start()
+        #mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
+        #mngr.start()
+
+        #def QAnalogAxisInput(self):
+
+
 
         self.pushButton11 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go1())
-        self.pushButton11.setGeometry(QtCore.QRect(20, 20, 120, 120))
+        self.pushButton11.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1713,7 +1815,7 @@ class PTSapp(QMainWindow):
         self.pushButton11.setFlat(False)
         self.pushButton11.setObjectName("pushButton11")
         self.pushButton12 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go2())
-        self.pushButton12.setGeometry(QtCore.QRect(160, 20, 120, 120))
+        self.pushButton12.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1722,7 +1824,7 @@ class PTSapp(QMainWindow):
         self.pushButton12.setFlat(False)
         self.pushButton12.setObjectName("pushButton12")
         self.pushButton13 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go3())
-        self.pushButton13.setGeometry(QtCore.QRect(300, 20, 120, 120))
+        self.pushButton13.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1731,7 +1833,7 @@ class PTSapp(QMainWindow):
         self.pushButton13.setFlat(False)
         self.pushButton13.setObjectName("pushButton13")
         self.pushButton14 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go4())
-        self.pushButton14.setGeometry(QtCore.QRect(440, 20, 120, 120))
+        self.pushButton14.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1740,7 +1842,7 @@ class PTSapp(QMainWindow):
         self.pushButton14.setFlat(False)
         self.pushButton14.setObjectName("pushButton14")
         self.pushButton15 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go5())
-        self.pushButton15.setGeometry(QtCore.QRect(580, 20, 120, 120))
+        self.pushButton15.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1749,7 +1851,7 @@ class PTSapp(QMainWindow):
         self.pushButton15.setFlat(False)
         self.pushButton15.setObjectName("pushButton15")
         self.pushButton16 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go6())
-        self.pushButton16.setGeometry(QtCore.QRect(720, 20, 120, 120))
+        self.pushButton16.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1758,7 +1860,7 @@ class PTSapp(QMainWindow):
         self.pushButton16.setFlat(False)
         self.pushButton16.setObjectName("pushButton16")
         self.pushButton17 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go7())
-        self.pushButton17.setGeometry(QtCore.QRect(860, 20, 120, 120))
+        self.pushButton17.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1767,7 +1869,7 @@ class PTSapp(QMainWindow):
         self.pushButton17.setFlat(False)
         self.pushButton17.setObjectName("pushButton17")
         self.pushButton18 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go8())
-        self.pushButton18.setGeometry(QtCore.QRect(1000, 20, 120, 120))
+        self.pushButton18.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1776,7 +1878,7 @@ class PTSapp(QMainWindow):
         self.pushButton18.setFlat(False)
         self.pushButton18.setObjectName("pushButton18")
         self.pushButton19 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go9())
-        self.pushButton19.setGeometry(QtCore.QRect(1140, 20, 120, 120))
+        self.pushButton19.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1785,7 +1887,7 @@ class PTSapp(QMainWindow):
         self.pushButton19.setFlat(False)
         self.pushButton19.setObjectName("pushButton19")
         self.pushButton10 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go10())
-        self.pushButton10.setGeometry(QtCore.QRect(1280, 20, 120, 120))
+        self.pushButton10.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1794,7 +1896,7 @@ class PTSapp(QMainWindow):
         self.pushButton10.setFlat(False)
         self.pushButton10.setObjectName("pushButton10")
         self.dial1p = QtWidgets.QDial(self.groupBox, sliderPressed= lambda: self.setDials(1, 1, self.dial1p.value()))
-        self.dial1p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
+        self.dial1p.setGeometry(QtCore.QRect(butttonLayoutX * 75, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))
         self.dial1p.setStyleSheet("background: black;")
         self.dial1p.setMinimum(1)
         self.dial1p.setMaximum(4)
@@ -1805,7 +1907,7 @@ class PTSapp(QMainWindow):
         self.dial1p.setNotchesVisible(True)
         self.dial1p.setObjectName("dial1p")
         self.dial1s = QtWidgets.QDial(self.groupBox, sliderPressed= lambda: self.setDials(1, 2, self.dial1s.value()))
-        self.dial1s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
+        self.dial1s.setGeometry(QtCore.QRect(butttonLayoutX * 83.5, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))
         self.dial1s.setStyleSheet("background: black;")
         self.dial1s.setMinimum(1)
         self.dial1s.setMaximum(4)
@@ -1813,14 +1915,14 @@ class PTSapp(QMainWindow):
         self.dial1s.setNotchesVisible(True)
         self.dial1s.setObjectName("dial1s")
         self.line1p = QtWidgets.QFrame(self.groupBox)
-        self.line1p.setGeometry(QtCore.QRect(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
+        self.line1p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
         self.line1p.setStyleSheet("border: 10px solid #aaaa00;")
         self.line1p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line1p.setLineWidth(20)
         self.line1p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line1p.setObjectName("line1p")
         self.line1s = QtWidgets.QFrame(self.groupBox)
-        self.line1s.setGeometry(QtCore.QRect(1820, 115, 20, 36))
+        self.line1s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))
         self.line1s.setStyleSheet("border: 10px solid #aaaa00;")
         self.line1s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line1s.setLineWidth(20)
@@ -1828,13 +1930,13 @@ class PTSapp(QMainWindow):
         self.line1s.setObjectName("line1s")
 
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_2.setGeometry(QtCore.QRect(20, 310, 1881, 160))
+        self.groupBox_2.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 15.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 310, 1881, 160))
         self.groupBox_2.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox_2.setTitle("")
         self.groupBox_2.setFlat(False)
         self.groupBox_2.setObjectName("groupBox_2")
         self.pushButton21 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go1())
-        self.pushButton21.setGeometry(QtCore.QRect(20, 20, 120, 120))
+        self.pushButton21.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1843,7 +1945,7 @@ class PTSapp(QMainWindow):
         self.pushButton21.setFlat(False)
         self.pushButton21.setObjectName("pushButton21")
         self.pushButton22 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go2())
-        self.pushButton22.setGeometry(QtCore.QRect(160, 20, 120, 120))
+        self.pushButton22.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1852,7 +1954,7 @@ class PTSapp(QMainWindow):
         self.pushButton22.setFlat(False)
         self.pushButton22.setObjectName("pushButton22")
         self.pushButton23 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go3())
-        self.pushButton23.setGeometry(QtCore.QRect(300, 20, 120, 120))
+        self.pushButton23.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1861,7 +1963,7 @@ class PTSapp(QMainWindow):
         self.pushButton23.setFlat(False)
         self.pushButton23.setObjectName("pushButton23")
         self.pushButton24 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go4())
-        self.pushButton24.setGeometry(QtCore.QRect(440, 20, 120, 120))
+        self.pushButton24.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1870,7 +1972,7 @@ class PTSapp(QMainWindow):
         self.pushButton24.setFlat(False)
         self.pushButton24.setObjectName("pushButton24")
         self.pushButton25 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go5())
-        self.pushButton25.setGeometry(QtCore.QRect(580, 20, 120, 120))
+        self.pushButton25.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1879,7 +1981,7 @@ class PTSapp(QMainWindow):
         self.pushButton25.setFlat(False)
         self.pushButton25.setObjectName("pushButton25")
         self.pushButton26 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go6())
-        self.pushButton26.setGeometry(QtCore.QRect(720, 20, 120, 120))
+        self.pushButton26.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1888,7 +1990,7 @@ class PTSapp(QMainWindow):
         self.pushButton26.setFlat(False)
         self.pushButton26.setObjectName("pushButton26")
         self.pushButton27 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go7())
-        self.pushButton27.setGeometry(QtCore.QRect(860, 20, 120, 120))
+        self.pushButton27.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1897,7 +1999,7 @@ class PTSapp(QMainWindow):
         self.pushButton27.setFlat(False)
         self.pushButton27.setObjectName("pushButton27")
         self.pushButton28 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go8())
-        self.pushButton28.setGeometry(QtCore.QRect(1000, 20, 120, 120))
+        self.pushButton28.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1906,7 +2008,7 @@ class PTSapp(QMainWindow):
         self.pushButton28.setFlat(False)
         self.pushButton28.setObjectName("pushButton28")
         self.pushButton29 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go9())
-        self.pushButton29.setGeometry(QtCore.QRect(1140, 20, 120, 120))
+        self.pushButton29.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1915,7 +2017,7 @@ class PTSapp(QMainWindow):
         self.pushButton29.setFlat(False)
         self.pushButton29.setObjectName("pushButton29")
         self.pushButton20 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2Go10())
-        self.pushButton20.setGeometry(QtCore.QRect(1280, 20, 120, 120))
+        self.pushButton20.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1924,7 +2026,7 @@ class PTSapp(QMainWindow):
         self.pushButton20.setFlat(False)
         self.pushButton20.setObjectName("pushButton20")
         self.dial2p = QtWidgets.QDial(self.groupBox_2, sliderPressed= lambda: self.setDials(2, 1, self.dial2p.value()))
-        self.dial2p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
+        self.dial2p.setGeometry(QtCore.QRect(butttonLayoutX * 75, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))  #(1500, 10, 140, 140))
         self.dial2p.setStyleSheet("background: black;")
         self.dial2p.setMinimum(1)
         self.dial2p.setMaximum(4)
@@ -1936,7 +2038,7 @@ class PTSapp(QMainWindow):
         self.dial2p.setNotchesVisible(True)
         self.dial2p.setObjectName("dial2p")
         self.dial2s = QtWidgets.QDial(self.groupBox_2, sliderPressed= lambda: self.setDials(2, 2, self.dial2s.value()))
-        self.dial2s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
+        self.dial2s.setGeometry(QtCore.QRect(butttonLayoutX * 83.5, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))    #(1670, 10, 140, 140))
         self.dial2s.setStyleSheet("background: black;")
         self.dial2s.setMinimum(1)
         self.dial2s.setMaximum(4)
@@ -1944,14 +2046,14 @@ class PTSapp(QMainWindow):
         self.dial2s.setNotchesVisible(True)
         self.dial2s.setObjectName("dial2s")
         self.line2p = QtWidgets.QFrame(self.groupBox_2)
-        self.line2p.setGeometry(QtCore.QRect(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
+        self.line2p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))   #(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
         self.line2p.setStyleSheet("border: 10px solid #aaaa00;")
         self.line2p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line2p.setLineWidth(20)
         self.line2p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line2p.setObjectName("line2p")
         self.line2s = QtWidgets.QFrame(self.groupBox_2)
-        self.line2s.setGeometry(QtCore.QRect(1820, 115, 20, 36))
+        self.line2s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)) #(1820, 115, 20, 36))
         self.line2s.setStyleSheet("border: 10px solid #aaaa00;")
         self.line2s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line2s.setLineWidth(20)
@@ -1959,13 +2061,13 @@ class PTSapp(QMainWindow):
         self.line2s.setObjectName("line2s")
 
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_3.setGeometry(QtCore.QRect(20, 480, 1881, 160))
+        self.groupBox_3.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 24, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 480, 1881, 160))
         self.groupBox_3.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
         self.groupBox_3.setTitle("")
         self.groupBox_3.setFlat(False)
         self.groupBox_3.setObjectName("groupBox_3")
         self.pushButton31 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go1())
-        self.pushButton31.setGeometry(QtCore.QRect(20, 20, 120, 120))
+        self.pushButton31.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1974,7 +2076,7 @@ class PTSapp(QMainWindow):
         self.pushButton31.setFlat(False)
         self.pushButton31.setObjectName("pushButton31")
         self.pushButton32 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go2())
-        self.pushButton32.setGeometry(QtCore.QRect(160, 20, 120, 120))
+        self.pushButton32.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1983,7 +2085,7 @@ class PTSapp(QMainWindow):
         self.pushButton32.setFlat(False)
         self.pushButton32.setObjectName("pushButton32")
         self.pushButton33 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go3())
-        self.pushButton33.setGeometry(QtCore.QRect(300, 20, 120, 120))
+        self.pushButton33.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -1992,7 +2094,7 @@ class PTSapp(QMainWindow):
         self.pushButton33.setFlat(False)
         self.pushButton33.setObjectName("pushButton33")
         self.pushButton34 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go4())
-        self.pushButton34.setGeometry(QtCore.QRect(440, 20, 120, 120))
+        self.pushButton34.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2001,7 +2103,7 @@ class PTSapp(QMainWindow):
         self.pushButton34.setFlat(False)
         self.pushButton34.setObjectName("pushButton34")
         self.pushButton35 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go5())
-        self.pushButton35.setGeometry(QtCore.QRect(580, 20, 120, 120))
+        self.pushButton35.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2010,7 +2112,7 @@ class PTSapp(QMainWindow):
         self.pushButton35.setFlat(False)
         self.pushButton35.setObjectName("pushButton35")
         self.pushButton36 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go6())
-        self.pushButton36.setGeometry(QtCore.QRect(720, 20, 120, 120))
+        self.pushButton36.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2019,7 +2121,7 @@ class PTSapp(QMainWindow):
         self.pushButton36.setFlat(False)
         self.pushButton36.setObjectName("pushButton36")
         self.pushButton37 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go7())
-        self.pushButton37.setGeometry(QtCore.QRect(860, 20, 120, 120))
+        self.pushButton37.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2028,7 +2130,7 @@ class PTSapp(QMainWindow):
         self.pushButton37.setFlat(False)
         self.pushButton37.setObjectName("pushButton37")
         self.pushButton38 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go8())
-        self.pushButton38.setGeometry(QtCore.QRect(1000, 20, 120, 120))
+        self.pushButton38.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2037,7 +2139,7 @@ class PTSapp(QMainWindow):
         self.pushButton38.setFlat(False)
         self.pushButton38.setObjectName("pushButton38")
         self.pushButton39 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go9())
-        self.pushButton39.setGeometry(QtCore.QRect(1140, 20, 120, 120))
+        self.pushButton39.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2046,7 +2148,7 @@ class PTSapp(QMainWindow):
         self.pushButton39.setFlat(False)
         self.pushButton39.setObjectName("pushButton39")
         self.pushButton30 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3Go10())
-        self.pushButton30.setGeometry(QtCore.QRect(1280, 20, 120, 120))
+        self.pushButton30.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2055,7 +2157,7 @@ class PTSapp(QMainWindow):
         self.pushButton30.setFlat(False)
         self.pushButton30.setObjectName("pushButton30")
         self.dial3p = QtWidgets.QDial(self.groupBox_3, sliderPressed= lambda: self.setDials(3, 1, self.dial3p.value()))
-        self.dial3p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
+        self.dial3p.setGeometry(QtCore.QRect(butttonLayoutX * 75, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))  #(1500, butttonLayoutY/2, 140, 140))
         self.dial3p.setStyleSheet("background: black;")
         self.dial3p.setMinimum(1)
         self.dial3p.setMaximum(4)
@@ -2066,7 +2168,7 @@ class PTSapp(QMainWindow):
         self.dial3p.setNotchesVisible(True)
         self.dial3p.setObjectName("dial3p")
         self.dial3s = QtWidgets.QDial(self.groupBox_3, sliderPressed= lambda: self.setDials(3, 2, self.dial3s.value()))
-        self.dial3s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
+        self.dial3s.setGeometry(QtCore.QRect(butttonLayoutX * 83.5, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))    #(1670, butttonLayoutY/2, 140, 140))
         self.dial3s.setStyleSheet("background: black;")
         self.dial3s.setMinimum(1)
         self.dial3s.setMaximum(4)
@@ -2074,14 +2176,14 @@ class PTSapp(QMainWindow):
         self.dial3s.setNotchesVisible(True)
         self.dial3s.setObjectName("dial3s")
         self.line3p = QtWidgets.QFrame(self.groupBox_3)
-        self.line3p.setGeometry(QtCore.QRect(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
+        self.line3p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))   #(1470, 115, buttonGoX, buttonGoY * 1.8))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
         self.line3p.setStyleSheet("border: 10px solid #aaaa00;")
         self.line3p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line3p.setLineWidth(20)
         self.line3p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line3p.setObjectName("line3p")
         self.line3s = QtWidgets.QFrame(self.groupBox_3)
-        self.line3s.setGeometry(QtCore.QRect(1820, 115, 20, 36))
+        self.line3s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)) #(1820, 115, buttonGoX, buttonGoY * 1.8))
         self.line3s.setStyleSheet("border: 10px solid #aaaa00;")
         self.line3s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line3s.setLineWidth(20)
@@ -2089,13 +2191,13 @@ class PTSapp(QMainWindow):
         self.line3s.setObjectName("line3s")
 
         self.groupBox_4 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_4.setGeometry(QtCore.QRect(20, 650, 1881, 160))
+        self.groupBox_4.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 32.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 650, 1881, 160))
         self.groupBox_4.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32; ")
         self.groupBox_4.setTitle("")
         self.groupBox_4.setFlat(False)
         self.groupBox_4.setObjectName("groupBox_4")
         self.pushButton41 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go1())
-        self.pushButton41.setGeometry(QtCore.QRect(20, 20, 120, 120))
+        self.pushButton41.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2104,7 +2206,7 @@ class PTSapp(QMainWindow):
         self.pushButton41.setFlat(False)
         self.pushButton41.setObjectName("pushButton41")
         self.pushButton42 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go2())
-        self.pushButton42.setGeometry(QtCore.QRect(160, 20, 120, 120))
+        self.pushButton42.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2113,7 +2215,7 @@ class PTSapp(QMainWindow):
         self.pushButton42.setFlat(False)
         self.pushButton42.setObjectName("pushButton42")
         self.pushButton43 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go3())
-        self.pushButton43.setGeometry(QtCore.QRect(300, 20, 120, 120))
+        self.pushButton43.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2122,7 +2224,7 @@ class PTSapp(QMainWindow):
         self.pushButton43.setFlat(False)
         self.pushButton43.setObjectName("pushButton43")
         self.pushButton44 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go4())
-        self.pushButton44.setGeometry(QtCore.QRect(440, 20, 120, 120))
+        self.pushButton44.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2131,7 +2233,7 @@ class PTSapp(QMainWindow):
         self.pushButton44.setFlat(False)
         self.pushButton44.setObjectName("pushButton44")
         self.pushButton45 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go5())
-        self.pushButton45.setGeometry(QtCore.QRect(580, 20, 120, 120))
+        self.pushButton45.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2140,7 +2242,7 @@ class PTSapp(QMainWindow):
         self.pushButton45.setFlat(False)
         self.pushButton45.setObjectName("pushButton45")
         self.pushButton46 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go6())
-        self.pushButton46.setGeometry(QtCore.QRect(720, 20, 120, 120))
+        self.pushButton46.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2149,7 +2251,7 @@ class PTSapp(QMainWindow):
         self.pushButton46.setFlat(False)
         self.pushButton46.setObjectName("pushButton46")
         self.pushButton47 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go7())
-        self.pushButton47.setGeometry(QtCore.QRect(860, 20, 120, 120))
+        self.pushButton47.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2158,7 +2260,7 @@ class PTSapp(QMainWindow):
         self.pushButton47.setFlat(False)
         self.pushButton47.setObjectName("pushButton47")
         self.pushButton48 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go8())
-        self.pushButton48.setGeometry(QtCore.QRect(1000, 20, 120, 120))
+        self.pushButton48.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2167,7 +2269,7 @@ class PTSapp(QMainWindow):
         self.pushButton48.setFlat(False)
         self.pushButton48.setObjectName("pushButton48")
         self.pushButton49 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go9())
-        self.pushButton49.setGeometry(QtCore.QRect(1140, 20, 120, 120))
+        self.pushButton49.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2176,7 +2278,7 @@ class PTSapp(QMainWindow):
         self.pushButton49.setFlat(False)
         self.pushButton49.setObjectName("pushButton49")
         self.pushButton40 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4Go10())
-        self.pushButton40.setGeometry(QtCore.QRect(1280, 20, 120, 120))
+        self.pushButton40.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2185,7 +2287,7 @@ class PTSapp(QMainWindow):
         self.pushButton40.setFlat(False)
         self.pushButton40.setObjectName("pushButton40")
         self.dial4p = QtWidgets.QDial(self.groupBox_4, sliderPressed= lambda: self.setDials(4, 1, self.dial4p.value()))
-        self.dial4p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
+        self.dial4p.setGeometry(QtCore.QRect(butttonLayoutX * 75, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))  #(1500, 10, 140, 140))
         self.dial4p.setStyleSheet("background: black;")
         self.dial4p.setMinimum(1)
         self.dial4p.setMaximum(4)
@@ -2196,7 +2298,7 @@ class PTSapp(QMainWindow):
         self.dial4p.setNotchesVisible(True)
         self.dial4p.setObjectName("dial4p")
         self.dial4s = QtWidgets.QDial(self.groupBox_4, sliderPressed= lambda: self.setDials(4, 2, self.dial4s.value()))
-        self.dial4s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
+        self.dial4s.setGeometry(QtCore.QRect(butttonLayoutX * 83.5, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))    #(1670, 10, 140, 140))
         self.dial4s.setStyleSheet("background: black;")
         self.dial4s.setMinimum(1)
         self.dial4s.setMaximum(4)
@@ -2204,14 +2306,14 @@ class PTSapp(QMainWindow):
         self.dial4s.setNotchesVisible(True)
         self.dial4s.setObjectName("dial4s")
         self.line4p = QtWidgets.QFrame(self.groupBox_4)
-        self.line4p.setGeometry(QtCore.QRect(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
+        self.line4p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))   #(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
         self.line4p.setStyleSheet("border: 10px solid #aaaa00;")
         self.line4p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line4p.setLineWidth(20)
         self.line4p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line4p.setObjectName("line4p")
         self.line4s = QtWidgets.QFrame(self.groupBox_4)
-        self.line4s.setGeometry(QtCore.QRect(1820, 115, 20, 36))
+        self.line4s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)) #(1820, 115, 20, 36))
         self.line4s.setStyleSheet("border: 10px solid #aaaa00;")
         self.line4s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line4s.setLineWidth(20)
@@ -2219,13 +2321,13 @@ class PTSapp(QMainWindow):
         self.line4s.setObjectName("line4s")
 
         self.groupBox_5 = QtWidgets.QGroupBox(self.centralwidget)
-        self.groupBox_5.setGeometry(QtCore.QRect(20, 820, 1881, 160))
+        self.groupBox_5.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 41, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 820, 1881, 160))
         self.groupBox_5.setStyleSheet("background-color: #1e252a; border: 4px solid #262d32;")
         self.groupBox_5.setTitle("")
         self.groupBox_5.setFlat(False)
         self.groupBox_5.setObjectName("groupBox_5")
         self.pushButton51 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go1())
-        self.pushButton51.setGeometry(QtCore.QRect(20, 20, 120, 120))
+        self.pushButton51.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2234,7 +2336,7 @@ class PTSapp(QMainWindow):
         self.pushButton51.setFlat(False)
         self.pushButton51.setObjectName("pushButton51")
         self.pushButton52 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go2())
-        self.pushButton52.setGeometry(QtCore.QRect(160, 20, 120, 120))
+        self.pushButton52.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2243,7 +2345,7 @@ class PTSapp(QMainWindow):
         self.pushButton52.setFlat(False)
         self.pushButton52.setObjectName("pushButton52")
         self.pushButton53 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go3())
-        self.pushButton53.setGeometry(QtCore.QRect(300, 20, 120, 120))
+        self.pushButton53.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2252,7 +2354,7 @@ class PTSapp(QMainWindow):
         self.pushButton53.setFlat(False)
         self.pushButton53.setObjectName("pushButton53")
         self.pushButton54 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go4())
-        self.pushButton54.setGeometry(QtCore.QRect(440, 20, 120, 120))
+        self.pushButton54.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2261,7 +2363,7 @@ class PTSapp(QMainWindow):
         self.pushButton54.setFlat(False)
         self.pushButton54.setObjectName("pushButton54")
         self.pushButton55 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go5())
-        self.pushButton55.setGeometry(QtCore.QRect(580, 20, 120, 120))
+        self.pushButton55.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2270,7 +2372,7 @@ class PTSapp(QMainWindow):
         self.pushButton55.setFlat(False)
         self.pushButton55.setObjectName("pushButton55")
         self.pushButton56 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go6())
-        self.pushButton56.setGeometry(QtCore.QRect(720, 20, 120, 120))
+        self.pushButton56.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2279,7 +2381,7 @@ class PTSapp(QMainWindow):
         self.pushButton56.setFlat(False)
         self.pushButton56.setObjectName("pushButton56")
         self.pushButton57 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go7())
-        self.pushButton57.setGeometry(QtCore.QRect(860, 20, 120, 120))
+        self.pushButton57.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2289,7 +2391,7 @@ class PTSapp(QMainWindow):
         self.pushButton57.setFlat(False)
         self.pushButton57.setObjectName("pushButton57")
         self.pushButton58 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go8())
-        self.pushButton58.setGeometry(QtCore.QRect(1000, 20, 120, 120))
+        self.pushButton58.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2298,7 +2400,7 @@ class PTSapp(QMainWindow):
         self.pushButton58.setFlat(False)
         self.pushButton58.setObjectName("pushButton58")
         self.pushButton59 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go9())
-        self.pushButton59.setGeometry(QtCore.QRect(1140, 20, 120, 120))
+        self.pushButton59.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2307,7 +2409,7 @@ class PTSapp(QMainWindow):
         self.pushButton59.setFlat(False)
         self.pushButton59.setObjectName("pushButton59")
         self.pushButton50 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5Go10())
-        self.pushButton50.setGeometry(QtCore.QRect(1280, 20, 120, 120))
+        self.pushButton50.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(32)
@@ -2316,7 +2418,7 @@ class PTSapp(QMainWindow):
         self.pushButton50.setFlat(False)
         self.pushButton50.setObjectName("pushButton50")
         self.dial5p = QtWidgets.QDial(self.groupBox_5, sliderPressed= lambda: self.setDials(5, 1, self.dial5p.value()))
-        self.dial5p.setGeometry(QtCore.QRect(1500, 10, 140, 140))
+        self.dial5p.setGeometry(QtCore.QRect(butttonLayoutX * 75, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))  #(1500, 10, 140, 140))
         self.dial5p.setStyleSheet("background: black;")
         self.dial5p.setMinimum(1)
         self.dial5p.setMaximum(4)
@@ -2327,7 +2429,7 @@ class PTSapp(QMainWindow):
         self.dial5p.setNotchesVisible(True)
         self.dial5p.setObjectName("dial5p")
         self.dial5s = QtWidgets.QDial(self.groupBox_5, sliderPressed= lambda: self.setDials(5, 2, self.dial5s.value()))
-        self.dial5s.setGeometry(QtCore.QRect(1670, 10, 140, 140))
+        self.dial5s.setGeometry(QtCore.QRect(butttonLayoutX * 83.5, butttonLayoutY / 2, butttonLayoutX * 7, butttonLayoutY * 7))    #(1670, 10, 140, 140))
         self.dial5s.setStyleSheet("background: black;")
         self.dial5s.setMinimum(1)
         self.dial5s.setMaximum(4)
@@ -2335,14 +2437,14 @@ class PTSapp(QMainWindow):
         self.dial5s.setNotchesVisible(True)
         self.dial5s.setObjectName("dial5s")
         self.line5p = QtWidgets.QFrame(self.groupBox_5)
-        self.line5p.setGeometry(QtCore.QRect(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
+        self.line5p.setGeometry(QtCore.QRect(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8))   #(1470, 115, 20, 36))            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
         self.line5p.setStyleSheet("border: 10px solid #aaaa00;")
         self.line5p.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line5p.setLineWidth(20)
         self.line5p.setFrameShape(QtWidgets.QFrame.VLine)
         self.line5p.setObjectName("line5p")
         self.line5s = QtWidgets.QFrame(self.groupBox_5)
-        self.line5s.setGeometry(QtCore.QRect(1820, 115, 20, 36))
+        self.line5s.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)) #(1820, 115, 20, 36))
         self.line5s.setStyleSheet("border: 10px solid #aaaa00;")
         self.line5s.setFrameShadow(QtWidgets.QFrame.Plain)
         self.line5s.setLineWidth(20)
@@ -2350,7 +2452,7 @@ class PTSapp(QMainWindow):
         self.line5s.setObjectName("line5s")
 
         self.pushButtonCam1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial1())
-        self.pushButtonCam1.setGeometry(QtCore.QRect(570, 30, 120, 71))
+        self.pushButtonCam1.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -2359,7 +2461,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam1.setFlat(False)
         self.pushButtonCam1.setObjectName("pushButtonCam1")
         self.pushButtonCam2 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial2())
-        self.pushButtonCam2.setGeometry(QtCore.QRect(730, 30, 120, 71))
+        self.pushButtonCam2.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -2368,7 +2470,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam2.setFlat(False)
         self.pushButtonCam2.setObjectName("pushButtonCam2")
         self.pushButtonCam3 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial3())
-        self.pushButtonCam3.setGeometry(QtCore.QRect(890, 30, 120, 71))
+        self.pushButtonCam3.setGeometry(QtCore.QRect(butttonLayoutX * 45, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -2377,7 +2479,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam3.setFlat(False)
         self.pushButtonCam3.setObjectName("pushButtonCam3")
         self.pushButtonCam4 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial4())
-        self.pushButtonCam4.setGeometry(QtCore.QRect(1050, 30, 120, 71))
+        self.pushButtonCam4.setGeometry(QtCore.QRect(butttonLayoutX * 53, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -2386,7 +2488,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam4.setFlat(False)
         self.pushButtonCam4.setObjectName("pushButtonCam4")
         self.pushButtonCam5 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial5())
-        self.pushButtonCam5.setGeometry(QtCore.QRect(1210, 30, 120, 71))
+        self.pushButtonCam5.setGeometry(QtCore.QRect(butttonLayoutX * 61, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(24)
@@ -2395,8 +2497,10 @@ class PTSapp(QMainWindow):
         self.pushButtonCam5.setFlat(False)
         self.pushButtonCam5.setObjectName("pushButtonCam5")
 
+
+
         self.labelDialPT = QtWidgets.QLabel(self.centralwidget)
-        self.labelDialPT.setGeometry(QtCore.QRect(1530, 120, 120, 16))
+        self.labelDialPT.setGeometry(QtCore.QRect(butttonLayoutX * 76.5, butttonLayoutY * 6, buttonGoX, butttonLayoutY * 0.8))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(12)
@@ -2406,7 +2510,7 @@ class PTSapp(QMainWindow):
         self.labelDialPT.setObjectName("labelDialPT")
 
         self.labelDialSL = QtWidgets.QLabel(self.centralwidget)
-        self.labelDialSL.setGeometry(QtCore.QRect(1710, 120, 100, 16))
+        self.labelDialSL.setGeometry(QtCore.QRect(butttonLayoutX * 85.5, butttonLayoutY * 6, buttonGoX / 1.2, butttonLayoutY * 0.8))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(12)
@@ -2416,7 +2520,7 @@ class PTSapp(QMainWindow):
         self.labelDialSL.setObjectName("labelDialSL")
 
         self.pushButtonSet = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setPos(3))
-        self.pushButtonSet.setGeometry(QtCore.QRect(1760, 30, 120, 71))
+        self.pushButtonSet.setGeometry(QtCore.QRect(butttonLayoutX * 88, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setPointSize(23)
         self.pushButtonSet.setFont(font)
@@ -2424,7 +2528,7 @@ class PTSapp(QMainWindow):
         self.pushButtonSet.setFlat(False)
         self.pushButtonSet.setObjectName("pushButtonSet")
         self.pushButtonEdit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setEditToggle())
-        self.pushButtonEdit.setGeometry(QtCore.QRect(40, 30, 120, 71))
+        self.pushButtonEdit.setGeometry(QtCore.QRect(butttonLayoutX * 2, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -2433,7 +2537,7 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
         self.pushButtonSLonly = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.slideOnlyToggle())
-        self.pushButtonSLonly.setGeometry(QtCore.QRect(1740, 990, 120, 51))
+        self.pushButtonSLonly.setGeometry(QtCore.QRect(butttonLayoutX * 87, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -2442,7 +2546,7 @@ class PTSapp(QMainWindow):
         self.pushButtonSLonly.setFlat(False)
         self.pushButtonSLonly.setObjectName("pushButtonSLonly")
         self.pushButtonFileLoad = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.fileLoad())
-        self.pushButtonFileLoad.setGeometry(QtCore.QRect(40, 990, 120, 51))
+        self.pushButtonFileLoad.setGeometry(QtCore.QRect(butttonLayoutX * 2, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -2452,7 +2556,7 @@ class PTSapp(QMainWindow):
         self.pushButtonFileLoad.setObjectName("pushButtonFileLoad")
         self.pushButtonFileLoad.hide()
         self.pushButtonFileSave = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.fileSave())
-        self.pushButtonFileSave.setGeometry(QtCore.QRect(320, 990, 120, 51))
+        self.pushButtonFileSave.setGeometry(QtCore.QRect(butttonLayoutX * 16, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -2462,7 +2566,7 @@ class PTSapp(QMainWindow):
         self.pushButtonFileSave.setObjectName("pushButtonFileSave")
         self.pushButtonFileSave.hide()
         self.pushButtonSettings = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.openSettingsWindow())
-        self.pushButtonSettings.setGeometry(QtCore.QRect(1020, 990, 260, 51))
+        self.pushButtonSettings.setGeometry(QtCore.QRect(butttonLayoutX * 51, butttonLayoutY * 49.5, buttonGoX * 2.17, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -2472,7 +2576,7 @@ class PTSapp(QMainWindow):
         self.pushButtonSettings.setObjectName("pushButtonSettings")
         self.pushButtonSettings.hide()
         self.pushButtonLED = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.resetButtonColours())
-        self.pushButtonLED.setGeometry(QtCore.QRect(1490, 990, 120, 51))
+        self.pushButtonLED.setGeometry(QtCore.QRect(butttonLayoutX * 74.5, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -2482,7 +2586,7 @@ class PTSapp(QMainWindow):
         self.pushButtonLED.setObjectName("pushButtonLED")
         self.pushButtonLED.hide()
         self.pushButtonExit = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.pushToClose())
-        self.pushButtonExit.setGeometry(QtCore.QRect(1740, 990, 120, 51))
+        self.pushButtonExit.setGeometry(QtCore.QRect(butttonLayoutX * 87, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(23)
@@ -2492,7 +2596,7 @@ class PTSapp(QMainWindow):
         self.pushButtonExit.setObjectName("pushButtonExit")
         self.pushButtonExit.hide()
         self.labelFilename = QtWidgets.QLabel(self.centralwidget)
-        self.labelFilename.setGeometry(QtCore.QRect(460, 990, 400, 51))
+        self.labelFilename.setGeometry(QtCore.QRect(butttonLayoutX * 23, butttonLayoutY * 49.5, buttonGoX * 3.33333, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(18)
@@ -2503,7 +2607,7 @@ class PTSapp(QMainWindow):
         self.labelFilename.setObjectName("labelFilename")
         self.labelFilename.setHidden(True)
         self.labelInfo = QtWidgets.QLabel(self.centralwidget)
-        self.labelInfo.setGeometry(QtCore.QRect(1360, 50, 371, 41))
+        self.labelInfo.setGeometry(QtCore.QRect(butttonLayoutX * 68, butttonLayoutY * 2.5, buttonGoX * 3.0917, buttonCamY * 0.6))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(18)
@@ -2513,7 +2617,7 @@ class PTSapp(QMainWindow):
         self.labelInfo.setAlignment(QtCore.Qt.AlignCenter)
         self.labelInfo.setObjectName("labelInfo")
         self.comboBox = QtWidgets.QComboBox(self.centralwidget)
-        self.comboBox.setGeometry(QtCore.QRect(190, 50, 351, 41))
+        self.comboBox.setGeometry(QtCore.QRect(butttonLayoutX * 9.5, butttonLayoutY * 2.5, buttonGoX * 3.0917, buttonCamY * 0.6))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(18)
@@ -2524,7 +2628,7 @@ class PTSapp(QMainWindow):
         self.comboBox.activated.connect(self.autoSerial)
         self.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(self)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 1920, 24))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, agX, buttonCamY * 0.2))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -3090,22 +3194,22 @@ class PTSapp(QMainWindow):
             elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
             elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
-            if axisW == -8: self.sendSerial(zoomSerial + 'a8')      # Zoom Out Fastest
-            elif axisW == -7: self.sendSerial(zoomSerial + 'a7')
-            elif axisW == -6: self.sendSerial(zoomSerial + 'a6')
-            elif axisW == -5: self.sendSerial(zoomSerial + 'a5')
-            elif axisW == -4: self.sendSerial(zoomSerial + 'a4')
-            elif axisW == -3: self.sendSerial(zoomSerial + 'a3')
-            elif axisW == -2: self.sendSerial(zoomSerial + 'a2')
-            elif axisW == -1: self.sendSerial(zoomSerial + 'a1')
-            elif axisW == 1: self.sendSerial(zoomSerial + 'A1')
-            elif axisW == 2: self.sendSerial(zoomSerial + 'A2')
-            elif axisW == 3: self.sendSerial(zoomSerial + 'A3')
-            elif axisW == 4: self.sendSerial(zoomSerial + 'A4')
-            elif axisW == 5: self.sendSerial(zoomSerial + 'A5')
-            elif axisW == 6: self.sendSerial(zoomSerial + 'A6')
-            elif axisW == 7: self.sendSerial(zoomSerial + 'A7')
-            elif axisW == 8: self.sendSerial(zoomSerial + 'A8')      # Zoom In Fastest
+            if axisW == -8: self.sendSerial(zoomSerial + 'A8')
+            elif axisW == -7: self.sendSerial(zoomSerial + 'A7')
+            elif axisW == -6: self.sendSerial(zoomSerial + 'A6')
+            elif axisW == -5: self.sendSerial(zoomSerial + 'A5')
+            elif axisW == -4: self.sendSerial(zoomSerial + 'A4')
+            elif axisW == -3: self.sendSerial(zoomSerial + 'A3')
+            elif axisW == -2: self.sendSerial(zoomSerial + 'A2')
+            elif axisW == -1: self.sendSerial(zoomSerial + 'A1')
+            elif axisW == 1: self.sendSerial(zoomSerial + 'a1')
+            elif axisW == 2: self.sendSerial(zoomSerial + 'a2')
+            elif axisW == 3: self.sendSerial(zoomSerial + 'a3')
+            elif axisW == 4: self.sendSerial(zoomSerial + 'a4')
+            elif axisW == 5: self.sendSerial(zoomSerial + 'a5')
+            elif axisW == 6: self.sendSerial(zoomSerial + 'a6')
+            elif axisW == 7: self.sendSerial(zoomSerial + 'a7')
+            elif axisW == 8: self.sendSerial(zoomSerial + 'a8')
             else: 
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
@@ -3814,11 +3918,9 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam1Record.text = "Recording"
                 #client.send_message("/style/bgcolor/4/16", [225, 0, 0])
             elif msg[1:4] == "115":
-                #cam1AF = True
-                pass
+                pass #cam1AF = True
             elif msg[1:4] == "105":
-                #cam1AF = False
-                pass
+                pass #cam1AF = False
             elif msg[1:4] == "100":
                 cam1Pos1Run = False
                 cam1Pos1Set = False
@@ -4031,11 +4133,9 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam2Record.text = "Recording"
                 #client.send_message("/style/bgcolor/5/16", [225, 0, 0])
             elif msg[1:4] == "215":
-                #cam2# = True
-                pass
+                pass #cam2AF = True
             elif msg[1:4] == "205":
-                #cam2AF = False
-                pass
+                pass #cam2AF = False
             elif msg[1:4] == "200":
                 cam2Pos1Run = False
                 cam2Pos1Set = False
@@ -4248,11 +4348,9 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam3Record.text = "Recording"
                 #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
             elif msg[1:4] == "315":
-                #cam3AF = True
-                pass
+                pass #cam3AF = True
             elif msg[1:4] == "305":
-                #cam3AF = False
-                pass
+                pass #cam3AF = False
             elif msg[1:4] == "300":
                 cam3Pos1Run = False
                 cam3Pos1Set = False
@@ -4465,11 +4563,9 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam4Record.text = "Recording"
                 #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
             elif msg[1:4] == "415":
-                #cam4AF = True
-                pass
+                pass #cam4AF = True
             elif msg[1:4] == "405":
-                #cam4AF = False
-                pass
+                pass #cam4AF = False
             elif msg[1:4] == "400":
                 cam4Pos1Run = False
                 cam4Pos1Set = False
@@ -4682,11 +4778,9 @@ class PTSapp(QMainWindow):
                 #self.root.get_screen('main').ids.cam5Record.text = "Recording"
                 #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
             elif msg[1:4] == "515":
-                #cam5AF = True
-                pass
+                pass #cam5AF = True
             elif msg[1:4] == "505":
-                #cam5AF = False
-                pass
+                pass #cam5AF = False
             elif msg[1:4] == "500":
                 cam5Pos1Run = False
                 cam5Pos1Set = False
@@ -6190,7 +6284,6 @@ class PTSapp(QMainWindow):
             elif cam5SliderSpeed >= 7:
                 self.dial5s.setValue(4)
                 self.line5s.setGeometry(1820, 10, 20, 141)
-
 
         resetButtons = False
 
@@ -7892,14 +7985,44 @@ class PTSapp(QMainWindow):
         elif cam5Pos10Set and not cam5AtPos10 and slideToggle:
             self.sendSerial('&5Y')
 
+class WorkerObject(QtCore.QObject):
+
+    signalStatus = Signal(str)
+
+    def __init__(self, parent=None):
+        super(self.__class__, self).__init__(parent)
+
+    @QtCore.Slot()        
+    def startWork(self):
+        print("Worker")
+        for device in devices:
+            print(device)
+        while 1:
+            events = get_gamepad()
+            for event in events:
+                print(event.ev_type, event.code, event.state)
+
 class ThreadClass(QtCore.QThread):
-    any_signal = QtCore.pyqtSignal(str)
+    any_signal = QtCore.Signal(str)             #QtCore.pyqtSignal(str)
 
     def __init__(self, parent=None,index=0):
         super(ThreadClass, self).__init__(parent)
         self.index=index
         self.is_running = True
 
+    
+    @QtCore.Slot()
+    def startWork(self):
+        print("Worker")
+        for device in devices:
+            print(device)
+        while 1:
+            events = get_gamepad()
+            for event in events:
+                print(event.ev_type, event.code, event.state)
+
+
+    @QtCore.Slot()        
     def run(self):
         global debug
         global msg
