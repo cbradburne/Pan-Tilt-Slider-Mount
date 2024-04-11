@@ -127,7 +127,6 @@ void Serial4Data() {
         Serial.print("=4");
         Serial.println(cam4SlSpeed);
       }
-
       else if (g == '@') {
         cam4PTSpeed = Serial4.read();
         cam4PTSpeed -= 48;

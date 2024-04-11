@@ -1,5 +1,6 @@
 #macOS
 #python3 -m pip install pyqt5
+#python3 -m pip install pyside6
 #python3 -m pip install pyjoystick
 #python3 -m pip install pyserial
 #python3 -m pip install pyinstaller
@@ -23,9 +24,9 @@
 #pyuic5 -x ptsui5.ui -o ptsui5.py
 #pyuic5 -x serialPage.ui -o serialPage.py
 
-from PyQt5.QtCore import Qt, QTimer
-from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QWidget, QMainWindow, QDesktopWidget, QFileDialog
+from PySide6.QtCore import Qt, QTimer
+from PySide6 import QtCore, QtGui, QtWidgets
+from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog #, QDesktopWidget
 from serial.tools import list_ports
 from serial import Serial
 import sys, time, os, subprocess, re, json, pkg_resources, pyjoystick
@@ -1425,8 +1426,12 @@ class Ui_MoverWindow(QMainWindow):
 
         self.show()
     
-        ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
-        sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+        #ag = QDesktopWidget().availableGeometry()       # 1920 x 1080
+        #sg = QDesktopWidget().screenGeometry()          # 1920 x 1080
+
+        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
+        sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
+
         widget = self.geometry()                        # 
         x = (ag.width() / 2) - (widget.width() / 2)
         y = 2 * ag.height() - sg.height() - widget.height() - 50
@@ -1709,8 +1714,11 @@ class PTSapp(QMainWindow):
                     axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
 
 
-        mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
-        mngr.start()
+        #mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
+        #mngr.start()
+
+        #def QAnalogAxisInput(self):
+
 
         self.pushButton11 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1Go1())
         self.pushButton11.setGeometry(QtCore.QRect(20, 20, 120, 120))
@@ -8002,7 +8010,7 @@ class PTSapp(QMainWindow):
             self.sendSerial('&5Y')
 
 class ThreadClass(QtCore.QThread):
-    any_signal = QtCore.pyqtSignal(str)
+    any_signal = QtCore.Signal(str)             #QtCore.pyqtSignal(str)
 
     def __init__(self, parent=None,index=0):
         super(ThreadClass, self).__init__(parent)

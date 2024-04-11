@@ -127,7 +127,6 @@ void Serial3Data() {
         Serial.print("=3");
         Serial.println(cam3SlSpeed);
       }
-
       else if (g == '@') {
         cam3PTSpeed = Serial3.read();
         cam3PTSpeed -= 48;

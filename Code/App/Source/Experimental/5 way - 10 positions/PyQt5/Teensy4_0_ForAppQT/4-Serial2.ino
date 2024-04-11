@@ -127,7 +127,6 @@ void Serial2Data() {
         Serial.print("=2");
         Serial.println(cam2SlSpeed);
       }
-
       else if (e == '@') {
         cam2PTSpeed = Serial2.read();
         cam2PTSpeed -= 48;
