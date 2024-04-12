@@ -1478,7 +1478,7 @@ class Ui_MoverWindow(QMainWindow):
             self.sendSerial(zoomSerial + 'q')
             self.sendSerial(zoomSerial + 'q')
             self.sendSerial(zoomSerial + 'q')
-            self.sendSerial(zoomSerial + 'q')
+            self.timer.singleShot(500,self.sendSerial(zoomSerial + 'q'))
             self.sendSerial(zoomSerial + 'q')
 
         #manualMove = "z" + str(speed)
@@ -3110,6 +3110,7 @@ class PTSapp(QMainWindow):
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
+                self.timer.singleShot(500,self.sendSerial(zoomSerial + 'q'))
                 self.sendSerial(zoomSerial + 'q')
 
     def sendJoystick(self, arr):
