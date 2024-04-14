@@ -1479,11 +1479,24 @@ class Ui_MoverWindow(QMainWindow):
             self.sendSerial(zoomSerial + 'q')
             self.sendSerial(zoomSerial + 'q')
             
-            self.stopZoom = QTimer()
-            self.stopZoom.singleShot(500,self.sendZoomStop)
+            #self.stopZoom = QTimer()
+            #self.stopZoom.singleShot(500,self.sendZoomStop)
             self.sendSerial(zoomSerial + 'q')
 
         #manualMove = "z" + str(speed)
+    
+
+    def sendZoomStop(self):
+        global whichCamSerial
+
+        zoomSerial = "&"
+        if whichCamSerial == 1: zoomSerial = zoomSerial + "1"
+        elif whichCamSerial == 2: zoomSerial = zoomSerial + "2"
+        elif whichCamSerial == 3: zoomSerial = zoomSerial + "3"
+        elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
+        elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
+
+        self.sendSerial(zoomSerial + 'q')
 
     def up10(self):
         global manualMove
@@ -3148,8 +3161,8 @@ class PTSapp(QMainWindow):
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
-                self.stopZoom = QTimer()
-                self.stopZoom.singleShot(500,self.sendZoomStop)
+                #self.stopZoom = QTimer()
+                #self.stopZoom.singleShot(500,self.sendZoomStop)
                 self.sendSerial(zoomSerial + 'q')
 
     def sendZoomStop(self):
