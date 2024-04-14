@@ -42,7 +42,7 @@ from pathlib import Path
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
-debug = False
+debug = True
 
 serial_port = None
 
@@ -1478,7 +1478,9 @@ class Ui_MoverWindow(QMainWindow):
             self.sendSerial(zoomSerial + 'q')
             self.sendSerial(zoomSerial + 'q')
             self.sendSerial(zoomSerial + 'q')
-            self.timer.singleShot(500,self.sendSerial(zoomSerial + 'q'))
+            
+            self.stopZoom = QTimer()
+            self.stopZoom.singleShot(500,self.sendZoomStop)
             self.sendSerial(zoomSerial + 'q')
 
         #manualMove = "z" + str(speed)
@@ -1690,10 +1692,10 @@ class PTSapp(QMainWindow):
 
             
             else:
-                if joyType[-6:] == "Axis 3":
+                if joyType[-6:] == "Axis 2":
                     axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
-                elif joyType[-6:] == "Axis 2":
-                    axisY = int(self.scale(key.value, (-1, 1), (-255,255)))
+                elif joyType[-6:] == "Axis 3":
+                    axisY = int(self.scale(key.value, (1, -1), (-255,255)))
                 elif joyType[-6:] == "Axis 0":
                     axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
@@ -3110,8 +3112,21 @@ class PTSapp(QMainWindow):
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
-                self.timer.singleShot(500,self.sendSerial(zoomSerial + 'q'))
+                self.stopZoom = QTimer()
+                self.stopZoom.singleShot(500,self.sendZoomStop)
                 self.sendSerial(zoomSerial + 'q')
+
+    def sendZoomStop(self):
+        global whichCamSerial
+
+        zoomSerial = "&"
+        if whichCamSerial == 1: zoomSerial = zoomSerial + "1"
+        elif whichCamSerial == 2: zoomSerial = zoomSerial + "2"
+        elif whichCamSerial == 3: zoomSerial = zoomSerial + "3"
+        elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
+        elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
+
+        self.sendSerial(zoomSerial + 'q')
 
     def sendJoystick(self, arr):
         global data
