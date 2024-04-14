@@ -134,27 +134,23 @@ void SerialData(void) {
           stepper_slider.stopAsync();
         }
       } else {
-        if (!sliderRunning) {
-          sliderRunning = true;
-          stepper_slider.setAcceleration(4000);
-          stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
+        if (((stepper_slider.getPosition() <= zoomLimit) && (speedFactorS > 0)) || ((stepper_slider.getPosition() >= zoomLimit) && (speedFactorS < 0)) || ((stepper_slider.getPosition() >= 500) && (speedFactorS < 0) || ((stepper_slider.getPosition() <= 500) && (speedFactorS > 0))) {
+          if (!sliderRunning) {
+            sliderRunning = true;
+            stepper_slider.setAcceleration(4000);
+            stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.overrideSpeed(0);
+          }
+          if (slideReverse) {
+            speedFactorS = (speedFactorS * -1);
+          }
+          stepper_slider.overrideSpeed(speedFactorS);
+        }
+        else {
+          sliderRunning = false;
           stepper_slider.overrideSpeed(0);
+          stepper_slider.stopAsync();
         }
-        if (slideReverse) {
-          speedFactorS = (speedFactorS * -1);
-        }
-        stepper_slider.overrideSpeed(speedFactorS);
-
-        //if (((stepper_slider.getPosition() <= zoomLimit) && (speedFactorS > 0)) || ((stepper_slider.getPosition() >= 0) && (speedFactorS < 0))) {
-          //Serial.println(stepper_slider.getPosition());
-          //Serial.println(speedFactorS);
-        //  stepper_slider.overrideSpeed(speedFactorS);
-        //}
-        //else {
-        //  sliderRunning = false;
-        //  stepper_slider.overrideSpeed(0);
-        //  stepper_slider.stopAsync();
-        //}
       }
 
       if (speedFactorP == 0.0) {
@@ -377,6 +373,10 @@ void SerialData(void) {
         Serial1.println(String("#d") + pantilt_speed1);
         Serial1.println(String("Pan/Tilt Speed 1 : ") + pantilt_speed1 + String("°/s"));
         Serial1.println("#$");
+
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
     case INSTRUCTION_SET_PANTILT_SPEED2:
@@ -385,6 +385,10 @@ void SerialData(void) {
         Serial1.println(String("#f") + pantilt_speed2);
         Serial1.println(String("Pan/Tilt Speed 2 : ") + pantilt_speed2 + String("°/s"));
         Serial1.println("#$");
+
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
     case INSTRUCTION_SET_PANTILT_SPEED3:
@@ -393,6 +397,10 @@ void SerialData(void) {
         Serial1.println(String("#g") + pantilt_speed3);
         Serial1.println(String("Pan/Tilt Speed 3 : ") + pantilt_speed3 + String("°/s"));
         Serial1.println("#$");
+
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
     case INSTRUCTION_SET_PANTILT_SPEED4:
@@ -401,6 +409,10 @@ void SerialData(void) {
         Serial1.println(String("#h") + pantilt_speed4);
         Serial1.println(String("Pan/Tilt Speed 4 : ") + pantilt_speed4 + String("°/s"));
         Serial1.println("#$");
+
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
     case INSTRUCTION_SET_SLIDER_SPEED1:
@@ -409,6 +421,10 @@ void SerialData(void) {
         Serial1.println(String("#j") + slider_speed1);
         Serial1.println(String("Silder Speed 1 : ") + slider_speed1 + String("mm/s"));
         Serial1.println("#$");
+
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
     case INSTRUCTION_SET_SLIDER_SPEED2:
@@ -417,6 +433,10 @@ void SerialData(void) {
         Serial1.println(String("#k") + slider_speed2);
         Serial1.println(String("Silder Speed 2 : ") + slider_speed2 + String("mm/s"));
         Serial1.println("#$");
+
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
     case INSTRUCTION_SET_SLIDER_SPEED3:
@@ -425,6 +445,10 @@ void SerialData(void) {
         Serial1.println(String("#l") + slider_speed3);
         Serial1.println(String("Silder Speed 3 : ") + slider_speed3 + String("mm/s"));
         Serial1.println("#$");
+
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
     case INSTRUCTION_SET_SLIDER_SPEED4:
@@ -433,6 +457,10 @@ void SerialData(void) {
         Serial1.println(String("#;") + slider_speed4);
         Serial1.println(String("Silder Speed 4 : ") + slider_speed4 + String("mm/s"));
         Serial1.println("#$");
+
+        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
     case INSTRUCTION_SET_ZOOM_LIMIT:
@@ -605,10 +633,8 @@ void SerialData(void) {
           stepper_zoom.overrideSpeed(0);
         }
 
-        if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {\
+        if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {
           stepper_zoom.overrideSpeed(speedFactorZ);
-          //Serial1.print("Zooming at - ");
-          //Serial1.println(speedFactorZ);
         }
         else {
           zoomRunning = false;
@@ -618,10 +644,6 @@ void SerialData(void) {
         if (speedFactorZ == 0.0) {
           stepper_zoom.setAcceleration(zoom_accel * zoom_set_speed);
         }
-
-
-        //Serial1.println("Zoom IN.");
-        //Serial1.println("#$");
       }
       break;
     case INSTRUCTION_ZOOM_OUT:
@@ -630,8 +652,8 @@ void SerialData(void) {
         zoomIN = false;
         zoomOUT = true;
 
-
         float speedFactorZ = map(zoom_speed, 0, 8, 0, zoomMaxFactor);
+        speedFactorZ = -speedFactorZ;
 
         if (!zoomRunning) {
           zoomRunning = true;
@@ -640,10 +662,9 @@ void SerialData(void) {
           stepper_zoom.overrideSpeed(0);
         }
 
-        if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {\
-          stepper_zoom.overrideSpeed(-speedFactorZ);
-          //Serial1.print("Zooming Out = ");
-          //Serial1.println(-speedFactorZ);
+        //if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {
+        if (((stepper_zoom.getPosition() >= zoomLimit) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0))) {
+          stepper_zoom.overrideSpeed(speedFactorZ);
         }
         else {
           zoomRunning = false;
@@ -653,10 +674,6 @@ void SerialData(void) {
         if (speedFactorZ == 0.0) {
           stepper_zoom.setAcceleration(zoom_accel * zoom_set_speed);
         }
-
-
-        //Serial1.println("Zoom OUT.");
-        //Serial1.println("#$");
       }
       break;
     case INSTRUCTION_STOP_ZOOM:
@@ -668,47 +685,6 @@ void SerialData(void) {
         stepper_zoom.overrideSpeed(0);
         stepper_zoom.stopAsync();
         stepper_zoom.setAcceleration(zoom_accel * zoom_set_speed);
-
-        //Serial1.println("STOP Zooming.\n");
-        //Serial1.println("#$");
-      }
-      break;
-    case INSTRUCTION_SET_AUTOFOCUS_ON:
-      {
-        //Serial2.println("#F");
-      }
-      break;
-    case INSTRUCTION_SET_AUTOFOCUS_OFF:
-      {
-        //Serial2.println("#f");
-      }
-      break;
-    case INSTRUCTION_IS_AUTOFOCUS_ON:
-      {
-        Serial1.println("#O");
-      }
-      break;
-    case INSTRUCTION_IS_AUTOFOCUS_OFF:
-      {
-        Serial1.println("#o");
-      }
-      break;
-    case INSTRUCTION_TOGGLE_RECORDING:
-      {
-        //Serial2.println("#O");
-
-        Serial1.println("Toggle Record.\n");
-        Serial1.println("#$");
-      }
-      break;
-    case INSTRUCTION_IS_RECORDING:
-      {
-        Serial1.println("#P");
-      }
-      break;
-    case INSTRUCTION_IS_NOT_RECORDING:
-      {
-        Serial1.println("#p");
       }
       break;
     case INSTRUCTION_SET_ZERO_POS:

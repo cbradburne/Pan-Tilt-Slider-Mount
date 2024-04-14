@@ -218,5 +218,15 @@ void zoomLimitCheck() {
     zoomRunning = false;
     stepper_zoom.moveRel(10);
   }
-
+  
+  //if ((stepper_slider.getPosition() > sliderLimit) && (sliderRunning == true)) {
+  //  stepper_slider.emergencyStop();
+  //  sliderRunning = false;
+  //  stepper_slider.moveRel(-10);
+  //} 
+  //else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true)) {
+  //  stepper_slider.emergencyStop();
+  //  sliderRunning = false;
+  //  stepper_slider.moveRel(10);
+  //}
 }
