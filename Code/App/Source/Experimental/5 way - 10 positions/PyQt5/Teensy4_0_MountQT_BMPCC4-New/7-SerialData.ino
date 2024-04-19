@@ -134,7 +134,7 @@ void SerialData(void) {
           stepper_slider.stopAsync();
         }
       } else {
-        if (((stepper_slider.getPosition() <= zoomLimit) && (speedFactorS > 0)) || ((stepper_slider.getPosition() >= zoomLimit) && (speedFactorS < 0)) || ((stepper_slider.getPosition() >= 500) && (speedFactorS < 0) || ((stepper_slider.getPosition() <= 500) && (speedFactorS > 0))) {
+        if (((stepper_slider.getPosition() <= zoomLimit) && (speedFactorS > 0)) || ((stepper_slider.getPosition() >= zoomLimit) && (speedFactorS < 0)) || (((stepper_slider.getPosition() >= 500) && (speedFactorS < 0)) || ((stepper_slider.getPosition() <= 500) && (speedFactorS > 0)))) {
           if (!sliderRunning) {
             sliderRunning = true;
             stepper_slider.setAcceleration(4000);
@@ -626,15 +626,20 @@ void SerialData(void) {
 
         float speedFactorZ = map(zoom_speed, -8, 0, -zoomMaxFactor, 0);
 
-        if (!zoomRunning) {
+
+          //zoomedIn = true;
+          //zoomedOut = false;
+
+        if (!zoomRunning && !zoomedIn) {
           zoomRunning = true;
           stepper_zoom.setAcceleration(4000);
           stepper_zoom.rotateAsync(zoom_set_speed);
           stepper_zoom.overrideSpeed(0);
         }
 
-        if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {
+        if ((((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) && !zoomedIn) {
           stepper_zoom.overrideSpeed(speedFactorZ);
+          zoomedOut = false;
         }
         else {
           zoomRunning = false;
@@ -655,7 +660,7 @@ void SerialData(void) {
         float speedFactorZ = map(zoom_speed, 0, 8, 0, zoomMaxFactor);
         speedFactorZ = -speedFactorZ;
 
-        if (!zoomRunning) {
+        if (!zoomRunning && !zoomedOut) {
           zoomRunning = true;
           stepper_zoom.setAcceleration(4000);
           stepper_zoom.rotateAsync(zoom_set_speed);
@@ -663,8 +668,9 @@ void SerialData(void) {
         }
 
         //if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {
-        if (((stepper_zoom.getPosition() >= zoomLimit) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0))) {
+        if ((((stepper_zoom.getPosition() >= zoomLimit) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0))) && !zoomedOut) {
           stepper_zoom.overrideSpeed(speedFactorZ);
+          zoomedIn = false;
         }
         else {
           zoomRunning = false;

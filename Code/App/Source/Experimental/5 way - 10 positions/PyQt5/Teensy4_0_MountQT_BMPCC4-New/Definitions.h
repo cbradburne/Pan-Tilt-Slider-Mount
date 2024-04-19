@@ -135,6 +135,9 @@ bool tiltRunning = false;
 bool sliderRunning = false;
 bool zoomRunning = false;
 
+bool zoomedIn = false;
+bool zoomedOut = false;
+
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
 

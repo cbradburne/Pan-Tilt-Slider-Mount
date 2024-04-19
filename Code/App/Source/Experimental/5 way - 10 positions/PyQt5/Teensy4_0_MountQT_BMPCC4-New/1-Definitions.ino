@@ -208,14 +208,18 @@ void mainLoop(void) {
 
 void zoomLimitCheck() {
 
-  if ((stepper_zoom.getPosition() > zoomLimit) && (zoomRunning == true)) {
+  if ((stepper_zoom.getPosition() > zoomLimit) && (zoomRunning == true) && (zoomedIn == false)) {
     stepper_zoom.emergencyStop();
     zoomRunning = false;
+    zoomedIn = true;
+    zoomedOut = false;
     stepper_zoom.moveRel(-10);
   } 
-  else if ((stepper_zoom.getPosition() < 0) && (zoomRunning == true)) {
+  else if ((stepper_zoom.getPosition() < 0) && (zoomRunning == true) && (zoomedOut == false)) {
     stepper_zoom.emergencyStop();
     zoomRunning = false;
+    zoomedIn = false;
+    zoomedOut = true;
     stepper_zoom.moveRel(10);
   }
   
