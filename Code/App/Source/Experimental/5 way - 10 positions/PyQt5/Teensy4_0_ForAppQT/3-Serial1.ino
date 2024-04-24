@@ -109,6 +109,12 @@ void Serial1Data() {
         Serial.print("=A0");
         Serial.println(SerialCommandValueInt);
       }
+      else if (d == 't') {
+        String stringText = Serial1.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=a5");
+        Serial.println(SerialCommandValueInt);
+      }
       else if (d == 'w') {
         String stringText = Serial1.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();

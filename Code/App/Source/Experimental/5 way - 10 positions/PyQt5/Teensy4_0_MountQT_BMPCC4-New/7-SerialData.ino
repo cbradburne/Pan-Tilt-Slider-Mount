@@ -134,7 +134,7 @@ void SerialData(void) {
           stepper_slider.stopAsync();
         }
       } else {
-        if (((stepper_slider.getPosition() <= zoomLimit) && (speedFactorS > 0)) || ((stepper_slider.getPosition() >= zoomLimit) && (speedFactorS < 0)) || (((stepper_slider.getPosition() >= 500) && (speedFactorS < 0)) || ((stepper_slider.getPosition() <= 500) && (speedFactorS > 0)))) {
+        if (((stepper_slider.getPosition() <= slideLimit) && (speedFactorS > 0)) || ((stepper_slider.getPosition() >= slideLimit) && (speedFactorS < 0)) || (((stepper_slider.getPosition() >= 500) && (speedFactorS < 0)) || ((stepper_slider.getPosition() <= 500) && (speedFactorS > 0)))) {
           if (!sliderRunning) {
             sliderRunning = true;
             stepper_slider.setAcceleration(4000);
@@ -463,6 +463,13 @@ void SerialData(void) {
         stepper_slider.setAcceleration(slider_accel * slider_set_speed);
       }
       break;
+    case INSTRUCTION_SET_SLIDE_LIMIT:
+      {
+        slideLimit = sliderMillimetresToSteps(SerialCommandValueInt);
+        Serial1.println(String("Slide Limit Set: ") + sliderStepsToMillimetres(slideLimit));
+        Serial1.println("#$");
+      }
+      break;
     case INSTRUCTION_SET_ZOOM_LIMIT:
       {
         zoomLimit = SerialCommandValueInt;
@@ -637,9 +644,11 @@ void SerialData(void) {
           stepper_zoom.overrideSpeed(0);
         }
 
-        if ((((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) && !zoomedIn) {
+        if ((stepper_zoom.getPosition() < zoomLimit) && (speedFactorZ > 0) && (!zoomedIn)){
           stepper_zoom.overrideSpeed(speedFactorZ);
-          zoomedOut = false;
+          if ((stepper_zoom.getPosition() > 20) && (zoomedOut == true)) {
+            zoomedOut = false;
+          }
         }
         else {
           zoomRunning = false;
@@ -667,10 +676,11 @@ void SerialData(void) {
           stepper_zoom.overrideSpeed(0);
         }
 
-        //if (((stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() >= 0) && (speedFactorZ < 0))) {
-        if ((((stepper_zoom.getPosition() >= zoomLimit) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0))) && !zoomedOut) {
+        if ((stepper_zoom.getPosition() > 0) && (speedFactorZ > 0) && (!zoomedOut)) {
           stepper_zoom.overrideSpeed(speedFactorZ);
-          zoomedIn = false;
+          if ((stepper_zoom.getPosition() < (zoomLimit - 20)) && (zoomedIn == true)) {
+            zoomedIn = false;
+          }
         }
         else {
           zoomRunning = false;

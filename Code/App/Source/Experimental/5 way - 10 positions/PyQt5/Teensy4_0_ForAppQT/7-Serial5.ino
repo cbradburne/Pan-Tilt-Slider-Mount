@@ -108,7 +108,12 @@ void Serial5Data() {
         SerialCommandValueInt = stringText.toInt();
         Serial.print("=G0");
         Serial.println(SerialCommandValueInt);
-        delay(10);
+      }
+      else if (h == 't') {
+        String stringText = Serial5.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=g5");
+        Serial.println(SerialCommandValueInt);
       }
       else if (h == 'w') {
         String stringText = Serial5.readStringUntil('\n');

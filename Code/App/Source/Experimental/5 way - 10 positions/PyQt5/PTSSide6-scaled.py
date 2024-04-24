@@ -45,7 +45,7 @@ from pathlib import Path
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
-debug = False
+debug = True
 
 serial_port = None
 
@@ -443,6 +443,12 @@ cam3PTSpeed = 0
 cam4PTSpeed = 0
 cam5PTSpeed = 0
 
+cam1SlideLimit = 0
+cam2SlideLimit = 0
+cam3SlideLimit = 0
+cam4SlideLimit = 0
+cam5SlideLimit = 0
+
 cam1ZoomLimit = 0
 cam2ZoomLimit = 0
 cam3ZoomLimit = 0
@@ -565,6 +571,14 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonZoomLimit.setFont(font)
         self.pushButtonZoomLimit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonZoomLimit.setObjectName("pushButtonZoomLimit")
+        self.pushButtonSlideLimit = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelZoomLimit.setFocus())
+        self.pushButtonSlideLimit.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 32.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(20)
+        self.pushButtonSlideLimit.setFont(font)
+        self.pushButtonSlideLimit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+        self.pushButtonSlideLimit.setObjectName("pushButtonSlideLimit")
         self.pushButtonPTS4 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed4.setFocus())
         self.pushButtonPTS4.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
@@ -664,7 +678,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setText("")
         self.labelZoomLimit.setObjectName("labelZoomLimit")
         self.labelPTspeed4 = QtWidgets.QLineEdit(self.groupBox)
-        self.labelPTspeed4.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 105, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
+        self.labelPTspeed4.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 10.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(40)
@@ -744,6 +758,15 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed1.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSLspeed1.setText("")
         self.labelSLspeed1.setObjectName("labelSLspeed1")
+        self.labelSlideLimit = QtWidgets.QLineEdit(self.groupBox)
+        self.labelSlideLimit.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 32.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(40)
+        self.labelSlideLimit.setFont(font)
+        self.labelSlideLimit.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelSlideLimit.setText("")
+        self.labelSlideLimit.setObjectName("labelSlideLimit")
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(butttonLayoutX * 67.5, butttonLayoutY * 33.5, (buttonGoX * 4.5833333333)+1, (buttonGoY * 2.8333333333)+1))
         self.groupBox_2.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32;")
@@ -944,6 +967,7 @@ class Ui_SettingsWindow(QMainWindow):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("settingsWindow", "MainWindow"))
         self.pushButtonZoomLimit.setText(_translate("settingsWindow", "Zoom Limit"))
+        self.pushButtonSlideLimit.setText(_translate("settingsWindow", "Slide Limit"))
         self.pushButtonPTS4.setText(_translate("settingsWindow", "Pan/Tilt Speed - Fastest"))
         self.pushButtonPTS3.setText(_translate("settingsWindow", "Pan/Tilt Speed - Fast"))
         self.pushButtonPTS2.setText(_translate("settingsWindow", "Pan/Tilt Speed - Slow"))
@@ -1003,26 +1027,40 @@ class Ui_SettingsWindow(QMainWindow):
 
         if widget.objectName() == "labelPTaccel":
             self.sendSerial('&' + str(whichCamSerial) + 'L' + widget.text())
+            self.labelPTspeed4.setFocus()
         elif widget.objectName() == "labelSLaccel":
             self.sendSerial('&' + str(whichCamSerial) + 'l' + widget.text())
+            self.labelSLspeed4.setFocus()
         elif widget.objectName() == "labelPTspeed1":
             self.sendSerial('&' + str(whichCamSerial) + 'F' + widget.text())
+            self.labelZoomLimit.setFocus()
         elif widget.objectName() == "labelPTspeed2":
             self.sendSerial('&' + str(whichCamSerial) + 'f' + widget.text())
+            self.labelPTspeed1.setFocus()
         elif widget.objectName() == "labelPTspeed3":
             self.sendSerial('&' + str(whichCamSerial) + 'G' + widget.text())
+            self.labelPTspeed2.setFocus()
         elif widget.objectName() == "labelPTspeed4":
             self.sendSerial('&' + str(whichCamSerial) + 'g' + widget.text())
+            self.labelPTspeed3.setFocus()
         elif widget.objectName() == "labelSLspeed1":
             self.sendSerial('&' + str(whichCamSerial) + 'H' + widget.text())
+            self.labelSlideLimit.setFocus()
         elif widget.objectName() == "labelSLspeed2":
             self.sendSerial('&' + str(whichCamSerial) + 'h' + widget.text())
+            self.labelSLspeed1.setFocus()
         elif widget.objectName() == "labelSLspeed3":
             self.sendSerial('&' + str(whichCamSerial) + 'J' + widget.text())
+            self.labelSLspeed2.setFocus()
         elif widget.objectName() == "labelSLspeed4":
             self.sendSerial('&' + str(whichCamSerial) + 'j' + widget.text())
+            self.labelSLspeed3.setFocus()
+        elif widget.objectName() == "labelSlideLimit":
+            self.sendSerial('&' + str(whichCamSerial) + 't' + widget.text())
+            self.labelPTaccel.setFocus()
         elif widget.objectName() == "labelZoomLimit":
             self.sendSerial('&' + str(whichCamSerial) + 'w' + widget.text())
+            self.labelSLaccel.setFocus()
 
 
             
@@ -1045,6 +1083,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam1slSpeed2
         global cam1slSpeed3
         global cam1slSpeed4
+        global cam1SlideLimit
         global cam1ZoomLimit
 
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
@@ -1079,6 +1118,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed2.setText(str(cam1slSpeed2))
         self.labelSLspeed3.setText(str(cam1slSpeed3))
         self.labelSLspeed4.setText(str(cam1slSpeed4))
+        self.labelSlideLimit.setText(str(cam1SlideLimit))
         self.labelZoomLimit.setText(str(cam1ZoomLimit))
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -1099,6 +1139,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam2slSpeed2
         global cam2slSpeed3
         global cam2slSpeed4
+        global cam2SlideLimit
         global cam2ZoomLimit
 
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
@@ -1153,6 +1194,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam3slSpeed2
         global cam3slSpeed3
         global cam3slSpeed4
+        global cam3SlideLimit
         global cam3ZoomLimit
 
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
@@ -1207,6 +1249,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam4slSpeed2
         global cam4slSpeed3
         global cam4slSpeed4
+        global cam4SlideLimit
         global cam4ZoomLimit
 
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
@@ -1261,6 +1304,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam5slSpeed2
         global cam5slSpeed3
         global cam5slSpeed4
+        global cam5SlideLimit
         global cam5ZoomLimit
 
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
@@ -1761,18 +1805,15 @@ class PTSapp(QMainWindow):
 
 
     def setupUi(self):
-        self.setObjectName("PTSapp")
-        self.resize(1920, 1080)
-        self.setAutoFillBackground(False)
-        self.setStyleSheet("background-color: #181e23;")
-        self.centralwidget = QtWidgets.QWidget(self)
-        self.centralwidget.setObjectName("centralwidget")
+        global debug
 
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
         #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
         agX = ag.width()
         agY = ag.height()
+        if debug:
+            agY = agY - 30
 
         buttonGoX = agX * 0.0625        # 120,  120/1920
         buttonGoY = agY * 0.1111        # 120,  120/1080
@@ -1786,6 +1827,13 @@ class PTSapp(QMainWindow):
         borderSize2 = borderSize / 2
         borderRadius = butttonLayoutX * 1.8
         borderRadius2 = borderRadius * 0.5
+
+        self.setObjectName("PTSapp")
+        self.resize(1920, 1080)
+        self.setAutoFillBackground(False)
+        self.setStyleSheet("background-color: #181e23;")
+        self.centralwidget = QtWidgets.QWidget(self)
+        self.centralwidget.setObjectName("centralwidget")
 
         self.groupBox = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 7, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
@@ -2752,6 +2800,7 @@ class PTSapp(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
     def retranslateUi(self):
+        global debug
         global cam1Label
         global cam2Label
         global cam3Label
@@ -2829,8 +2878,10 @@ class PTSapp(QMainWindow):
         self.initFlashTimer()
 
         #self.show()
-        self.showMaximized()
-        #self.showFullScreen()
+        if debug:
+            self.showMaximized()
+        else:
+            self.showFullScreen()
         
         self.autoFileLoad()
 
@@ -3799,6 +3850,7 @@ class PTSapp(QMainWindow):
         global cam1slSpeed2
         global cam1slSpeed3
         global cam1slSpeed4
+        global cam1SlideLimit
         global cam1ZoomLimit
 
         global cam2ptAccel
@@ -3811,6 +3863,7 @@ class PTSapp(QMainWindow):
         global cam2slSpeed2
         global cam2slSpeed3
         global cam2slSpeed4
+        global cam2SlideLimit
         global cam2ZoomLimit
 
         global cam3ptAccel
@@ -3823,6 +3876,7 @@ class PTSapp(QMainWindow):
         global cam3slSpeed2
         global cam3slSpeed3
         global cam3slSpeed4
+        global cam3SlideLimit
         global cam3ZoomLimit
 
         global cam4ptAccel
@@ -3835,6 +3889,7 @@ class PTSapp(QMainWindow):
         global cam4slSpeed2
         global cam4slSpeed3
         global cam4slSpeed4
+        global cam4SlideLimit
         global cam4ZoomLimit
 
         global cam5ptAccel
@@ -3847,6 +3902,7 @@ class PTSapp(QMainWindow):
         global cam5slSpeed2
         global cam5slSpeed3
         global cam5slSpeed4
+        global cam5SlideLimit
         global cam5ZoomLimit
 
         global whichCamRead
@@ -5054,6 +5110,8 @@ class PTSapp(QMainWindow):
             cam1slSpeed3 = int(msg[3:])
         elif msg[0:3] == "=A4":
             cam1slSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=a5":
+            cam1SlideLimit = int(msg[3:])
         elif msg[0:3] == "=A5":
             cam1ZoomLimit = int(msg[3:])
 
@@ -5077,6 +5135,8 @@ class PTSapp(QMainWindow):
             cam2slSpeed3 = int(msg[3:])
         elif msg[0:3] == "=S4":
             cam2slSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=s5":
+            cam2SlideLimit = int(msg[3:])
         elif msg[0:3] == "=S5":
             cam2ZoomLimit = int(msg[3:])
 
@@ -5100,6 +5160,8 @@ class PTSapp(QMainWindow):
             cam3slSpeed3 = int(msg[3:])
         elif msg[0:3] == "=D4":
             cam3slSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=d5":
+            cam3SlideLimit = int(msg[3:])
         elif msg[0:3] == "=D5":
             cam3ZoomLimit = int(msg[3:])
 
@@ -5123,6 +5185,8 @@ class PTSapp(QMainWindow):
             cam4slSpeed3 = int(msg[3:])
         elif msg[0:3] == "=F4":
             cam4slSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=f5":
+            cam4SlideLimit = int(msg[3:])
         elif msg[0:3] == "=F5":
             cam4ZoomLimit = int(msg[3:])
 
@@ -5146,6 +5210,8 @@ class PTSapp(QMainWindow):
             cam5slSpeed3 = int(msg[3:])
         elif msg[0:3] == "=G4":
             cam5slSpeed4 = int(msg[3:])
+        elif msg[0:3] == "=g5":
+            cam5SlideLimit = int(msg[3:])
         elif msg[0:3] == "=G5":
             cam5ZoomLimit = int(msg[3:])
 

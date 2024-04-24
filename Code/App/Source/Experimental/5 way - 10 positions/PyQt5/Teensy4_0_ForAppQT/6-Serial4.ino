@@ -109,6 +109,12 @@ void Serial4Data() {
         Serial.print("=F0");
         Serial.println(SerialCommandValueInt);
       }
+      else if (h == 't') {
+        String stringText = Serial4.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=f5");
+        Serial.println(SerialCommandValueInt);
+      }
       else if (h == 'w') {
         String stringText = Serial4.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();

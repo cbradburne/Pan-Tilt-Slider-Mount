@@ -828,6 +828,23 @@ void USBSerialData() {
               }
             }
             break;
+          case 't':
+            {  // set Slide Limit
+              String stringText = Serial.readStringUntil('\n');
+              SerialCommandValueInt = stringText.toInt();
+              if (camNumInst == '1') {
+                Serial1.println(String("?y") + SerialCommandValueInt);
+              } else if (camNumInst == '2') {
+                Serial2.println(String("?y") + SerialCommandValueInt);
+              } else if (camNumInst == '3') {
+                Serial3.println(String("?y") + SerialCommandValueInt);
+              } else if (camNumInst == '4') {
+                Serial4.println(String("?y") + SerialCommandValueInt);
+              } else if (camNumInst == '5') {
+                Serial5.println(String("?y") + SerialCommandValueInt);
+              }
+            }
+            break;
           case 'w':
             {  // set Zoom Limit
               String stringText = Serial.readStringUntil('\n');

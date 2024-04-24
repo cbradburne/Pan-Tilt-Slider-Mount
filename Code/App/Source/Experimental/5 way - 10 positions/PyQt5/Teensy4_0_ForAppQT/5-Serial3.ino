@@ -109,6 +109,12 @@ void Serial3Data() {
         Serial.print("=D0");
         Serial.println(SerialCommandValueInt);
       }
+      else if (h == 't') {
+        String stringText = Serial3.readStringUntil('\n');
+        SerialCommandValueInt = stringText.toInt();
+        Serial.print("=d5");
+        Serial.println(SerialCommandValueInt);
+      }
       else if (h == 'w') {
         String stringText = Serial3.readStringUntil('\n');
         SerialCommandValueInt = stringText.toInt();

@@ -50,6 +50,7 @@
 #define INSTRUCTION_SET_TILT_SPEED 'S'
 #define INSTRUCTION_SET_SLIDER_SPEED 'a'
 
+#define INSTRUCTION_SET_SLIDE_LIMIT 'y'
 #define INSTRUCTION_SET_ZOOM_LIMIT 'w'
 
 #define INSTRUCTION_SET_PANTILT_SPEED1 'B'
@@ -103,6 +104,7 @@
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
 #define EEPROM_ADDRESS_ZOOM_LIMIT 62
+#define EEPROM_ADDRESS_SLIDER_LIMIT 70
 #define EEPROM_ADDRESS_PANTILT_ACCEL 14
 #define EEPROM_ADDRESS_SLIDER_ACCEL 18
 #define EEPROM_ADDRESS_PANTILT_SPEED1 22
@@ -116,7 +118,8 @@
 
 #define VERSION_NUMBER "27 Mar 2024"
 
-float zoomLimit = 5550;       //  12 - 35mm
+float slideLimit = 130000;     // 3 metres
+float zoomLimit = 5550;      // 12 - 35mm
 
 bool withSlider = false;
 bool DEBUG1 = false;

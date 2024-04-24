@@ -160,6 +160,7 @@ void sendCamSettings() {
   Serial1.println(String("#q") + pantilt_accel);
   Serial1.println(String("#Q") + slider_accel);
 
+  Serial1.println(String("#t") + sliderStepsToMillimetres(slideLimit));
   Serial1.println(String("#w") + zoomLimit);
 }
 
@@ -222,15 +223,13 @@ void zoomLimitCheck() {
     zoomedOut = true;
     stepper_zoom.moveRel(10);
   }
-  
-  //if ((stepper_slider.getPosition() > sliderLimit) && (sliderRunning == true)) {
-  //  stepper_slider.emergencyStop();
-  //  sliderRunning = false;
-  //  stepper_slider.moveRel(-10);
-  //} 
-  //else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true)) {
-  //  stepper_slider.emergencyStop();
-  //  sliderRunning = false;
-  //  stepper_slider.moveRel(10);
-  //}
+
+  if ((stepper_slider.getPosition() > slideLimit) && (sliderRunning == true)) {
+    sliderRunning = false;
+    stepper_slider.stop();
+  }
+  else if ((stepper_slider.getPosition() <= 500) && (sliderRunning == true)){
+    sliderRunning = false;
+    stepper_slider.stop();
+  }
 }
