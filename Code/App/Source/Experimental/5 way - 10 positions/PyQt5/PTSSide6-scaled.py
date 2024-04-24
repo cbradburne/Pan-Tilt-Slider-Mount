@@ -1879,9 +1879,9 @@ class PTSapp(QMainWindow):
                     #axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 4":
                     if (key.value < -deadRange):
-                        axisY = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                        axisY = int(self.scale(key.value, (-1, -deadRange), (255, 0)))
                     elif (key.value > deadRange):
-                        axisY = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                        axisY = int(self.scale(key.value, (1, deadRange), (-255, 0)))
                     else:
                         axisY = 0
 
@@ -1897,9 +1897,9 @@ class PTSapp(QMainWindow):
                     #axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
                     if (key.value < -deadRange):
-                        axisW = int(self.scale(key.value, (-1, -(deadRange*2)), (-8, 0)))
+                        axisW = int(self.scale(key.value, (-1, -(deadRange*2)), (8, 0)))
                     elif (key.value > deadRange):
-                        axisW = int(self.scale(key.value, (1, (deadRange*2)), (8, 0)))
+                        axisW = int(self.scale(key.value, (1, (deadRange*2)), (-8, 0)))
                     else:
                         axisW = 0
 
@@ -1935,14 +1935,40 @@ class PTSapp(QMainWindow):
 
             
             else:
-                if joyType[-6:] == "Axis 3":
-                    axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
-                elif joyType[-6:] == "Axis 2":
-                    axisY = int(self.scale(key.value, (-1, 1), (-255,255)))
+                if joyType[-6:] == "Axis 2":
+                    if (key.value < -deadRange):
+                        axisX = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                    elif (key.value > deadRange):
+                        axisX = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                    else:
+                        axisX = 0
+                    
+                    #axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
+                elif joyType[-6:] == "Axis 3":
+                    if (key.value < -deadRange):
+                        axisY = int(self.scale(key.value, (-1, -deadRange), (255, 0)))
+                    elif (key.value > deadRange):
+                        axisY = int(self.scale(key.value, (1, deadRange), (-255, 0)))
+                    else:
+                        axisY = 0
+
+                    #axisY = int(self.scale(key.value, (-1, 1), (255,-255)))
                 elif joyType[-6:] == "Axis 0":
-                    axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
+                    if (key.value < -deadRange):
+                        axisZ = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                    elif (key.value > deadRange):
+                        axisZ = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                    else:
+                        axisZ = 0
+
+                    #axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
-                    axisW = int(self.scale(key.value, (-1, 1), (-8,8)))
+                    if (key.value < -deadRange):
+                        axisW = int(self.scale(key.value, (-1, -(deadRange*2)), (8, 0)))
+                    elif (key.value > deadRange):
+                        axisW = int(self.scale(key.value, (1, (deadRange*2)), (-8, 0)))
+                    else:
+                        axisW = 0
 
 
         mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
