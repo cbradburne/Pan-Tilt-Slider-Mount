@@ -530,7 +530,12 @@ void SerialData(void) {
     case INSTRUCTION_PAN_DEGREES:
       {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
-          panDegrees(SerialCommandValueFloat);
+          if (upsideDown) {
+            panDegrees(-SerialCommandValueFloat);
+          }
+          else {
+            panDegrees(SerialCommandValueFloat);
+          }
         }
       }
       break;
@@ -544,14 +549,24 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_MILLIMETRES:
       {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
-          sliderMoveTo(SerialCommandValueFloat);
+          if (slideReverse) {
+            sliderMoveTo(-SerialCommandValueFloat);
+          }
+          else {
+            sliderMoveTo(SerialCommandValueFloat);
+          }
         }
       }
       break;
     case INSTRUCTION_PAN_DEGREES_REL:
       {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
-          panDegreesRel(SerialCommandValueFloat);
+          if (upsideDown) {
+            panDegreesRel(-SerialCommandValueFloat);
+          }
+          else {
+            panDegreesRel(SerialCommandValueFloat);
+          }
         }
       }
       break;
@@ -565,7 +580,12 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_MILLIMETRES_REL:
       {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
-          sliderMMRel(SerialCommandValueFloat);
+          if (slideReverse) {
+            sliderMMRel(-SerialCommandValueFloat);
+          }
+          else {
+            sliderMMRel(SerialCommandValueFloat);
+          }
         }
       }
       break;

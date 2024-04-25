@@ -1,5 +1,4 @@
 #macOS
-#python3 -m pip install pyqt5
 #python3 -m pip install pyjoystick
 #python3 -m pip install pyserial
 #python3 -m pip install pyinstaller
@@ -12,7 +11,6 @@
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT5.py
 
 #Windows
-#python -m pip install pyqt5
 #python -m pip install pyjoystick
 #python -m pip install pyserial
 #python -m pip install pyinstaller

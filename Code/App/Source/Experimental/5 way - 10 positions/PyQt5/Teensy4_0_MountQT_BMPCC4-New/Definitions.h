@@ -19,7 +19,8 @@
 #define PIN_SW3 11
 #define PIN_SW4 12
 
-#define SLIDER_PULLEY_TEETH 36.0
+#define SLIDER_PULLEY_TEETH 36.0  // 36 teeth, 1.8 deg stepper
+
 //#define PAN_GEAR_RATIO 8.4705882352941176470588235294118  //  144/17 teeth      - Original Mount
 //#define TILT_GEAR_RATIO 3.047619047619047619047619047619  //  64/21 teeth       - Original Mount
 
@@ -144,8 +145,8 @@ bool zoomedOut = false;
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
 
-float pan_steps_per_degree = (200.0 * 16 * PAN_GEAR_RATIO) / 360.0;            //  Stepper motor has 200 steps per 360 degrees
-float tilt_steps_per_degree = (200.0 * 16 * TILT_GEAR_RATIO) / 360.0;          //  Stepper motor has 200 steps per 360 degrees
+float pan_steps_per_degree = (400.0 * 16 * PAN_GEAR_RATIO) / 360.0;            //  Stepper motor has 400 steps per 360 degrees (0.9 deg per step). Steps per full motor rotation * micro stepping / 360 (per deg)
+float tilt_steps_per_degree = (400.0 * 16 * TILT_GEAR_RATIO) / 360.0;          //  Stepper motor has 400 steps per 360 degrees
 float slider_steps_per_millimetre = (200.0 * 16) / (SLIDER_PULLEY_TEETH * 2);  //  Stepper motor has 200 steps per 360 degrees, the timing pully has 36 teeth and the belt has a pitch of 2mm
 
 float pantilt_set_speed = 20;     //  degrees/second.
