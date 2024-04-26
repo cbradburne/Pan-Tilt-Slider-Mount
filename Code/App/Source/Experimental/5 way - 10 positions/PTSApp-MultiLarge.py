@@ -2269,7 +2269,6 @@ WindowManager:
         MDFillRoundFlatButton:
             id: buttonWhichCam1
             text: "Cam 1"
-            #user_font_size: "30sp"
             line_width: 5
             line_color: 1, 0, 0, 1
             md_bg_color: get_color_from_hex(app.Cam1ButColour)
@@ -2282,7 +2281,6 @@ WindowManager:
         MDFillRoundFlatButton:
             id: buttonWhichCam2
             text: "Cam 2"
-            #user_font_size: "30sp"
             line_width: 5
             line_color: .13, .13, .13, 1
             md_bg_color: get_color_from_hex(app.Cam2ButColour)
@@ -2295,7 +2293,6 @@ WindowManager:
         MDFillRoundFlatButton:
             id: buttonWhichCam3
             text: "Cam 3"
-            #user_font_size: "30sp"
             line_width: 5
             line_color: .13, .13, .13, 1
             md_bg_color: get_color_from_hex(app.Cam3ButColour)
@@ -2308,7 +2305,6 @@ WindowManager:
         MDFillRoundFlatButton:
             id: buttonWhichCam4
             text: "Cam 4"
-            #user_font_size: "30sp"
             line_width: 5
             line_color: .13, .13, .13, 1
             md_bg_color: get_color_from_hex(app.Cam4ButColour)
@@ -2321,7 +2317,6 @@ WindowManager:
         MDFillRoundFlatButton:
             id: buttonWhichCam5
             text: "Cam 5"
-            #user_font_size: "30sp"
             line_width: 5
             line_color: .13, .13, .13, 1
             md_bg_color: get_color_from_hex(app.Cam5ButColour)
