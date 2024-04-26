@@ -237,14 +237,30 @@ void zoomLimitCheck() {
   }
 
 
-
-
-  if ((stepper_slider.getPosition() > slideLimit) && (sliderRunning == true)) {
+  
+  if ((stepper_slider.getPosition() > slideLimit) && (sliderRunning == true) && (sliderRight == false)) {
+    stepper_slider.emergencyStop();
     sliderRunning = false;
-    stepper_slider.stop();
+    sliderRight = true;
+    sliderLeft = false;
+    stepper_slider.moveRel(-20);
+    //Serial1.println("Zoomed Fully IN"); 
+  } 
+  else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true) && (sliderLeft == false)) {
+    stepper_slider.emergencyStop();
+    sliderRunning = false;
+    sliderRight = false;
+    sliderLeft = true;
+    stepper_slider.moveRel(20);
+    //Serial1.println("Zoomed Fully OUT"); 
   }
-  else if ((stepper_slider.getPosition() <= 500) && (sliderRunning == true)){
-    sliderRunning = false;
-    stepper_slider.stop();
+
+  if ((stepper_slider.getPosition() > (slideLimit * 0.1)) && (sliderLeft == true)) {
+    sliderLeft = false;
+    //Serial1.println("Zoomed OUT reset"); 
+  }
+  if ((stepper_slider.getPosition() < (slideLimit * 0.9)) && (sliderRight == true)) {
+    sliderRight = false;
+    //Serial1.println("Zoomed IN reset");
   }
 }

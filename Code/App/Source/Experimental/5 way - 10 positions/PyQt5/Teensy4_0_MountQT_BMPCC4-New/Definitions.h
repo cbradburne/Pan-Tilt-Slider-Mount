@@ -139,6 +139,9 @@ bool tiltRunning = false;
 bool sliderRunning = false;
 bool zoomRunning = false;
 
+bool sliderLeft = false;
+bool sliderRight = false;
+
 bool zoomedIn = false;
 bool zoomedOut = false;
 

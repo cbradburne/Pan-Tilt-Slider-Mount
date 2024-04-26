@@ -134,7 +134,7 @@ void SerialData(void) {
           stepper_slider.stopAsync();
         }
       } else {
-        if (((stepper_slider.getPosition() <= slideLimit) && (speedFactorS > 0)) || ((stepper_slider.getPosition() >= slideLimit) && (speedFactorS < 0)) || (((stepper_slider.getPosition() >= 500) && (speedFactorS < 0)) || ((stepper_slider.getPosition() <= 500) && (speedFactorS > 0)))) {
+        if (((stepper_slider.getPosition() < (slideLimit * 0.9)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.1)) && (speedFactorS < 0))) {
           if (!sliderRunning) {
             sliderRunning = true;
             stepper_slider.setAcceleration(4000);
