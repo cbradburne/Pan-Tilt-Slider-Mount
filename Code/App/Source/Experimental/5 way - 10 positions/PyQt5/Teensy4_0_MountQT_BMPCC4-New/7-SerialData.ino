@@ -647,15 +647,10 @@ void SerialData(void) {
       break;
     case INSTRUCTION_ZOOM_IN:
       {
+        //Serial1.println("Zoomed IN sent"); 
         zoom_speed = SerialCommandValueFloat;
-        zoomIN = true;
-        zoomOUT = false;
 
         float speedFactorZ = map(zoom_speed, -8, 0, -zoomMaxFactor, 0);
-
-
-          //zoomedIn = true;
-          //zoomedOut = false;
 
         if (!zoomRunning && !zoomedIn) {
           zoomRunning = true;
@@ -666,15 +661,13 @@ void SerialData(void) {
 
         if ((stepper_zoom.getPosition() < zoomLimit) && (speedFactorZ > 0) && (!zoomedIn)){
           stepper_zoom.overrideSpeed(speedFactorZ);
-          if ((stepper_zoom.getPosition() > 20) && (zoomedOut == true)) {
-            zoomedOut = false;
-          }
         }
         else {
           zoomRunning = false;
           stepper_zoom.overrideSpeed(0);
           stepper_zoom.stopAsync();
         }
+
         if (speedFactorZ == 0.0) {
           stepper_zoom.setAcceleration(zoom_accel * zoom_set_speed);
         }
@@ -682,12 +675,10 @@ void SerialData(void) {
       break;
     case INSTRUCTION_ZOOM_OUT:
       {
+        //Serial1.println("Zoomed OUT sent"); 
         zoom_speed = SerialCommandValueFloat;
-        zoomIN = false;
-        zoomOUT = true;
 
         float speedFactorZ = map(zoom_speed, 0, 8, 0, zoomMaxFactor);
-        speedFactorZ = -speedFactorZ;
 
         if (!zoomRunning && !zoomedOut) {
           zoomRunning = true;
@@ -697,16 +688,14 @@ void SerialData(void) {
         }
 
         if ((stepper_zoom.getPosition() > 0) && (speedFactorZ > 0) && (!zoomedOut)) {
-          stepper_zoom.overrideSpeed(speedFactorZ);
-          if ((stepper_zoom.getPosition() < (zoomLimit - 20)) && (zoomedIn == true)) {
-            zoomedIn = false;
-          }
+          stepper_zoom.overrideSpeed(speedFactorZ * -1);
         }
         else {
           zoomRunning = false;
           stepper_zoom.overrideSpeed(0);
           stepper_zoom.stopAsync();
         }
+
         if (speedFactorZ == 0.0) {
           stepper_zoom.setAcceleration(zoom_accel * zoom_set_speed);
         }
