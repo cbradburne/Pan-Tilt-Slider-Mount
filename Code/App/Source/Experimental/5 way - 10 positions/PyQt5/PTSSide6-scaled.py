@@ -532,24 +532,15 @@ class Ui_SettingsWindow(QMainWindow):
 
     def setupUi(self):
         global whichCamSerial
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         self.setObjectName("settingsWindow")
         self.resize(1980, 1080)
@@ -997,7 +988,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonStore.setText(_translate("settingsWindow", "Store"))
 
         if debug:
-            self.show()
+            self.showMaximized()
         else:
             self.showFullScreen()
 
@@ -1084,24 +1075,14 @@ class Ui_SettingsWindow(QMainWindow):
         global cam1SlideLimit
         global cam1ZoomLimit
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         whichCamSerial = 1
         self.sendSerial('&1K')
@@ -1140,24 +1121,14 @@ class Ui_SettingsWindow(QMainWindow):
         global cam2SlideLimit
         global cam2ZoomLimit
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         whichCamSerial = 2
         self.sendSerial('&2K')
@@ -1195,24 +1166,14 @@ class Ui_SettingsWindow(QMainWindow):
         global cam3SlideLimit
         global cam3ZoomLimit
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         whichCamSerial = 3
         self.sendSerial('&3K')
@@ -1250,24 +1211,14 @@ class Ui_SettingsWindow(QMainWindow):
         global cam4SlideLimit
         global cam4ZoomLimit
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         whichCamSerial = 4
         self.sendSerial('&4K')
@@ -1305,24 +1256,14 @@ class Ui_SettingsWindow(QMainWindow):
         global cam5SlideLimit
         global cam5ZoomLimit
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         whichCamSerial = 5
         self.sendSerial('&5K')
@@ -1356,24 +1297,14 @@ class Ui_editWindow(QMainWindow):
         self.setWindowFlag(Qt.FramelessWindowHint, True)
 
     def setupUi(self):
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         self.setObjectName("editWindow")
         self.resize(buttonGoX * 2.7666666667, buttonGoY* 1.5416666667)
@@ -1440,24 +1371,14 @@ class Ui_MoverWindow(QMainWindow):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
 
     def setupUi(self):
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         self.setObjectName("MainWindow")
         self.resize((buttonGoX * 7.1666666667)+1 , (buttonGoY * 6.6666666667)+1)
@@ -1739,20 +1660,16 @@ class PTSapp(QMainWindow):
     global agY
     global debug
 
+    global butttonLayoutX
+    global butttonLayoutY
+    global buttonGoX
+    global buttonGoY
+    global buttonCamY
+
     def __init__(self, txt):
         self.text = txt
         super(PTSapp, self).__init__()
         self.setupUi()
-
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        if debug:
-            print(agX)
-            print(agY)
 
         #self.createWorkerThread()
 
@@ -1805,11 +1722,20 @@ class PTSapp(QMainWindow):
     def setupUi(self):
         global debug
 
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+        
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
 
         agX = ag.width()
         agY = ag.height()
+
         if debug:
             agY = agY - 30
 
@@ -1820,6 +1746,10 @@ class PTSapp(QMainWindow):
 
         butttonLayoutX = agX * 0.01042      # 20 / 1920
         butttonLayoutY = agY * 0.01852      # 20 / 1080
+
+        if debug:
+            print(agX)
+            print(agY)
 
         borderSize = butttonLayoutX / 2
         borderSize2 = borderSize / 2
@@ -1854,6 +1784,11 @@ class PTSapp(QMainWindow):
             global axisY
             global axisZ
             global axisW
+
+            global butttonLayoutX
+            global butttonLayoutY
+            global buttonGoX
+            global buttonGoY
             
             #updater.now_call_latest()
             joyName = str(key.joystick)
@@ -2991,24 +2926,14 @@ class PTSapp(QMainWindow):
         global editToggle
         global SetPosToggle
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         if SetPosToggle:
             self.openMoverWindow()
@@ -3036,27 +2961,17 @@ class PTSapp(QMainWindow):
         global cam5Pos10Run
         global cam5AtPos10
 
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+
         buttonColourSet = "#ff0000"
         buttonColourAt = "#00ff00"
-
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
 
         if (slideToggle):
             slideToggle = False
@@ -5393,26 +5308,16 @@ class PTSapp(QMainWindow):
         global cam5AtPos9
         global cam5AtPos10
 
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+
         global flashTick
-
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
 
         if flashTick:
             flashTick = False
@@ -5812,26 +5717,16 @@ class PTSapp(QMainWindow):
         global oldcam4PTSpeed
         global oldcam5PTSpeed
 
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+
         global resetButtons
-
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
 
         buttonColourSet = "#ff0000"
         buttonColourAt = "#00ff00"
@@ -6413,151 +6308,151 @@ class PTSapp(QMainWindow):
             oldcam1PTSpeed = cam1PTSpeed
             if cam1PTSpeed == 1:
                 self.dial1p.setValue(1)
-                self.line1p.setGeometry(1470, 115, 20, 36)            #    1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
+                self.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8) # 1470, 10, 20, 141           1470, 45, 20, 106           1470, 80, 20, 71           1470, 115, 20, 36
             elif cam1PTSpeed == 3:
                 self.dial1p.setValue(2)
-                self.line1p.setGeometry(1470, 80, 20, 71)
+                self.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam1PTSpeed == 5:
                 self.dial1p.setValue(3)
-                self.line1p.setGeometry(1470, 45, 20, 106)
+                self.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam1PTSpeed == 7:
                 self.dial1p.setValue(4)
-                self.line1p.setGeometry(1470, 10, 20, 141)
+                self.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam2PTSpeed != cam2PTSpeed:
             oldcam2PTSpeed = cam2PTSpeed
             if cam2PTSpeed == 1:
                 self.dial2p.setValue(1)
-                self.line2p.setGeometry(1470, 115, 20, 36)
+                self.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
             elif cam2PTSpeed == 3:
                 self.dial2p.setValue(2)
-                self.line2p.setGeometry(1470, 80, 20, 71)
+                self.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam2PTSpeed == 5:
                 self.dial2p.setValue(3)
-                self.line2p.setGeometry(1470, 45, 20, 106)
+                self.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam2PTSpeed == 7:
                 self.dial2p.setValue(4)
-                self.line2p.setGeometry(1470, 10, 20, 141)
+                self.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam3PTSpeed != cam3PTSpeed:
             oldcam3PTSpeed = cam3PTSpeed
             if cam3PTSpeed == 1:
                 self.dial3p.setValue(1)
-                self.line3p.setGeometry(1470, 115, 20, 36)
+                self.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
             elif cam3PTSpeed == 3:
                 self.dial3p.setValue(2)
-                self.line3p.setGeometry(1470, 80, 20, 71)
+                self.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam3PTSpeed == 5:
                 self.dial3p.setValue(3)
-                self.line3p.setGeometry(1470, 45, 20, 106)
+                self.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam3PTSpeed == 7:
                 self.dial3p.setValue(4)
-                self.line3p.setGeometry(1470, 10, 20, 141)
+                self.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam4PTSpeed != cam4PTSpeed:
             oldcam4PTSpeed = cam4PTSpeed
             if cam4PTSpeed == 1:
                 self.dial4p.setValue(1)
-                self.line4p.setGeometry(1470, 115, 20, 36)
+                self.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
             elif cam4PTSpeed == 3:
                 self.dial4p.setValue(2)
-                self.line4p.setGeometry(1470, 80, 20, 71)
+                self.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam4PTSpeed == 5:
                 self.dial4p.setValue(3)
-                self.line4p.setGeometry(1470, 45, 20, 106)
+                self.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam4PTSpeed == 7:
                 self.dial4p.setValue(4)
-                self.line4p.setGeometry(1470, 10, 20, 141)
+                self.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam5PTSpeed != cam5PTSpeed:
             oldcam5PTSpeed = cam5PTSpeed
             if cam5PTSpeed == 1:
                 self.dial5p.setValue(1)
-                self.line5p.setGeometry(1470, 115, 20, 36)
+                self.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
             elif cam5PTSpeed == 3:
                 self.dial5p.setValue(2)
-                self.line5p.setGeometry(1470, 80, 20, 71)
+                self.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam5PTSpeed == 5:
                 self.dial5p.setValue(3)
-                self.line5p.setGeometry(1470, 45, 20, 106)
+                self.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam5PTSpeed == 7:
                 self.dial5p.setValue(4)
-                self.line5p.setGeometry(1470, 10, 20, 141)
+                self.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam1Speed != cam1SliderSpeed:
             oldcam1Speed = cam1SliderSpeed
             if cam1SliderSpeed == 1:
                 self.dial1s.setValue(1)
-                self.line1s.setGeometry(1820, 115, 20, 36)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
+                self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8) #1820, 115, 20, 36)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
             elif cam1SliderSpeed == 3:
                 self.dial1s.setValue(2)
-                self.line1s.setGeometry(1820, 80, 20, 71)
+                self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam1SliderSpeed == 5:
                 self.dial1s.setValue(3)
-                self.line1s.setGeometry(1820, 45, 20, 106)
+                self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam1SliderSpeed >= 7:
                 self.dial1s.setValue(4)
-                self.line1s.setGeometry(1820, 10, 20, 141)
+                self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam2Speed != cam2SliderSpeed:
             oldcam2Speed = cam2SliderSpeed
             if cam2SliderSpeed == 1:
                 self.dial2s.setValue(1)
-                self.line2s.setGeometry(1820, 115, 20, 36)
+                self.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
             elif cam2SliderSpeed == 3:
                 self.dial2s.setValue(2)
-                self.line2s.setGeometry(1820, 80, 20, 71)
+                self.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam2SliderSpeed == 5:
                 self.dial2s.setValue(3)
-                self.line2s.setGeometry(1820, 45, 20, 106)
+                self.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam2SliderSpeed >= 7:
                 self.dial2s.setValue(4)
-                self.line2s.setGeometry(1820, 10, 20, 141)
+                self.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam3Speed != cam3SliderSpeed:
             oldcam3Speed = cam3SliderSpeed
             if cam3SliderSpeed == 1:
                 self.dial3s.setValue(1)
-                self.line3s.setGeometry(1820, 115, 20, 36)
+                self.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
             elif cam3SliderSpeed == 3:
                 self.dial3s.setValue(2)
-                self.line3s.setGeometry(1820, 80, 20, 71)
+                self.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam3SliderSpeed == 5:
                 self.dial3s.setValue(3)
-                self.line3s.setGeometry(1820, 45, 20, 106)
+                self.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam3SliderSpeed >= 7:
                 self.dial3s.setValue(4)
-                self.line3s.setGeometry(1820, 10, 20, 141)
+                self.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam4Speed != cam4SliderSpeed:
             oldcam4Speed = cam4SliderSpeed
             if cam4SliderSpeed == 1:
                 self.dial4s.setValue(1)
-                self.line4s.setGeometry(1820, 115, 20, 36)
+                self.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
             elif cam4SliderSpeed == 3:
                 self.dial4s.setValue(2)
-                self.line4s.setGeometry(1820, 80, 20, 71)
+                self.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam4SliderSpeed == 5:
                 self.dial4s.setValue(3)
-                self.line4s.setGeometry(1820, 45, 20, 106)
+                self.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam4SliderSpeed >= 7:
                 self.dial4s.setValue(4)
-                self.line4s.setGeometry(1820, 10, 20, 141)
+                self.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
         if oldcam5Speed != cam5SliderSpeed:
             oldcam5Speed = cam5SliderSpeed
             if cam5SliderSpeed == 1:
                 self.dial5s.setValue(1)
-                self.line5s.setGeometry(1820, 115, 20, 36)
+                self.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
             elif cam5SliderSpeed == 3:
                 self.dial5s.setValue(2)
-                self.line5s.setGeometry(1820, 80, 20, 71)
+                self.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 4, butttonLayoutX, butttonLayoutY * 3.55)
             elif cam5SliderSpeed == 5:
                 self.dial5s.setValue(3)
-                self.line5s.setGeometry(1820, 45, 20, 106)
+                self.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 2.25, butttonLayoutX, butttonLayoutY * 5.3)
             elif cam5SliderSpeed >= 7:
                 self.dial5s.setValue(4)
-                self.line5s.setGeometry(1820, 10, 20, 141)
+                self.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 0.5, butttonLayoutX, butttonLayoutY * 7.05)
 
 
         resetButtons = False
@@ -6753,6 +6648,11 @@ class PTSapp(QMainWindow):
         global oldcam4PTSpeed
         global oldcam5PTSpeed
 
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+
         cam1Pos1Set = False
         cam1Pos2Set = False
         cam1Pos3Set = False
@@ -6933,26 +6833,26 @@ class PTSapp(QMainWindow):
         oldcam5PTSpeed = 9
 
         self.dial1p.setValue(1)
-        self.line1p.setGeometry(1470, 115, 20, 36)
+        self.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8) #1470, 115, 20, 36)
         self.dial2p.setValue(1)
-        self.line2p.setGeometry(1470, 115, 20, 36)
+        self.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8) #1470, 115, 20, 36)
         self.dial3p.setValue(1)
-        self.line3p.setGeometry(1470, 115, 20, 36)
+        self.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8) #1470, 115, 20, 36)
         self.dial4p.setValue(1)
-        self.line4p.setGeometry(1470, 115, 20, 36)
+        self.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8) #1470, 115, 20, 36)
         self.dial5p.setValue(1)
-        self.line5p.setGeometry(1470, 115, 20, 36)
+        self.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8) #1470, 115, 20, 36)
         
         self.dial1s.setValue(1)
-        self.line1s.setGeometry(1820, 115, 20, 36)
+        self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)   #1820, 115, 20, 36)
         self.dial2s.setValue(1)
-        self.line2s.setGeometry(1820, 115, 20, 36)
+        self.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)   #1820, 115, 20, 36)
         self.dial3s.setValue(1)
-        self.line3s.setGeometry(1820, 115, 20, 36)
+        self.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)   #1820, 115, 20, 36)
         self.dial4s.setValue(1)
-        self.line4s.setGeometry(1820, 115, 20, 36)
+        self.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)   #1820, 115, 20, 36)
         self.dial5s.setValue(1)
-        self.line5s.setGeometry(1820, 115, 20, 36)
+        self.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)   #1820, 115, 20, 36)
 
         self.setPos(3)
         self.doButtonColours()
@@ -6973,24 +6873,14 @@ class PTSapp(QMainWindow):
         global cam4Label
         global cam5Label
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         if serialLoop and not isConnected:
             self.comboBox.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #229922; border-radius: {borderRadius2}px;")
@@ -7226,24 +7116,14 @@ class PTSapp(QMainWindow):
         global cam4Label
         global cam5Label
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
         
         if (SetPosToggle == True and state == 3) or state == 0:
             SetPosToggle = False
@@ -7289,24 +7169,14 @@ class PTSapp(QMainWindow):
         global editToggle
         global editButton
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         if editToggle:
             editButton = 61
@@ -7329,24 +7199,14 @@ class PTSapp(QMainWindow):
         global editToggle
         global editButton
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         if editToggle:
             editButton = 62
@@ -7369,24 +7229,14 @@ class PTSapp(QMainWindow):
         global editToggle
         global editButton
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         if editToggle:
             editButton = 63
@@ -7409,24 +7259,14 @@ class PTSapp(QMainWindow):
         global editToggle
         global editButton
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         if editToggle:
             editButton = 64
@@ -7449,24 +7289,14 @@ class PTSapp(QMainWindow):
         global editToggle
         global editButton
 
-        ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-
-        agX = ag.width()
-        agY = ag.height()
-
-        buttonGoX = agX * 0.0625        # 120,  120/1920
-        buttonGoY = agY * 0.1111        # 120,  120/1080
-
-        buttonCamY = agY * 0.06574       # 71,   71/1080
-
-        butttonLayoutX = agX * 0.01042      # 20 / 1920
-        butttonLayoutY = agY * 0.01852      # 20 / 1080
-
-        borderSize = butttonLayoutX / 2
-        borderSize2 = borderSize / 2
-        borderRadius = butttonLayoutX * 1.8
-        borderRadius2 = borderRadius * 0.5
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
 
         if editToggle:
             editButton = 65
