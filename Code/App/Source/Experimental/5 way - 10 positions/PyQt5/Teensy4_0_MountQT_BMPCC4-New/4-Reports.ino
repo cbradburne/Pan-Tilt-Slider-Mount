@@ -14,6 +14,7 @@ void debugReport(void) {
   Serial1.println(String("Slider set speed    : ") + slider_set_speed + String(" mm/s\n"));
   Serial1.println(String("Pan/Tilt Base Accel : ") + pantilt_accel + String(" steps/sSq"));
   Serial1.println(String("Slider Base Accel   : ") + slider_accel + String(" steps/sSq\n"));
+  Serial1.println(String("Slider Limit        : ") + slideLimit + String(" mm\n"));
   Serial1.println(String("Zoom Limit          : ") + zoomLimit + String("\n"));
   
   Serial1.println(String("Pan/Tilt Speed 1    : ") + pantilt_speed1 + String(" Deg/s"));
