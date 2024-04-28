@@ -137,9 +137,9 @@ void sliderMoveTo(float mm) {
     Serial1.println("-");
     Serial1.println("#$");
 
-    if (slideReverse) {
-      mm = (mm * -1);
-    }
+    //if (slideReverse) {
+    //  mm = (mm * -1);
+    //}
     stepper_slider.moveAbs(sliderMillimetresToSteps(mm));
     
     sentMoved = false;
@@ -170,9 +170,9 @@ void sliderMMRel(float mm) {
     Serial1.println("-");
     Serial1.println("#$");
 
-    if (slideReverse) {
-      mm = (mm * -1);
-    }
+    //if (slideReverse) {
+    //  mm = (mm * -1);
+    //}
     stepper_slider.moveRel(sliderMillimetresToSteps(mm));
     
     sentMoved = false;

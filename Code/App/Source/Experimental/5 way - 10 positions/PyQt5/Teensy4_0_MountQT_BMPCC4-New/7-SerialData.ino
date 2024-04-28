@@ -136,6 +136,7 @@ void SerialData(void) {
       } 
       else {
         if (slideReverse) {
+          speedFactorS = -speedFactorS;
           if (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))) {
             if (!sliderRunning) {
               sliderRunning = true;
@@ -143,7 +144,6 @@ void SerialData(void) {
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
               stepper_slider.overrideSpeed(0);
             }
-            speedFactorS = (speedFactorS * -1);
             stepper_slider.overrideSpeed(speedFactorS);
           }
         }
@@ -475,18 +475,9 @@ void SerialData(void) {
         slideLimit = sliderMillimetresToSteps(SerialCommandValueInt);
         Serial1.println(String("Slide Limit Set: ") + sliderStepsToMillimetres(slideLimit));
         Serial1.println("#$");
-
-        if (slideReverse) {
-          if (stepper_slider.getPosition() <= (slideLimit * -1)) {
-            sliderAtLimit = true;
-            Serial1.println("Slider @ Limit"); 
-          }
-        }
-        else {
-          if (stepper_slider.getPosition() >= slideLimit) {
-            sliderAtLimit = true;
-            Serial1.println("Slider @ Limit"); 
-          }
+        if (stepper_slider.getPosition() >= slideLimit) {
+          sliderAtLimit = true;
+          Serial1.println("Slider @ Limit"); 
         }
       }
       break;
@@ -569,7 +560,22 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_MILLIMETRES:
       {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
-
+          if (slideReverse) {
+            SerialCommandValueFloat = -SerialCommandValueFloat;
+            if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
+              sliderRunning = true;
+              sliderMoveTo(SerialCommandValueFloat);
+              sliderRunning = false;
+            }
+          }
+          else {
+            if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
+              sliderRunning = true;
+              sliderMMRel(SerialCommandValueFloat);
+              sliderRunning = false;
+            }
+          }
+          /*
           if (slideReverse) {
             if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
               sliderRunning = true;
@@ -584,6 +590,7 @@ void SerialData(void) {
               sliderRunning = false;
             }
           }
+          */
         }
       }
       break;
@@ -609,7 +616,23 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_MILLIMETRES_REL:
       {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
+          if (slideReverse) {
+            SerialCommandValueFloat = -SerialCommandValueFloat;
+            if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
+              sliderRunning = true;
+              sliderMMRel(SerialCommandValueFloat);
+              sliderRunning = false;
+            }
+          }
+          else {
+            if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
+              sliderRunning = true;
+              sliderMMRel(SerialCommandValueFloat);
+              sliderRunning = false;
+            }
+          }
 
+          /*
           if (slideReverse) {
             if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
               sliderRunning = true;
@@ -624,6 +647,7 @@ void SerialData(void) {
               sliderRunning = false;
             }
           }
+          */
         }
       }
       break;

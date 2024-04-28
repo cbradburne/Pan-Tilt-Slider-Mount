@@ -236,7 +236,7 @@ void zoomLimitCheck() {
     //Serial1.println("Zoomed IN reset");
   }
 
-
+  
   if (slideReverse) {
     if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
       stepper_slider.emergencyStop();
