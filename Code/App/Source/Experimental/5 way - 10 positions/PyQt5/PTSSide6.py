@@ -11,6 +11,7 @@
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT5.py
 
 #Windows
+#python -m pip install pyside6
 #python -m pip install pyjoystick
 #python -m pip install pyserial
 #python -m pip install pyinstaller
