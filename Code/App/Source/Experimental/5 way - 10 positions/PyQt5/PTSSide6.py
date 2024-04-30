@@ -1806,7 +1806,7 @@ class PTSapp(QMainWindow):
                 #print(key.number)
                 if joyType[-6:] == "Axis 3":
                     if (key.value < -deadRange):
-                        axisX = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                        axisX = int(self.scale(key.value, (-1, -deadRange), (-255, -30)))
                     elif (key.value > deadRange):
                         axisX = int(self.scale(key.value, (1, deadRange), (255, 0)))
                     else:
@@ -1817,7 +1817,7 @@ class PTSapp(QMainWindow):
                     if (key.value < -deadRange):
                         axisY = int(self.scale(key.value, (-1, -deadRange), (255, 0)))
                     elif (key.value > deadRange):
-                        axisY = int(self.scale(key.value, (1, deadRange), (-255, 0)))
+                        axisY = int(self.scale(key.value, (1, deadRange), (-255, -30)))
                     else:
                         axisY = 0
 
