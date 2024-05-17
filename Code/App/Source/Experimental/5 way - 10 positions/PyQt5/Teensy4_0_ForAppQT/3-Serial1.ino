@@ -140,21 +140,10 @@ void Serial1Data() {
         Serial.println(cam1PTSpeed);
       }
     }
-    else if (c == 'W') {
-      ;
-    }
-
-    else if (c == '\n') {
-      ;
-    }
-
-    else if (c == '\r') {
-      ;
-    }
-
-    else if (c == '?') {
-      String readSerial1 = Serial1.readStringUntil('\n');
-    }
+    else if (c == 'W') { ; }
+    else if (c == '\n') { ; }
+    else if (c == '\r') { ; }
+    else if (c == '?') { String readSerial1 = Serial1.readStringUntil('\n'); }
 
     else if (c == 4) {
       delay(1);

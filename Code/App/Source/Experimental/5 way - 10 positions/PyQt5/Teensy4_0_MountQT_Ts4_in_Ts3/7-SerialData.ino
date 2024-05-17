@@ -2,7 +2,6 @@
 
 void SerialData(void) {
   char instruction;
-/*
   if (Serial2.available() > 0) {
     instruction = Serial2.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {
@@ -36,11 +35,7 @@ void SerialData(void) {
     } else {
       return;
     }
-  } else 
-  
-  */
-  
-  if (Serial1.available() > 0) {
+  } else if (Serial1.available() > 0) {
     instruction = Serial1.read();
     //Serial.println(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
@@ -677,69 +672,39 @@ void SerialData(void) {
       break;
     case INSTRUCTION_ZOOM_IN:
       {
-        //Serial1.println("Zoomed IN sent"); 
-        zoom_speed = SerialCommandValueFloat;
+        zoom_speed = SerialCommandValueInt;
+        zoomIN = true;
+        zoomOUT = false;
 
-        float speedFactorZ = map(zoom_speed, -8, 0, -zoomMaxFactor, 0);
+        Serial2.print("#I");
+        Serial2.println(zoom_speed);
 
-        if (!zoomRunning && !zoomedIn) {
-          zoomRunning = true;
-          stepper_zoom.setAcceleration(zoom_set_speed * 5); //4000);4000);
-          stepper_zoom.rotateAsync(zoom_set_speed);
-          stepper_zoom.overrideSpeed(0);
-        }
-
-        if ((stepper_zoom.getPosition() < zoomLimit) && (speedFactorZ > 0) && (!zoomedIn)){
-          stepper_zoom.overrideSpeed(speedFactorZ);
-        }
-        else {
-          zoomRunning = false;
-          stepper_zoom.overrideSpeed(0);
-          stepper_zoom.stopAsync();
-        }
-
-        if (speedFactorZ == 0.0) {
-          stepper_zoom.setAcceleration(zoom_set_speed); //zoom_accel * zoom_set_speed);
-        }
-      }
+        Serial1.println("Zoom IN.");
+        Serial1.println("#$");
       break;
     case INSTRUCTION_ZOOM_OUT:
       {
-        //Serial1.println("Zoomed OUT sent"); 
-        zoom_speed = SerialCommandValueFloat;
+        zoom_speed = SerialCommandValueInt;
+        zoomIN = false;
+        zoomOUT = true;
 
-        float speedFactorZ = map(zoom_speed, 0, 8, 0, zoomMaxFactor);
+        Serial2.print("#i");
+        Serial2.println(zoom_speed);
 
-        if (!zoomRunning && !zoomedOut) {
-          zoomRunning = true;
-          stepper_zoom.setAcceleration(zoom_set_speed * 5); //4000);
-          stepper_zoom.rotateAsync(zoom_set_speed);
-          stepper_zoom.overrideSpeed(0);
-        }
-
-        if ((stepper_zoom.getPosition() > 0) && (speedFactorZ > 0) && (!zoomedOut)) {
-          stepper_zoom.overrideSpeed(speedFactorZ * -1);
-        }
-        else {
-          zoomRunning = false;
-          stepper_zoom.overrideSpeed(0);
-          stepper_zoom.stopAsync();
-        }
-
-        if (speedFactorZ == 0.0) {
-          stepper_zoom.setAcceleration(zoom_set_speed); //zoom_accel * zoom_set_speed);
-        }
-      }
+        Serial1.println("Zoom OUT.");
+        Serial1.println("#$");
       break;
     case INSTRUCTION_STOP_ZOOM:
       {
         zoomIN = false;
         zoomOUT = false;
 
-        zoomRunning = false;
-        stepper_zoom.overrideSpeed(0);
-        stepper_zoom.stopAsync();
-        stepper_zoom.setAcceleration(zoom_set_speed); //zoom_accel * zoom_set_speed);
+        Serial2.println("#o");
+        delay(20);
+        Serial2.println("#o");  // Just in case, it's important!
+
+        Serial1.println("STOP Zooming.\n");
+        Serial1.println("#$");
       }
       break;
     case INSTRUCTION_SET_ZERO_POS:
