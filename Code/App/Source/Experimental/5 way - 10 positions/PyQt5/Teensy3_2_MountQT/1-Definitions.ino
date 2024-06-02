@@ -104,7 +104,7 @@ if (pantilt_set_speed == pantilt_speed1) {
   //if (upsideDown) {
   //  stepper_pan.setInverseRotation(true);
     //stepper_tilt.setInverseRotation(true);
- // }
+  //}
 
   //if (slideReverse) {
   //  stepper_slider.setInverseRotation(true);
@@ -197,7 +197,7 @@ void zoomLimitCheck() {
   if (findingHome == false){
     if (slideReverse) {
       if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
-        stepper_slider.emergencyStop();
+        step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
@@ -206,7 +206,7 @@ void zoomLimitCheck() {
         Serial1.println("Slider @ Limit"); 
       } 
       else if ((stepper_slider.getPosition() > 0) && (sliderRunning == true) && (sliderAtZero == false)) {
-        stepper_slider.emergencyStop();
+        step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
@@ -226,7 +226,7 @@ void zoomLimitCheck() {
     }
     else {
       if ((stepper_slider.getPosition() > slideLimit) && (sliderRunning == true) && (sliderAtLimit == false)) {
-        stepper_slider.emergencyStop();
+        step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
@@ -235,7 +235,7 @@ void zoomLimitCheck() {
         Serial1.println("Slider @ Limit"); 
       } 
       else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true) && (sliderAtZero == false)) {
-        stepper_slider.emergencyStop();
+        step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
