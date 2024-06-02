@@ -1814,7 +1814,7 @@ class PTSapp(QMainWindow):
         if debug:
             agY = agY - 30
         else:
-            agY = agY + 60
+            agY = agY + 30
 
         buttonGoX = agX * 0.0625        # 120,  120/1920
         buttonGoY = agY * 0.1111        # 120,  120/1080
