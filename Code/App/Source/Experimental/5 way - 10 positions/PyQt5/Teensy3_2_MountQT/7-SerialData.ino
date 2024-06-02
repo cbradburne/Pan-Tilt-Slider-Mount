@@ -393,8 +393,8 @@ void SerialData(void) {
     case INSTRUCTION_PANTILT_ACCEL:
       {
         pantilt_accel = SerialCommandValueInt;
-        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
-        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+        stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
 
         Serial1.println(String("#q") + pantilt_accel);
         Serial1.println(String("Pan/Tilt Accel : ") + pantilt_accel + String("steps/s²"));
@@ -404,7 +404,7 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_ACCEL:
       {
         slider_accel = SerialCommandValueInt;
-        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
+        stepper_slider.setAcceleration(slider_accel * (slider_set_speed / 10));
         
         Serial1.println(String("#Q") + slider_accel);
         Serial1.println(String("Slider Accel   : ") + slider_accel + String("steps/s²"));
@@ -544,8 +544,8 @@ void SerialData(void) {
 
         stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
         stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
-        stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
-        stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
+        stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+        stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
 
         Serial1.println(String("Set Pan/Tilt Speed to: ") + pantilt_set_speed + String("°/s.\n"));
         Serial1.println("#$");
@@ -572,7 +572,7 @@ void SerialData(void) {
         }
 
         stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-        stepper_slider.setAcceleration(slider_accel * slider_set_speed);
+        stepper_slider.setAcceleration(slider_accel * (slider_set_speed / 10));
 
         Serial1.println(String("Set Slider Speed to: ") + slider_set_speed + String("mm/s.\n"));
         Serial1.println("#$");

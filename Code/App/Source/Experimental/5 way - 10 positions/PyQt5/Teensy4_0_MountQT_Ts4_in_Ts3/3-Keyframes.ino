@@ -6,7 +6,7 @@ void editKeyframe(int keyframeEdit) {
   keyframe_array[(keyframeEdit - 1)].panTiltSpeed = panDegreesToSteps(pantilt_set_speed);
   keyframe_array[(keyframeEdit - 1)].sliderStepCount = stepper_slider.getPosition();
   keyframe_array[(keyframeEdit - 1)].sliderSpeed = sliderMillimetresToSteps(slider_set_speed);
-  keyframe_array[(keyframeEdit - 1)].zoomStepCount = stepper_zoom.getPosition();
+  //keyframe_array[(keyframeEdit - 1)].zoomStepCount = stepper_zoom.getPosition();
   keyframe_array[(keyframeEdit - 1)].isRecorded = 1;
 
   if (keyframeEdit == 1) {
@@ -84,7 +84,7 @@ void editKeyframe(int keyframeEdit) {
   Serial1.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial1.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
   Serial1.println(String("Slider position   : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm\n"));
-  Serial1.println(String("Zoom position   : ") + stepper_zoom.getPosition());
+  //Serial1.println(String("Zoom position   : ") + stepper_zoom.getPosition());
   Serial1.println("#$");
 
   sentMoved = false;
@@ -102,7 +102,7 @@ void clearKeyframes(void) {
     keyframe_array[i].panTiltSpeed = 0;
     keyframe_array[i].sliderStepCount = 0;
     keyframe_array[i].sliderSpeed = 0;
-    keyframe_array[i].zoomStepCount = 0;
+    //keyframe_array[i].zoomStepCount = 0;
     keyframe_array[i].isRecorded = 0;
   }
 
@@ -192,7 +192,7 @@ void moveToIndex(int index) {
   Serial1.println(String("Pan   : ") + panStepsToDegrees(keyframe_array[index - 1].panStepCount) + String("°"));
   Serial1.println(String("Tilt  : ") + tiltStepsToDegrees(keyframe_array[index - 1].tiltStepCount) + String("°"));
   Serial1.println(String("Slider: ") + sliderStepsToMillimetres(keyframe_array[index - 1].sliderStepCount) + String("mm"));
-  Serial1.println(String("Zoom  : ") + (keyframe_array[index - 1].zoomStepCount));
+  //Serial1.println(String("Zoom  : ") + (keyframe_array[index - 1].zoomStepCount));
   Serial1.println("#$");
 
   if (useKeyframeSpeeds) {
@@ -201,14 +201,14 @@ void moveToIndex(int index) {
     stepper_slider.setMaxSpeed(keyframe_array[index - 1].sliderSpeed);
   }
 
-  stepper_zoom.setMaxSpeed(pantilt_set_speed);
+  //stepper_zoom.setMaxSpeed(pantilt_set_speed);
 
   stepper_pan.setTargetAbs(keyframe_array[index - 1].panStepCount);
   stepper_tilt.setTargetAbs(keyframe_array[index - 1].tiltStepCount);
   stepper_slider.setTargetAbs(keyframe_array[index - 1].sliderStepCount);
-  stepper_zoom.setTargetAbs(keyframe_array[index - 1].zoomStepCount);
+  //stepper_zoom.setTargetAbs(keyframe_array[index - 1].zoomStepCount);
 
-  StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+  StepperGroup ({stepper_pan, stepper_tilt, stepper_slider}).move();
 
   Serial1Flush(); 
 
@@ -347,6 +347,6 @@ void moveToIndex(int index) {
     stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
   }
 
-  stepper_zoom.setMaxSpeed(zoom_set_speed);
+  //stepper_zoom.setMaxSpeed(zoom_set_speed);
   sentMoved = false;
 }

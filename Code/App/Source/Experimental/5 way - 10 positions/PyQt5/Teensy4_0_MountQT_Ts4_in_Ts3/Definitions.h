@@ -11,8 +11,8 @@
 #define PIN_DIRECTION_TILT 16
 #define PIN_STEP_SLIDER 15
 #define PIN_DIRECTION_SLIDER 14
-#define PIN_STEP_ZOOM 21
-#define PIN_DIRECTION_ZOOM 20
+//#define PIN_STEP_ZOOM 21
+//#define PIN_DIRECTION_ZOOM 20
 
 #define PIN_SW1 11
 #define PIN_SW2 12
@@ -158,7 +158,7 @@ float pantilt_set_speed = 20;     //  degrees/second.
 float slider_set_speed = 60;      //  mm/second.
 
 float pantilt_accel = 200;
-float slider_accel = 20;
+float slider_accel = 4000;
 
 float pantilt_speed1 = 1;
 float pantilt_speed2 = 5;
@@ -245,7 +245,7 @@ struct KeyframeElement {
   float panTiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
-  long zoomStepCount = 0;
+  //long zoomStepCount = 0;
   int isRecorded = 0;
 };
 

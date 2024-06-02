@@ -40,9 +40,9 @@ void getEEPROMVariables(void) {
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED3, slider_speed3);
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED4, slider_speed4);
 
-  stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed);
-  stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed);
-  stepper_slider.setAcceleration(slider_accel * slider_set_speed);
+  stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+  stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+  stepper_slider.setAcceleration(slider_accel * (slider_set_speed / 10));
 }
 
 

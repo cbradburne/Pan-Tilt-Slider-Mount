@@ -13,7 +13,7 @@ using namespace TS4;
 Stepper stepper_pan(PIN_STEP_PAN, PIN_DIRECTION_PAN);
 Stepper stepper_tilt(PIN_STEP_TILT, PIN_DIRECTION_TILT);
 Stepper stepper_slider(PIN_STEP_SLIDER, PIN_DIRECTION_SLIDER);
-Stepper stepper_zoom(PIN_STEP_ZOOM, PIN_DIRECTION_ZOOM);
+//Stepper stepper_zoom(PIN_STEP_ZOOM, PIN_DIRECTION_ZOOM);
 
 KeyframeElement keyframe_array[10];
 
@@ -47,11 +47,11 @@ void initPanTilt(void) {
   stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-  stepper_zoom.setMaxSpeed(zoom_set_speed);
-  stepper_pan.setAcceleration(pantilt_set_speed); //pantilt_accel * pantilt_set_speed);
-  stepper_tilt.setAcceleration(pantilt_set_speed); //pantilt_accel * pantilt_set_speed);
-  stepper_slider.setAcceleration(slider_set_speed); //pantilt_accel * pantilt_set_speed); slider_accel * slider_set_speed);
-  stepper_zoom.setAcceleration(zoom_set_speed * 5);
+  //stepper_zoom.setMaxSpeed(zoom_set_speed);
+  stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+  stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+  stepper_slider.setAcceleration(slider_accel * (slider_set_speed / 10));
+  //stepper_zoom.setAcceleration(zoom_set_speed * 5);
 
   delay(200);
 
@@ -161,7 +161,7 @@ void sendCamSettings() {
   Serial1.println(String("#Q") + slider_accel);
 
   Serial1.println(String("#t") + sliderStepsToMillimetres(slideLimit));
-  Serial1.println(String("#w") + zoomLimit);
+  //Serial1.println(String("#w") + zoomLimit);
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -195,12 +195,12 @@ void mainLoop(void) {
         delay(10);
       }
 
-      if (stepper_zoom.isMoving) {
-        zoomRunning = false;
-        stepper_zoom.overrideSpeed(0);
-        stepper_zoom.stopAsync();
-        delay(10);
-      }
+      //if (stepper_zoom.isMoving) {
+      //  zoomRunning = false;
+      //  stepper_zoom.overrideSpeed(0);
+      //  stepper_zoom.stopAsync();
+      //  delay(10);
+      //}
 
       isManualMove = false;
     }
@@ -209,6 +209,7 @@ void mainLoop(void) {
 
 void zoomLimitCheck() {
   if (findingHome == false){
+    /*
     if ((stepper_zoom.getPosition() > zoomLimit) && (zoomRunning == true) && (zoomedIn == false)) {
       stepper_zoom.emergencyStop();
       zoomRunning = false;
@@ -236,7 +237,7 @@ void zoomLimitCheck() {
       //Serial1.println("Zoomed IN reset");
     }
 
-    
+    */
     if (slideReverse) {
       if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
         stepper_slider.emergencyStop();
