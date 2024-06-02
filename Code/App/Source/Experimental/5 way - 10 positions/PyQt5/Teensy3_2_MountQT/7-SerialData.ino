@@ -61,7 +61,7 @@ void SerialData(void) {
       atPos0 = false;
 
       short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
-      if (!withSlider) {
+      if (withSlider) {
         sliderStepSpeed = 0;
       }
       short panStepSpeed = (Serial1.read() << 8) + Serial1.read();
@@ -111,8 +111,6 @@ void SerialData(void) {
         isManualMove = true;
         previousMillisMoveCheck = millis();
       }
-
-
 
 
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
@@ -374,6 +372,24 @@ void SerialData(void) {
         Serial1.println("#$");
       }
       break;
+    case INSTRUCTION_SET_SLIDE_LIMIT:
+      {
+        slideLimit = sliderMillimetresToSteps(SerialCommandValueInt);
+        Serial1.println(String("Slide Limit Set: ") + sliderStepsToMillimetres(slideLimit));
+        Serial1.println("#$");
+        if (stepper_slider.getPosition() >= slideLimit) {
+          sliderAtLimit = true;
+          Serial1.println("Slider @ Limit"); 
+        }
+      }
+      break;
+    case INSTRUCTION_SET_ZOOM_LIMIT:
+      {
+        zoomLimit = SerialCommandValueInt;
+        Serial1.println(String("Zoom Limit Set: ") + zoomLimit);
+        Serial1.println("#$");
+      }
+      break;
     case INSTRUCTION_PANTILT_ACCEL:
       {
         pantilt_accel = SerialCommandValueInt;
@@ -427,7 +443,12 @@ void SerialData(void) {
     case INSTRUCTION_PAN_DEGREES:
       {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
-          panDegrees(SerialCommandValueFloat);
+          if (upsideDown) {
+            panDegrees(-SerialCommandValueFloat);
+          }
+          else {
+            panDegrees(SerialCommandValueFloat);
+          }
         }
       }
       break;
@@ -441,14 +462,34 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_MILLIMETRES:
       {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
-          sliderMoveTo(SerialCommandValueFloat);
+          if (slideReverse) {
+            SerialCommandValueFloat = -SerialCommandValueFloat;
+            if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
+              sliderRunning = true;
+              sliderMoveTo(SerialCommandValueFloat);
+              sliderRunning = false;
+            }
+          }
+          else {
+            if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
+              sliderRunning = true;
+              sliderMMRel(SerialCommandValueFloat);
+              sliderRunning = false;
+            }
+          }
+          //sliderMoveTo(SerialCommandValueFloat);
         }
       }
       break;
     case INSTRUCTION_PAN_DEGREES_REL:
       {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
-          panDegreesRel(SerialCommandValueFloat);
+          if (upsideDown) {
+            panDegreesRel(-SerialCommandValueFloat);
+          }
+          else {
+            panDegreesRel(SerialCommandValueFloat);
+          }
         }
       }
       break;
@@ -462,7 +503,22 @@ void SerialData(void) {
     case INSTRUCTION_SLIDER_MILLIMETRES_REL:
       {
         if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
-          sliderMMRel(SerialCommandValueFloat);
+          if (slideReverse) {
+            SerialCommandValueFloat = -SerialCommandValueFloat;
+            if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
+              sliderRunning = true;
+              sliderMMRel(SerialCommandValueFloat);
+              sliderRunning = false;
+            }
+          }
+          else {
+            if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
+              sliderRunning = true;
+              sliderMMRel(SerialCommandValueFloat);
+              sliderRunning = false;
+            }
+          }
+          //sliderMMRel(SerialCommandValueFloat);
         }
       }
       break;
@@ -601,9 +657,20 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_ZERO_POS:
       {
-        stepper_pan.setPosition(0);
-        stepper_tilt.setPosition(0);
+        //stepper_pan.setPosition(0);
+        //stepper_tilt.setPosition(0);
         stepper_slider.setPosition(0);
+        findingHome = false;
+      }
+      break;
+    case INSTRUCTION_FIND_ZERO_POS:
+      {
+        if (findingHome == false){
+          findingHome = true;
+        }
+        else {
+          findingHome = false;
+        }
       }
       break;
     default:

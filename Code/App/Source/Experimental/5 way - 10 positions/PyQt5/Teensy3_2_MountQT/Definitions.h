@@ -47,6 +47,9 @@
 #define INSTRUCTION_SET_TILT_SPEED 'S'
 #define INSTRUCTION_SET_SLIDER_SPEED 'a'
 
+#define INSTRUCTION_SET_SLIDE_LIMIT 'y'
+#define INSTRUCTION_SET_ZOOM_LIMIT 'w'
+
 #define INSTRUCTION_SET_PANTILT_SPEED1 'B'
 #define INSTRUCTION_SET_PANTILT_SPEED2 'b'
 #define INSTRUCTION_SET_PANTILT_SPEED3 'C'
@@ -72,6 +75,7 @@
 #define INSTRUCTION_SAVE_TO_EEPROM 'U'
 
 #define INSTRUCTION_SET_ZERO_POS 'h'
+#define INSTRUCTION_FIND_ZERO_POS 'H'
 
 #define INSTRUCTION_IS_CAM_DELAY 'j'
 
@@ -97,6 +101,8 @@
 
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
+#define EEPROM_ADDRESS_ZOOM_LIMIT 62
+#define EEPROM_ADDRESS_SLIDE_LIMIT 70
 #define EEPROM_ADDRESS_PANTILT_ACCEL 14
 #define EEPROM_ADDRESS_SLIDER_ACCEL 18
 #define EEPROM_ADDRESS_PANTILT_SPEED1 22
@@ -108,7 +114,10 @@
 #define EEPROM_ADDRESS_SLIDER_SPEED3 46
 #define EEPROM_ADDRESS_SLIDER_SPEED4 50
 
-#define VERSION_NUMBER "8 Aug 2023"
+#define VERSION_NUMBER "2 June 2024"
+
+float slideLimit = 130000;     // 3 metres
+float zoomLimit = 5550;      // 12 - 35mm
 
 bool withSlider = false;
 bool DEBUG1 = false;
@@ -120,16 +129,25 @@ bool startedAsync = false;
 bool panAsync = false;
 bool tiltAsync = false;
 bool sliderAsync = false;
+bool zoomAsync = false;
 
 bool panRunning = false;
 bool tiltRunning = false;
 bool sliderRunning = false;
+bool zoomRunning = false;
+
+bool sliderAtZero = false;
+bool sliderAtLimit = false;
+bool findingHome = false;
+
+bool zoomedIn = false;
+bool zoomedOut = false;
 
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
 
-float pan_steps_per_degree = (200.0 * 16 * PAN_GEAR_RATIO) / 360.0;            //  Stepper motor has 200 steps per 360 degrees
-float tilt_steps_per_degree = (200.0 * 16 * TILT_GEAR_RATIO) / 360.0;          //  Stepper motor has 200 steps per 360 degrees
+float pan_steps_per_degree = (400.0 * 16 * PAN_GEAR_RATIO) / 360.0;            //  Stepper motor has 400 steps per 360 degrees
+float tilt_steps_per_degree = (400.0 * 16 * TILT_GEAR_RATIO) / 360.0;          //  Stepper motor has 400 steps per 360 degrees
 float slider_steps_per_millimetre = (200.0 * 16) / (SLIDER_PULLEY_TEETH * 2);  //  Stepper motor has 200 steps per 360 degrees, the timing pully has 36 teeth and the belt has a pitch of 2mm
 
 float pantilt_set_speed = 20;     //  degrees/second.
@@ -148,8 +166,12 @@ float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
 
+float zoom_set_speed = 1000;
+float zoom_accel = 8000;
+
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
 float sliderMaxFactor = 1.0;
+float zoomMaxFactor = 1.0;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
@@ -159,6 +181,7 @@ String atIndex = "";
 float speedFactorS = 0.0;
 float speedFactorP = 0.0;
 float speedFactorT = 0.0;
+float speedFactorZ = 0.0;
 
 bool sentMoved = false;
 
@@ -168,7 +191,7 @@ unsigned long previousMillis = 0;
 const long zoomInterval = 50;
 bool zoomIN = false;
 bool zoomOUT = false;
-int zoom_speed;
+float zoom_speed;
 
 bool pos1set = false;
 bool pos2set = false;
@@ -219,19 +242,6 @@ struct KeyframeElement {
   long sliderStepCount = 0;
   float sliderSpeed = 0;
   int isRecorded = 0;
-};
-
-struct FloatCoordinate {
-  float x;
-  float y;
-  float z;
-};
-
-struct LinePoints {
-  float x0;
-  float y0;
-  float x1;
-  float y1;
 };
 
 /*------------------------------------------------------------------------------------------------------------------------------------------------------*/

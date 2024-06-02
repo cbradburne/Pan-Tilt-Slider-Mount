@@ -48,9 +48,9 @@ void initPanTilt(void) {
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
   stepper_zoom.setMaxSpeed(zoom_set_speed);
-  stepper_pan.setAcceleration(pantilt_set_speed); //pantilt_accel * pantilt_set_speed);
-  stepper_tilt.setAcceleration(pantilt_set_speed); //pantilt_accel * pantilt_set_speed);
-  stepper_slider.setAcceleration(slider_set_speed); //pantilt_accel * pantilt_set_speed); slider_accel * slider_set_speed);
+  stepper_pan.setAcceleration(pantilt_accel * pantilt_set_speed); //pantilt_accel * pantilt_set_speed);
+  stepper_tilt.setAcceleration(pantilt_accel * pantilt_set_speed); //pantilt_accel * pantilt_set_speed);
+  stepper_slider.setAcceleration(slider_accel * slider_set_speed); //pantilt_accel * pantilt_set_speed); slider_accel * slider_set_speed);
   stepper_zoom.setAcceleration(zoom_set_speed * 5);
 
   delay(200);
