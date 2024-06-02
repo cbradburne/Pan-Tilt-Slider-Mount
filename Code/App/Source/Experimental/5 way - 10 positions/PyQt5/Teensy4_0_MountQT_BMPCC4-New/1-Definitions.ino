@@ -208,87 +208,88 @@ void mainLoop(void) {
 }
 
 void zoomLimitCheck() {
-
-  if ((stepper_zoom.getPosition() > zoomLimit) && (zoomRunning == true) && (zoomedIn == false)) {
-    stepper_zoom.emergencyStop();
-    zoomRunning = false;
-    zoomedIn = true;
-    zoomedOut = false;
-    stepper_zoom.moveRel(-20);
-    //Serial1.println("Zoomed Fully IN"); 
-  } 
-  else if ((stepper_zoom.getPosition() < 0) && (zoomRunning == true) && (zoomedOut == false)) {
-    stepper_zoom.emergencyStop();
-    zoomRunning = false;
-    zoomedIn = false;
-    zoomedOut = true;
-    stepper_zoom.moveRel(20);
-    //Serial1.println("Zoomed Fully OUT"); 
-  }
-
-
-  if ((stepper_zoom.getPosition() > 20) && (zoomedOut == true)) {
-    zoomedOut = false;
-    //Serial1.println("Zoomed OUT reset"); 
-  }
-  if ((stepper_zoom.getPosition() < (zoomLimit - 20)) && (zoomedIn == true)) {
-    zoomedIn = false;
-    //Serial1.println("Zoomed IN reset");
-  }
-
-  
-  if (slideReverse) {
-    if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
-      stepper_slider.emergencyStop();
-      sliderRunning = false;
-      sliderAtLimit = true;   // +ve limit value
-      sliderAtZero = false;   // 0 limit value
-      stepper_slider.moveRel(20);
-      Serial1.println("Slider @ Limit"); 
+  if (findingHome == false){
+    if ((stepper_zoom.getPosition() > zoomLimit) && (zoomRunning == true) && (zoomedIn == false)) {
+      stepper_zoom.emergencyStop();
+      zoomRunning = false;
+      zoomedIn = true;
+      zoomedOut = false;
+      stepper_zoom.moveRel(-20);
+      //Serial1.println("Zoomed Fully IN"); 
     } 
-    else if ((stepper_slider.getPosition() > 0) && (sliderRunning == true) && (sliderAtZero == false)) {
-      stepper_slider.emergencyStop();
-      sliderRunning = false;
-      sliderAtLimit = false;
-      sliderAtZero = true;
-      stepper_slider.moveRel(-20);
-      Serial1.println("Slider @ Zero"); 
+    else if ((stepper_zoom.getPosition() < 0) && (zoomRunning == true) && (zoomedOut == false)) {
+      stepper_zoom.emergencyStop();
+      zoomRunning = false;
+      zoomedIn = false;
+      zoomedOut = true;
+      stepper_zoom.moveRel(20);
+      //Serial1.println("Zoomed Fully OUT"); 
     }
 
-    if ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (sliderAtZero == true)) {
-      sliderAtZero = false;
-      Serial1.println("Slider Zero reset"); 
+
+    if ((stepper_zoom.getPosition() > 20) && (zoomedOut == true)) {
+      zoomedOut = false;
+      //Serial1.println("Zoomed OUT reset"); 
     }
-    if ((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (sliderAtLimit == true)) {
-      sliderAtLimit = false;
-      Serial1.println("Slider Limit reset");
-    }
-  }
-  else {
-    if ((stepper_slider.getPosition() > slideLimit) && (sliderRunning == true) && (sliderAtLimit == false)) {
-      stepper_slider.emergencyStop();
-      sliderRunning = false;
-      sliderAtLimit = true;   // +ve limit value
-      sliderAtZero = false;   // 0 limit value
-      stepper_slider.moveRel(-20);
-      Serial1.println("Slider @ Limit"); 
-    } 
-    else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true) && (sliderAtZero == false)) {
-      stepper_slider.emergencyStop();
-      sliderRunning = false;
-      sliderAtLimit = false;
-      sliderAtZero = true;
-      stepper_slider.moveRel(20);
-      Serial1.println("Slider @ Zero"); 
+    if ((stepper_zoom.getPosition() < (zoomLimit - 20)) && (zoomedIn == true)) {
+      zoomedIn = false;
+      //Serial1.println("Zoomed IN reset");
     }
 
-    if ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (sliderAtZero == true)) {
-      sliderAtZero = false;
-      Serial1.println("Slider Zero reset"); 
+    
+    if (slideReverse) {
+      if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
+        stepper_slider.emergencyStop();
+        sliderRunning = false;
+        sliderAtLimit = true;   // +ve limit value
+        sliderAtZero = false;   // 0 limit value
+        stepper_slider.moveRel(20);
+        Serial1.println("Slider @ Limit"); 
+      } 
+      else if ((stepper_slider.getPosition() > 0) && (sliderRunning == true) && (sliderAtZero == false)) {
+        stepper_slider.emergencyStop();
+        sliderRunning = false;
+        sliderAtLimit = false;
+        sliderAtZero = true;
+        stepper_slider.moveRel(-20);
+        Serial1.println("Slider @ Zero"); 
+      }
+
+      if ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (sliderAtZero == true)) {
+        sliderAtZero = false;
+        Serial1.println("Slider Zero reset"); 
+      }
+      if ((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (sliderAtLimit == true)) {
+        sliderAtLimit = false;
+        Serial1.println("Slider Limit reset");
+      }
     }
-    if ((stepper_slider.getPosition() < (slideLimit * 0.97)) && (sliderAtLimit == true)) {
-      sliderAtLimit = false;
-      Serial1.println("Slider Limit reset");
+    else {
+      if ((stepper_slider.getPosition() > slideLimit) && (sliderRunning == true) && (sliderAtLimit == false)) {
+        stepper_slider.emergencyStop();
+        sliderRunning = false;
+        sliderAtLimit = true;   // +ve limit value
+        sliderAtZero = false;   // 0 limit value
+        stepper_slider.moveRel(-20);
+        Serial1.println("Slider @ Limit"); 
+      } 
+      else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true) && (sliderAtZero == false)) {
+        stepper_slider.emergencyStop();
+        sliderRunning = false;
+        sliderAtLimit = false;
+        sliderAtZero = true;
+        stepper_slider.moveRel(20);
+        Serial1.println("Slider @ Zero"); 
+      }
+
+      if ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (sliderAtZero == true)) {
+        sliderAtZero = false;
+        Serial1.println("Slider Zero reset"); 
+      }
+      if ((stepper_slider.getPosition() < (slideLimit * 0.97)) && (sliderAtLimit == true)) {
+        sliderAtLimit = false;
+        Serial1.println("Slider Limit reset");
+      }
     }
   }
 }

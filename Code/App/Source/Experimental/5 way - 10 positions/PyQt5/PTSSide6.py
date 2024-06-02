@@ -44,7 +44,7 @@ from pathlib import Path
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
-debug = False
+debug = True
 
 serial_port = None
 
@@ -526,6 +526,8 @@ cam5slSpeed2 = ''
 cam5slSpeed3 = ''
 cam5slSpeed4 = ''
 
+locateHomeActive = False
+
 class Ui_SettingsWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
@@ -569,6 +571,22 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSlideLimit.setFont(font)
         self.pushButtonSlideLimit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonSlideLimit.setObjectName("pushButtonSlideLimit")
+        self.pushButtonSlideLocate = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.locateHome())
+        self.pushButtonSlideLocate.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 36.5, (buttonGoX * 1)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(20)
+        self.pushButtonSlideLocate.setFont(font)
+        self.pushButtonSlideLocate.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+        self.pushButtonSlideLocate.setObjectName("pushButtonSlideLocate")
+        self.pushButtonSlideSetHome = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.setHome())
+        self.pushButtonSlideSetHome.setGeometry(QtCore.QRect(butttonLayoutX * 44.5, butttonLayoutY * 36.5, (buttonGoX * 1)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(20)
+        self.pushButtonSlideSetHome.setFont(font)
+        self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+        self.pushButtonSlideSetHome.setObjectName("pushButtonSlideSetHome")
         self.pushButtonPTS4 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed4.setFocus())
         self.pushButtonPTS4.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
@@ -958,6 +976,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.setWindowTitle(_translate("settingsWindow", "MainWindow"))
         self.pushButtonZoomLimit.setText(_translate("settingsWindow", "Zoom Limit"))
         self.pushButtonSlideLimit.setText(_translate("settingsWindow", "Slide Limit"))
+        self.pushButtonSlideLocate.setText(_translate("settingsWindow", "Locate Home"))
+        self.pushButtonSlideSetHome.setText(_translate("settingsWindow", "Set Home"))
         self.pushButtonPTS4.setText(_translate("settingsWindow", "Pan/Tilt Speed - Fastest"))
         self.pushButtonPTS3.setText(_translate("settingsWindow", "Pan/Tilt Speed - Fast"))
         self.pushButtonPTS2.setText(_translate("settingsWindow", "Pan/Tilt Speed - Slow"))
@@ -1290,6 +1310,60 @@ class Ui_SettingsWindow(QMainWindow):
     def sendSerial(self, toSendData):
         global sendData
         sendData = toSendData
+
+    def locateHome(self):
+        global locateHomeActive
+        global whichCamSerial
+
+        if locateHomeActive:
+            locateHomeActive = False
+            self.pushButtonSlideLocate.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+
+            if whichCamSerial == 1:
+                self.sendSerial('&1T')
+            elif whichCamSerial == 2:
+                self.sendSerial('&2T')
+            elif whichCamSerial == 3:
+                self.sendSerial('&3T')
+            elif whichCamSerial == 4:
+                self.sendSerial('&4T')
+            elif whichCamSerial == 5:
+                self.sendSerial('&5T')
+        else:
+            locateHomeActive = True
+            self.pushButtonSlideLocate.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #a0405C; border-radius: {borderRadius2}px;")
+
+            if whichCamSerial == 1:
+                self.sendSerial('&1T')
+            elif whichCamSerial == 2:
+                self.sendSerial('&2T')
+            elif whichCamSerial == 3:
+                self.sendSerial('&3T')
+            elif whichCamSerial == 4:
+                self.sendSerial('&4T')
+            elif whichCamSerial == 5:
+                self.sendSerial('&5T')
+
+    def setHome(self):
+        global locateHomeActive
+        global whichCamSerial
+
+        if locateHomeActive:
+            locateHomeActive = False
+            self.pushButtonSlideLocate.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+
+            if whichCamSerial == 1:
+                self.sendSerial('&1u')
+            elif whichCamSerial == 2:
+                self.sendSerial('&2u')
+            elif whichCamSerial == 3:
+                self.sendSerial('&3u')
+            elif whichCamSerial == 4:
+                self.sendSerial('&4u')
+            elif whichCamSerial == 5:
+                self.sendSerial('&5u')
+
+        self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
 
 class Ui_editWindow(QMainWindow):
     def __init__(self):
@@ -1800,42 +1874,42 @@ class PTSapp(QMainWindow):
             joyType = str(key)
             #print(joyType[-6:])
 
-            deadRange = 0.1
+            deadRange = 0.15
 
             if re.search('xbox', joyName):
                 #print(key.number)
                 if joyType[-6:] == "Axis 3":
                     if (key.value < -deadRange):
-                        axisX = int(self.scale(key.value, (-1, -deadRange), (-255, -30)))
+                        axisX = int(self.scale(key.value, (-1, deadRange), (-255, -30)))
                     elif (key.value > deadRange):
-                        axisX = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                        axisX = int(self.scale(key.value, (1, -deadRange), (255, 0)))
                     else:
                         axisX = 0
                     
                     #axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 4":
                     if (key.value < -deadRange):
-                        axisY = int(self.scale(key.value, (-1, -deadRange), (255, 0)))
+                        axisY = int(self.scale(key.value, (-1, deadRange), (255, 0)))
                     elif (key.value > deadRange):
-                        axisY = int(self.scale(key.value, (1, deadRange), (-255, -30)))
+                        axisY = int(self.scale(key.value, (1, -deadRange), (-255, -30)))
                     else:
                         axisY = 0
 
                     #axisY = int(self.scale(key.value, (-1, 1), (255,-255)))
                 elif joyType[-6:] == "Axis 0":
                     if (key.value < -deadRange):
-                        axisZ = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                        axisZ = int(self.scale(key.value, (-1, deadRange), (-255, 0)))
                     elif (key.value > deadRange):
-                        axisZ = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                        axisZ = int(self.scale(key.value, (1, -deadRange), (255, 0)))
                     else:
                         axisZ = 0
 
                     #axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
                     if (key.value < -deadRange):
-                        axisW = int(self.scale(key.value, (-1, -(deadRange*2)), (8, 0)))
+                        axisW = int(self.scale(key.value, (-1, (deadRange*2)), (8, 0)))
                     elif (key.value > deadRange):
-                        axisW = int(self.scale(key.value, (1, (deadRange*2)), (-8, 0)))
+                        axisW = int(self.scale(key.value, (1, -(deadRange*2)), (-8, 0)))
                     else:
                         axisW = 0
 
@@ -1873,38 +1947,64 @@ class PTSapp(QMainWindow):
             else:
                 if joyType[-6:] == "Axis 2":
                     if (key.value < -deadRange):
-                        axisX = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                        axisX = int(self.scale(key.value, (-1, deadRange), (-255, 0)))
+                        if axisX < -254:
+                            axisX = -254
                     elif (key.value > deadRange):
-                        axisX = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                        axisX = int(self.scale(key.value, (1, -deadRange), (255, 0)))
+                        if axisX > 254:
+                            axisX = 254
                     else:
                         axisX = 0
                     
                     #axisX = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 3":
                     if (key.value < -deadRange):
-                        axisY = int(self.scale(key.value, (-1, -deadRange), (255, 0)))
+                        axisY = int(self.scale(key.value, (-1, deadRange), (255, 0)))
+                        if axisY < -254:
+                            axisY = -254
                     elif (key.value > deadRange):
-                        axisY = int(self.scale(key.value, (1, deadRange), (-255, 0)))
+                        axisY = int(self.scale(key.value, (1, -deadRange), (-255, 0)))
+                        if axisY > 254:
+                            axisY = 254
                     else:
                         axisY = 0
 
                     #axisY = int(self.scale(key.value, (-1, 1), (255,-255)))
                 elif joyType[-6:] == "Axis 0":
                     if (key.value < -deadRange):
-                        axisZ = int(self.scale(key.value, (-1, -deadRange), (-255, 0)))
+                        axisZ = int(self.scale(key.value, (-1, deadRange), (-255, 0)))
+                        if axisZ < -254:
+                            axisZ = -254
                     elif (key.value > deadRange):
-                        axisZ = int(self.scale(key.value, (1, deadRange), (255, 0)))
+                        axisZ = int(self.scale(key.value, (1, -deadRange), (255, 0)))
+                        if axisZ > 254:
+                            axisZ= 254
                     else:
                         axisZ = 0
+                    print(axisZ)
 
                     #axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
+                    #scale(self, val, src, dst):
+                    #return ((val - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
+                    #               -1      /   -0.1    - -1   *   0 - 8 + 8
+                    #       -0.1    -1      /    0.9           *   8 - 0 
+                    #
+                    #         0.5   1       /    0.2  -   1    *   0 - 8 + 8
+                    #
+                    #   axisW = int(self.scale(key.value, (-1, -(deadRange*2)), (8, 0)))
+
                 elif joyType[-6:] == "Axis 1":
                     if (key.value < -deadRange):
-                        axisW = int(self.scale(key.value, (-1, -(deadRange*2)), (8, 0)))
+                        axisW = int(self.scale(key.value, (-1, (deadRange*2)), (8, 0)))
                     elif (key.value > deadRange):
-                        axisW = int(self.scale(key.value, (1, (deadRange*2)), (-8, 0)))
+                        axisW = int(self.scale(key.value, (1, -(deadRange*2)), (-8, 0)))
                     else:
                         axisW = 0
+
+            #if debug:
+            #    print("from handle_key_event")
+            self.doJoyMoves(1)
 
 
         mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
@@ -3295,22 +3395,24 @@ class PTSapp(QMainWindow):
         global moveCheckInterval
         global whichCamSerial
 
-        if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
-            currentMillisMoveCheck = time.time()
-            if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
-                previousMillisMoveCheck = currentMillisMoveCheck
+        #if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
+        #    currentMillisMoveCheck = time.time()
+        #    if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
+        #        previousMillisMoveCheck = currentMillisMoveCheck
                 #arr = [4, axisZh, axisXh, axisYh]                                          # for debugging
-                self.sendJoystick(arr)
+        #        self.sendJoystick(arr)
         if ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
             previousTime = time.time()
-            oldAxisX = axisX
-            oldAxisY = axisY
-            oldAxisZ = axisZ
+            #oldAxisX = axisX
+            #oldAxisY = axisY
+            #oldAxisZ = axisZ
             axisXh = self.toHex(axisX, 16)
             axisYh = self.toHex(axisY, 16)
             axisZh = self.toHex(axisZ, 16)
 
             arr = [4, axisZh, axisXh, axisYh]
+            if debug:
+                print(arr)
             self.sendJoystick(arr)
             previousMillisMoveCheck = time.time()
 
@@ -3849,8 +3951,8 @@ class PTSapp(QMainWindow):
 
         global whichCamRead
 
-        if debug:
-            print(msg)
+        #if debug:
+        #    print(msg)
 
         #textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
         #if textLength > 8000:
@@ -8305,7 +8407,8 @@ class ThreadClass(QtCore.QThread):
                         try:
                             self.serial_port.write(joyData)
                             previousMillisMoveCheck = time.time()
-                            #print("Re-sending Joystick for keep-alive")    # debugging
+                            if debug:
+                                print("Re-sending Joystick for keep-alive")    # debugging
                         except:
                             print("Didn't RE-send joystick :(")
                             self.stop()

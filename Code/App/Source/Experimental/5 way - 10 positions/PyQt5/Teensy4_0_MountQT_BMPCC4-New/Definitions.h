@@ -79,6 +79,7 @@
 #define INSTRUCTION_SAVE_TO_EEPROM 'U'
 
 #define INSTRUCTION_SET_ZERO_POS 'h'
+#define INSTRUCTION_FIND_ZERO_POS 'H'
 
 #define INSTRUCTION_IS_CAM_DELAY 'j'
 
@@ -141,6 +142,7 @@ bool zoomRunning = false;
 
 bool sliderAtZero = false;
 bool sliderAtLimit = false;
+bool findingHome = false;
 
 bool zoomedIn = false;
 bool zoomedOut = false;

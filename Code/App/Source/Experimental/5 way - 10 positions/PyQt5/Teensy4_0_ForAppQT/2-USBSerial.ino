@@ -30,6 +30,72 @@ void USBSerialData() {
           delayMicroseconds(1);
         }
         instruction = Serial.read();
+
+        /*
+        Z = Save Pos1
+        X = Save Pos2
+        C = Save Pos3
+        V = Save Pos4
+        B = Save Pos5
+        N = Save Pos6
+        M = Save Pos7
+        < = Save Pos8
+        > = Save Pos9
+        ? = Save Pos10
+
+        z = Move Pos1
+        x = Move Pos2
+        c = Move Pos3
+        v = Move Pos4
+        b = Move Pos5
+        n = Move Pos6
+        m = Move Pos7
+        , = Move Pos8
+        . = Move Pos9
+        / = Move Pos10
+
+        y = Move to Pos1 SLIDER ONLY
+        Y = Move to Pos10 SLIDER ONLY
+
+        a(+) = Zoom out
+        A(+) = Zoom in
+        q = Zoom Stop
+
+        d = Toggle Recording
+
+        D = Clear Positions
+
+        r = Report All
+        R = Report positions
+        k = Keyframe report
+        K = Request cam settings
+
+        F = Set PT speed 1
+        f = Set PT speed 2
+        G = Set PT speed 3
+        g = Set PT speed 4
+
+        H = Set Sl speed 1
+        h = Set Sl speed 2
+        J = Set Sl speed 3
+        j = Set Sl speed 4
+
+        L = Set PT Accel
+        l = Set Sl Access
+
+        t = Set Slide Limit
+        T = Home Locate
+        u = Set Home
+
+        w = Set Zoom Limit
+
+        s =
+        W = 
+
+        P = Toggle AutoFocus
+
+        U = Store EEPROM
+        */
         switch (instruction) {
           case 'Z':  // Save pos 1
             {
@@ -842,6 +908,38 @@ void USBSerialData() {
                 Serial4.println(String("?y") + SerialCommandValueInt);
               } else if (camNumInst == '5') {
                 Serial5.println(String("?y") + SerialCommandValueInt);
+              }
+            }
+            break;
+          case 'T':
+            {  // Locate home (for limits)
+              String stringText = Serial.readStringUntil('\n');
+              if (camNumInst == '1') {
+                Serial1.println(String("?H"));
+              } else if (camNumInst == '2') {
+                Serial2.println(String("?H"));
+              } else if (camNumInst == '3') {
+                Serial3.println(String("?H"));
+              } else if (camNumInst == '4') {
+                Serial4.println(String("?H"));
+              } else if (camNumInst == '5') {
+                Serial5.println(String("?H"));
+              }
+            }
+            break;
+          case 'u':
+            {  // Set home (for limits)
+              String stringText = Serial.readStringUntil('\n');
+              if (camNumInst == '1') {
+                Serial1.println(String("?h"));
+              } else if (camNumInst == '2') {
+                Serial2.println(String("?h"));
+              } else if (camNumInst == '3') {
+                Serial3.println(String("?h"));
+              } else if (camNumInst == '4') {
+                Serial4.println(String("?h"));
+              } else if (camNumInst == '5') {
+                Serial5.println(String("?h"));
               }
             }
             break;
