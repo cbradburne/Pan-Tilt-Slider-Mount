@@ -100,7 +100,7 @@ void SerialData(void) {
       } else {
         if (!panRunning) {
           panRunning = true;
-          stepper_pan.setAcceleration(pantilt_set_speed * (pantilt_set_speed / 2));
+          stepper_pan.setAcceleration((pantilt_set_speed * pantilt_set_speed) / 2);
           stepper_pan.rotateAsync(panDegreesToSteps(pantilt_set_speed));
         }
         if (upsideDown) {
@@ -118,7 +118,7 @@ void SerialData(void) {
       } else {
         if (!tiltRunning) {
           tiltRunning = true;
-          stepper_tilt.setAcceleration(pantilt_set_speed * (pantilt_set_speed / 2));
+          stepper_tilt.setAcceleration((pantilt_set_speed * pantilt_set_speed) / 2);
           stepper_tilt.rotateAsync(panDegreesToSteps(pantilt_set_speed));
         }
         //if (upsideDown) {
