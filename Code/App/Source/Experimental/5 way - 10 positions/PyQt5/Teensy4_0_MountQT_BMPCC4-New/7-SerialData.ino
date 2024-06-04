@@ -137,7 +137,7 @@ void SerialData(void) {
       else {
         if (slideReverse) {
           speedFactorS = -speedFactorS;
-          if ((findingHome == true) || ((findingHome == false) && ((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0)))) {
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))))) {
             if (!sliderRunning) {
               sliderRunning = true;
               stepper_slider.setAcceleration((slider_set_speed * slider_set_speed) / 20);
@@ -148,7 +148,7 @@ void SerialData(void) {
           }
         }
         else {
-          if ((findingHome == true) || ((findingHome == false) && ((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0)))) {
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
             if (!sliderRunning) {
               sliderRunning = true;
               stepper_slider.setAcceleration((slider_set_speed * slider_set_speed) / 20);
