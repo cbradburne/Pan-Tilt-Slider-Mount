@@ -72,7 +72,7 @@ void SerialData(void) {
       float tiltStepSpeed2 = tiltStepSpeed;
 
       float speedFactorS = map(sliderStepSpeed2, -255, 255, -sliderMaxFactor, sliderMaxFactor);
-      float speedFactorP = map(panStepSpeed2, -265, 265, -pantiltMaxFactor, pantiltMaxFactor);
+      float speedFactorP = map(panStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
 
       //Serial.print("Pan Incoming = ");
@@ -95,13 +95,13 @@ void SerialData(void) {
       } else {
         if (!panRunning && (speedFactorP > 0)) {
           panRunning = true;
-          stepper_pan.setAcceleration(4000); //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
+          stepper_pan.setAcceleration(8000); //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
           stepper_pan.rotateAsync(panDegreesToSteps(pantilt_set_speed));
           panNeg = false;
         }
         else if (!panRunning && (speedFactorP < 0)) {
           panRunning = true;
-          stepper_pan.setAcceleration(4000); //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
+          stepper_pan.setAcceleration(8000); //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
           stepper_pan.rotateAsync(panDegreesToSteps(-pantilt_set_speed));
           panNeg = true;
         }
