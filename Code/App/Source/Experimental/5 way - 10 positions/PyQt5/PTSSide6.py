@@ -1108,6 +1108,32 @@ class Ui_SettingsWindow(QMainWindow):
         whichCamSerial = 1
         self.sendSerial('&1K')
 
+        QtCore.QTimer.singleShot(200,self.showCam1Settings)
+
+    def showCam1Settings(self):
+        global whichCamSerial
+        global cam1ptAccel
+        global cam1slAccel
+        global cam1ptSpeed1
+        global cam1ptSpeed2
+        global cam1ptSpeed3
+        global cam1ptSpeed4
+        global cam1slSpeed1
+        global cam1slSpeed2
+        global cam1slSpeed3
+        global cam1slSpeed4
+        global cam1SlideLimit
+        global cam1ZoomLimit
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+
         self.labelPTaccel.setText(str(cam1ptAccel))
         self.labelSLaccel.setText(str(cam1slAccel))
         self.labelPTspeed1.setText(str(cam1ptSpeed1))
@@ -1154,6 +1180,32 @@ class Ui_SettingsWindow(QMainWindow):
         whichCamSerial = 2
         self.sendSerial('&2K')
 
+        QtCore.QTimer.singleShot(200,self.showCam2Settings)
+
+    def showCam2Settings(self):
+        global whichCamSerial
+        global cam2ptAccel
+        global cam2slAccel
+        global cam2ptSpeed1
+        global cam2ptSpeed2
+        global cam2ptSpeed3
+        global cam2ptSpeed4
+        global cam2slSpeed1
+        global cam2slSpeed2
+        global cam2slSpeed3
+        global cam2slSpeed4
+        global cam2SlideLimit
+        global cam2ZoomLimit
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+
         self.labelPTaccel.setText(str(cam2ptAccel))
         self.labelSLaccel.setText(str(cam2slAccel))
         self.labelPTspeed1.setText(str(cam2ptSpeed1))
@@ -1164,6 +1216,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed2.setText(str(cam2slSpeed2))
         self.labelSLspeed3.setText(str(cam2slSpeed3))
         self.labelSLspeed4.setText(str(cam2slSpeed4))
+        self.labelSlideLimit.setText(str(cam2SlideLimit))
         self.labelZoomLimit.setText(str(cam2ZoomLimit))
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -1199,6 +1252,32 @@ class Ui_SettingsWindow(QMainWindow):
         whichCamSerial = 3
         self.sendSerial('&3K')
 
+        QtCore.QTimer.singleShot(200,self.showCam3Settings)
+
+    def showCam3Settings(self):
+        global whichCamSerial
+        global cam3ptAccel
+        global cam3slAccel
+        global cam3ptSpeed1
+        global cam3ptSpeed2
+        global cam3ptSpeed3
+        global cam3ptSpeed4
+        global cam3slSpeed1
+        global cam3slSpeed2
+        global cam3slSpeed3
+        global cam3slSpeed4
+        global cam3SlideLimit
+        global cam3ZoomLimit
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+
         self.labelPTaccel.setText(str(cam3ptAccel))
         self.labelSLaccel.setText(str(cam3slAccel))
         self.labelPTspeed1.setText(str(cam3ptSpeed1))
@@ -1209,6 +1288,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed2.setText(str(cam3slSpeed2))
         self.labelSLspeed3.setText(str(cam3slSpeed3))
         self.labelSLspeed4.setText(str(cam3slSpeed4))
+        self.labelSlideLimit.setText(str(cam3SlideLimit))
         self.labelZoomLimit.setText(str(cam3ZoomLimit))
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -1244,6 +1324,32 @@ class Ui_SettingsWindow(QMainWindow):
         whichCamSerial = 4
         self.sendSerial('&4K')
 
+        QtCore.QTimer.singleShot(200,self.showCam4Settings)
+
+    def showCam4Settings(self):
+        global whichCamSerial
+        global cam4ptAccel
+        global cam4slAccel
+        global cam4ptSpeed1
+        global cam4ptSpeed2
+        global cam4ptSpeed3
+        global cam4ptSpeed4
+        global cam4slSpeed1
+        global cam4slSpeed2
+        global cam4slSpeed3
+        global cam4slSpeed4
+        global cam4SlideLimit
+        global cam4ZoomLimit
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+
         self.labelPTaccel.setText(str(cam4ptAccel))
         self.labelSLaccel.setText(str(cam4slAccel))
         self.labelPTspeed1.setText(str(cam4ptSpeed1))
@@ -1254,6 +1360,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed2.setText(str(cam4slSpeed2))
         self.labelSLspeed3.setText(str(cam4slSpeed3))
         self.labelSLspeed4.setText(str(cam4slSpeed4))
+        self.labelSlideLimit.setText(str(cam4SlideLimit))
         self.labelZoomLimit.setText(str(cam4ZoomLimit))
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -1289,6 +1396,32 @@ class Ui_SettingsWindow(QMainWindow):
         whichCamSerial = 5
         self.sendSerial('&5K')
 
+        QtCore.QTimer.singleShot(200,self.showCam5Settings)
+
+    def showCam5Settings(self):
+        global whichCamSerial
+        global cam5ptAccel
+        global cam5slAccel
+        global cam5ptSpeed1
+        global cam5ptSpeed2
+        global cam5ptSpeed3
+        global cam5ptSpeed4
+        global cam5slSpeed1
+        global cam5slSpeed2
+        global cam5slSpeed3
+        global cam5slSpeed4
+        global cam5SlideLimit
+        global cam5ZoomLimit
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+        global borderSize
+        global borderSize2
+        global borderRadius
+        global borderRadius2
+
         self.labelPTaccel.setText(str(cam5ptAccel))
         self.labelSLaccel.setText(str(cam5slAccel))
         self.labelPTspeed1.setText(str(cam5ptSpeed1))
@@ -1299,6 +1432,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed2.setText(str(cam5slSpeed2))
         self.labelSLspeed3.setText(str(cam5slSpeed3))
         self.labelSLspeed4.setText(str(cam5slSpeed4))
+        self.labelSlideLimit.setText(str(cam5SlideLimit))
         self.labelZoomLimit.setText(str(cam5ZoomLimit))
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -3951,8 +4085,8 @@ class PTSapp(QMainWindow):
 
         global whichCamRead
 
-        #if debug:
-        #    print(msg)
+        if debug:
+            print(msg)
 
         #textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
         #if textLength > 8000:
