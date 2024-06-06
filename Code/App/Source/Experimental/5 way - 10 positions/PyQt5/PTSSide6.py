@@ -999,7 +999,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum9.setText(_translate("settingsWindow", "9"))
         self.pushButtonNum0.setText(_translate("settingsWindow", "0"))
         self.pushButtonNumBS.setText(_translate("settingsWindow", "⌫"))
-        self.pushButtonNumEnt.setText(_translate("settingsWindow", "↩"))
+        self.pushButtonNumEnt.setText(_translate("settingsWindow", "Set"))    #"↩"))
         self.pushButtonCam1.setText(_translate("settingsWindow", "Cam1"))
         self.pushButtonCam2.setText(_translate("settingsWindow", "Cam2"))
         self.pushButtonCam3.setText(_translate("settingsWindow", "Cam3"))
