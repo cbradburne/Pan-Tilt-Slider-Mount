@@ -526,6 +526,14 @@ cam5slSpeed2 = ''
 cam5slSpeed3 = ''
 cam5slSpeed4 = ''
 
+
+runToggle = False
+cam1Running = False
+cam2Running = False
+cam3Running = False
+cam4Running = False
+cam5Running = False
+
 locateHomeActive = False
 
 class Ui_SettingsWindow(QMainWindow):
@@ -2880,6 +2888,15 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonEdit.setFlat(False)
         self.pushButtonEdit.setObjectName("pushButtonEdit")
+        self.pushButtonRun = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.runToggle())
+        self.pushButtonRun.setGeometry(QtCore.QRect(butttonLayoutX * 74.5, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(23)
+        self.pushButtonRun.setFont(font)
+        self.pushButtonRun.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+        self.pushButtonRun.setFlat(False)
+        self.pushButtonRun.setObjectName("pushButtonRun")
         self.pushButtonSLonly = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.slideOnlyToggle())
         self.pushButtonSLonly.setGeometry(QtCore.QRect(butttonLayoutX * 87, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
@@ -3064,6 +3081,7 @@ class PTSapp(QMainWindow):
         self.labelDialSL.setText(_translate("MainWindow", "Slide Speed"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
+        self.pushButtonRun.setText(_translate("MainWindow", "Run"))
         self.pushButtonSLonly.setText(_translate("MainWindow", "SL"))
         self.pushButtonFileLoad.setText(_translate("MainWindow", "Load"))
         self.pushButtonFileSave.setText(_translate("MainWindow", "Save"))
@@ -3182,6 +3200,66 @@ class PTSapp(QMainWindow):
         else:
             editToggle = True
             self.pushButtonEdit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #CC5050; border-radius: {borderRadius2}px;")
+
+    def runToggle(self):
+        global whichCamSerial
+        global runToggle
+        global cam1Running
+        global cam2Running
+        global cam3Running
+        global cam4Running
+        global cam5Running
+
+        if runToggle == False:
+            runToggle = True
+            self.pushButtonRun.setStyleSheet(f"border: {borderSize2}px solid #ff0000; background-color: #CC5050; border-radius: {borderRadius2}px;")
+            
+            self.pushButtonCam1.setText("Run")
+            self.pushButtonCam2.setText("Run")
+            self.pushButtonCam3.setText("Run")
+            self.pushButtonCam4.setText("Run")
+            self.pushButtonCam5.setText("Run")
+            self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+            self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+            self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+            self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+            self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
+
+
+            #if cam1Running == True:
+            #    self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid yellow; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+            #    self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+            #    self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
+            #    self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+            #    self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
+
+
+        else:
+            runToggle = False
+            self.pushButtonRun.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+
+            self.pushButtonCam1.setText("Cam1")
+            self.pushButtonCam2.setText("Cam2")
+            self.pushButtonCam3.setText("Cam3")
+            self.pushButtonCam4.setText("Cam4")
+            self.pushButtonCam5.setText("Cam5")
+
+            if whichCamSerial == 1 and cam1Running == False:
+                self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+                
+            if whichCamSerial == 2 and cam2Running == False:
+                self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #405C80; border-radius: {borderRadius2}px;")
+                
+            if whichCamSerial == 3 and cam3Running == False:
+                self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #807100; border-radius: {borderRadius2}px;")
+                
+            if whichCamSerial == 4 and cam4Running == False:
+                self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #008071; border-radius: {borderRadius2}px;")
+                
+            if whichCamSerial == 5 and cam5Running == False:
+                self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #8D5395; border-radius: {borderRadius2}px;")
+
+
 
     def slideOnlyToggle(self):
         global slideToggle
@@ -4083,6 +4161,12 @@ class PTSapp(QMainWindow):
         global cam5SlideLimit
         global cam5ZoomLimit
 
+        global cam1Running
+        global cam1Running
+        global cam3Running
+        global cam4Running
+        global cam5Running
+
         global whichCamRead
 
         if debug:
@@ -4250,33 +4334,53 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "113":
                 cam1Pos1Run = False
                 cam1AtPos1 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "123":
                 cam1Pos2Run = False
                 cam1AtPos2 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "133":
                 cam1Pos3Run = False
                 cam1AtPos3 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "143":
                 cam1Pos4Run = False
                 cam1AtPos4 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "153":
                 cam1Pos5Run = False
                 cam1AtPos5 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "163":
                 cam1Pos6Run = False
                 cam1AtPos6 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "173":
                 cam1Pos7Run = False
                 cam1AtPos7 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "183":
                 cam1Pos8Run = False
                 cam1AtPos8 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "193":
                 cam1Pos9Run = False
                 cam1AtPos9 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "103":
                 cam1Pos10Run = False
                 cam1AtPos10 = True
+                if cam1Running:
+                    self.runCam1()
             elif msg[1:4] == "114":
                 cam1isRecording = False
                 #self.root.get_screen('main').ids.cam1Record.background_color = get_color_from_hex("#666666")
@@ -4467,33 +4571,53 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "213":
                 cam2Pos1Run = False
                 cam2AtPos1 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "223":
                 cam2Pos2Run = False
                 cam2AtPos2 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "233":
                 cam2Pos3Run = False
                 cam2AtPos3 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "243":
                 cam2Pos4Run = False
                 cam2AtPos4 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "253":
                 cam2Pos5Run = False
                 cam2AtPos5 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "263":
                 cam2Pos6Run = False
                 cam2AtPos6 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "273":
                 cam2Pos7Run = False
                 cam2AtPos7 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "283":
                 cam2Pos8Run = False
                 cam2AtPos8 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "293":
                 cam2Pos9Run = False
                 cam2AtPos9 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "203":
                 cam2Pos10Run = False
                 cam2AtPos10 = True
+                if cam2Running:
+                    self.runCam2()
             elif msg[1:4] == "214":
                 cam2isRecording = False
                 #self.root.get_screen('main').ids.cam2Record.background_color = get_color_from_hex("#666666")
@@ -4684,33 +4808,53 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "313":
                 cam3Pos1Run = False
                 cam3AtPos1 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "323":
                 cam3Pos2Run = False
                 cam3AtPos2 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "333":
                 cam3Pos3Run = False
                 cam3AtPos3 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "343":
                 cam3Pos4Run = False
                 cam3AtPos4 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "353":
                 cam3Pos5Run = False
                 cam3AtPos5 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "363":
                 cam3Pos6Run = False
                 cam3AtPos6 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "373":
                 cam3Pos7Run = False
                 cam3AtPos7 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "383":
                 cam3Pos8Run = False
                 cam3AtPos8 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "393":
                 cam3Pos9Run = False
                 cam3AtPos9 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "303":
                 cam3Pos10Run = False
                 cam3AtPos10 = True
+                if cam3Running:
+                    self.runCam3()
             elif msg[1:4] == "314":
                 cam3isRecording = False
                 #self.root.get_screen('main').ids.cam3Record.background_color = get_color_from_hex("#666666")
@@ -4901,33 +5045,53 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "413":
                 cam4Pos1Run = False
                 cam4AtPos1 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "423":
                 cam4Pos2Run = False
                 cam4AtPos2 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "433":
                 cam4Pos3Run = False
                 cam4AtPos3 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "443":
                 cam4Pos4Run = False
                 cam4AtPos4 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "453":
                 cam4Pos5Run = False
                 cam4AtPos5 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "463":
                 cam4Pos6Run = False
                 cam4AtPos6 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "473":
                 cam4Pos7Run = False
                 cam4AtPos7 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "483":
                 cam4Pos8Run = False
                 cam4AtPos8 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "493":
                 cam4Pos9Run = False
                 cam4AtPos9 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "403":
                 cam4Pos10Run = False
                 cam4AtPos10 = True
+                if cam4Running:
+                    self.runCam4()
             elif msg[1:4] == "414":
                 cam4isRecording = False
                 #self.root.get_screen('main').ids.cam4Record.background_color = get_color_from_hex("#666666")
@@ -5118,33 +5282,53 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "513":
                 cam5Pos1Run = False
                 cam5AtPos1 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "523":
                 cam5Pos2Run = False
                 cam5AtPos2 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "533":
                 cam5Pos3Run = False
                 cam5AtPos3 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "543":
                 cam5Pos4Run = False
                 cam5AtPos4 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "553":
                 cam5Pos5Run = False
                 cam5AtPos5 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "563":
                 cam5Pos6Run = False
                 cam5AtPos6 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "573":
                 cam5Pos7Run = False
                 cam5AtPos7 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "583":
                 cam5Pos8Run = False
                 cam5AtPos8 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "593":
                 cam5Pos9Run = False
                 cam5AtPos9 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "503":
                 cam5Pos10Run = False
                 cam5AtPos10 = True
+                if cam5Running:
+                    self.runCam5()
             elif msg[1:4] == "514":
                 cam5isRecording = False
                 #self.root.get_screen('main').ids.cam5Record.background_color = get_color_from_hex("#666666")
@@ -5547,6 +5731,12 @@ class PTSapp(QMainWindow):
         global cam5AtPos9
         global cam5AtPos10
 
+        global cam1Running
+        global cam2Running
+        global cam3Running
+        global cam4Running
+        global cam5Running
+
         global butttonLayoutX
         global butttonLayoutY
         global buttonGoX
@@ -5673,6 +5863,17 @@ class PTSapp(QMainWindow):
             self.pushButton59.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos10Run and not cam5AtPos10:
             self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
+
+        if cam1Running:
+            self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+        if cam2Running:
+            self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius2}px;")
+        if cam3Running:
+            self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius2}px;")
+        if cam4Running:
+            self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius2}px;")
+        if cam5Running:
+            self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
         
 
@@ -7380,6 +7581,7 @@ class PTSapp(QMainWindow):
             self.pushButtonFileLoad.hide()
             self.pushButtonFileSave.hide()
             self.pushButtonSettings.hide()
+            self.pushButtonRun.show()
             self.pushButtonSLonly.show()
             self.labelFilename.setHidden(True)
         elif (SetPosToggle == False and state == 3) or state == 1:
@@ -7398,6 +7600,7 @@ class PTSapp(QMainWindow):
             self.pushButtonFileLoad.show()
             self.pushButtonFileSave.show()
             self.pushButtonSettings.show()
+            self.pushButtonRun.hide()
             self.pushButtonSLonly.hide()
             self.labelFilename.setHidden(False)
 
@@ -7407,6 +7610,9 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global runToggle
+        global cam1Running
+        global message
 
         global butttonLayoutX
         global butttonLayoutY
@@ -7417,6 +7623,19 @@ class PTSapp(QMainWindow):
         global borderRadius
         global borderRadius2
 
+        global cam1Pos1Set
+        global cam1Pos2Set
+        global cam1Pos3Set
+        global cam1Pos4Set
+        global cam1Pos5Set
+        global cam1Pos6Set
+        global cam1Pos7Set
+        global cam1Pos8Set
+        global cam1Pos9Set
+        global cam1Pos10Set
+
+        cam1test = 0
+
         if editToggle:
             editButton = 61
             currentText = self.pushButtonCam1.text()
@@ -7424,6 +7643,29 @@ class PTSapp(QMainWindow):
         elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&1D')
+        elif runToggle:
+            if cam1Pos1Set: cam1test += 1
+            if cam1Pos2Set: cam1test += 1
+            if cam1Pos3Set: cam1test += 1
+            if cam1Pos4Set: cam1test += 1
+            if cam1Pos5Set: cam1test += 1
+            if cam1Pos6Set: cam1test += 1
+            if cam1Pos7Set: cam1test += 1
+            if cam1Pos8Set: cam1test += 1
+            if cam1Pos9Set: cam1test += 1
+            if cam1Pos10Set: cam1test += 1
+
+            if cam1test > 1:
+                if cam1Running:
+                    cam1Running = False
+                    self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+                else:
+                    cam1Running = True
+                    self.runCam1()
+                return
+            else:
+                message = ("Not pos set")
+                return
         else:
             whichCamSerial = 1
             self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -7437,6 +7679,9 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global runToggle
+        global cam2Running
+        global message
 
         global butttonLayoutX
         global butttonLayoutY
@@ -7447,6 +7692,19 @@ class PTSapp(QMainWindow):
         global borderRadius
         global borderRadius2
 
+        global cam2Pos1Set
+        global cam2Pos2Set
+        global cam2Pos3Set
+        global cam2Pos4Set
+        global cam2Pos5Set
+        global cam2Pos6Set
+        global cam2Pos7Set
+        global cam2Pos8Set
+        global cam2Pos9Set
+        global cam2Pos10Set
+
+        cam2test = 0
+
         if editToggle:
             editButton = 62
             currentText = self.pushButtonCam2.text()
@@ -7454,6 +7712,29 @@ class PTSapp(QMainWindow):
         if SetPosToggle:
             self.setPos(3)
             self.sendSerial('&2D')
+        elif runToggle:
+            if cam2Pos1Set: cam2test += 1
+            if cam2Pos2Set: cam2test += 1
+            if cam2Pos3Set: cam2test += 1
+            if cam2Pos4Set: cam2test += 1
+            if cam2Pos5Set: cam2test += 1
+            if cam2Pos6Set: cam2test += 1
+            if cam2Pos7Set: cam2test += 1
+            if cam2Pos8Set: cam2test += 1
+            if cam2Pos9Set: cam2test += 1
+            if cam2Pos10Set: cam2test += 1
+
+            if cam2test > 1:
+                if cam2Running:
+                    cam2Running = False
+                    self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
+                else:
+                    cam2Running = True
+                    self.runCam2()
+                return
+            else:
+                message = ("Not pos set")
+                return
         else:
             whichCamSerial = 2
             self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -7467,6 +7748,9 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global runToggle
+        global cam3Running
+        global message
 
         global butttonLayoutX
         global butttonLayoutY
@@ -7477,6 +7761,19 @@ class PTSapp(QMainWindow):
         global borderRadius
         global borderRadius2
 
+        global cam3Pos1Set
+        global cam3Pos2Set
+        global cam3Pos3Set
+        global cam3Pos4Set
+        global cam3Pos5Set
+        global cam3Pos6Set
+        global cam3Pos7Set
+        global cam3Pos8Set
+        global cam3Pos9Set
+        global cam3Pos10Set
+
+        cam3test = 0
+
         if editToggle:
             editButton = 63
             currentText = self.pushButtonCam3.text()
@@ -7484,6 +7781,29 @@ class PTSapp(QMainWindow):
         elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&3D')
+        elif runToggle:
+            if cam3Pos1Set: cam3test += 1
+            if cam3Pos2Set: cam3test += 1
+            if cam3Pos3Set: cam3test += 1
+            if cam3Pos4Set: cam3test += 1
+            if cam3Pos5Set: cam3test += 1
+            if cam3Pos6Set: cam3test += 1
+            if cam3Pos7Set: cam3test += 1
+            if cam3Pos8Set: cam3test += 1
+            if cam3Pos9Set: cam3test += 1
+            if cam3Pos10Set: cam3test += 1
+
+            if cam3test > 1:
+                if cam3Running:
+                    cam3Running = False
+                    self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
+                else:
+                    cam3Running = True
+                    self.runCam3()
+                return
+            else:
+                message = ("Not pos set")
+                return
         else:
             whichCamSerial = 3
             self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -7497,6 +7817,9 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global runToggle
+        global cam4Running
+        global message
 
         global butttonLayoutX
         global butttonLayoutY
@@ -7507,6 +7830,19 @@ class PTSapp(QMainWindow):
         global borderRadius
         global borderRadius2
 
+        global cam4Pos1Set
+        global cam4Pos2Set
+        global cam4Pos3Set
+        global cam4Pos4Set
+        global cam4Pos5Set
+        global cam4Pos6Set
+        global cam4Pos7Set
+        global cam4Pos8Set
+        global cam4Pos9Set
+        global cam4Pos10Set
+
+        cam4test = 0
+
         if editToggle:
             editButton = 64
             currentText = self.pushButtonCam4.text()
@@ -7514,6 +7850,29 @@ class PTSapp(QMainWindow):
         elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&4D')
+        elif runToggle:
+            if cam4Pos1Set: cam4test += 1
+            if cam4Pos2Set: cam4test += 1
+            if cam4Pos3Set: cam4test += 1
+            if cam4Pos4Set: cam4test += 1
+            if cam4Pos5Set: cam4test += 1
+            if cam4Pos6Set: cam4test += 1
+            if cam4Pos7Set: cam4test += 1
+            if cam4Pos8Set: cam4test += 1
+            if cam4Pos9Set: cam4test += 1
+            if cam4Pos10Set: cam4test += 1
+
+            if cam4test > 1:
+                if cam4Running:
+                    cam4Running = False
+                    self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
+                else:
+                    cam4Running = True
+                    self.runCam4()
+                return
+            else:
+                message = ("Not pos set")
+                return
         else:
             whichCamSerial = 4
             self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -7527,6 +7886,9 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global runToggle
+        global cam5Running
+        global message
 
         global butttonLayoutX
         global butttonLayoutY
@@ -7537,6 +7899,19 @@ class PTSapp(QMainWindow):
         global borderRadius
         global borderRadius2
 
+        global cam4Pos1Set
+        global cam4Pos2Set
+        global cam4Pos3Set
+        global cam4Pos4Set
+        global cam4Pos5Set
+        global cam4Pos6Set
+        global cam4Pos7Set
+        global cam4Pos8Set
+        global cam4Pos9Set
+        global cam4Pos10Set
+
+        cam4test = 0
+
         if editToggle:
             editButton = 65
             currentText = self.pushButtonCam5.text()
@@ -7544,6 +7919,29 @@ class PTSapp(QMainWindow):
         elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&5D')
+        elif runToggle:
+            if cam4Pos1Set: cam4test += 1
+            if cam4Pos2Set: cam4test += 1
+            if cam4Pos3Set: cam4test += 1
+            if cam4Pos4Set: cam4test += 1
+            if cam4Pos5Set: cam4test += 1
+            if cam4Pos6Set: cam4test += 1
+            if cam4Pos7Set: cam4test += 1
+            if cam4Pos8Set: cam4test += 1
+            if cam4Pos9Set: cam4test += 1
+            if cam4Pos10Set: cam4test += 1
+
+            if cam4test > 1:
+                if cam5Running:
+                    cam5Running = False
+                    self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
+                else:
+                    cam5Running = True
+                    self.runCam5()
+                return
+            else:
+                message = ("Not pos set")
+                return
         else:
             whichCamSerial = 5
             self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
@@ -7551,6 +7949,1079 @@ class PTSapp(QMainWindow):
             self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
             self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
             self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #8D5395; border-radius: {borderRadius2}px;")
+
+
+
+    def runCam1(self):
+        global cam1AtPos1
+        global cam1AtPos2
+        global cam1AtPos3
+        global cam1AtPos4
+        global cam1AtPos5
+        global cam1AtPos6
+        global cam1AtPos7
+        global cam1AtPos8
+        global cam1AtPos9
+        global cam1AtPos10
+
+        global cam1Pos1Set
+        global cam1Pos2Set
+        global cam1Pos3Set
+        global cam1Pos4Set
+        global cam1Pos5Set
+        global cam1Pos6Set
+        global cam1Pos7Set
+        global cam1Pos8Set
+        global cam1Pos9Set
+        global cam1Pos10Set
+
+        if cam1AtPos1:
+            if cam1Pos2Set:
+                self.sendSerial('&1x')
+            elif cam1Pos3Set:
+                self.sendSerial('&1c')
+            elif cam1Pos4Set:
+                self.sendSerial('&1v')
+            elif cam1Pos5Set:
+                self.sendSerial('&1b')
+            elif cam1Pos6Set:
+                self.sendSerial('&1n')
+            elif cam1Pos7Set:
+                self.sendSerial('&1m')
+            elif cam1Pos8Set:
+                self.sendSerial('&1,')
+            elif cam1Pos9Set:
+                self.sendSerial('&1.')
+            elif cam1Pos10Set:
+                self.sendSerial('&1/')
+        elif cam1AtPos2:
+            if cam1Pos3Set:
+                self.sendSerial('&1c')
+            elif cam1Pos4Set:
+                self.sendSerial('&1v')
+            elif cam1Pos5Set:
+                self.sendSerial('&1b')
+            elif cam1Pos6Set:
+                self.sendSerial('&1n')
+            elif cam1Pos7Set:
+                self.sendSerial('&1m')
+            elif cam1Pos8Set:
+                self.sendSerial('&1,')
+            elif cam1Pos9Set:
+                self.sendSerial('&1.')
+            elif cam1Pos10Set:
+                self.sendSerial('&1/')
+            elif cam1Pos1Set:
+                self.sendSerial('&1z')
+        elif cam1AtPos3:
+            if cam1Pos4Set:
+                self.sendSerial('&1v')
+            elif cam1Pos5Set:
+                self.sendSerial('&1b')
+            elif cam1Pos6Set:
+                self.sendSerial('&1n')
+            elif cam1Pos7Set:
+                self.sendSerial('&1m')
+            elif cam1Pos8Set:
+                self.sendSerial('&1,')
+            elif cam1Pos9Set:
+                self.sendSerial('&1.')
+            elif cam1Pos10Set:
+                self.sendSerial('&1/')
+            elif cam1Pos1Set:
+                self.sendSerial('&1z')
+            elif cam1Pos2Set:
+                self.sendSerial('&1x')
+        elif cam1AtPos4:
+            if cam1Pos5Set:
+                self.sendSerial('&1b')
+            elif cam1Pos6Set:
+                self.sendSerial('&1n')
+            elif cam1Pos7Set:
+                self.sendSerial('&1m')
+            elif cam1Pos8Set:
+                self.sendSerial('&1,')
+            elif cam1Pos9Set:
+                self.sendSerial('&1.')
+            elif cam1Pos10Set:
+                self.sendSerial('&1/')
+            elif cam1Pos1Set:
+                self.sendSerial('&1z')
+            elif cam1Pos2Set:
+                self.sendSerial('&1x')
+            elif cam1Pos3Set:
+                self.sendSerial('&1c')
+        elif cam1AtPos5:
+            if cam1Pos6Set:
+                self.sendSerial('&1n')
+            elif cam1Pos7Set:
+                self.sendSerial('&1m')
+            elif cam1Pos8Set:
+                self.sendSerial('&1,')
+            elif cam1Pos9Set:
+                self.sendSerial('&1.')
+            elif cam1Pos10Set:
+                self.sendSerial('&1/')
+            elif cam1Pos1Set:
+                self.sendSerial('&1z')
+            elif cam1Pos2Set:
+                self.sendSerial('&1x')
+            elif cam1Pos3Set:
+                self.sendSerial('&1c')
+            elif cam1Pos4Set:
+                self.sendSerial('&1v')
+        elif cam1AtPos6:
+            if cam1Pos7Set:
+                self.sendSerial('&1m')
+            elif cam1Pos8Set:
+                self.sendSerial('&1,')
+            elif cam1Pos9Set:
+                self.sendSerial('&1.')
+            elif cam1Pos10Set:
+                self.sendSerial('&1/')
+            elif cam1Pos1Set:
+                self.sendSerial('&1z')
+            elif cam1Pos2Set:
+                self.sendSerial('&1x')
+            elif cam1Pos3Set:
+                self.sendSerial('&1c')
+            elif cam1Pos4Set:
+                self.sendSerial('&1v')
+            elif cam1Pos5Set:
+                self.sendSerial('&1b')
+        elif cam1AtPos7:
+            if cam1Pos8Set:
+                self.sendSerial('&1,')
+            elif cam1Pos9Set:
+                self.sendSerial('&1.')
+            elif cam1Pos10Set:
+                self.sendSerial('&1/')
+            elif cam1Pos1Set:
+                self.sendSerial('&1z')
+            elif cam1Pos2Set:
+                self.sendSerial('&1x')
+            elif cam1Pos3Set:
+                self.sendSerial('&1c')
+            elif cam1Pos4Set:
+                self.sendSerial('&1v')
+            elif cam1Pos5Set:
+                self.sendSerial('&1b')
+            elif cam1Pos6Set:
+                self.sendSerial('&1n')
+        elif cam1AtPos8:
+            if cam1Pos9Set:
+                self.sendSerial('&1.')
+            elif cam1Pos10Set:
+                self.sendSerial('&1/')
+            elif cam1Pos1Set:
+                self.sendSerial('&1z')
+            elif cam1Pos2Set:
+                self.sendSerial('&1x')
+            elif cam1Pos3Set:
+                self.sendSerial('&1c')
+            elif cam1Pos4Set:
+                self.sendSerial('&1v')
+            elif cam1Pos5Set:
+                self.sendSerial('&1b')
+            elif cam1Pos6Set:
+                self.sendSerial('&1n')
+            elif cam1Pos7Set:
+                self.sendSerial('&1m')
+        elif cam1AtPos9:
+            if cam1Pos10Set:
+                self.sendSerial('&1/')
+            elif cam1Pos1Set:
+                self.sendSerial('&1z')
+            elif cam1Pos2Set:
+                self.sendSerial('&1x')
+            elif cam1Pos3Set:
+                self.sendSerial('&1c')
+            elif cam1Pos4Set:
+                self.sendSerial('&1v')
+            elif cam1Pos5Set:
+                self.sendSerial('&1b')
+            elif cam1Pos6Set:
+                self.sendSerial('&1n')
+            elif cam1Pos7Set:
+                self.sendSerial('&1m')
+            elif cam1Pos8Set:
+                self.sendSerial('&1,')
+        elif cam1AtPos10:
+            if cam1Pos1Set:
+                self.sendSerial('&1z')
+            elif cam1Pos2Set:
+                self.sendSerial('&1x')
+            elif cam1Pos3Set:
+                self.sendSerial('&1c')
+            elif cam1Pos4Set:
+                self.sendSerial('&1v')
+            elif cam1Pos5Set:
+                self.sendSerial('&1b')
+            elif cam1Pos6Set:
+                self.sendSerial('&1n')
+            elif cam1Pos7Set:
+                self.sendSerial('&1m')
+            elif cam1Pos8Set:
+                self.sendSerial('&1,')
+            elif cam1Pos9Set:
+                self.sendSerial('&1.')
+
+    def runCam2(self):
+        global cam2AtPos1
+        global cam2AtPos2
+        global cam2AtPos3
+        global cam2AtPos4
+        global cam2AtPos5
+        global cam2AtPos6
+        global cam2AtPos7
+        global cam2AtPos8
+        global cam2AtPos9
+        global cam2AtPos10
+
+        global cam2Pos1Set
+        global cam2Pos2Set
+        global cam2Pos3Set
+        global cam2Pos4Set
+        global cam2Pos5Set
+        global cam2Pos6Set
+        global cam2Pos7Set
+        global cam2Pos8Set
+        global cam2Pos9Set
+        global cam2Pos10Set
+
+        if cam2AtPos1:
+            if cam2Pos2Set:
+                self.sendSerial('&1x')
+            elif cam2Pos3Set:
+                self.sendSerial('&1c')
+            elif cam2Pos4Set:
+                self.sendSerial('&1v')
+            elif cam2Pos5Set:
+                self.sendSerial('&1b')
+            elif cam2Pos6Set:
+                self.sendSerial('&1n')
+            elif cam2Pos7Set:
+                self.sendSerial('&1m')
+            elif cam2Pos8Set:
+                self.sendSerial('&1,')
+            elif cam2Pos9Set:
+                self.sendSerial('&1.')
+            elif cam2Pos10Set:
+                self.sendSerial('&1/')
+        elif cam2AtPos2:
+            if cam2Pos3Set:
+                self.sendSerial('&1c')
+            elif cam2Pos4Set:
+                self.sendSerial('&1v')
+            elif cam2Pos5Set:
+                self.sendSerial('&1b')
+            elif cam2Pos6Set:
+                self.sendSerial('&1n')
+            elif cam2Pos7Set:
+                self.sendSerial('&1m')
+            elif cam2Pos8Set:
+                self.sendSerial('&1,')
+            elif cam2Pos9Set:
+                self.sendSerial('&1.')
+            elif cam2Pos10Set:
+                self.sendSerial('&1/')
+            elif cam2Pos1Set:
+                self.sendSerial('&1z')
+        elif cam2AtPos3:
+            if cam2Pos4Set:
+                self.sendSerial('&1v')
+            elif cam2Pos5Set:
+                self.sendSerial('&1b')
+            elif cam2Pos6Set:
+                self.sendSerial('&1n')
+            elif cam2Pos7Set:
+                self.sendSerial('&1m')
+            elif cam2Pos8Set:
+                self.sendSerial('&1,')
+            elif cam2Pos9Set:
+                self.sendSerial('&1.')
+            elif cam2Pos10Set:
+                self.sendSerial('&1/')
+            elif cam2Pos1Set:
+                self.sendSerial('&1z')
+            elif cam2Pos2Set:
+                self.sendSerial('&1x')
+        elif cam2AtPos4:
+            if cam2Pos5Set:
+                self.sendSerial('&1b')
+            elif cam2Pos6Set:
+                self.sendSerial('&1n')
+            elif cam2Pos7Set:
+                self.sendSerial('&1m')
+            elif cam2Pos8Set:
+                self.sendSerial('&1,')
+            elif cam2Pos9Set:
+                self.sendSerial('&1.')
+            elif cam2Pos10Set:
+                self.sendSerial('&1/')
+            elif cam2Pos1Set:
+                self.sendSerial('&1z')
+            elif cam2Pos2Set:
+                self.sendSerial('&1x')
+            elif cam2Pos3Set:
+                self.sendSerial('&1c')
+        elif cam2AtPos5:
+            if cam2Pos6Set:
+                self.sendSerial('&1n')
+            elif cam2Pos7Set:
+                self.sendSerial('&1m')
+            elif cam2Pos8Set:
+                self.sendSerial('&1,')
+            elif cam2Pos9Set:
+                self.sendSerial('&1.')
+            elif cam2Pos10Set:
+                self.sendSerial('&1/')
+            elif cam2Pos1Set:
+                self.sendSerial('&1z')
+            elif cam2Pos2Set:
+                self.sendSerial('&1x')
+            elif cam2Pos3Set:
+                self.sendSerial('&1c')
+            elif cam2Pos4Set:
+                self.sendSerial('&1v')
+        elif cam2AtPos6:
+            if cam2Pos7Set:
+                self.sendSerial('&1m')
+            elif cam2Pos8Set:
+                self.sendSerial('&1,')
+            elif cam2Pos9Set:
+                self.sendSerial('&1.')
+            elif cam2Pos10Set:
+                self.sendSerial('&1/')
+            elif cam2Pos1Set:
+                self.sendSerial('&1z')
+            elif cam2Pos2Set:
+                self.sendSerial('&1x')
+            elif cam2Pos3Set:
+                self.sendSerial('&1c')
+            elif cam2Pos4Set:
+                self.sendSerial('&1v')
+            elif cam2Pos5Set:
+                self.sendSerial('&1b')
+        elif cam2AtPos7:
+            if cam2Pos8Set:
+                self.sendSerial('&1,')
+            elif cam2Pos9Set:
+                self.sendSerial('&1.')
+            elif cam2Pos10Set:
+                self.sendSerial('&1/')
+            elif cam2Pos1Set:
+                self.sendSerial('&1z')
+            elif cam2Pos2Set:
+                self.sendSerial('&1x')
+            elif cam2Pos3Set:
+                self.sendSerial('&1c')
+            elif cam2Pos4Set:
+                self.sendSerial('&1v')
+            elif cam2Pos5Set:
+                self.sendSerial('&1b')
+            elif cam2Pos6Set:
+                self.sendSerial('&1n')
+        elif cam2AtPos8:
+            if cam2Pos9Set:
+                self.sendSerial('&1.')
+            elif cam2Pos10Set:
+                self.sendSerial('&1/')
+            elif cam2Pos1Set:
+                self.sendSerial('&1z')
+            elif cam2Pos2Set:
+                self.sendSerial('&1x')
+            elif cam2Pos3Set:
+                self.sendSerial('&1c')
+            elif cam2Pos4Set:
+                self.sendSerial('&1v')
+            elif cam2Pos5Set:
+                self.sendSerial('&1b')
+            elif cam2Pos6Set:
+                self.sendSerial('&1n')
+            elif cam2Pos7Set:
+                self.sendSerial('&1m')
+        elif cam2AtPos9:
+            if cam2Pos10Set:
+                self.sendSerial('&1/')
+            elif cam2Pos1Set:
+                self.sendSerial('&1z')
+            elif cam2Pos2Set:
+                self.sendSerial('&1x')
+            elif cam2Pos3Set:
+                self.sendSerial('&1c')
+            elif cam2Pos4Set:
+                self.sendSerial('&1v')
+            elif cam2Pos5Set:
+                self.sendSerial('&1b')
+            elif cam2Pos6Set:
+                self.sendSerial('&1n')
+            elif cam2Pos7Set:
+                self.sendSerial('&1m')
+            elif cam2Pos8Set:
+                self.sendSerial('&1,')
+        elif cam2AtPos10:
+            if cam2Pos1Set:
+                self.sendSerial('&1z')
+            elif cam2Pos2Set:
+                self.sendSerial('&1x')
+            elif cam2Pos3Set:
+                self.sendSerial('&1c')
+            elif cam2Pos4Set:
+                self.sendSerial('&1v')
+            elif cam2Pos5Set:
+                self.sendSerial('&1b')
+            elif cam2Pos6Set:
+                self.sendSerial('&1n')
+            elif cam2Pos7Set:
+                self.sendSerial('&1m')
+            elif cam2Pos8Set:
+                self.sendSerial('&1,')
+            elif cam2Pos9Set:
+                self.sendSerial('&1.')
+
+    def runCam3(self):
+        global cam3AtPos1
+        global cam3AtPos2
+        global cam3AtPos3
+        global cam3AtPos4
+        global cam3AtPos5
+        global cam3AtPos6
+        global cam3AtPos7
+        global cam3AtPos8
+        global cam3AtPos9
+        global cam3AtPos10
+
+        global cam3Pos1Set
+        global cam3Pos2Set
+        global cam3Pos3Set
+        global cam3Pos4Set
+        global cam3Pos5Set
+        global cam3Pos6Set
+        global cam3Pos7Set
+        global cam3Pos8Set
+        global cam3Pos9Set
+        global cam3Pos10Set
+
+        if cam3AtPos1:
+            if cam3Pos2Set:
+                self.sendSerial('&1x')
+            elif cam3Pos3Set:
+                self.sendSerial('&1c')
+            elif cam3Pos4Set:
+                self.sendSerial('&1v')
+            elif cam3Pos5Set:
+                self.sendSerial('&1b')
+            elif cam3Pos6Set:
+                self.sendSerial('&1n')
+            elif cam3Pos7Set:
+                self.sendSerial('&1m')
+            elif cam3Pos8Set:
+                self.sendSerial('&1,')
+            elif cam3Pos9Set:
+                self.sendSerial('&1.')
+            elif cam3Pos10Set:
+                self.sendSerial('&1/')
+        elif cam3AtPos2:
+            if cam3Pos3Set:
+                self.sendSerial('&1c')
+            elif cam3Pos4Set:
+                self.sendSerial('&1v')
+            elif cam3Pos5Set:
+                self.sendSerial('&1b')
+            elif cam3Pos6Set:
+                self.sendSerial('&1n')
+            elif cam3Pos7Set:
+                self.sendSerial('&1m')
+            elif cam3Pos8Set:
+                self.sendSerial('&1,')
+            elif cam3Pos9Set:
+                self.sendSerial('&1.')
+            elif cam3Pos10Set:
+                self.sendSerial('&1/')
+            elif cam3Pos1Set:
+                self.sendSerial('&1z')
+        elif cam3AtPos3:
+            if cam3Pos4Set:
+                self.sendSerial('&1v')
+            elif cam3Pos5Set:
+                self.sendSerial('&1b')
+            elif cam3Pos6Set:
+                self.sendSerial('&1n')
+            elif cam3Pos7Set:
+                self.sendSerial('&1m')
+            elif cam3Pos8Set:
+                self.sendSerial('&1,')
+            elif cam3Pos9Set:
+                self.sendSerial('&1.')
+            elif cam3Pos10Set:
+                self.sendSerial('&1/')
+            elif cam3Pos1Set:
+                self.sendSerial('&1z')
+            elif cam3Pos2Set:
+                self.sendSerial('&1x')
+        elif cam3AtPos4:
+            if cam3Pos5Set:
+                self.sendSerial('&1b')
+            elif cam3Pos6Set:
+                self.sendSerial('&1n')
+            elif cam3Pos7Set:
+                self.sendSerial('&1m')
+            elif cam3Pos8Set:
+                self.sendSerial('&1,')
+            elif cam3Pos9Set:
+                self.sendSerial('&1.')
+            elif cam3Pos10Set:
+                self.sendSerial('&1/')
+            elif cam3Pos1Set:
+                self.sendSerial('&1z')
+            elif cam3Pos2Set:
+                self.sendSerial('&1x')
+            elif cam3Pos3Set:
+                self.sendSerial('&1c')
+        elif cam3AtPos5:
+            if cam3Pos6Set:
+                self.sendSerial('&1n')
+            elif cam3Pos7Set:
+                self.sendSerial('&1m')
+            elif cam3Pos8Set:
+                self.sendSerial('&1,')
+            elif cam3Pos9Set:
+                self.sendSerial('&1.')
+            elif cam3Pos10Set:
+                self.sendSerial('&1/')
+            elif cam3Pos1Set:
+                self.sendSerial('&1z')
+            elif cam3Pos2Set:
+                self.sendSerial('&1x')
+            elif cam3Pos3Set:
+                self.sendSerial('&1c')
+            elif cam3Pos4Set:
+                self.sendSerial('&1v')
+        elif cam3AtPos6:
+            if cam3Pos7Set:
+                self.sendSerial('&1m')
+            elif cam3Pos8Set:
+                self.sendSerial('&1,')
+            elif cam3Pos9Set:
+                self.sendSerial('&1.')
+            elif cam3Pos10Set:
+                self.sendSerial('&1/')
+            elif cam3Pos1Set:
+                self.sendSerial('&1z')
+            elif cam3Pos2Set:
+                self.sendSerial('&1x')
+            elif cam3Pos3Set:
+                self.sendSerial('&1c')
+            elif cam3Pos4Set:
+                self.sendSerial('&1v')
+            elif cam3Pos5Set:
+                self.sendSerial('&1b')
+        elif cam3AtPos7:
+            if cam3Pos8Set:
+                self.sendSerial('&1,')
+            elif cam3Pos9Set:
+                self.sendSerial('&1.')
+            elif cam3Pos10Set:
+                self.sendSerial('&1/')
+            elif cam3Pos1Set:
+                self.sendSerial('&1z')
+            elif cam3Pos2Set:
+                self.sendSerial('&1x')
+            elif cam3Pos3Set:
+                self.sendSerial('&1c')
+            elif cam3Pos4Set:
+                self.sendSerial('&1v')
+            elif cam3Pos5Set:
+                self.sendSerial('&1b')
+            elif cam3Pos6Set:
+                self.sendSerial('&1n')
+        elif cam3AtPos8:
+            if cam3Pos9Set:
+                self.sendSerial('&1.')
+            elif cam3Pos10Set:
+                self.sendSerial('&1/')
+            elif cam3Pos1Set:
+                self.sendSerial('&1z')
+            elif cam3Pos2Set:
+                self.sendSerial('&1x')
+            elif cam3Pos3Set:
+                self.sendSerial('&1c')
+            elif cam3Pos4Set:
+                self.sendSerial('&1v')
+            elif cam3Pos5Set:
+                self.sendSerial('&1b')
+            elif cam3Pos6Set:
+                self.sendSerial('&1n')
+            elif cam3Pos7Set:
+                self.sendSerial('&1m')
+        elif cam3AtPos9:
+            if cam3Pos10Set:
+                self.sendSerial('&1/')
+            elif cam3Pos1Set:
+                self.sendSerial('&1z')
+            elif cam3Pos2Set:
+                self.sendSerial('&1x')
+            elif cam3Pos3Set:
+                self.sendSerial('&1c')
+            elif cam3Pos4Set:
+                self.sendSerial('&1v')
+            elif cam3Pos5Set:
+                self.sendSerial('&1b')
+            elif cam3Pos6Set:
+                self.sendSerial('&1n')
+            elif cam3Pos7Set:
+                self.sendSerial('&1m')
+            elif cam3Pos8Set:
+                self.sendSerial('&1,')
+        elif cam3AtPos10:
+            if cam3Pos1Set:
+                self.sendSerial('&1z')
+            elif cam3Pos2Set:
+                self.sendSerial('&1x')
+            elif cam3Pos3Set:
+                self.sendSerial('&1c')
+            elif cam3Pos4Set:
+                self.sendSerial('&1v')
+            elif cam3Pos5Set:
+                self.sendSerial('&1b')
+            elif cam3Pos6Set:
+                self.sendSerial('&1n')
+            elif cam3Pos7Set:
+                self.sendSerial('&1m')
+            elif cam3Pos8Set:
+                self.sendSerial('&1,')
+            elif cam3Pos9Set:
+                self.sendSerial('&1.')
+
+    def runCam4(self):
+        global cam4AtPos1
+        global cam4AtPos2
+        global cam4AtPos3
+        global cam4AtPos4
+        global cam4AtPos5
+        global cam4AtPos6
+        global cam4AtPos7
+        global cam4AtPos8
+        global cam4AtPos9
+        global cam4AtPos10
+
+        global cam4Pos1Set
+        global cam4Pos2Set
+        global cam4Pos3Set
+        global cam4Pos4Set
+        global cam4Pos5Set
+        global cam4Pos6Set
+        global cam4Pos7Set
+        global cam4Pos8Set
+        global cam4Pos9Set
+        global cam4Pos10Set
+
+        if cam4AtPos1:
+            if cam4Pos2Set:
+                self.sendSerial('&1x')
+            elif cam4Pos3Set:
+                self.sendSerial('&1c')
+            elif cam4Pos4Set:
+                self.sendSerial('&1v')
+            elif cam4Pos5Set:
+                self.sendSerial('&1b')
+            elif cam4Pos6Set:
+                self.sendSerial('&1n')
+            elif cam4Pos7Set:
+                self.sendSerial('&1m')
+            elif cam4Pos8Set:
+                self.sendSerial('&1,')
+            elif cam4Pos9Set:
+                self.sendSerial('&1.')
+            elif cam4Pos10Set:
+                self.sendSerial('&1/')
+        elif cam4AtPos2:
+            if cam4Pos3Set:
+                self.sendSerial('&1c')
+            elif cam4Pos4Set:
+                self.sendSerial('&1v')
+            elif cam4Pos5Set:
+                self.sendSerial('&1b')
+            elif cam4Pos6Set:
+                self.sendSerial('&1n')
+            elif cam4Pos7Set:
+                self.sendSerial('&1m')
+            elif cam4Pos8Set:
+                self.sendSerial('&1,')
+            elif cam4Pos9Set:
+                self.sendSerial('&1.')
+            elif cam4Pos10Set:
+                self.sendSerial('&1/')
+            elif cam4Pos1Set:
+                self.sendSerial('&1z')
+        elif cam4AtPos3:
+            if cam4Pos4Set:
+                self.sendSerial('&1v')
+            elif cam4Pos5Set:
+                self.sendSerial('&1b')
+            elif cam4Pos6Set:
+                self.sendSerial('&1n')
+            elif cam4Pos7Set:
+                self.sendSerial('&1m')
+            elif cam4Pos8Set:
+                self.sendSerial('&1,')
+            elif cam4Pos9Set:
+                self.sendSerial('&1.')
+            elif cam4Pos10Set:
+                self.sendSerial('&1/')
+            elif cam4Pos1Set:
+                self.sendSerial('&1z')
+            elif cam4Pos2Set:
+                self.sendSerial('&1x')
+        elif cam4AtPos4:
+            if cam4Pos5Set:
+                self.sendSerial('&1b')
+            elif cam4Pos6Set:
+                self.sendSerial('&1n')
+            elif cam4Pos7Set:
+                self.sendSerial('&1m')
+            elif cam4Pos8Set:
+                self.sendSerial('&1,')
+            elif cam4Pos9Set:
+                self.sendSerial('&1.')
+            elif cam4Pos10Set:
+                self.sendSerial('&1/')
+            elif cam4Pos1Set:
+                self.sendSerial('&1z')
+            elif cam4Pos2Set:
+                self.sendSerial('&1x')
+            elif cam4Pos3Set:
+                self.sendSerial('&1c')
+        elif cam4AtPos5:
+            if cam4Pos6Set:
+                self.sendSerial('&1n')
+            elif cam4Pos7Set:
+                self.sendSerial('&1m')
+            elif cam4Pos8Set:
+                self.sendSerial('&1,')
+            elif cam4Pos9Set:
+                self.sendSerial('&1.')
+            elif cam4Pos10Set:
+                self.sendSerial('&1/')
+            elif cam4Pos1Set:
+                self.sendSerial('&1z')
+            elif cam4Pos2Set:
+                self.sendSerial('&1x')
+            elif cam4Pos3Set:
+                self.sendSerial('&1c')
+            elif cam4Pos4Set:
+                self.sendSerial('&1v')
+        elif cam4AtPos6:
+            if cam4Pos7Set:
+                self.sendSerial('&1m')
+            elif cam4Pos8Set:
+                self.sendSerial('&1,')
+            elif cam4Pos9Set:
+                self.sendSerial('&1.')
+            elif cam4Pos10Set:
+                self.sendSerial('&1/')
+            elif cam4Pos1Set:
+                self.sendSerial('&1z')
+            elif cam4Pos2Set:
+                self.sendSerial('&1x')
+            elif cam4Pos3Set:
+                self.sendSerial('&1c')
+            elif cam4Pos4Set:
+                self.sendSerial('&1v')
+            elif cam4Pos5Set:
+                self.sendSerial('&1b')
+        elif cam4AtPos7:
+            if cam4Pos8Set:
+                self.sendSerial('&1,')
+            elif cam4Pos9Set:
+                self.sendSerial('&1.')
+            elif cam4Pos10Set:
+                self.sendSerial('&1/')
+            elif cam4Pos1Set:
+                self.sendSerial('&1z')
+            elif cam4Pos2Set:
+                self.sendSerial('&1x')
+            elif cam4Pos3Set:
+                self.sendSerial('&1c')
+            elif cam4Pos4Set:
+                self.sendSerial('&1v')
+            elif cam4Pos5Set:
+                self.sendSerial('&1b')
+            elif cam4Pos6Set:
+                self.sendSerial('&1n')
+        elif cam4AtPos8:
+            if cam4Pos9Set:
+                self.sendSerial('&1.')
+            elif cam4Pos10Set:
+                self.sendSerial('&1/')
+            elif cam4Pos1Set:
+                self.sendSerial('&1z')
+            elif cam4Pos2Set:
+                self.sendSerial('&1x')
+            elif cam4Pos3Set:
+                self.sendSerial('&1c')
+            elif cam4Pos4Set:
+                self.sendSerial('&1v')
+            elif cam4Pos5Set:
+                self.sendSerial('&1b')
+            elif cam4Pos6Set:
+                self.sendSerial('&1n')
+            elif cam4Pos7Set:
+                self.sendSerial('&1m')
+        elif cam4AtPos9:
+            if cam4Pos10Set:
+                self.sendSerial('&1/')
+            elif cam4Pos1Set:
+                self.sendSerial('&1z')
+            elif cam4Pos2Set:
+                self.sendSerial('&1x')
+            elif cam4Pos3Set:
+                self.sendSerial('&1c')
+            elif cam4Pos4Set:
+                self.sendSerial('&1v')
+            elif cam4Pos5Set:
+                self.sendSerial('&1b')
+            elif cam4Pos6Set:
+                self.sendSerial('&1n')
+            elif cam4Pos7Set:
+                self.sendSerial('&1m')
+            elif cam4Pos8Set:
+                self.sendSerial('&1,')
+        elif cam4AtPos10:
+            if cam4Pos1Set:
+                self.sendSerial('&1z')
+            elif cam4Pos2Set:
+                self.sendSerial('&1x')
+            elif cam4Pos3Set:
+                self.sendSerial('&1c')
+            elif cam4Pos4Set:
+                self.sendSerial('&1v')
+            elif cam4Pos5Set:
+                self.sendSerial('&1b')
+            elif cam4Pos6Set:
+                self.sendSerial('&1n')
+            elif cam4Pos7Set:
+                self.sendSerial('&1m')
+            elif cam4Pos8Set:
+                self.sendSerial('&1,')
+            elif cam4Pos9Set:
+                self.sendSerial('&1.')
+
+    def runCam5(self):
+        global cam5AtPos1
+        global cam5AtPos2
+        global cam5AtPos3
+        global cam5AtPos4
+        global cam5AtPos5
+        global cam5AtPos6
+        global cam5AtPos7
+        global cam5AtPos8
+        global cam5AtPos9
+        global cam5AtPos10
+
+        global cam5Pos1Set
+        global cam5Pos2Set
+        global cam5Pos3Set
+        global cam5Pos4Set
+        global cam5Pos5Set
+        global cam5Pos6Set
+        global cam5Pos7Set
+        global cam5Pos8Set
+        global cam5Pos9Set
+        global cam5Pos10Set
+
+        if cam5AtPos1:
+            if cam5Pos2Set:
+                self.sendSerial('&1x')
+            elif cam5Pos3Set:
+                self.sendSerial('&1c')
+            elif cam5Pos4Set:
+                self.sendSerial('&1v')
+            elif cam5Pos5Set:
+                self.sendSerial('&1b')
+            elif cam5Pos6Set:
+                self.sendSerial('&1n')
+            elif cam5Pos7Set:
+                self.sendSerial('&1m')
+            elif cam5Pos8Set:
+                self.sendSerial('&1,')
+            elif cam5Pos9Set:
+                self.sendSerial('&1.')
+            elif cam5Pos10Set:
+                self.sendSerial('&1/')
+        elif cam5AtPos2:
+            if cam5Pos3Set:
+                self.sendSerial('&1c')
+            elif cam5Pos4Set:
+                self.sendSerial('&1v')
+            elif cam5Pos5Set:
+                self.sendSerial('&1b')
+            elif cam5Pos6Set:
+                self.sendSerial('&1n')
+            elif cam5Pos7Set:
+                self.sendSerial('&1m')
+            elif cam5Pos8Set:
+                self.sendSerial('&1,')
+            elif cam5Pos9Set:
+                self.sendSerial('&1.')
+            elif cam5Pos10Set:
+                self.sendSerial('&1/')
+            elif cam5Pos1Set:
+                self.sendSerial('&1z')
+        elif cam5AtPos3:
+            if cam5Pos4Set:
+                self.sendSerial('&1v')
+            elif cam5Pos5Set:
+                self.sendSerial('&1b')
+            elif cam5Pos6Set:
+                self.sendSerial('&1n')
+            elif cam5Pos7Set:
+                self.sendSerial('&1m')
+            elif cam5Pos8Set:
+                self.sendSerial('&1,')
+            elif cam5Pos9Set:
+                self.sendSerial('&1.')
+            elif cam5Pos10Set:
+                self.sendSerial('&1/')
+            elif cam5Pos1Set:
+                self.sendSerial('&1z')
+            elif cam5Pos2Set:
+                self.sendSerial('&1x')
+        elif cam5AtPos4:
+            if cam5Pos5Set:
+                self.sendSerial('&1b')
+            elif cam5Pos6Set:
+                self.sendSerial('&1n')
+            elif cam5Pos7Set:
+                self.sendSerial('&1m')
+            elif cam5Pos8Set:
+                self.sendSerial('&1,')
+            elif cam5Pos9Set:
+                self.sendSerial('&1.')
+            elif cam5Pos10Set:
+                self.sendSerial('&1/')
+            elif cam5Pos1Set:
+                self.sendSerial('&1z')
+            elif cam5Pos2Set:
+                self.sendSerial('&1x')
+            elif cam5Pos3Set:
+                self.sendSerial('&1c')
+        elif cam5AtPos5:
+            if cam5Pos6Set:
+                self.sendSerial('&1n')
+            elif cam5Pos7Set:
+                self.sendSerial('&1m')
+            elif cam5Pos8Set:
+                self.sendSerial('&1,')
+            elif cam5Pos9Set:
+                self.sendSerial('&1.')
+            elif cam5Pos10Set:
+                self.sendSerial('&1/')
+            elif cam5Pos1Set:
+                self.sendSerial('&1z')
+            elif cam5Pos2Set:
+                self.sendSerial('&1x')
+            elif cam5Pos3Set:
+                self.sendSerial('&1c')
+            elif cam5Pos4Set:
+                self.sendSerial('&1v')
+        elif cam5AtPos6:
+            if cam5Pos7Set:
+                self.sendSerial('&1m')
+            elif cam5Pos8Set:
+                self.sendSerial('&1,')
+            elif cam5Pos9Set:
+                self.sendSerial('&1.')
+            elif cam5Pos10Set:
+                self.sendSerial('&1/')
+            elif cam5Pos1Set:
+                self.sendSerial('&1z')
+            elif cam5Pos2Set:
+                self.sendSerial('&1x')
+            elif cam5Pos3Set:
+                self.sendSerial('&1c')
+            elif cam5Pos4Set:
+                self.sendSerial('&1v')
+            elif cam5Pos5Set:
+                self.sendSerial('&1b')
+        elif cam5AtPos7:
+            if cam5Pos8Set:
+                self.sendSerial('&1,')
+            elif cam5Pos9Set:
+                self.sendSerial('&1.')
+            elif cam5Pos10Set:
+                self.sendSerial('&1/')
+            elif cam5Pos1Set:
+                self.sendSerial('&1z')
+            elif cam5Pos2Set:
+                self.sendSerial('&1x')
+            elif cam5Pos3Set:
+                self.sendSerial('&1c')
+            elif cam5Pos4Set:
+                self.sendSerial('&1v')
+            elif cam5Pos5Set:
+                self.sendSerial('&1b')
+            elif cam5Pos6Set:
+                self.sendSerial('&1n')
+        elif cam5AtPos8:
+            if cam5Pos9Set:
+                self.sendSerial('&1.')
+            elif cam5Pos10Set:
+                self.sendSerial('&1/')
+            elif cam5Pos1Set:
+                self.sendSerial('&1z')
+            elif cam5Pos2Set:
+                self.sendSerial('&1x')
+            elif cam5Pos3Set:
+                self.sendSerial('&1c')
+            elif cam5Pos4Set:
+                self.sendSerial('&1v')
+            elif cam5Pos5Set:
+                self.sendSerial('&1b')
+            elif cam5Pos6Set:
+                self.sendSerial('&1n')
+            elif cam5Pos7Set:
+                self.sendSerial('&1m')
+        elif cam5AtPos9:
+            if cam5Pos10Set:
+                self.sendSerial('&1/')
+            elif cam5Pos1Set:
+                self.sendSerial('&1z')
+            elif cam5Pos2Set:
+                self.sendSerial('&1x')
+            elif cam5Pos3Set:
+                self.sendSerial('&1c')
+            elif cam5Pos4Set:
+                self.sendSerial('&1v')
+            elif cam5Pos5Set:
+                self.sendSerial('&1b')
+            elif cam5Pos6Set:
+                self.sendSerial('&1n')
+            elif cam5Pos7Set:
+                self.sendSerial('&1m')
+            elif cam5Pos8Set:
+                self.sendSerial('&1,')
+        elif cam5AtPos10:
+            if cam5Pos1Set:
+                self.sendSerial('&1z')
+            elif cam5Pos2Set:
+                self.sendSerial('&1x')
+            elif cam5Pos3Set:
+                self.sendSerial('&1c')
+            elif cam5Pos4Set:
+                self.sendSerial('&1v')
+            elif cam5Pos5Set:
+                self.sendSerial('&1b')
+            elif cam5Pos6Set:
+                self.sendSerial('&1n')
+            elif cam5Pos7Set:
+                self.sendSerial('&1m')
+            elif cam5Pos8Set:
+                self.sendSerial('&1,')
+            elif cam5Pos9Set:
+                self.sendSerial('&1.')
+
 
 
     def Cam1Go1(self):
