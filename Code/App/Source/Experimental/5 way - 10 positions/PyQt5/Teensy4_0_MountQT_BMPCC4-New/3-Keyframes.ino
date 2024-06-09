@@ -201,7 +201,7 @@ void moveToIndex(int index) {
     stepper_slider.setMaxSpeed(keyframe_array[index - 1].sliderSpeed);
   }
 
-  stepper_zoom.setMaxSpeed(pantilt_set_speed);
+  //stepper_zoom.setMaxSpeed(pantilt_set_speed);
 
   stepper_pan.setTargetAbs(keyframe_array[index - 1].panStepCount);
   stepper_tilt.setTargetAbs(keyframe_array[index - 1].tiltStepCount);
@@ -347,6 +347,6 @@ void moveToIndex(int index) {
     stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
   }
 
-  stepper_zoom.setMaxSpeed(zoom_set_speed);
+  //stepper_zoom.setMaxSpeed(zoom_set_speed);
   sentMoved = false;
 }

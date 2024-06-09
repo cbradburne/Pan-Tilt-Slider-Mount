@@ -170,8 +170,8 @@ float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
 
-float zoom_set_speed = 1000;
-float zoom_accel = 8000;
+float zoom_set_speed = 8000;
+float zoom_accel = 16000;
 
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
 float sliderMaxFactor = 1.0;
