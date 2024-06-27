@@ -36,10 +36,10 @@ void initPanTilt(void) {
   pinMode(13, OUTPUT);    // LED
   digitalWrite(13, LOW);  // LED OFF
 
-  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1.                   OFF = Up-side Down
-  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   OFF = Slider Reverse
-  pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   OFF = Slider Used
-  pinMode(PIN_SW4, INPUT_PULLUP);  // Dip Switch 4.                   OFF = 
+  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1.                   HIGH = Up-side Down
+  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   HIGH = Slider Reverse
+  pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   HIGH = Slider Used
+  pinMode(PIN_SW4, INPUT_PULLUP);  // Dip Switch 4.                   HIGH = 
   
   zoomLimitTimer.begin(zoomLimitCheck, 250);
   zoomLimitTimer.priority(255);             
@@ -48,10 +48,11 @@ void initPanTilt(void) {
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
   stepper_zoom.setMaxSpeed(zoom_set_speed);
-  stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
-  stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
-  stepper_slider.setAcceleration(slider_accel * (slider_set_speed / 10));
+  stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+  stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+  stepper_slider.setAcceleration(slider_accel / 20) * slider_set_speed);
   stepper_zoom.setAcceleration(zoom_set_speed * 5);
+
 
   delay(200);
 

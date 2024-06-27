@@ -66,7 +66,7 @@ void SerialData(void) {
       atPos0 = false;
 
       short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
-      if (withSlider) {
+      if (!withSlider) {
         sliderStepSpeed = 0;
       }
       short panStepSpeed = (Serial1.read() << 8) + Serial1.read();
@@ -431,8 +431,8 @@ void SerialData(void) {
           pantilt_set_speed = pantilt_speed1;
           stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
           stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
-          stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
-          stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+          stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+          stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
         }
         else{
           pantilt_speed1 = SerialCommandValueInt;
@@ -449,8 +449,8 @@ void SerialData(void) {
           pantilt_set_speed = pantilt_speed2;
           stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
           stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
-          stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
-          stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+          stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+          stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
         }
         else{
           pantilt_speed2 = SerialCommandValueInt;
@@ -467,8 +467,8 @@ void SerialData(void) {
           pantilt_set_speed = pantilt_speed3;
           stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
           stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
-          stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
-          stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+          stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+          stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
         }
         else{
           pantilt_speed3 = SerialCommandValueInt;
@@ -485,8 +485,8 @@ void SerialData(void) {
           pantilt_set_speed = pantilt_speed4;
           stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
           stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
-          stepper_pan.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
-          stepper_tilt.setAcceleration(pantilt_accel * (pantilt_set_speed / 10));
+          stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+          stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
         }
         else{
           pantilt_speed4 = SerialCommandValueInt;
@@ -502,7 +502,7 @@ void SerialData(void) {
           slider_speed1 = SerialCommandValueInt;
           slider_set_speed = slider_speed1;
           stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-          stepper_slider.setAcceleration(slider_accel * (slider_set_speed / 10));
+          stepper_slider.setAcceleration(slider_accel / 20) * slider_set_speed);
         }
         else{
           slider_speed1 = SerialCommandValueInt;

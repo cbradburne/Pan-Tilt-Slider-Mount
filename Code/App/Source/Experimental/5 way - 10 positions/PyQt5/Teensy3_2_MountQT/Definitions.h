@@ -119,7 +119,7 @@
 float slideLimit = 130000;     // 3 metres
 float zoomLimit = 5550;      // 12 - 35mm
 
-bool withSlider = false;
+bool withSlider = true;
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
 bool upsideDown = false;
@@ -172,6 +172,11 @@ float zoom_accel = 8000;
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
 float sliderMaxFactor = 1.0;
 float zoomMaxFactor = 1.0;
+
+bool panNeg = false;
+bool tiltNeg = false;
+bool slideNeg = false;
+bool zoomNeg = false;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;

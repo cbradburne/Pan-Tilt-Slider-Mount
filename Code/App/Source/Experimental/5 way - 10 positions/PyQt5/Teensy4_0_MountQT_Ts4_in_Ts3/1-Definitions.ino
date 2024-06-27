@@ -36,10 +36,10 @@ void initPanTilt(void) {
   pinMode(13, OUTPUT);    // LED
   digitalWrite(13, LOW);  // LED OFF
 
-  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1.                   OFF = Up-side Down
-  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   OFF = Slider Reverse
-  pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   OFF = Slider Used
-  //pinMode(PIN_SW4, INPUT_PULLUP);  // Dip Switch 4.                   OFF = 
+  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1.                   HIGH = Up-side Down
+  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   HIGH = Slider Reverse
+  pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   HIGH = Slider Used
+  //pinMode(PIN_SW4, INPUT_PULLUP);  // Dip Switch 4.                   HIGH = 
   
   zoomLimitTimer.begin(zoomLimitCheck, 250);
   zoomLimitTimer.priority(255);             
