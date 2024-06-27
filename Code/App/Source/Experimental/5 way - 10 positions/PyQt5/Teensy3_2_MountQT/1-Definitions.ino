@@ -1,5 +1,5 @@
 #include "Definitions.h"
-#include <Iibrary.h>  //A library I created for Arduino that contains some simple functions I commonly use. Library available at: https://github.com/isaac879/Iibrary
+//#include <Iibrary.h>  //A library I created for Arduino that contains some simple functions I commonly use. Library available at: https://github.com/isaac879/Iibrary
 #include "TeensyStep.h"
 #include <EEPROM.h>  //To be able to save values when powered off
 #include <elapsedMillis.h>
@@ -99,7 +99,7 @@ if (pantilt_set_speed == pantilt_speed1) {
 
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
-  //withSlider = digitalRead(PIN_SW3);
+  withSlider = digitalRead(PIN_SW3);
 
   //if (upsideDown) {
   //  stepper_pan.setInverseRotation(true);
@@ -197,18 +197,20 @@ void zoomLimitCheck() {
   if (findingHome == false){
     if (slideReverse) {
       if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
-        rotate_stepperS.stopAsync();
-        step_stepperS.emergencyStop();
+        // IS reversed - position over slide limit - motor running - AtLimit not set
+        rotate_stepperS.emergencyStop();
+        //step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
         stepper_slider.setTargetRel(20);
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Limit"); 
-      } 
+      }
       else if ((stepper_slider.getPosition() > 0) && (sliderRunning == true) && (sliderAtZero == false)) {
-        rotate_stepperS.stopAsync();
-        step_stepperS.emergencyStop();
+        // IS reversed - position less than zero - motor running - AtZero not set
+        rotate_stepperS.emergencyStop();
+        //step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
@@ -228,8 +230,9 @@ void zoomLimitCheck() {
     }
     else {
       if ((stepper_slider.getPosition() > slideLimit) && (sliderRunning == true) && (sliderAtLimit == false)) {
-        rotate_stepperS.stopAsync();
-        step_stepperS.emergencyStop();
+        // Not reversed - position over slide limit - motor running - AtLimit not set
+        rotate_stepperS.emergencyStop();
+        //step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
@@ -238,8 +241,9 @@ void zoomLimitCheck() {
         //Serial1.println("Slider @ Limit"); 
       } 
       else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true) && (sliderAtZero == false)) {
-        rotate_stepperS.stopAsync();
-        step_stepperS.emergencyStop();
+        // Not reversed - position less than zero - motor running - AtZero not set
+        rotate_stepperS.emergencyStop();
+        //step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;

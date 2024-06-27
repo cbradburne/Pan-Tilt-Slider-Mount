@@ -50,7 +50,7 @@ void initPanTilt(void) {
   stepper_zoom.setMaxSpeed(zoom_set_speed);
   stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
   stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-  stepper_slider.setAcceleration(slider_accel / 20) * slider_set_speed);
+  stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
   stepper_zoom.setAcceleration(zoom_set_speed * 5);
 
 

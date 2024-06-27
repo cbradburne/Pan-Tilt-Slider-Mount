@@ -2,7 +2,7 @@
 
 void SerialData(void) {
   char instruction;
-/*
+  /*
   if (Serial2.available() > 0) {
     instruction = Serial2.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {
@@ -39,17 +39,17 @@ void SerialData(void) {
   } else 
   
   */
-  
+
   if (Serial1.available() > 0) {
     instruction = Serial1.read();
     //Serial.println(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
-      while (Serial1.available() < 6) {                     //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
         count++;
         if (count > 100) {
-          Serial1Flush();                                   //  Clear the Serial1 buffer
+          Serial1Flush();  //  Clear the Serial1 buffer
           break;
         }
       }
@@ -100,13 +100,12 @@ void SerialData(void) {
       } else {
         if (!panRunning && (speedFactorP > 0)) {
           panRunning = true;
-          stepper_pan.setAcceleration(8000); //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
+          stepper_pan.setAcceleration(8000);  //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
           stepper_pan.rotateAsync(panDegreesToSteps(pantilt_set_speed));
           panNeg = false;
-        }
-        else if (!panRunning && (speedFactorP < 0)) {
+        } else if (!panRunning && (speedFactorP < 0)) {
           panRunning = true;
-          stepper_pan.setAcceleration(8000); //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
+          stepper_pan.setAcceleration(8000);  //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
           stepper_pan.rotateAsync(panDegreesToSteps(-pantilt_set_speed));
           panNeg = true;
         }
@@ -115,8 +114,7 @@ void SerialData(void) {
         }
         if (panNeg == false) {
           stepper_pan.overrideSpeed(speedFactorP);
-        }
-        else {
+        } else {
           stepper_pan.overrideSpeed(-speedFactorP);
         }
       }
@@ -130,20 +128,18 @@ void SerialData(void) {
       } else {
         if (!tiltRunning && (speedFactorT > 0)) {
           tiltRunning = true;
-          stepper_tilt.setAcceleration(8000); //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
+          stepper_tilt.setAcceleration(8000);  //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
           stepper_tilt.rotateAsync(panDegreesToSteps(pantilt_set_speed));
           tiltNeg = false;
-        }
-        else if (!tiltRunning && (speedFactorT < 0)) {
+        } else if (!tiltRunning && (speedFactorT < 0)) {
           tiltRunning = true;
-          stepper_tilt.setAcceleration(8000); //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
+          stepper_tilt.setAcceleration(8000);  //pantilt_accel * 2 * pantilt_set_speed); //(pantilt_set_speed * pantilt_set_speed) /2);
           stepper_tilt.rotateAsync(panDegreesToSteps(-pantilt_set_speed));
           tiltNeg = true;
         }
         if (tiltNeg == false) {
           stepper_tilt.overrideSpeed(speedFactorT);
-        }
-        else {
+        } else {
           stepper_tilt.overrideSpeed(-speedFactorT);
         }
       }
@@ -154,21 +150,19 @@ void SerialData(void) {
           stepper_slider.overrideSpeed(0);
           stepper_slider.stopAsync();
         }
-      } 
-      else {
+      } else {
         if (slideReverse) {
           speedFactorS = -speedFactorS;
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))))) {
             if (!sliderRunning && (speedFactorS > 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(8000); // * slider_set_speed); //(slider_set_speed * slider_set_speed) / 20);
+              stepper_slider.setAcceleration(8000);  // * slider_set_speed); //(slider_set_speed * slider_set_speed) / 20);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = false;
-            }
-            else if (!sliderRunning && (speedFactorS < 0)) {
+            } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(8000); // * slider_set_speed); //(slider_set_speed * slider_set_speed) / 20);
+              stepper_slider.setAcceleration(8000);  // * slider_set_speed); //(slider_set_speed * slider_set_speed) / 20);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = true;
@@ -176,25 +170,22 @@ void SerialData(void) {
 
             if (slideNeg == false) {
               stepper_slider.overrideSpeed(speedFactorS);
-            }
-            else {
+            } else {
               stepper_slider.overrideSpeed(-speedFactorS);
             }
             //stepper_slider.overrideSpeed(speedFactorS);
           }
-        }
-        else {
+        } else {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
             if (!sliderRunning && (speedFactorS > 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(8000); // * slider_set_speed); //(slider_set_speed * slider_set_speed) / 20);
+              stepper_slider.setAcceleration(8000);  // * slider_set_speed); //(slider_set_speed * slider_set_speed) / 20);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = false;
-            }
-            else if (!sliderRunning && (speedFactorS < 0)) {
+            } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(8000); // * slider_set_speed); //(slider_set_speed * slider_set_speed) / 20);
+              stepper_slider.setAcceleration(8000);  // * slider_set_speed); //(slider_set_speed * slider_set_speed) / 20);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = true;
@@ -202,8 +193,7 @@ void SerialData(void) {
 
             if (slideNeg == false) {
               stepper_slider.overrideSpeed(speedFactorS);
-            }
-            else {
+            } else {
               stepper_slider.overrideSpeed(-speedFactorS);
             }
           }
@@ -230,33 +220,33 @@ void SerialData(void) {
 
 
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);                                             //wait to make sure all data in the Serial1 message has arived
+      delay(2);  //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
         dlyPos = Serial1.read();
-        memset(&stringText[0], 0, sizeof(stringText));      //clear the array
-        while (Serial1.available()) {                       //set elemetns of stringText to the Serial1 values sent
-          char digit = Serial1.read();                      //read in a char
-          strncat(stringText, &digit, 1);                   //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
+        while (Serial1.available()) {                   //set elemetns of stringText to the Serial1 values sent
+          char digit = Serial1.read();                  //read in a char
+          strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                                     //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
+        Serial1Flush();                            //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
       } else if (instruction == INSTRUCTION_IS_SETTINGS_REQUESTED) {
         delay(2);
         whichSetting = Serial1.read();
       } else {
-        memset(&stringText[0], 0, sizeof(stringText));      //clear the array
-        while (Serial1.available()) {                       //set elemetns of stringText to the Serial1 values sent
-          char digit = Serial1.read();                      //read in a char
-          strncat(stringText, &digit, 1);                   //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
+        while (Serial1.available()) {                   //set elemetns of stringText to the Serial1 values sent
+          char digit = Serial1.read();                  //read in a char
+          strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                                     //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);         //converts stringText to a float
-        if (instruction == '+') {                           //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                       //wait to make sure all data in the Serial1 message has arived
-          Serial1Flush();                                   //Clear any excess data in the Serial1 buffer
+        Serial1Flush();                              //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
+        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                //wait to make sure all data in the Serial1 message has arived
+          Serial1Flush();                            //Clear any excess data in the Serial1 buffer
           return;
         }
       }
@@ -268,10 +258,10 @@ void SerialData(void) {
   }
 
   if (!atPos1 && !atPos2 && !atPos3 && !atPos4 && !atPos5 && !atPos6 && !atPos7 && !atPos8 && !atPos9 && !atPos0 && !sentMoved) {
-    Serial1.println("#s");                                  // not at any set pos
+    Serial1.println("#s");  // not at any set pos
     sentMoved = true;
   }
-  
+
   switch (instruction) {
     case INSTRUCTION_IS_SETTINGS_REQUESTED:
       {
@@ -426,15 +416,14 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_PANTILT_SPEED1:
       {
-        if (pantilt_set_speed == pantilt_speed1){
+        if (pantilt_set_speed == pantilt_speed1) {
           pantilt_speed1 = SerialCommandValueInt;
           pantilt_set_speed = pantilt_speed1;
           stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
           stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
           stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
           stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-        }
-        else{
+        } else {
           pantilt_speed1 = SerialCommandValueInt;
         }
         Serial1.println(String("#d") + pantilt_speed1);
@@ -444,15 +433,14 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_PANTILT_SPEED2:
       {
-        if (pantilt_set_speed == pantilt_speed2){
+        if (pantilt_set_speed == pantilt_speed2) {
           pantilt_speed2 = SerialCommandValueInt;
           pantilt_set_speed = pantilt_speed2;
           stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
           stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
           stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
           stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-        }
-        else{
+        } else {
           pantilt_speed2 = SerialCommandValueInt;
         }
         Serial1.println(String("#f") + pantilt_speed2);
@@ -462,15 +450,14 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_PANTILT_SPEED3:
       {
-        if (pantilt_set_speed == pantilt_speed3){
+        if (pantilt_set_speed == pantilt_speed3) {
           pantilt_speed3 = SerialCommandValueInt;
           pantilt_set_speed = pantilt_speed3;
           stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
           stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
           stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
           stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-        }
-        else{
+        } else {
           pantilt_speed3 = SerialCommandValueInt;
         }
         Serial1.println(String("#g") + pantilt_speed3);
@@ -480,15 +467,14 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_PANTILT_SPEED4:
       {
-        if (pantilt_set_speed == pantilt_speed4){
+        if (pantilt_set_speed == pantilt_speed4) {
           pantilt_speed4 = SerialCommandValueInt;
           pantilt_set_speed = pantilt_speed4;
           stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
           stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
           stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
           stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-        }
-        else{
+        } else {
           pantilt_speed4 = SerialCommandValueInt;
         }
         Serial1.println(String("#h") + pantilt_speed4);
@@ -498,13 +484,12 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_SLIDER_SPEED1:
       {
-        if (slider_set_speed == slider_speed1){
+        if (slider_set_speed == slider_speed1) {
           slider_speed1 = SerialCommandValueInt;
           slider_set_speed = slider_speed1;
           stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-          stepper_slider.setAcceleration(slider_accel / 20) * slider_set_speed);
-        }
-        else{
+          stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+        } else {
           slider_speed1 = SerialCommandValueInt;
         }
         Serial1.println(String("#j") + slider_speed1);
@@ -514,13 +499,12 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_SLIDER_SPEED2:
       {
-        if (slider_set_speed == slider_speed2){
+        if (slider_set_speed == slider_speed2) {
           slider_speed2 = SerialCommandValueInt;
           slider_set_speed = slider_speed2;
           stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
           stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-        }
-        else{
+        } else {
           slider_speed2 = SerialCommandValueInt;
         }
         Serial1.println(String("#k") + slider_speed2);
@@ -530,13 +514,12 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_SLIDER_SPEED3:
       {
-        if (slider_set_speed == slider_speed3){
+        if (slider_set_speed == slider_speed3) {
           slider_speed3 = SerialCommandValueInt;
           slider_set_speed = slider_speed3;
           stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
           stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-        }
-        else{
+        } else {
           slider_speed3 = SerialCommandValueInt;
         }
         Serial1.println(String("#l") + slider_speed3);
@@ -546,13 +529,12 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_SLIDER_SPEED4:
       {
-        if (slider_set_speed == slider_speed4){
+        if (slider_set_speed == slider_speed4) {
           slider_speed4 = SerialCommandValueInt;
           slider_set_speed = slider_speed4;
           stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
           stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-        }
-        else{
+        } else {
           slider_speed4 = SerialCommandValueInt;
         }
         Serial1.println(String("#;") + slider_speed4);
@@ -567,7 +549,7 @@ void SerialData(void) {
         Serial1.println("#$");
         if (stepper_slider.getPosition() >= slideLimit) {
           sliderAtLimit = true;
-          Serial1.println("Slider @ Limit"); 
+          Serial1.println("Slider @ Limit");
         }
       }
       break;
@@ -593,7 +575,7 @@ void SerialData(void) {
       {
         slider_accel = SerialCommandValueInt;
         stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-        
+
         Serial1.println(String("#Q") + slider_accel);
         Serial1.println(String("Slider Accel   : ") + slider_accel + String("steps/s²"));
         Serial1.println("#$");
@@ -633,8 +615,7 @@ void SerialData(void) {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
           if (upsideDown) {
             panDegrees(-SerialCommandValueFloat);
-          }
-          else {
+          } else {
             panDegrees(SerialCommandValueFloat);
           }
         }
@@ -657,8 +638,7 @@ void SerialData(void) {
               sliderMoveTo(SerialCommandValueFloat);
               sliderRunning = false;
             }
-          }
-          else {
+          } else {
             if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
               sliderRunning = true;
               sliderMMRel(SerialCommandValueFloat);
@@ -689,8 +669,7 @@ void SerialData(void) {
         if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
           if (upsideDown) {
             panDegreesRel(-SerialCommandValueFloat);
-          }
-          else {
+          } else {
             panDegreesRel(SerialCommandValueFloat);
           }
         }
@@ -713,8 +692,7 @@ void SerialData(void) {
               sliderMMRel(SerialCommandValueFloat);
               sliderRunning = false;
             }
-          }
-          else {
+          } else {
             if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
               sliderRunning = true;
               sliderMMRel(SerialCommandValueFloat);
@@ -799,7 +777,7 @@ void SerialData(void) {
       break;
     case INSTRUCTION_ZOOM_IN:
       {
-        //Serial1.println("Zoomed IN sent"); 
+        //Serial1.println("Zoomed IN sent");
         zoom_speed = SerialCommandValueFloat;
 
         float speedFactorZ = map(zoom_speed, -8, 0, -zoomMaxFactor, 0);
@@ -811,10 +789,9 @@ void SerialData(void) {
           stepper_zoom.overrideSpeed(0);
         }
 
-        if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() < zoomLimit) && (speedFactorZ > 0) && (!zoomedIn))){
+        if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() < zoomLimit) && (speedFactorZ > 0) && (!zoomedIn))) {
           stepper_zoom.overrideSpeed(speedFactorZ);
-        }
-        else {
+        } else {
           zoomRunning = false;
           stepper_zoom.overrideSpeed(0);
           stepper_zoom.stopAsync();
@@ -827,7 +804,7 @@ void SerialData(void) {
       break;
     case INSTRUCTION_ZOOM_OUT:
       {
-        //Serial1.println("Zoomed OUT sent"); 
+        //Serial1.println("Zoomed OUT sent");
         zoom_speed = SerialCommandValueFloat;
 
         float speedFactorZ = map(zoom_speed, 0, 8, 0, zoomMaxFactor);
@@ -841,8 +818,7 @@ void SerialData(void) {
 
         if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > 0) && (speedFactorZ > 0) && (!zoomedOut))) {
           stepper_zoom.overrideSpeed(speedFactorZ * -1);
-        }
-        else {
+        } else {
           zoomRunning = false;
           stepper_zoom.overrideSpeed(0);
           stepper_zoom.stopAsync();
@@ -875,10 +851,9 @@ void SerialData(void) {
       break;
     case INSTRUCTION_FIND_ZERO_POS:
       {
-        if (findingHome == false){
+        if (findingHome == false) {
           findingHome = true;
-        }
-        else {
+        } else {
           findingHome = false;
         }
       }
