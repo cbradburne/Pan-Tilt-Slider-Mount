@@ -1,11 +1,12 @@
 #macOS
-#python3 -m pip install pyjoystick
+#python3 -m pip install pyside6
 #python3 -m pip install pyserial
-#python3 -m pip install pyinstaller
+#python3 -m pip install pyjoystick
 #python3 -m pip install pysdl2-dll
+
+#python3 -m pip install pyinstaller
 #python3 -m pip install pynput
 
-#python3 -m pip install pyside6
 #python3 -m pip install inputs
 
 #pyinstaller --additional-hooks-dir=. --onefile --windowed --icon PTSApp-Icon.icns --name PTSApp-QT PTSQT5.py
@@ -1956,7 +1957,11 @@ class PTSapp(QMainWindow):
         if debug:
             agY = agY - 30
         else:
+<<<<<<< Updated upstream
             agY = agY + 30
+=======
+            agY = agY + 40
+>>>>>>> Stashed changes
 
         buttonGoX = agX * 0.0625        # 120,  120/1920
         buttonGoY = agY * 0.1111        # 120,  120/1080
