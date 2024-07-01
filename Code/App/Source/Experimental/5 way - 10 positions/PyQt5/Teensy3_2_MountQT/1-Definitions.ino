@@ -100,15 +100,7 @@ if (pantilt_set_speed == pantilt_speed1) {
   upsideDown = digitalRead(PIN_SW1);
   slideReverse = digitalRead(PIN_SW2);
   withSlider = digitalRead(PIN_SW3);
-
-  //if (upsideDown) {
-  //  stepper_pan.setInverseRotation(true);
-    //stepper_tilt.setInverseRotation(true);
-  //}
-
-  //if (slideReverse) {
-  //  stepper_slider.setInverseRotation(true);
-  //}
+  
 }
 
 
@@ -203,7 +195,7 @@ void zoomLimitCheck() {
         sliderRunning = false;
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
-        stepper_slider.setTargetRel(20);
+        stepper_slider.setTargetRel(-20)); //sliderMillimetresToSteps(-20)); // should be positive
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Limit"); 
       }
@@ -214,7 +206,7 @@ void zoomLimitCheck() {
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
-        stepper_slider.setTargetRel(-20);
+        stepper_slider.setTargetRel(20)); //sliderMillimetresToSteps(20)); // should be negative
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Zero"); 
       }
@@ -236,7 +228,7 @@ void zoomLimitCheck() {
         sliderRunning = false;
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
-        stepper_slider.setTargetRel(-20);
+        stepper_slider.setTargetRel(-20)); //sliderMillimetresToSteps(-20));
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Limit"); 
       } 
@@ -247,7 +239,7 @@ void zoomLimitCheck() {
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
-        stepper_slider.setTargetRel(20);
+        stepper_slider.setTargetRel(20)); //sliderMillimetresToSteps(20));
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Zero"); 
       }

@@ -645,22 +645,6 @@ void SerialData(void) {
               sliderRunning = false;
             }
           }
-          /*
-          if (slideReverse) {
-            if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
-              sliderRunning = true;
-              sliderMoveTo(-SerialCommandValueFloat);
-              sliderRunning = false;
-            }
-          }
-          else {
-            if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
-              sliderRunning = true;
-              sliderMoveTo(SerialCommandValueFloat);
-              sliderRunning = false;
-            }
-          }
-          */
         }
       }
       break;
@@ -699,23 +683,6 @@ void SerialData(void) {
               sliderRunning = false;
             }
           }
-
-          /*
-          if (slideReverse) {
-            if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
-              sliderRunning = true;
-              sliderMMRel(-SerialCommandValueFloat);
-              sliderRunning = false;
-            }
-          }
-          else {
-            if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
-              sliderRunning = true;
-              sliderMMRel(SerialCommandValueFloat);
-              sliderRunning = false;
-            }
-          }
-          */
         }
       }
       break;
