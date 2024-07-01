@@ -2125,7 +2125,7 @@ class PTSapp(QMainWindow):
                             axisZ= 254
                     else:
                         axisZ = 0
-                    print(axisZ)
+                    #print(axisZ)
 
                     #axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                     #scale(self, val, src, dst):
