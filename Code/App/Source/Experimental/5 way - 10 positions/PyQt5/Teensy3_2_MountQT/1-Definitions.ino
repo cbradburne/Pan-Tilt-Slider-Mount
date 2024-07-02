@@ -41,9 +41,9 @@ void initPanTilt(void) {
   pinMode(13, OUTPUT);    // LED
   digitalWrite(13, LOW);  // LED OFF
 
-  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1.                   HIGH = Up-side Down
-  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   HIGH = Slider Reverse
-  pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   HIGH = Slider Used   -  pin 10 to gnd if no slider used
+  pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1.                   HIGH (switch off) = Up-side Down
+  pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   HIGH (switch off) = Slider Reverse
+  pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   HIGH (switch off) = Slider Used   -  pin 10 to gnd if no slider used
 
   zoomLimitTimer.begin(zoomLimitCheck, 250);
   zoomLimitTimer.priority(255);             
@@ -191,22 +191,28 @@ void zoomLimitCheck() {
       if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
         // IS reversed - position over slide limit - motor running - AtLimit not set
         rotate_stepperS.emergencyStop();
+        Serial1.print("Slider @ Limit - ");
+        Serial1.println(stepper_slider.getPosition());
         //step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
         stepper_slider.setTargetRel(-20)); //sliderMillimetresToSteps(-20)); // should be positive
+        //stepper_slider.setTargetRel(2);
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Limit"); 
       }
       else if ((stepper_slider.getPosition() > 0) && (sliderRunning == true) && (sliderAtZero == false)) {
         // IS reversed - position less than zero - motor running - AtZero not set
         rotate_stepperS.emergencyStop();
+        Serial1.print("Slider @ Zero - ");
+        Serial1.println(stepper_slider.getPosition());
         //step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
         stepper_slider.setTargetRel(20)); //sliderMillimetresToSteps(20)); // should be negative
+        //stepper_slider.setTargetRel(-2);
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Zero"); 
       }
@@ -224,22 +230,28 @@ void zoomLimitCheck() {
       if ((stepper_slider.getPosition() > slideLimit) && (sliderRunning == true) && (sliderAtLimit == false)) {
         // Not reversed - position over slide limit - motor running - AtLimit not set
         rotate_stepperS.emergencyStop();
+        Serial1.print("Slider @ Limit - ");
+        Serial1.println(stepper_slider.getPosition());
         //step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
         stepper_slider.setTargetRel(-20)); //sliderMillimetresToSteps(-20));
+        //stepper_slider.setTargetRel(-2);
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Limit"); 
       } 
       else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true) && (sliderAtZero == false)) {
         // Not reversed - position less than zero - motor running - AtZero not set
         rotate_stepperS.emergencyStop();
+        Serial1.print("Slider @ Zero - ");
+        Serial1.println(stepper_slider.getPosition());
         //step_stepperS.emergencyStop();
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
         stepper_slider.setTargetRel(20)); //sliderMillimetresToSteps(20));
+        //stepper_slider.setTargetRel(2);
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Zero"); 
       }

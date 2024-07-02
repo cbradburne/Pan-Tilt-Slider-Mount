@@ -154,13 +154,13 @@ void SerialData(void) {
             if (!sliderRunning && (speedFactorS > 0)) {
               sliderRunning = true;
               rotate_stepperS.rotateAsync(stepper_slider);
-              rotate_stepperS.overrideAcceleration(10);  // to make accel faster when using joystick
+              rotate_stepperS.overrideAcceleration(100);  // to make accel faster when using joystick
               rotate_stepperS.overrideSpeed(0);
               slideNeg = false;
             } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
               rotate_stepperS.rotateAsync(stepper_slider);
-              rotate_stepperS.overrideAcceleration(10);  // to make accel faster when using joystick
+              rotate_stepperS.overrideAcceleration(100);  // to make accel faster when using joystick
               rotate_stepperS.overrideSpeed(0);
               slideNeg = true;
             }
