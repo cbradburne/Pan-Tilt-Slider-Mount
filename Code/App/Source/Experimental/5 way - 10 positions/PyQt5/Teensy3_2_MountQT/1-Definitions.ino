@@ -196,7 +196,7 @@ void zoomLimitCheck() {
         sliderRunning = false;
         sliderAtLimit = true;
         sliderAtZero = false;
-        stepper_slider.setTargetRel(-20);   // should be positive
+        stepper_slider.setTargetRel(20);
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Limit"); 
       }
@@ -208,7 +208,7 @@ void zoomLimitCheck() {
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
-        stepper_slider.setTargetRel(20);    // should be negative
+        stepper_slider.setTargetRel(-20);
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Zero"); 
       }
