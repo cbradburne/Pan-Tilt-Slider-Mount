@@ -535,6 +535,12 @@ cam3Running = False
 cam4Running = False
 cam5Running = False
 
+cam1HasSlider = False
+cam2HasSlider = True
+cam3HasSlider = False
+cam4HasSlider = False
+cam5HasSlider = False
+
 locateHomeActive = False
 
 class Ui_SettingsWindow(QMainWindow):
@@ -596,6 +602,28 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSlideSetHome.setFont(font)
         self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonSlideSetHome.setObjectName("pushButtonSlideSetHome")
+        #self.checkBoxCamHasSlider
+        self.checkBoxCamHasSlider = QtWidgets.QCheckBox(self.groupBox, clicked = lambda: self.checkBoxHasSlider())
+        self.checkBoxCamHasSlider.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 40, (buttonGoX * 1.6), (buttonGoY * 0.3)))
+        self.checkBoxCamHasSlider.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(36)
+        self.checkBoxCamHasSlider.setFont(font)
+        self.checkBoxCamHasSlider.setStyleSheet("QCheckBox::indicator { width: 50px; height: 50px;}")
+        self.checkBoxCamHasSlider.setText("")
+        self.checkBoxCamHasSlider.setIconSize(QtCore.QSize(64, 64))
+        self.checkBoxCamHasSlider.setChecked(False)
+        self.checkBoxCamHasSlider.setObjectName("checkBoxCamHasSlider")
+        self.labelCamHasSlider = QtWidgets.QLabel(self.groupBox)
+        self.labelCamHasSlider.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 40.3, buttonGoX * 1.2, butttonLayoutY * 1.2))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(18)
+        self.labelCamHasSlider.setFont(font)
+        self.labelCamHasSlider.setStyleSheet("border: 0px; color:grey;")
+        self.labelCamHasSlider.setAlignment(QtCore.Qt.AlignCenter)
+        self.labelCamHasSlider.setObjectName("labelCamHasSlider")
         self.pushButtonPTS4 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed4.setFocus())
         self.pushButtonPTS4.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
@@ -1016,6 +1044,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam5.setText(_translate("settingsWindow", "Cam5"))
         self.pushButtonClose.setText(_translate("settingsWindow", "Close"))
         self.pushButtonStore.setText(_translate("settingsWindow", "Store"))
+        self.labelCamHasSlider.setText(_translate("settingsWindow", "Has Slider"))
+        
 
         if debug:
             self.showMaximized()
@@ -1104,6 +1134,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam1slSpeed4
         global cam1SlideLimit
         global cam1ZoomLimit
+        global cam1HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1133,6 +1164,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam1slSpeed4
         global cam1SlideLimit
         global cam1ZoomLimit
+        global cam1HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1156,6 +1188,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSlideLimit.setText(str(cam1SlideLimit))
         self.labelZoomLimit.setText(str(cam1ZoomLimit))
 
+        if cam1HasSlider == True:
+            self.checkBoxCamHasSlider.setChecked(True)
+        else:
+            self.checkBoxCamHasSlider.setChecked(False)
+
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
@@ -1176,6 +1213,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam2slSpeed4
         global cam2SlideLimit
         global cam2ZoomLimit
+        global cam2HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1205,6 +1243,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam2slSpeed4
         global cam2SlideLimit
         global cam2ZoomLimit
+        global cam2HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1228,6 +1267,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSlideLimit.setText(str(cam2SlideLimit))
         self.labelZoomLimit.setText(str(cam2ZoomLimit))
 
+        if cam2HasSlider == True:
+            self.checkBoxCamHasSlider.setChecked(True)
+        else:
+            self.checkBoxCamHasSlider.setChecked(False)
+
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
@@ -1248,6 +1292,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam3slSpeed4
         global cam3SlideLimit
         global cam3ZoomLimit
+        global cam3HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1277,6 +1322,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam3slSpeed4
         global cam3SlideLimit
         global cam3ZoomLimit
+        global cam3HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1300,6 +1346,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSlideLimit.setText(str(cam3SlideLimit))
         self.labelZoomLimit.setText(str(cam3ZoomLimit))
 
+        if cam3HasSlider == True:
+            self.checkBoxCamHasSlider.setChecked(True)
+        else:
+            self.checkBoxCamHasSlider.setChecked(False)
+
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #807100; border-radius: {borderRadius2}px;")
@@ -1320,6 +1371,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam4slSpeed4
         global cam4SlideLimit
         global cam4ZoomLimit
+        global cam4HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1349,6 +1401,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam4slSpeed4
         global cam4SlideLimit
         global cam4ZoomLimit
+        global cam4HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1372,6 +1425,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSlideLimit.setText(str(cam4SlideLimit))
         self.labelZoomLimit.setText(str(cam4ZoomLimit))
 
+        if cam4HasSlider == True:
+            self.checkBoxCamHasSlider.setChecked(True)
+        else:
+            self.checkBoxCamHasSlider.setChecked(False)
+
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
@@ -1392,6 +1450,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam5slSpeed4
         global cam5SlideLimit
         global cam5ZoomLimit
+        global cam5HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1421,6 +1480,7 @@ class Ui_SettingsWindow(QMainWindow):
         global cam5slSpeed4
         global cam5SlideLimit
         global cam5ZoomLimit
+        global cam5HasSlider
 
         global butttonLayoutX
         global butttonLayoutY
@@ -1443,6 +1503,11 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed4.setText(str(cam5slSpeed4))
         self.labelSlideLimit.setText(str(cam5SlideLimit))
         self.labelZoomLimit.setText(str(cam5ZoomLimit))
+
+        if cam5HasSlider == True:
+            self.checkBoxCamHasSlider.setChecked(True)
+        else:
+            self.checkBoxCamHasSlider.setChecked(False)
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
@@ -1957,7 +2022,7 @@ class PTSapp(QMainWindow):
         if debug:
             agY = agY - 30
         else:
-            agY = agY + 40
+            agY = agY + 30
 
         buttonGoX = agX * 0.0625        # 120,  120/1920
         buttonGoY = agY * 0.1111        # 120,  120/1080

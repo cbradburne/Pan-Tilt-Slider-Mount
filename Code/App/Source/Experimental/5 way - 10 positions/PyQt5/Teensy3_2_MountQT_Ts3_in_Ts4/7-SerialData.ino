@@ -3,33 +3,33 @@
 void SerialData(void) {
   char instruction;
 
-  if (Serial2.available() > 0) {
-    instruction = Serial2.read();
+  if (Serial3.available() > 0) {
+    instruction = Serial3.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {
       delay(2);  //wait to make sure all data in the Serial message has arived
-      instruction = Serial2.read();
+      instruction = Serial3.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
-        dlyPos = Serial2.read();
+        dlyPos = Serial3.read();
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
-        while (Serial2.available()) {                   //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial2.read();                  //read in a char
+        while (Serial3.available()) {                   //set elemetns of stringText to the Serial3 values sent
+          char digit = Serial3.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                            //Clear any excess data in the Serial2 buffer
+        Serial3Flush();                            //Clear any excess data in the Serial3 buffer
         SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
       } else {
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
-        while (Serial2.available()) {                   //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial2.read();                  //read in a char
+        while (Serial3.available()) {                   //set elemetns of stringText to the Serial3 values sent
+          char digit = Serial3.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                              //Clear any excess data in the Serial2 buffer
+        Serial3Flush();                              //Clear any excess data in the Serial3 buffer
         SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
         SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
         if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                //wait to make sure all data in the Serial2 message has arived
-          Serial2Flush();                            //Clear any excess data in the Serial2 buffer
+          delay(100);                                //wait to make sure all data in the Serial3 message has arived
+          Serial3Flush();                            //Clear any excess data in the Serial3 buffer
           return;
         }
       }
@@ -689,28 +689,58 @@ void SerialData(void) {
       break;
     case INSTRUCTION_ZOOM_IN:
       {
-        zoom_speed = SerialCommandValueInt;
-        zoomIN = true;
-        zoomOUT = false;
+        //Serial1.println("Zoomed IN sent");
+        zoom_speed = SerialCommandValueFloat;
 
-        Serial2.print("#I");
-        Serial2.println(zoom_speed);
+        float speedFactorZ = map(zoom_speed, -8, 0, -zoomMaxFactor, 0);
 
-        Serial1.println("Zoom IN.");
-        Serial1.println("#$");
+        if (!zoomRunning && !zoomedIn) {
+          zoomRunning = true;
+          rotate_stepperZ.rotateAsync(stepper_zoom);
+          rotate_stepperZ.overrideAcceleration(5);
+          rotate_stepperZ.overrideSpeed(0);
+        }
+
+        if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() < zoomLimit) && (speedFactorZ > 0) && (!zoomedIn))) {
+          rotate_stepperZ.overrideSpeed(speedFactorZ);
+        } else {
+          zoomRunning = false;
+          rotate_stepperZ.overrideSpeed(0);
+          rotate_stepperZ.stopAsync();
+        }
+
+        //if (speedFactorZ == 0.0) {
+        //  rotate_stepperZ.stopAsync();
+          //stepper_zoom.setAcceleration(zoom_set_speed);
+        //}
       }
       break;
     case INSTRUCTION_ZOOM_OUT:
       {
-        zoom_speed = SerialCommandValueInt;
-        zoomIN = false;
-        zoomOUT = true;
+        //Serial1.println("Zoomed OUT sent");
+        zoom_speed = SerialCommandValueFloat;
 
-        Serial2.print("#i");
-        Serial2.println(zoom_speed);
+        float speedFactorZ = map(zoom_speed, 0, 8, 0, zoomMaxFactor);
 
-        Serial1.println("Zoom OUT.");
-        Serial1.println("#$");
+        if (!zoomRunning && !zoomedOut) {
+          zoomRunning = true;
+          rotate_stepperZ.rotateAsync(stepper_zoom);
+          rotate_stepperZ.overrideAcceleration(5);
+          rotate_stepperZ.overrideSpeed(0);
+        }
+
+        if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > 0) && (speedFactorZ > 0) && (!zoomedOut))) {
+          rotate_stepperZ.overrideSpeed(speedFactorZ * -1);
+        } else {
+          zoomRunning = false;
+          rotate_stepperZ.overrideSpeed(0);
+          rotate_stepperZ.stopAsync();
+        }
+
+        //if (speedFactorZ == 0.0) {
+        //  rotate_stepperZ.stopAsync();
+          //stepper_zoom.setAcceleration(zoom_set_speed);
+        //}
       }
       break;
     case INSTRUCTION_STOP_ZOOM:
@@ -718,55 +748,16 @@ void SerialData(void) {
         zoomIN = false;
         zoomOUT = false;
 
-        Serial2.println("#o");
-        delay(20);
-        Serial2.println("#o");  // Just in case, it's important!
-
-        Serial1.println("STOP Zooming.\n");
-        Serial1.println("#$");
-      }
-      break;
-    case INSTRUCTION_SET_AUTOFOCUS_ON:
-      {
-        Serial2.println("#F");
-      }
-      break;
-    case INSTRUCTION_SET_AUTOFOCUS_OFF:
-      {
-        Serial2.println("#f");
-      }
-      break;
-    case INSTRUCTION_IS_AUTOFOCUS_ON:
-      {
-        Serial1.println("#O");
-      }
-      break;
-    case INSTRUCTION_IS_AUTOFOCUS_OFF:
-      {
-        Serial1.println("#o");
-      }
-      break;
-    case INSTRUCTION_TOGGLE_RECORDING:
-      {
-        Serial2.println("#O");
-
-        Serial1.println("Toggle Record.\n");
-        Serial1.println("#$");
-      }
-      break;
-    case INSTRUCTION_IS_RECORDING:
-      {
-        Serial1.println("#P");
-      }
-      break;
-    case INSTRUCTION_IS_NOT_RECORDING:
-      {
-        Serial1.println("#p");
+        zoomRunning = false;
+        rotate_stepperZ.overrideSpeed(0);
+        rotate_stepperZ.stopAsync();
+        //stepper_zoom.setAcceleration(zoom_set_speed);
       }
       break;
     case INSTRUCTION_SET_ZERO_POS:
       {
         stepper_slider.setPosition(0);
+        stepper_zoom.setPosition(0);
         findingHome = false;
       }
       break;

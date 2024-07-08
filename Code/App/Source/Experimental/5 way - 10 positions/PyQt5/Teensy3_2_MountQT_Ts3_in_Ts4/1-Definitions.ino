@@ -11,16 +11,19 @@
 Stepper stepper_pan(PIN_STEP_PAN, PIN_DIRECTION_PAN);
 Stepper stepper_tilt(PIN_STEP_TILT, PIN_DIRECTION_TILT);
 Stepper stepper_slider(PIN_STEP_SLIDER, PIN_DIRECTION_SLIDER);
+Stepper stepper_zoom(PIN_STEP_ZOOM, PIN_DIRECTION_ZOOM);
 
 StepControl multi_stepper;
 
 StepControl step_stepperP;
 StepControl step_stepperT;
 StepControl step_stepperS;
+StepControl step_stepperZ;
 
 RotateControl rotate_stepperP;
 RotateControl rotate_stepperT;
 RotateControl rotate_stepperS;
+RotateControl rotate_stepperZ;
 
 KeyframeElement keyframe_array[10];
 
@@ -36,7 +39,7 @@ void initPanTilt(void) {
 
   //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
-  Serial2.begin(BAUD_RATE);
+  Serial3.begin(BAUD_RATE);
 
   pinMode(13, OUTPUT);    // LED
   digitalWrite(13, LOW);  // LED OFF
@@ -44,6 +47,7 @@ void initPanTilt(void) {
   pinMode(PIN_SW1, INPUT_PULLUP);  // Dip Switch 1.                   HIGH (switch off) = Up-side Down
   pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   HIGH (switch off) = Slider Reverse
   pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   HIGH (switch off) = Slider Used   -  pin 10 to gnd if no slider used
+  pinMode(PIN_SW4, INPUT_PULLUP);  // Dip Switch 4.                   HIGH (switch off) = 
 
   zoomLimitTimer.begin(zoomLimitCheck, 250);
   zoomLimitTimer.priority(255);             
@@ -51,9 +55,11 @@ void initPanTilt(void) {
   stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
   stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
+  stepper_zoom.setMaxSpeed(zoom_set_speed);
   stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
   stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
   stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+  stepper_zoom.setAcceleration(zoom_set_speed * 5);
 
   delay(200);
 
@@ -142,9 +148,9 @@ void Serial1Flush(void) {
   }
 }
 
-void Serial2Flush(void) {
-  while (Serial2.available() > 0) {
-    c = Serial2.read();
+void Serial3Flush(void) {
+  while (Serial3.available() > 0) {
+    c = Serial3.read();
   }
 }
 
@@ -180,6 +186,7 @@ void mainLoop(void) {
       rotate_stepperS.stopAsync();
       rotate_stepperP.stopAsync();
       rotate_stepperT.stopAsync();
+      rotate_stepperZ.stopAsync();
       isManualMove = false;
     }
   }
@@ -187,6 +194,36 @@ void mainLoop(void) {
 
 void zoomLimitCheck() {
   if (findingHome == false){
+    if ((stepper_zoom.getPosition() > zoomLimit) && (zoomRunning == true) && (zoomedIn == false)) {
+      rotate_stepperZ.emergencyStop();
+      zoomRunning = false;
+      zoomedIn = true;
+      zoomedOut = false;
+      stepper_zoom.setTargetRel(-20);
+      step_stepperZ.move(stepper_zoom);
+      //Serial1.println("Zoomed Fully IN"); 
+    } 
+    else if ((stepper_zoom.getPosition() < 0) && (zoomRunning == true) && (zoomedOut == false)) {
+      rotate_stepperZ.emergencyStop();
+      zoomRunning = false;
+      zoomedIn = false;
+      zoomedOut = true;
+      stepper_zoom.setTargetRel(20);
+      step_stepperZ.move(stepper_zoom);
+      //Serial1.println("Zoomed Fully OUT"); 
+    }
+
+
+    if ((stepper_zoom.getPosition() > 20) && (zoomedOut == true)) {
+      zoomedOut = false;
+      //Serial1.println("Zoomed OUT reset"); 
+    }
+    if ((stepper_zoom.getPosition() < (zoomLimit - 20)) && (zoomedIn == true)) {
+      zoomedIn = false;
+      //Serial1.println("Zoomed IN reset");
+    }
+
+    
     if (slideReverse) {
       if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
         // IS reversed - position over slide limit - motor running - AtLimit not set
@@ -196,7 +233,7 @@ void zoomLimitCheck() {
         sliderRunning = false;
         sliderAtLimit = true;
         sliderAtZero = false;
-        stepper_slider.setTargetRel(-20);   // should be positive
+        stepper_slider.setTargetRel(20);   // should be positive
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Limit"); 
       }
@@ -208,7 +245,7 @@ void zoomLimitCheck() {
         sliderRunning = false;
         sliderAtLimit = false;
         sliderAtZero = true;
-        stepper_slider.setTargetRel(20);    // should be negative
+        stepper_slider.setTargetRel(-20);    // should be negative
         step_stepperS.move(stepper_slider);
         //Serial1.println("Slider @ Zero"); 
       }

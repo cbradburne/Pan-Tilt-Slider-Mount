@@ -5,16 +5,30 @@
 
 #define BAUD_RATE 38400 //9600 //57600
 
-#define PIN_STEP_PAN 19
-#define PIN_DIRECTION_PAN 18
-#define PIN_STEP_TILT 17
-#define PIN_DIRECTION_TILT 16
-#define PIN_STEP_SLIDER 15
-#define PIN_DIRECTION_SLIDER 14
+#define PIN_STEP_PAN 21
+#define PIN_DIRECTION_PAN 20
+#define PIN_STEP_TILT 19
+#define PIN_DIRECTION_TILT 18
+#define PIN_STEP_SLIDER 17
+#define PIN_DIRECTION_SLIDER 16
+#define PIN_STEP_ZOOM 15
+#define PIN_DIRECTION_ZOOM 14
 
-#define PIN_SW1 11
-#define PIN_SW2 12
-#define PIN_SW3 6
+#define PIN_SW1 9
+#define PIN_SW2 10
+#define PIN_SW3 11
+#define PIN_SW4 12
+
+//#define PIN_STEP_PAN 19
+//#define PIN_DIRECTION_PAN 18
+//#define PIN_STEP_TILT 17
+//#define PIN_DIRECTION_TILT 16
+//#define PIN_STEP_SLIDER 15
+//#define PIN_DIRECTION_SLIDER 14
+
+//#define PIN_SW1 11
+//#define PIN_SW2 12
+//#define PIN_SW3 6
 
 #define SLIDER_PULLEY_TEETH 36.0
 //#define PAN_GEAR_RATIO 8.4705882352941176470588235294118  //  144/17 teeth      - Original Mount
@@ -246,6 +260,7 @@ struct KeyframeElement {
   float panTiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
+  long zoomStepCount = 0;
   int isRecorded = 0;
 };
 

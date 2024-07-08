@@ -202,7 +202,6 @@ void mainLoop(void) {
         stepper_zoom.stopAsync();
         delay(10);
       }
-
       isManualMove = false;
     }
   }
@@ -245,7 +244,7 @@ void zoomLimitCheck() {
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
         stepper_slider.moveRel(20);
-        Serial1.println("Slider @ Limit"); 
+        //Serial1.println("Slider @ Limit"); 
       } 
       else if ((stepper_slider.getPosition() > 0) && (sliderRunning == true) && (sliderAtZero == false)) {
         stepper_slider.emergencyStop();
@@ -253,16 +252,16 @@ void zoomLimitCheck() {
         sliderAtLimit = false;
         sliderAtZero = true;
         stepper_slider.moveRel(-20);
-        Serial1.println("Slider @ Zero"); 
+        //Serial1.println("Slider @ Zero"); 
       }
 
       if ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (sliderAtZero == true)) {
         sliderAtZero = false;
-        Serial1.println("Slider Zero reset"); 
+        //Serial1.println("Slider Zero reset"); 
       }
       if ((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (sliderAtLimit == true)) {
         sliderAtLimit = false;
-        Serial1.println("Slider Limit reset");
+        //Serial1.println("Slider Limit reset");
       }
     }
     else {
@@ -272,7 +271,7 @@ void zoomLimitCheck() {
         sliderAtLimit = true;   // +ve limit value
         sliderAtZero = false;   // 0 limit value
         stepper_slider.moveRel(-20);
-        Serial1.println("Slider @ Limit"); 
+        //Serial1.println("Slider @ Limit"); 
       } 
       else if ((stepper_slider.getPosition() < 0) && (sliderRunning == true) && (sliderAtZero == false)) {
         stepper_slider.emergencyStop();
@@ -280,16 +279,16 @@ void zoomLimitCheck() {
         sliderAtLimit = false;
         sliderAtZero = true;
         stepper_slider.moveRel(20);
-        Serial1.println("Slider @ Zero"); 
+        //Serial1.println("Slider @ Zero"); 
       }
 
       if ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (sliderAtZero == true)) {
         sliderAtZero = false;
-        Serial1.println("Slider Zero reset"); 
+        //Serial1.println("Slider Zero reset"); 
       }
       if ((stepper_slider.getPosition() < (slideLimit * 0.97)) && (sliderAtLimit == true)) {
         sliderAtLimit = false;
-        Serial1.println("Slider Limit reset");
+        //Serial1.println("Slider Limit reset");
       }
     }
   }

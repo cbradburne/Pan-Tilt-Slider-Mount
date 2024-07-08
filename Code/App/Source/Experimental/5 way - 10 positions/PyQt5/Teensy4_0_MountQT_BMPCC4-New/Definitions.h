@@ -158,7 +158,7 @@ float pantilt_set_speed = 20;     //  degrees/second.
 float slider_set_speed = 60;      //  mm/second.
 
 float pantilt_accel = 200;
-float slider_accel = 4000;
+float slider_accel = 8000;
 
 float pantilt_speed1 = 1;
 float pantilt_speed2 = 5;
