@@ -641,7 +641,7 @@ void SerialData(void) {
           } else {
             if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
               sliderRunning = true;
-              sliderMMRel(SerialCommandValueFloat);
+              sliderMoveTo(SerialCommandValueFloat);
               sliderRunning = false;
             }
           }

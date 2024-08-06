@@ -171,7 +171,7 @@ void sliderMMRel(float mm) {
     Serial1.println("#$");
 
     if (slideReverse) {
-      mm = (mm * -1);
+      mm = -mm; //(mm * -1);
     }
     stepper_slider.moveRel(sliderMillimetresToSteps(mm));
     
