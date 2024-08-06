@@ -8011,18 +8011,18 @@ class PTSapp(QMainWindow):
         global borderRadius
         global borderRadius2
 
-        global cam4Pos1Set
-        global cam4Pos2Set
-        global cam4Pos3Set
-        global cam4Pos4Set
-        global cam4Pos5Set
-        global cam4Pos6Set
-        global cam4Pos7Set
-        global cam4Pos8Set
-        global cam4Pos9Set
-        global cam4Pos10Set
+        global cam5Pos1Set
+        global cam5Pos2Set
+        global cam5Pos3Set
+        global cam5Pos4Set
+        global cam5Pos5Set
+        global cam5Pos6Set
+        global cam5Pos7Set
+        global cam5Pos8Set
+        global cam5Pos9Set
+        global cam5Pos10Set
 
-        cam4test = 0
+        cam5test = 0
 
         if editToggle:
             editButton = 65
@@ -8032,18 +8032,18 @@ class PTSapp(QMainWindow):
             self.setPos(3)
             self.sendSerial('&5D')
         elif runToggle:
-            if cam4Pos1Set: cam4test += 1
-            if cam4Pos2Set: cam4test += 1
-            if cam4Pos3Set: cam4test += 1
-            if cam4Pos4Set: cam4test += 1
-            if cam4Pos5Set: cam4test += 1
-            if cam4Pos6Set: cam4test += 1
-            if cam4Pos7Set: cam4test += 1
-            if cam4Pos8Set: cam4test += 1
-            if cam4Pos9Set: cam4test += 1
-            if cam4Pos10Set: cam4test += 1
+            if cam5Pos1Set: cam5test += 1
+            if cam5Pos2Set: cam5test += 1
+            if cam5Pos3Set: cam5test += 1
+            if cam5Pos4Set: cam5test += 1
+            if cam5Pos5Set: cam5test += 1
+            if cam5Pos6Set: cam5test += 1
+            if cam5Pos7Set: cam5test += 1
+            if cam5Pos8Set: cam5test += 1
+            if cam5Pos9Set: cam5test += 1
+            if cam5Pos10Set: cam5test += 1
 
-            if cam4test > 1:
+            if cam5test > 1:
                 if cam5Running:
                     cam5Running = False
                     self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
