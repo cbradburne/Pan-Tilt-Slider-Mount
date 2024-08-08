@@ -208,6 +208,7 @@ void moveToIndex(int index) {
   stepper_slider.setTargetAbs(keyframe_array[index - 1].sliderStepCount);
   stepper_zoom.setTargetAbs(keyframe_array[index - 1].zoomStepCount);
 
+  isMoving = true;
   StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
 
   Serial1Flush(); 
@@ -348,5 +349,6 @@ void moveToIndex(int index) {
   }
 
   //stepper_zoom.setMaxSpeed(zoom_set_speed);
+  isMoving = false;
   sentMoved = false;
 }

@@ -3689,8 +3689,8 @@ class PTSapp(QMainWindow):
             axisZh = self.toHex(axisZ, 16)
 
             arr = [4, axisZh, axisXh, axisYh]
-            if debug:
-                print(arr)
+            #if debug:
+                #print(arr)
             self.sendJoystick(arr)
             previousMillisMoveCheck = time.time()
 
@@ -10092,8 +10092,8 @@ class ThreadClass(QtCore.QThread):
                     msg=''
 
                 if sendData != "":
-                    if debug:
-                        print(sendData)
+                    #if debug:
+                        #print(sendData)
 
                     if type(sendData) is str:
                         data = bytes((sendData + '\n'), 'utf8')
@@ -10101,7 +10101,7 @@ class ThreadClass(QtCore.QThread):
                             self.serial_port.write(data)
                         except Exception as error:
                             print("Didn't send button :(")
-                            print(error)
+                            #print(error)
                             self.stop()
 
                     elif type(sendData) is bytearray:
