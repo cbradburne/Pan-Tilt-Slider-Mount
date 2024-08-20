@@ -63,6 +63,10 @@ void initPanTilt(void) {
 
   delay(200);
 
+  upsideDown = digitalRead(PIN_SW1);
+  slideReverse = digitalRead(PIN_SW2);
+  withSlider = digitalRead(PIN_SW3);
+
   Serial1.println("#a");
   Serial1.println("#a");
   Serial1.println("#%");
@@ -82,19 +86,20 @@ if (pantilt_set_speed == pantilt_speed1) {
     Serial1.println("^@7");
   }
 
-
-  if (slider_set_speed == slider_speed1) {
-    Serial1.println("^=1");
-    Serial1.println("^=1");
-  } else if (slider_set_speed == slider_speed2) {
-    Serial1.println("^=3");
-    Serial1.println("^=3");
-  } else if (slider_set_speed == slider_speed3) {
-    Serial1.println("^=5");
-    Serial1.println("^=5");
-  } else if (slider_set_speed == slider_speed4) {
-    Serial1.println("^=7");
-    Serial1.println("^=7");
+  if (withSlider) {
+    if (slider_set_speed == slider_speed1) {
+      Serial1.println("^=1");
+      Serial1.println("^=1");
+    } else if (slider_set_speed == slider_speed2) {
+      Serial1.println("^=3");
+      Serial1.println("^=3");
+    } else if (slider_set_speed == slider_speed3) {
+      Serial1.println("^=5");
+      Serial1.println("^=5");
+    } else if (slider_set_speed == slider_speed4) {
+      Serial1.println("^=7");
+      Serial1.println("^=7");
+    }
   }
 
   sendCamSettings();
@@ -102,11 +107,6 @@ if (pantilt_set_speed == pantilt_speed1) {
   Serial1.println("Camera Active");
   Serial1.println("-");
   Serial1.println("#$");
-
-  upsideDown = digitalRead(PIN_SW1);
-  slideReverse = digitalRead(PIN_SW2);
-  withSlider = digitalRead(PIN_SW3);
-  
 }
 
 
@@ -161,15 +161,21 @@ void sendCamSettings() {
   Serial1.println(String("#g") + pantilt_speed3);
   Serial1.println(String("#h") + pantilt_speed4);
 
-  Serial1.println(String("#j") + slider_speed1);
-  Serial1.println(String("#k") + slider_speed2);
-  Serial1.println(String("#l") + slider_speed3);
-  Serial1.println(String("#;") + slider_speed4);
+  if (withSlider) {
+    Serial1.println(String("#j") + slider_speed1);
+    Serial1.println(String("#k") + slider_speed2);
+    Serial1.println(String("#l") + slider_speed3);
+    Serial1.println(String("#;") + slider_speed4);
+  }
 
   Serial1.println(String("#q") + pantilt_accel);
-  Serial1.println(String("#Q") + slider_accel);
+  if (withSlider) {
+    Serial1.println(String("#Q") + slider_accel);
+  }
 
-  Serial1.println(String("#t") + sliderStepsToMillimetres(slideLimit));
+  if (withSlider) {
+    Serial1.println(String("#t") + sliderStepsToMillimetres(slideLimit));
+  }
   Serial1.println(String("#w") + zoomLimit);
 }
 
