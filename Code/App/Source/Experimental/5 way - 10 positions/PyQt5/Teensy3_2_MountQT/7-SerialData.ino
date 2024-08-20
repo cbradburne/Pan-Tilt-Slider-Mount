@@ -223,13 +223,21 @@ void SerialData(void) {
         } else if (whichSetting == 'f') {
           pantilt_speed4 = SerialCommandValueInt;
         } else if (whichSetting == 'A') {
-          slider_speed1 = SerialCommandValueInt;
+          if (withSlider) {
+            slider_speed1 = SerialCommandValueInt;
+          }
         } else if (whichSetting == 'S') {
-          slider_speed2 = SerialCommandValueInt;
+          if (withSlider) {
+            slider_speed2 = SerialCommandValueInt;
+          }
         } else if (whichSetting == 'D') {
-          slider_speed3 = SerialCommandValueInt;
+          if (withSlider) {
+            slider_speed3 = SerialCommandValueInt;
+          }
         } else if (whichSetting == 'F') {
-          slider_speed4 = SerialCommandValueInt;
+          if (withSlider) {
+            slider_speed4 = SerialCommandValueInt;
+          }
         }
       }
       break;
@@ -427,72 +435,82 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_SLIDER_SPEED1:
       {
-        if (slider_set_speed == slider_speed1) {
-          slider_speed1 = SerialCommandValueInt;
-          slider_set_speed = slider_speed1;
-          stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-          stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-        } else {
-          slider_speed1 = SerialCommandValueInt;
-          Serial1.println(String("#j") + slider_speed1);
-          Serial1.println(String("Silder Speed 1 : ") + slider_speed1 + String("mm/s"));
-          Serial1.println("#$");
+        if (withSlider) {
+          if (slider_set_speed == slider_speed1) {
+            slider_speed1 = SerialCommandValueInt;
+            slider_set_speed = slider_speed1;
+            stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+          } else {
+            slider_speed1 = SerialCommandValueInt;
+            Serial1.println(String("#j") + slider_speed1);
+            Serial1.println(String("Silder Speed 1 : ") + slider_speed1 + String("mm/s"));
+            Serial1.println("#$");
+          }
         }
       }
       break;
     case INSTRUCTION_SET_SLIDER_SPEED2:
       {
-        if (slider_set_speed == slider_speed2) {
-          slider_speed2 = SerialCommandValueInt;
-          slider_set_speed = slider_speed2;
-          stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-          stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-        } else {
-          slider_speed2 = SerialCommandValueInt;
-          Serial1.println(String("#k") + slider_speed2);
-          Serial1.println(String("Silder Speed 2 : ") + slider_speed2 + String("mm/s"));
-          Serial1.println("#$");
+        if (withSlider) {
+          if (slider_set_speed == slider_speed2) {
+            slider_speed2 = SerialCommandValueInt;
+            slider_set_speed = slider_speed2;
+            stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+          } else {
+            slider_speed2 = SerialCommandValueInt;
+            Serial1.println(String("#k") + slider_speed2);
+            Serial1.println(String("Silder Speed 2 : ") + slider_speed2 + String("mm/s"));
+            Serial1.println("#$");
+          }
         }
       }
       break;
     case INSTRUCTION_SET_SLIDER_SPEED3:
       {
-        if (slider_set_speed == slider_speed3) {
-          slider_speed3 = SerialCommandValueInt;
-          slider_set_speed = slider_speed3;
-          stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-          stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-        } else {
-          slider_speed3 = SerialCommandValueInt;
-          Serial1.println(String("#l") + slider_speed3);
-          Serial1.println(String("Silder Speed 3 : ") + slider_speed3 + String("mm/s"));
-          Serial1.println("#$");
+        if (withSlider) {
+          if (slider_set_speed == slider_speed3) {
+            slider_speed3 = SerialCommandValueInt;
+            slider_set_speed = slider_speed3;
+            stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+          } else {
+            slider_speed3 = SerialCommandValueInt;
+            Serial1.println(String("#l") + slider_speed3);
+            Serial1.println(String("Silder Speed 3 : ") + slider_speed3 + String("mm/s"));
+            Serial1.println("#$");
+          }
         }
       }
       break;
     case INSTRUCTION_SET_SLIDER_SPEED4:
       {
-        if (slider_set_speed == slider_speed4) {
-          slider_speed4 = SerialCommandValueInt;
-          slider_set_speed = slider_speed4;
-          stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-          stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-        } else {
-          slider_speed4 = SerialCommandValueInt;
-          Serial1.println(String("#;") + slider_speed4);
-          Serial1.println(String("Silder Speed 4 : ") + slider_speed4 + String("mm/s"));
-          Serial1.println("#$");
+        if (withSlider) {
+          if (slider_set_speed == slider_speed4) {
+            slider_speed4 = SerialCommandValueInt;
+            slider_set_speed = slider_speed4;
+            stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+          } else {
+            slider_speed4 = SerialCommandValueInt;
+            Serial1.println(String("#;") + slider_speed4);
+            Serial1.println(String("Silder Speed 4 : ") + slider_speed4 + String("mm/s"));
+            Serial1.println("#$");
+          }
         }
       }
       break;
     case INSTRUCTION_SET_SLIDE_LIMIT:
       {
-        slideLimit = sliderMillimetresToSteps(SerialCommandValueInt);
-        Serial1.println(String("Slide Limit Set: ") + sliderStepsToMillimetres(slideLimit));
-        Serial1.println("#$");
-        if (stepper_slider.getPosition() >= slideLimit) {
-          sliderAtLimit = true;
-          Serial1.println("Slider @ Limit");
+        if (withSlider) {
+          slideLimit = sliderMillimetresToSteps(SerialCommandValueInt);
+          Serial1.println(String("Slide Limit Set: ") + sliderStepsToMillimetres(slideLimit));
+          Serial1.println("#$");
+          if (stepper_slider.getPosition() >= slideLimit) {
+            sliderAtLimit = true;
+            Serial1.println("Slider @ Limit");
+          }
         }
       }
       break;
@@ -516,12 +534,14 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SLIDER_ACCEL:
       {
-        slider_accel = SerialCommandValueInt;
-        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+        if (withSlider) {
+          slider_accel = SerialCommandValueInt;
+          stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
 
-        Serial1.println(String("#Q") + slider_accel);
-        Serial1.println(String("Slider Accel   : ") + slider_accel + String("steps/s²"));
-        Serial1.println("#$");
+          Serial1.println(String("#Q") + slider_accel);
+          Serial1.println(String("Slider Accel   : ") + slider_accel + String("steps/s²"));
+          Serial1.println("#$");
+        }
       }
       break;
     case INSTRUCTION_SAVE_TO_EEPROM:
@@ -573,22 +593,23 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SLIDER_MILLIMETRES:
       {
-        if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
-          if (slideReverse) {
-            SerialCommandValueFloat = -SerialCommandValueFloat;
-            if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
-              sliderRunning = true;
-              sliderMoveTo(SerialCommandValueFloat);
-              sliderRunning = false;
-            }
-          } else {
-            if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
-              sliderRunning = true;
-              sliderMMRel(SerialCommandValueFloat);
-              sliderRunning = false;
+        if (withSlider) {
+          if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
+            if (slideReverse) {
+              SerialCommandValueFloat = -SerialCommandValueFloat;
+              if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
+                sliderRunning = true;
+                sliderMoveTo(SerialCommandValueFloat);
+                sliderRunning = false;
+              }
+            } else {
+              if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
+                sliderRunning = true;
+                sliderMMRel(SerialCommandValueFloat);
+                sliderRunning = false;
+              }
             }
           }
-          //sliderMoveTo(SerialCommandValueFloat);
         }
       }
       break;
@@ -612,22 +633,23 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SLIDER_MILLIMETRES_REL:
       {
-        if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
-          if (slideReverse) {
-            SerialCommandValueFloat = -SerialCommandValueFloat;
-            if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
-              sliderRunning = true;
-              sliderMMRel(SerialCommandValueFloat);
-              sliderRunning = false;
-            }
-          } else {
-            if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
-              sliderRunning = true;
-              sliderMMRel(SerialCommandValueFloat);
-              sliderRunning = false;
+        if (withSlider) {
+          if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
+            if (slideReverse) {
+              SerialCommandValueFloat = -SerialCommandValueFloat;
+              if (((stepper_slider.getPosition() >= (slideLimit * -1)) && (SerialCommandValueFloat < 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() <= 0) && (SerialCommandValueFloat > 0) && (!sliderAtZero))) {
+                sliderRunning = true;
+                sliderMMRel(SerialCommandValueFloat);
+                sliderRunning = false;
+              }
+            } else {
+              if (((stepper_slider.getPosition() <= slideLimit) && (SerialCommandValueFloat > 0) && (!sliderAtLimit)) || ((stepper_slider.getPosition() >= 0) && (SerialCommandValueFloat < 0) && (!sliderAtZero))) {
+                sliderRunning = true;
+                sliderMMRel(SerialCommandValueFloat);
+                sliderRunning = false;
+              }
             }
           }
-          //sliderMMRel(SerialCommandValueFloat);
         }
       }
       break;
@@ -662,29 +684,31 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_SLIDER_SPEED:
       {
-        if (SerialCommandValueInt == 1) {
-          Serial1.println("^=1");
-          Serial1.println("^=1");
-          slider_set_speed = slider_speed1;
-        } else if (SerialCommandValueInt == 2) {
-          Serial1.println("^=3");
-          Serial1.println("^=3");
-          slider_set_speed = slider_speed2;
-        } else if (SerialCommandValueInt == 3) {
-          Serial1.println("^=5");
-          Serial1.println("^=5");
-          slider_set_speed = slider_speed3;
-        } else if (SerialCommandValueInt == 4) {
-          Serial1.println("^=7");
-          Serial1.println("^=7");
-          slider_set_speed = slider_speed4;
+        if (withSlider) {
+          if (SerialCommandValueInt == 1) {
+            Serial1.println("^=1");
+            Serial1.println("^=1");
+            slider_set_speed = slider_speed1;
+          } else if (SerialCommandValueInt == 2) {
+            Serial1.println("^=3");
+            Serial1.println("^=3");
+            slider_set_speed = slider_speed2;
+          } else if (SerialCommandValueInt == 3) {
+            Serial1.println("^=5");
+            Serial1.println("^=5");
+            slider_set_speed = slider_speed3;
+          } else if (SerialCommandValueInt == 4) {
+            Serial1.println("^=7");
+            Serial1.println("^=7");
+            slider_set_speed = slider_speed4;
+          }
+
+          stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
+          stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+
+          Serial1.println(String("Set Slider Speed to: ") + slider_set_speed + String("mm/s.\n"));
+          Serial1.println("#$");
         }
-
-        stepper_slider.setMaxSpeed(sliderMillimetresToSteps(slider_set_speed));
-        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-
-        Serial1.println(String("Set Slider Speed to: ") + slider_set_speed + String("mm/s.\n"));
-        Serial1.println("#$");
       }
       break;
     case INSTRUCTION_ZOOM_IN:

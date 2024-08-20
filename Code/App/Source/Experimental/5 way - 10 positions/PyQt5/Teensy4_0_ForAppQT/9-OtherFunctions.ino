@@ -63,11 +63,17 @@ void RefreshLEDs() {
   if (resetLEDs) {  //  Start "reset LEDs"
     resetLEDs = false;
 
-    Serial1.println("#0");
-    Serial2.println("#0");
-    Serial3.println("#0");
-    Serial4.println("#0");
-    Serial5.println("#0");
+    cam1SlSpeed = 0;
+    cam2SlSpeed = 0;
+    cam3SlSpeed = 0;
+    cam4SlSpeed = 0;
+    cam5SlSpeed = 0;
+
+    //Serial1.println("#0");
+    //Serial2.println("#0");
+    //Serial3.println("#0");
+    //Serial4.println("#0");
+    //Serial5.println("#0");
 
     Serial.println("~100");
     Serial.println("~200");

@@ -97,18 +97,19 @@ void doRemoteControlLEDs(void) {
     Serial1.println("^@7");
   }
 
-
-  if (slider_set_speed == slider_speed1) {
-    Serial1.println("^=1");
-    Serial1.println("^=1");
-  } else if (slider_set_speed == slider_speed2) {
-    Serial1.println("^=3");
-    Serial1.println("^=3");
-  } else if (slider_set_speed == slider_speed3) {
-    Serial1.println("^=5");
-    Serial1.println("^=5");
-  } else if (slider_set_speed == slider_speed4) {
-    Serial1.println("^=7");
-    Serial1.println("^=7");
+  if (withSlider) {
+    if (slider_set_speed == slider_speed1) {
+      Serial1.println("^=1");
+      Serial1.println("^=1");
+    } else if (slider_set_speed == slider_speed2) {
+      Serial1.println("^=3");
+      Serial1.println("^=3");
+    } else if (slider_set_speed == slider_speed3) {
+      Serial1.println("^=5");
+      Serial1.println("^=5");
+    } else if (slider_set_speed == slider_speed4) {
+      Serial1.println("^=7");
+      Serial1.println("^=7");
+    }
   }
 }
