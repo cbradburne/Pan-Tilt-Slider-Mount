@@ -27,6 +27,7 @@ KeyframeElement keyframe_array[10];
 elapsedMillis timeElapsed;
 
 IntervalTimer zoomLimitTimer;
+IntervalTimer aliveTimer;
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
 
@@ -45,8 +46,11 @@ void initPanTilt(void) {
   pinMode(PIN_SW2, INPUT_PULLUP);  // Dip Switch 2.                   HIGH (switch off) = Slider Reverse
   pinMode(PIN_SW3, INPUT_PULLUP);  // Dip Switch 3.                   HIGH (switch off) = Slider Used   -  pin 6 to gnd if no slider used
 
-  zoomLimitTimer.begin(zoomLimitCheck, 250);
-  zoomLimitTimer.priority(255);             
+  zoomLimitTimer.begin(zoomLimitCheck, 25000);
+  zoomLimitTimer.priority(255);
+
+  aliveTimer.begin(sendAlive, 10000000);
+  aliveTimer.priority(255);          
 
   stepper_pan.setMaxSpeed(panDegreesToSteps(pantilt_set_speed));
   stepper_tilt.setMaxSpeed(tiltDegreesToSteps(pantilt_set_speed));
@@ -172,6 +176,8 @@ void sendCamSettings() {
     Serial1.println(String("#t") + sliderStepsToMillimetres(slideLimit));
   }
   Serial1.println(String("#w") + zoomLimit);
+
+  Serial1.println("#+");
 }
 
 /*--------------------------------------------------------------------------------------------------------------------------------------------------------*/
@@ -265,4 +271,8 @@ void zoomLimitCheck() {
       }
     }
   }
+}
+
+void sendAlive() {
+  Serial1.println("#+");
 }

@@ -82,6 +82,7 @@ void doRemoteControlLEDs(void) {
     Serial1.println("#?");
   }
 
+  Serial1.println("#+");
   
   if (pantilt_set_speed == pantilt_speed1) {
     Serial1.println("^@1");
