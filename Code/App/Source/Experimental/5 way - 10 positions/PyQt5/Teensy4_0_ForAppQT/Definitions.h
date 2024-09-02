@@ -49,3 +49,15 @@ int cam2PTSpeed = 0;
 int cam3PTSpeed = 0;
 int cam4PTSpeed = 0;
 int cam5PTSpeed = 0;
+
+bool cam1Alive = false;
+bool cam2Alive = false;
+bool cam3Alive = false;
+bool cam4Alive = false;
+bool cam5Alive = false;
+
+unsigned long previousCam1Alive = 0;
+unsigned long previousCam2Alive = 0;
+unsigned long previousCam3Alive = 0;
+unsigned long previousCam4Alive = 0;
+unsigned long previousCam5Alive = 0;

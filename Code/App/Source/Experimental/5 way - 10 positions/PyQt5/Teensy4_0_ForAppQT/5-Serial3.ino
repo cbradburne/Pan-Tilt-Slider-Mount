@@ -121,6 +121,11 @@ void Serial3Data() {
         Serial.print("=D5");
         Serial.println(SerialCommandValueInt);
       }
+      else if (h == '+') {
+        Serial.println("=-3+");
+        cam3Alive = true;
+        previousCam3Alive = timeElapsed;
+      }
     }
     else if (g == '^') {
       while (Serial3.available() < 2) {                        //  Wait for 1 byts to be available

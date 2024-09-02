@@ -121,6 +121,11 @@ void Serial1Data() {
         Serial.print("=A5");
         Serial.println(SerialCommandValueInt);
       }
+      else if (d == '+') {
+        Serial.println("=-1+");
+        cam1Alive = true;
+        previousCam1Alive = timeElapsed;
+      }
     }
     else if (c == '^') {
       while (Serial1.available() < 2) {                        //  Wait for 1 byts to be available

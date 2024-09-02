@@ -83,7 +83,7 @@ void editKeyframe(int keyframeEdit) {
   Serial1.println(String("Edited index: ") + keyframeEdit);
   Serial1.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial1.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
-  Serial1.println(String("Slider position   : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm\n"));
+  Serial1.println(String("Slider position   : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm"));
   Serial1.println(String("Zoom position   : ") + stepper_zoom.getPosition());
   Serial1.println("#$");
 

@@ -29,6 +29,7 @@
 from PySide6.QtCore import Qt, QTimer, Signal
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog #, QDesktopWidget
+from PySide6.QtGui import *
 from serial.tools import list_ports
 from serial import Serial
 import sys, time, os, subprocess, re, json, pkg_resources, pyjoystick
@@ -97,6 +98,12 @@ data = bytearray(8)
 previousTime = time.time()
 currentMillisMoveCheck = time.time()
 previousMillisMoveCheck = time.time()
+
+aliveCam1 = False
+aliveCam2 = False
+aliveCam3 = False
+aliveCam4 = False
+aliveCam5 = False
 
 moveCheckInterval = 0.8
 
@@ -812,6 +819,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSlideLimit.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSlideLimit.setText("")
         self.labelSlideLimit.setObjectName("labelSlideLimit")
+
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(butttonLayoutX * 67.5, butttonLayoutY * 33.5, (buttonGoX * 4.5833333333)+1, (buttonGoY * 2.8333333333)+1))
         self.groupBox_2.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32;")
@@ -2347,6 +2355,12 @@ class PTSapp(QMainWindow):
         self.line1s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line1s.setObjectName("line1s")
 
+        self.groupBox11 = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox11.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 7, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
+        self.groupBox11.setStyleSheet(f"background-color: rgba(12, 12, 12, 120); border: {borderSize2}px solid #262d32;")
+        self.groupBox11.setTitle("")
+        self.groupBox11.setObjectName("groupBox11")
+
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 15.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 310, 1881, 160))
         self.groupBox_2.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32;")
@@ -2478,6 +2492,12 @@ class PTSapp(QMainWindow):
         self.line2s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line2s.setObjectName("line2s")
 
+        self.groupBox21 = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox21.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 15.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
+        self.groupBox21.setStyleSheet(f"background-color: rgba(12, 12, 12, 120); border: {borderSize2}px solid #262d32;")
+        self.groupBox21.setTitle("")
+        self.groupBox21.setObjectName("groupBox21")
+
         self.groupBox_3 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_3.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 24, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 480, 1881, 160))
         self.groupBox_3.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32; ")
@@ -2607,6 +2627,12 @@ class PTSapp(QMainWindow):
         self.line3s.setLineWidth(20)
         self.line3s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line3s.setObjectName("line3s")
+
+        self.groupBox31 = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox31.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 24, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
+        self.groupBox31.setStyleSheet(f"background-color: rgba(12, 12, 12, 120); border: {borderSize2}px solid #262d32;")
+        self.groupBox31.setTitle("")
+        self.groupBox31.setObjectName("groupBox31")
 
         self.groupBox_4 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_4.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 32.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 650, 1881, 160))
@@ -2738,6 +2764,12 @@ class PTSapp(QMainWindow):
         self.line4s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line4s.setObjectName("line4s")
 
+        self.groupBox41 = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox41.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 32.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
+        self.groupBox41.setStyleSheet(f"background-color: rgba(12, 12, 12, 120); border: {borderSize2}px solid #262d32;")
+        self.groupBox41.setTitle("")
+        self.groupBox41.setObjectName("groupBox41")
+
         self.groupBox_5 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_5.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 41, (butttonLayoutX * 94) +1, butttonLayoutY * 8))#(20, 820, 1881, 160))
         self.groupBox_5.setStyleSheet(f"background-color: #1e252a; border: {borderSize2}px solid #262d32;")
@@ -2868,6 +2900,12 @@ class PTSapp(QMainWindow):
         self.line5s.setLineWidth(20)
         self.line5s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line5s.setObjectName("line5s")
+
+        self.groupBox51 = QtWidgets.QGroupBox(self.centralwidget)
+        self.groupBox51.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 41, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
+        self.groupBox51.setStyleSheet(f"background-color: rgba(12, 12, 12, 120); border: {borderSize2}px solid #262d32;")
+        self.groupBox51.setTitle("")
+        self.groupBox51.setObjectName("groupBox51")
 
         self.pushButtonCam1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.whichCamSerial1())
         self.pushButtonCam1.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
@@ -5643,6 +5681,28 @@ class PTSapp(QMainWindow):
         elif msg[0:3] == "=G5":
             cam5ZoomLimit = int(msg[3:])
 
+        elif msg[0:4] == "=-1+":
+            self.aliveCam1()
+        elif msg[0:4] == "=-2+":
+            self.aliveCam2()
+        elif msg[0:4] == "=-3+":
+            self.aliveCam3()
+        elif msg[0:4] == "=-4+":
+            self.aliveCam4()
+        elif msg[0:4] == "=-5+":
+            self.aliveCam5()
+
+        elif msg[0:4] == "=-1-":
+            self.deadCam1()
+        elif msg[0:4] == "=-2-":
+            self.deadCam2()
+        elif msg[0:4] == "=-3-":
+            self.deadCam3()
+        elif msg[0:4] == "=-4-":
+            self.deadCam4()
+        elif msg[0:4] == "=-5-":
+            self.deadCam5()
+
         elif msg[0:2] == "#$":
             return
         elif msg[0:4] == "Cam1":
@@ -5693,6 +5753,464 @@ class PTSapp(QMainWindow):
         msg = ''
 
         self.doButtonColours()
+
+
+    def aliveCam1(self):
+        self.groupBox11.hide()
+    
+    def aliveCam2(self):
+        self.groupBox21.hide()
+    
+    def aliveCam3(self):
+        self.groupBox31.hide()
+    
+    def aliveCam4(self):
+        self.groupBox41.hide()
+    
+    def aliveCam5(self):
+        self.groupBox51.hide()
+    
+    
+    def deadCam1(self):
+        global cam1AtPos1
+        global cam1AtPos2
+        global cam1AtPos3
+        global cam1AtPos4
+        global cam1AtPos5
+        global cam1AtPos6
+        global cam1AtPos7
+        global cam1AtPos8
+        global cam1AtPos9
+        global cam1AtPos10
+        global cam1Pos1Set
+        global cam1Pos2Set
+        global cam1Pos3Set
+        global cam1Pos4Set
+        global cam1Pos5Set
+        global cam1Pos6Set
+        global cam1Pos7Set
+        global cam1Pos8Set
+        global cam1Pos9Set
+        global cam1Pos10Set
+        global cam1Pos1Run
+        global cam1Pos2Run
+        global cam1Pos3Run
+        global cam1Pos4Run
+        global cam1Pos5Run
+        global cam1Pos6Run
+        global cam1Pos7Run
+        global cam1Pos8Run
+        global cam1Pos9Run
+        global cam1Pos10Run
+        global cam1isRecording
+        global cam1isZooming
+
+        global oldcam1PTSpeed
+        global cam1PTSpeed
+        global oldcam1Speed
+        global cam1SliderSpeed
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+
+        cam1Pos1Set = False
+        cam1Pos2Set = False
+        cam1Pos3Set = False
+        cam1Pos4Set = False
+        cam1Pos5Set = False
+        cam1Pos6Set = False
+        cam1Pos7Set = False
+        cam1Pos8Set = False
+        cam1Pos9Set = False
+        cam1Pos10Set = False
+        cam1Pos1Run = False
+        cam1Pos2Run = False
+        cam1Pos3Run = False
+        cam1Pos4Run = False
+        cam1Pos5Run = False
+        cam1Pos6Run = False
+        cam1Pos7Run = False
+        cam1Pos8Run = False
+        cam1Pos9Run = False
+        cam1Pos10Run = False
+        cam1AtPos1 = False
+        cam1AtPos2 = False
+        cam1AtPos3 = False
+        cam1AtPos4 = False
+        cam1AtPos5 = False
+        cam1AtPos6 = False
+        cam1AtPos7 = False
+        cam1AtPos8 = False
+        cam1AtPos9 = False
+        cam1AtPos10 = False
+
+        cam1PTSpeed = 0
+        oldcam1PTSpeed = 9
+        oldcam1Speed = 9
+        cam1SliderSpeed = 0
+
+        self.doButtonColours()
+
+        self.dial1p.setValue(1)
+        self.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        self.dial1s.setValue(1)
+        self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+
+        self.groupBox11.show()
+    
+    def deadCam2(self):
+        global cam2AtPos1
+        global cam2AtPos2
+        global cam2AtPos3
+        global cam2AtPos4
+        global cam2AtPos5
+        global cam2AtPos6
+        global cam2AtPos7
+        global cam2AtPos8
+        global cam2AtPos9
+        global cam2AtPos10
+        global cam2Pos1Set
+        global cam2Pos2Set
+        global cam2Pos3Set
+        global cam2Pos4Set
+        global cam2Pos5Set
+        global cam2Pos6Set
+        global cam2Pos7Set
+        global cam2Pos8Set
+        global cam2Pos9Set
+        global cam2Pos10Set
+        global cam2Pos1Run
+        global cam2Pos2Run
+        global cam2Pos3Run
+        global cam2Pos4Run
+        global cam2Pos5Run
+        global cam2Pos6Run
+        global cam2Pos7Run
+        global cam2Pos8Run
+        global cam2Pos9Run
+        global cam2Pos10Run
+
+        global cam2isRecording
+        global cam2isZooming
+        global oldcam2PTSpeed
+        global cam2PTSpeed
+        global oldcam2Speed
+        global cam2SliderSpeed
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+
+        cam2Pos1Set = False
+        cam2Pos2Set = False
+        cam2Pos3Set = False
+        cam2Pos4Set = False
+        cam2Pos5Set = False
+        cam2Pos6Set = False
+        cam2Pos7Set = False
+        cam2Pos8Set = False
+        cam2Pos9Set = False
+        cam2Pos10Set = False
+        cam2Pos1Run = False
+        cam2Pos2Run = False
+        cam2Pos3Run = False
+        cam2Pos4Run = False
+        cam2Pos5Run = False
+        cam2Pos6Run = False
+        cam2Pos7Run = False
+        cam2Pos8Run = False
+        cam2Pos9Run = False
+        cam2Pos10Run = False
+        cam2AtPos1 = False
+        cam2AtPos2 = False
+        cam2AtPos3 = False
+        cam2AtPos4 = False
+        cam2AtPos5 = False
+        cam2AtPos6 = False
+        cam2AtPos7 = False
+        cam2AtPos8 = False
+        cam2AtPos9 = False
+        cam2AtPos10 = False
+        cam2PTSpeed = 0
+        oldcam2PTSpeed = 9
+        oldcam2Speed = 9
+        cam2SliderSpeed = 0
+
+        self.doButtonColours()
+
+        self.dial2p.setValue(1)
+        self.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        self.dial2s.setValue(1)
+        self.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+
+        self.groupBox21.show()
+    
+    def deadCam3(self):
+        global cam3AtPos1
+        global cam3AtPos2
+        global cam3AtPos3
+        global cam3AtPos4
+        global cam3AtPos5
+        global cam3AtPos6
+        global cam3AtPos7
+        global cam3AtPos8
+        global cam3AtPos9
+        global cam3AtPos10
+        global cam3Pos1Set
+        global cam3Pos2Set
+        global cam3Pos3Set
+        global cam3Pos4Set
+        global cam3Pos5Set
+        global cam3Pos6Set
+        global cam3Pos7Set
+        global cam3Pos8Set
+        global cam3Pos9Set
+        global cam3Pos10Set
+        global cam3Pos1Run
+        global cam3Pos2Run
+        global cam3Pos3Run
+        global cam3Pos4Run
+        global cam3Pos5Run
+        global cam3Pos6Run
+        global cam3Pos7Run
+        global cam3Pos8Run
+        global cam3Pos9Run
+        global cam3Pos10Run
+
+        global cam3isRecording
+        global cam3isZooming
+        global oldcam3PTSpeed
+        global cam3PTSpeed
+        global oldcam3Speed
+        global cam3SliderSpeed
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+
+        cam3Pos1Set = False
+        cam3Pos2Set = False
+        cam3Pos3Set = False
+        cam3Pos4Set = False
+        cam3Pos5Set = False
+        cam3Pos6Set = False
+        cam3Pos7Set = False
+        cam3Pos8Set = False
+        cam3Pos9Set = False
+        cam3Pos10Set = False
+        cam3Pos1Run = False
+        cam3Pos2Run = False
+        cam3Pos3Run = False
+        cam3Pos4Run = False
+        cam3Pos5Run = False
+        cam3Pos6Run = False
+        cam3Pos7Run = False
+        cam3Pos8Run = False
+        cam3Pos9Run = False
+        cam3Pos10Run = False
+        cam3AtPos1 = False
+        cam3AtPos2 = False
+        cam3AtPos3 = False
+        cam3AtPos4 = False
+        cam3AtPos5 = False
+        cam3AtPos6 = False
+        cam3AtPos7 = False
+        cam3AtPos8 = False
+        cam3AtPos9 = False
+        cam3AtPos10 = False
+        cam3PTSpeed = 0
+        oldcam3PTSpeed = 9
+        oldcam3Speed = 9
+        cam3SliderSpeed = 0
+
+        self.doButtonColours()
+
+        self.dial3p.setValue(1)
+        self.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        self.dial3s.setValue(1)
+        self.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+
+        self.groupBox31.show()
+    
+    def deadCam4(self):
+        global cam4AtPos1
+        global cam4AtPos2
+        global cam4AtPos3
+        global cam4AtPos4
+        global cam4AtPos5
+        global cam4AtPos6
+        global cam4AtPos7
+        global cam4AtPos8
+        global cam4AtPos9
+        global cam4AtPos10
+        global cam4Pos1Set
+        global cam4Pos2Set
+        global cam4Pos3Set
+        global cam4Pos4Set
+        global cam4Pos5Set
+        global cam4Pos6Set
+        global cam4Pos7Set
+        global cam4Pos8Set
+        global cam4Pos9Set
+        global cam4Pos10Set
+        global cam4Pos1Run
+        global cam4Pos2Run
+        global cam4Pos3Run
+        global cam4Pos4Run
+        global cam4Pos5Run
+        global cam4Pos6Run
+        global cam4Pos7Run
+        global cam4Pos8Run
+        global cam4Pos9Run
+        global cam4Pos10Run
+
+        global cam4isRecording
+        global cam4isZooming
+        global oldcam4PTSpeed
+        global cam4PTSpeed
+        global oldcam4Speed
+        global cam4SliderSpeed
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+
+        cam4Pos1Set = False
+        cam4Pos2Set = False
+        cam4Pos3Set = False
+        cam4Pos4Set = False
+        cam4Pos5Set = False
+        cam4Pos6Set = False
+        cam4Pos7Set = False
+        cam4Pos8Set = False
+        cam4Pos9Set = False
+        cam4Pos10Set = False
+        cam4Pos1Run = False
+        cam4Pos2Run = False
+        cam4Pos3Run = False
+        cam4Pos4Run = False
+        cam4Pos5Run = False
+        cam4Pos6Run = False
+        cam4Pos7Run = False
+        cam4Pos8Run = False
+        cam4Pos9Run = False
+        cam4Pos10Run = False
+        cam4AtPos1 = False
+        cam4AtPos2 = False
+        cam4AtPos3 = False
+        cam4AtPos4 = False
+        cam4AtPos5 = False
+        cam4AtPos6 = False
+        cam4AtPos7 = False
+        cam4AtPos8 = False
+        cam4AtPos9 = False
+        cam4AtPos10 = False
+        cam4PTSpeed = 0
+        oldcam4PTSpeed = 9
+        oldcam4Speed = 9
+        cam4SliderSpeed = 0
+
+        self.doButtonColours()
+
+        self.dial4p.setValue(1)
+        self.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        self.dial4s.setValue(1)
+        self.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+
+        self.groupBox41.show()
+    
+    def deadCam5(self):
+        global cam5AtPos1
+        global cam5AtPos2
+        global cam5AtPos3
+        global cam5AtPos4
+        global cam5AtPos5
+        global cam5AtPos6
+        global cam5AtPos7
+        global cam5AtPos8
+        global cam5AtPos9
+        global cam5AtPos10
+        global cam5Pos1Set
+        global cam5Pos2Set
+        global cam5Pos3Set
+        global cam5Pos4Set
+        global cam5Pos5Set
+        global cam5Pos6Set
+        global cam5Pos7Set
+        global cam5Pos8Set
+        global cam5Pos9Set
+        global cam5Pos10Set
+        global cam5Pos1Run
+        global cam5Pos2Run
+        global cam5Pos3Run
+        global cam5Pos4Run
+        global cam5Pos5Run
+        global cam5Pos6Run
+        global cam5Pos7Run
+        global cam5Pos8Run
+        global cam5Pos9Run
+        global cam5Pos10Run
+
+        global cam5isRecording
+        global cam5isZooming
+        global oldcam5PTSpeed
+        global cam5PTSpeed
+        global oldcam5Speed
+        global cam5SliderSpeed
+
+        global butttonLayoutX
+        global butttonLayoutY
+        global buttonGoX
+        global buttonGoY
+
+        cam5Pos1Set = False
+        cam5Pos2Set = False
+        cam5Pos3Set = False
+        cam5Pos4Set = False
+        cam5Pos5Set = False
+        cam5Pos6Set = False
+        cam5Pos7Set = False
+        cam5Pos8Set = False
+        cam5Pos9Set = False
+        cam5Pos10Set = False
+        cam5Pos1Run = False
+        cam5Pos2Run = False
+        cam5Pos3Run = False
+        cam5Pos4Run = False
+        cam5Pos5Run = False
+        cam5Pos6Run = False
+        cam5Pos7Run = False
+        cam5Pos8Run = False
+        cam5Pos9Run = False
+        cam5Pos10Run = False
+        cam5AtPos1 = False
+        cam5AtPos2 = False
+        cam5AtPos3 = False
+        cam5AtPos4 = False
+        cam5AtPos5 = False
+        cam5AtPos6 = False
+        cam5AtPos7 = False
+        cam5AtPos8 = False
+        cam5AtPos9 = False
+        cam5AtPos10 = False
+        cam5PTSpeed = 0
+        oldcam5PTSpeed = 9
+        oldcam5Speed = 9
+        cam5SliderSpeed = 0
+
+        self.doButtonColours()
+
+        self.dial5p.setValue(1)
+        self.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        self.dial5s.setValue(1)
+        self.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+
+        self.groupBox51.show()
 
     def flash(self):
         global whichCamSerial

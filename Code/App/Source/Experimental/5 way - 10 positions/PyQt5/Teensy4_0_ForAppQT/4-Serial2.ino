@@ -121,6 +121,11 @@ void Serial2Data() {
         Serial.print("=S5");
         Serial.println(SerialCommandValueInt);
       }
+      else if (f == '+') {
+        Serial.println("=-2+");
+        cam2Alive = true;
+        previousCam2Alive = timeElapsed;
+      }
     }
     else if (e == '^') {
       while (Serial2.available() < 2) {                        //  Wait for 1 byts to be available
