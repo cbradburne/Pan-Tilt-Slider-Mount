@@ -3217,7 +3217,7 @@ class PTSapp(QMainWindow):
 
         self.messageTimer = QTimer()
         self.messageTimer.timeout.connect(self.setMessage)
-        self.messageTimer.start(10)
+        self.messageTimer.start(100)
 
 
     def setDials(self, cam, ps, value):
@@ -7958,12 +7958,10 @@ class PTSapp(QMainWindow):
             isConnected = True
 
         if isConnected:
-            #print("joy")
             self.doJoyMoves(1)
             self.labelInfo.setText(message)
             self.messageTimerReset = QTimer()
             self.messageTimerReset.singleShot(2000,self.resetMessage)  # for one time call only. (once)
-            message = ""
 
         if manualMove != "":
             if manualMove == "u10":
@@ -8176,7 +8174,9 @@ class PTSapp(QMainWindow):
             newText = ""
             
     def resetMessage(self):
+        global message
         self.labelInfo.setText("")
+        message = ""
 
     def setPos(self, state):
         global SetPosToggle
