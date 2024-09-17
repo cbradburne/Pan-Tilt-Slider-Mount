@@ -46,7 +46,7 @@ from pathlib import Path
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
-debug = False
+debug = True
 
 serial_port = None
 
@@ -1659,7 +1659,10 @@ class Ui_editWindow(QMainWindow):
 
 class Ui_MoverWindow(QMainWindow):
     def __init__(self):
-        QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
+        super(Ui_MoverWindow, self).__init__()
+        self.setWindowFlag(Qt.WindowStaysOnTopHint, True)
+        self.setWindowFlag(Qt.FramelessWindowHint, True)
+        #QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
 
     def setupUi(self):
         global butttonLayoutX
@@ -1672,7 +1675,8 @@ class Ui_MoverWindow(QMainWindow):
         global borderRadius2
 
         self.setObjectName("MainWindow")
-        self.resize((buttonGoX * 7.1666666667)+1 , (buttonGoY * 6.6666666667)+1)
+        #self.resize((buttonGoX * 7.1666666667)+1 , (buttonGoY * 6.6666666667)+1)
+        self.resize(buttonGoX * 2.7666666667, buttonGoY* 1.5416666667)
         self.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
@@ -1814,13 +1818,14 @@ class Ui_MoverWindow(QMainWindow):
         self.retranslateUi()
         QtCore.QMetaObject.connectSlotsByName(self)
 
-        self.show()
+        self.showNormal()
+        #self.move(buttonGoX * 6.5, buttonGoY * 1.25)
     
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
         #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
         #sg = self.screen()[0].size().toTuple()
 
-        widget = self.geometry()                        # 
+        widget = self.geometry()
         x = (ag.width() / 2) - (widget.width() / 2)
         y = 2 * ag.height() - ag.height() - widget.height() - 50
         x = int(x)
