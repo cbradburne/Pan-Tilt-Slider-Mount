@@ -1,1 +1,0 @@
-C:\Users\Music\AppData\Local\Programs\Python\Python39\Python.exe "C:\Users\Music\Documents\GitHub\Pan-Tilt-Slider-Mount\Code\App\Source\Experimental\5 way - 10 positions\PyQt5\PTSQT5.py"
