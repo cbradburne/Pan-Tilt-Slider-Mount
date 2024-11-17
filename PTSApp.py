@@ -543,7 +543,7 @@ cam4Running = False
 cam5Running = False
 
 cam1HasSlider = False
-cam2HasSlider = True
+cam2HasSlider = False
 cam3HasSlider = False
 cam4HasSlider = False
 cam5HasSlider = False
@@ -568,7 +568,10 @@ class Ui_SettingsWindow(QMainWindow):
         global borderRadius2
 
         self.setObjectName("settingsWindow")
-        self.resize(1980, 1080)
+        if debug:
+            self.resize(1000, 600)
+        else:
+            self.resize(1920, 1080)
         self.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
@@ -1056,7 +1059,7 @@ class Ui_SettingsWindow(QMainWindow):
         
 
         if debug:
-            self.showMaximized()
+            self.show()
         else:
             self.showFullScreen()
 
@@ -1828,6 +1831,9 @@ class Ui_MoverWindow(QMainWindow):
         widget = self.geometry()
         x = (ag.width() / 2) - (widget.width() / 2)
         y = 2 * ag.height() - ag.height() - widget.height() - 50
+        if debug:
+            x = x - 100
+            y = y - 100
         x = int(x)
         y = int(y)
         self.move(x, y)
@@ -2030,10 +2036,14 @@ class PTSapp(QMainWindow):
         ag = QtGui.QGuiApplication.primaryScreen().availableGeometry()
 
         agX = ag.width()
-        agY = ag.height()
+        if sys.platform == "win32":
+            agY = ag.height()
+        else:
+            agY = ag.height() - 20
 
         if debug:
-            agY = agY - 30
+            agY = agY - 330
+            agX = agX - 500
         else:
             agY = agY + 30
 
@@ -2045,9 +2055,9 @@ class PTSapp(QMainWindow):
         butttonLayoutX = agX * 0.01042      # 20 / 1920
         butttonLayoutY = agY * 0.01852      # 20 / 1080
 
-        if debug:
-            print(agX)
-            print(agY)
+        #if debug:
+        #    print(agX)
+        #    print(agY)
 
         borderSize = butttonLayoutX / 2
         borderSize2 = borderSize / 2
@@ -2055,7 +2065,10 @@ class PTSapp(QMainWindow):
         borderRadius2 = borderRadius * 0.5
 
         self.setObjectName("PTSapp")
-        self.resize(1920, 1080)
+        if debug:
+            self.resize(1000, 600)
+        else:
+            self.resize(1920, 1080)
         self.setAutoFillBackground(False)
         self.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(self)
@@ -3200,9 +3213,8 @@ class PTSapp(QMainWindow):
 
         self.initFlashTimer()
 
-        #self.show()
         if debug:
-            self.showMaximized()
+            self.show()
         else:
             self.showFullScreen()
         
