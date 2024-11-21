@@ -10524,7 +10524,7 @@ class PTSapp(QMainWindow):
             editButton = 44
             currentText = self.pushButton44.text()
             self.openEditWindow(currentText)
-        if SetPosToggle:
+        elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&4V')
             return
