@@ -9920,6 +9920,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos1Set
         global cam1AtPos1
 
@@ -9938,6 +9939,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos2Set
         global cam1AtPos2
 
@@ -9956,6 +9958,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos3Set
         global cam1AtPos3
 
@@ -9974,6 +9977,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos4Set
         global cam1AtPos4
 
@@ -9992,6 +9996,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos5Set
         global cam1AtPos5
 
@@ -10010,6 +10015,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos6Set
         global cam1AtPos6
 
@@ -10028,6 +10034,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos7Set
         global cam1AtPos7
 
@@ -10046,6 +10053,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos8Set
         global cam1AtPos8
 
@@ -10064,6 +10072,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos9Set
         global cam1AtPos9
 
@@ -10082,6 +10091,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam1Pos10Set
         global cam1AtPos10
 
@@ -10100,6 +10110,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos1Set
         global cam2AtPos1
 
@@ -10118,6 +10129,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos2Set
         global cam2AtPos2
 
@@ -10136,6 +10148,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos3Set
         global cam2AtPos3
 
@@ -10154,6 +10167,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos4Set
         global cam2AtPos4
 
@@ -10172,6 +10186,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos5Set
         global cam2AtPos5
 
@@ -10190,6 +10205,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos6Set
         global cam2AtPos6
 
@@ -10208,6 +10224,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos7Set
         global cam2AtPos7
 
@@ -10226,6 +10243,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos8Set
         global cam2AtPos8
 
@@ -10244,6 +10262,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos9Set
         global cam2AtPos9
 
@@ -10262,6 +10281,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam2Pos10Set
         global cam2AtPos10
 
@@ -10280,6 +10300,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos1Set
         global cam3AtPos1
 
@@ -10298,6 +10319,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos2Set
         global cam3AtPos2
 
@@ -10316,6 +10338,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos3Set
         global cam3AtPos3
 
@@ -10334,6 +10357,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos4Set
         global cam3AtPos4
 
@@ -10352,6 +10376,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos5Set
         global cam3AtPos5
 
@@ -10370,6 +10395,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos6Set
         global cam3AtPos6
 
@@ -10388,6 +10414,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos7Set
         global cam3AtPos7
 
@@ -10406,6 +10433,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos8Set
         global cam3AtPos8
 
@@ -10424,6 +10452,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos9Set
         global cam3AtPos9
 
@@ -10442,6 +10471,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam3Pos10Set
         global cam3AtPos10
 
@@ -10481,6 +10511,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos2Set
         global cam4AtPos2
 
@@ -10499,6 +10530,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos3Set
         global cam4AtPos3
 
@@ -10517,6 +10549,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos4Set
         global cam4AtPos4
 
@@ -10535,6 +10568,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos5Set
         global cam4AtPos5
 
@@ -10553,6 +10587,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos6Set
         global cam4AtPos6
 
@@ -10571,6 +10606,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos7Set
         global cam4AtPos7
 
@@ -10589,6 +10625,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos8Set
         global cam4AtPos8
 
@@ -10607,6 +10644,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos9Set
         global cam4AtPos9
 
@@ -10625,6 +10663,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam4Pos10Set
         global cam4AtPos10
 
@@ -10645,6 +10684,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos1Set
         global cam5AtPos1
 
@@ -10665,6 +10705,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos2Set
         global cam5AtPos2
 
@@ -10683,6 +10724,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos3Set
         global cam5AtPos3
 
@@ -10701,6 +10743,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos4Set
         global cam5AtPos4
 
@@ -10719,6 +10762,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos5Set
         global cam5AtPos5
 
@@ -10737,6 +10781,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos6Set
         global cam5AtPos6
 
@@ -10755,6 +10800,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos7Set
         global cam5AtPos7
 
@@ -10773,6 +10819,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos8Set
         global cam5AtPos8
 
@@ -10791,6 +10838,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos9Set
         global cam5AtPos9
 
@@ -10809,6 +10857,7 @@ class PTSapp(QMainWindow):
         global SetPosToggle
         global editToggle
         global editButton
+        global slideToggle
         global cam5Pos10Set
         global cam5AtPos10
 
