@@ -1678,8 +1678,8 @@ class Ui_MoverWindow(QMainWindow):
         global borderRadius2
 
         self.setObjectName("MainWindow")
-        #self.resize((buttonGoX * 7.1666666667)+1 , (buttonGoY * 6.6666666667)+1)
-        self.resize(buttonGoX * 2.7666666667, buttonGoY* 1.5416666667)
+        self.resize((buttonGoX * 7.1666666667)+1 , (buttonGoY * 6.6666666667)+1)
+        #self.resize(buttonGoX * 2.7666666667, buttonGoY* 1.5416666667)
         self.setStyleSheet("background-color: #181e23;")
         self.centralwidget = QtWidgets.QWidget(self)
         self.centralwidget.setObjectName("centralwidget")
