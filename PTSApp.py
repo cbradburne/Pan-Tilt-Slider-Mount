@@ -550,6 +550,11 @@ cam5HasSlider = False
 
 locateHomeActive = False
 
+winSize = 1
+
+if sys.platform == "win32":
+    winSize = 0.7
+
 class Ui_SettingsWindow(QMainWindow):
     def __init__(self):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
@@ -565,6 +570,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         self.setObjectName("settingsWindow")
 
@@ -592,7 +598,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonZoomLimit.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 32.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonZoomLimit.setFont(font)
         self.pushButtonZoomLimit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonZoomLimit.setObjectName("pushButtonZoomLimit")
@@ -600,7 +606,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSlideLimit.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 32.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonSlideLimit.setFont(font)
         self.pushButtonSlideLimit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonSlideLimit.setObjectName("pushButtonSlideLimit")
@@ -608,7 +614,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSlideLocate.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 36.5, (buttonGoX * 1)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 0.9)
+        font.setPointSize(butttonLayoutX * winSize * 0.9)
         self.pushButtonSlideLocate.setFont(font)
         self.pushButtonSlideLocate.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonSlideLocate.setObjectName("pushButtonSlideLocate")
@@ -616,7 +622,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSlideSetHome.setGeometry(QtCore.QRect(butttonLayoutX * 44.5, butttonLayoutY * 36.5, (buttonGoX * 1)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 0.9)
+        font.setPointSize(butttonLayoutX * winSize * 0.9)
         self.pushButtonSlideSetHome.setFont(font)
         self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonSlideSetHome.setObjectName("pushButtonSlideSetHome")
@@ -626,7 +632,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.checkBoxCamHasSlider.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.checkBoxCamHasSlider.setFont(font)
         self.checkBoxCamHasSlider.setStyleSheet("QCheckBox::indicator { width: 50px; height: 50px;}")
         self.checkBoxCamHasSlider.setText("")
@@ -637,7 +643,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelCamHasSlider.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 40.3, buttonGoX * 1.2, butttonLayoutY * 1.2))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.1)
+        font.setPointSize(butttonLayoutX * winSize * 1.1)
         self.labelCamHasSlider.setFont(font)
         self.labelCamHasSlider.setStyleSheet("border: 0px; color:grey;")
         self.labelCamHasSlider.setAlignment(QtCore.Qt.AlignCenter)
@@ -646,7 +652,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTS4.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonPTS4.setFont(font)
         self.pushButtonPTS4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTS4.setObjectName("pushButtonPTS4")
@@ -654,7 +660,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTS3.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 15, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonPTS3.setFont(font)
         self.pushButtonPTS3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTS3.setObjectName("pushButtonPTS3")
@@ -662,7 +668,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTS2.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 19.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonPTS2.setFont(font)
         self.pushButtonPTS2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTS2.setObjectName("pushButtonPTS2")
@@ -670,7 +676,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTS1.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 24, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonPTS1.setFont(font)
         self.pushButtonPTS1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTS1.setObjectName("pushButtonPTS1")
@@ -678,7 +684,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSS4.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonSS4.setFont(font)
         self.pushButtonSS4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSS4.setObjectName("pushButtonSS4")
@@ -686,7 +692,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSS3.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 15, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonSS3.setFont(font)
         self.pushButtonSS3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSS3.setObjectName("pushButtonSS3")
@@ -694,7 +700,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSS2.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 19.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonSS2.setFont(font)
         self.pushButtonSS2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSS2.setObjectName("pushButtonSS2")
@@ -702,7 +708,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSS1.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 24, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonSS1.setFont(font)
         self.pushButtonSS1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSS1.setObjectName("pushButtonSS1")
@@ -710,7 +716,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSA.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 3.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonSA.setFont(font)
         self.pushButtonSA.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonSA.setObjectName("pushButtonSA")
@@ -718,7 +724,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonPTA.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 3.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.3)
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
         self.pushButtonPTA.setFont(font)
         self.pushButtonPTA.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonPTA.setObjectName("pushButtonPTA")
@@ -726,7 +732,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTaccel.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 3.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelPTaccel.setFont(font)
         self.labelPTaccel.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelPTaccel.setText("")
@@ -735,7 +741,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 32.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelZoomLimit.setFont(font)
         self.labelZoomLimit.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelZoomLimit.setText("")
@@ -744,7 +750,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTspeed4.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 10.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelPTspeed4.setFont(font)
         self.labelPTspeed4.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelPTspeed4.setText("")
@@ -753,7 +759,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTspeed3.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 15, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelPTspeed3.setFont(font)
         self.labelPTspeed3.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelPTspeed3.setText("")
@@ -762,7 +768,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTspeed2.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 19.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelPTspeed2.setFont(font)
         self.labelPTspeed2.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelPTspeed2.setText("")
@@ -771,7 +777,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelPTspeed1.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 24, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelPTspeed1.setFont(font)
         self.labelPTspeed1.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelPTspeed1.setText("")
@@ -780,7 +786,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLaccel.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 3.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelSLaccel.setFont(font)
         self.labelSLaccel.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSLaccel.setText("")
@@ -789,7 +795,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed4.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 10.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelSLspeed4.setFont(font)
         self.labelSLspeed4.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSLspeed4.setText("")
@@ -798,7 +804,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed3.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 15, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelSLspeed3.setFont(font)
         self.labelSLspeed3.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSLspeed3.setText("")
@@ -807,7 +813,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed2.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 19.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelSLspeed2.setFont(font)
         self.labelSLspeed2.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSLspeed2.setText("")
@@ -816,7 +822,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSLspeed1.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 24, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelSLspeed1.setFont(font)
         self.labelSLspeed1.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSLspeed1.setText("")
@@ -825,7 +831,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSlideLimit.setGeometry(QtCore.QRect(butttonLayoutX * 52, butttonLayoutY * 32.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3.2)
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
         self.labelSlideLimit.setFont(font)
         self.labelSlideLimit.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelSlideLimit.setText("")
@@ -840,7 +846,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum1.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, butttonLayoutY, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum1.setFont(font)
         self.pushButtonNum1.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum1.setObjectName("pushButtonNum1")
@@ -849,7 +855,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum2.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum2.setFont(font)
         self.pushButtonNum2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum2.setObjectName("pushButtonNum2")
@@ -858,7 +864,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum3.setGeometry(QtCore.QRect(butttonLayoutX * 12.5, butttonLayoutY, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum3.setFont(font)
         self.pushButtonNum3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum3.setObjectName("pushButtonNum3")
@@ -867,7 +873,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum4.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, butttonLayoutY * 5, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum4.setFont(font)
         self.pushButtonNum4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum4.setObjectName("pushButtonNum4")
@@ -876,7 +882,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum5.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 5, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum5.setFont(font)
         self.pushButtonNum5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum5.setObjectName("pushButtonNum5")
@@ -885,7 +891,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum6.setGeometry(QtCore.QRect(butttonLayoutX * 12.5, butttonLayoutY * 5, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum6.setFont(font)
         self.pushButtonNum6.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum6.setObjectName("pushButtonNum6")
@@ -894,7 +900,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum7.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, butttonLayoutY * 9, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum7.setFont(font)
         self.pushButtonNum7.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum7.setObjectName("pushButtonNum7")
@@ -903,7 +909,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum8.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 9, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum8.setFont(font)
         self.pushButtonNum8.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum8.setObjectName("pushButtonNum8")
@@ -912,7 +918,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum9.setGeometry(QtCore.QRect(butttonLayoutX * 12.5, butttonLayoutY * 9, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum9.setFont(font)
         self.pushButtonNum9.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum9.setObjectName("pushButtonNum9")
@@ -921,7 +927,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNum0.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 13, (buttonGoX * 0.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNum0.setFont(font)
         self.pushButtonNum0.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNum0.setObjectName("pushButtonNum0")
@@ -930,7 +936,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNumBS.setGeometry(QtCore.QRect(butttonLayoutX * 20.5, butttonLayoutY, buttonGoX + 1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.6)
+        font.setPointSize(butttonLayoutX * winSize * 2.6)
         self.pushButtonNumBS.setFont(font)
         self.pushButtonNumBS.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNumBS.setObjectName("pushButtonNumBS")
@@ -939,7 +945,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonNumEnt.setGeometry(QtCore.QRect(butttonLayoutX * 19.5, butttonLayoutY * 13, (buttonGoX * 1.25)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonNumEnt.setFont(font)
         self.pushButtonNumEnt.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonNumEnt.setObjectName("pushButtonNumEnt")
@@ -953,7 +959,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam1.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 1.5, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonCam1.setFont(font)
         self.pushButtonCam1.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam1.setFlat(False)
@@ -962,7 +968,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam2.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 7, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonCam2.setFont(font)
         self.pushButtonCam2.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setFlat(False)
@@ -971,7 +977,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam3.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 12.5, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonCam3.setFont(font)
         self.pushButtonCam3.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonCam3.setFlat(False)
@@ -980,7 +986,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam4.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 18, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonCam4.setFont(font)
         self.pushButtonCam4.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam4.setFlat(False)
@@ -989,7 +995,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam5.setGeometry(QtCore.QRect(butttonLayoutX * 3, butttonLayoutY * 23.5, (buttonGoX * 1.417)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonCam5.setFont(font)
         self.pushButtonCam5.setStyleSheet(f"color:black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setFlat(False)
@@ -998,7 +1004,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonClose.setGeometry(QtCore.QRect(butttonLayoutX * 86, butttonLayoutY * 2, (buttonGoX * 1.5)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonClose.setFont(font)
         self.pushButtonClose.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #aa4c4C; border-radius: {borderRadius}px;")
         self.pushButtonClose.setFlat(False)
@@ -1007,7 +1013,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonStore.setGeometry(QtCore.QRect(butttonLayoutX * 86, butttonLayoutY * 23.5, (buttonGoX * 1.5)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushButtonStore.setFont(font)
         self.pushButtonStore.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #4caa4C; border-radius: {borderRadius}px;")
         self.pushButtonStore.setFlat(False)
@@ -1164,6 +1170,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         whichCamSerial = 1
         self.sendSerial('&1K')
@@ -1194,6 +1201,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         self.labelPTaccel.setText(str(cam1ptAccel))
         self.labelSLaccel.setText(str(cam1slAccel))
@@ -1243,6 +1251,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         whichCamSerial = 2
         self.sendSerial('&2K')
@@ -1273,6 +1282,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         self.labelPTaccel.setText(str(cam2ptAccel))
         self.labelSLaccel.setText(str(cam2slAccel))
@@ -1322,6 +1332,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         whichCamSerial = 3
         self.sendSerial('&3K')
@@ -1352,6 +1363,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         self.labelPTaccel.setText(str(cam3ptAccel))
         self.labelSLaccel.setText(str(cam3slAccel))
@@ -1401,6 +1413,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         whichCamSerial = 4
         self.sendSerial('&4K')
@@ -1431,6 +1444,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         self.labelPTaccel.setText(str(cam4ptAccel))
         self.labelSLaccel.setText(str(cam4slAccel))
@@ -1480,6 +1494,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         whichCamSerial = 5
         self.sendSerial('&5K')
@@ -1510,6 +1525,7 @@ class Ui_SettingsWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         self.labelPTaccel.setText(str(cam5ptAccel))
         self.labelSLaccel.setText(str(cam5slAccel))
@@ -1609,6 +1625,7 @@ class Ui_editWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         self.setObjectName("editWindow")
         self.resize(buttonGoX * 3, buttonGoY* 1.7)
@@ -1620,7 +1637,7 @@ class Ui_editWindow(QMainWindow):
         self.lineEdit.setGeometry(QtCore.QRect(butttonLayoutX * 2, butttonLayoutY * 2.5, buttonGoX, buttonCamY)) #butttonLayoutX * 2, butttonLayoutY * 1.5, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.6)
+        font.setPointSize(butttonLayoutX * winSize * 1.6)
         self.lineEdit.setFont(font)
         self.lineEdit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #cccccc; border-radius: {borderRadius2}px;")
         self.lineEdit.setText("")
@@ -1629,7 +1646,7 @@ class Ui_editWindow(QMainWindow):
         self.pushButton = QtWidgets.QPushButton(self.centralwidget, clicked = lambda: self.editSet())
         self.pushButton.setGeometry(QtCore.QRect(butttonLayoutX *10, butttonLayoutY * 2.5, (buttonGoX), buttonCamY)) # * 0.75)+1, (buttonGoY * 0.6666666667)+1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 2.4)
+        font.setPointSize(butttonLayoutX * winSize * 2.4)
         self.pushButton.setFont(font)
         self.pushButton.setStyleSheet("background-color: #cccccc;")
         self.pushButton.setObjectName("pushButton")
@@ -1701,6 +1718,7 @@ class Ui_MoverWindow(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         self.setObjectName("MainWindow")
         self.resize((buttonGoX * 7.1666666667)+1 , (buttonGoY * 6.6666666667)+1)
@@ -1711,7 +1729,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushUP10.setGeometry(QtCore.QRect(butttonLayoutX * 12, 0, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushUP10.setFont(font)
         self.pushUP10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #208020; border-radius: {borderRadius}px;")
         self.pushUP10.setObjectName("pushUP10")
@@ -1719,77 +1737,77 @@ class Ui_MoverWindow(QMainWindow):
         self.pushUP1.setGeometry(QtCore.QRect(butttonLayoutX * 12, butttonLayoutY * 6.5, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushUP1.setFont(font)
         self.pushUP1.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #40a040; border-radius: {borderRadius}px;")
         self.pushUP1.setObjectName("pushUP1")
         self.pushDOWN1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.down1())
         self.pushDOWN1.setGeometry(QtCore.QRect(butttonLayoutX * 12, butttonLayoutY * 17.5, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushDOWN1.setFont(font)
         self.pushDOWN1.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #40a040; border-radius: {borderRadius}px;")
         self.pushDOWN1.setObjectName("pushDOWN1")
         self.pushDOWN10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.down10())
         self.pushDOWN10.setGeometry(QtCore.QRect(butttonLayoutX * 12, butttonLayoutY * 24, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushDOWN10.setFont(font)
         self.pushDOWN10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #208020; border-radius: {borderRadius}px;")
         self.pushDOWN10.setObjectName("pushDOWN10")
         self.pushLEFT10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.left10())
         self.pushLEFT10.setGeometry(QtCore.QRect(0, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushLEFT10.setFont(font)
         self.pushLEFT10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushLEFT10.setObjectName("pushLEFT10")
         self.pushLEFT1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.left1())
         self.pushLEFT1.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushLEFT1.setFont(font)
         self.pushLEFT1.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #a09100; border-radius: {borderRadius}px;")
         self.pushLEFT1.setObjectName("pushLEFT1")
         self.pushRIGHT1 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.right1())
         self.pushRIGHT1.setGeometry(QtCore.QRect(butttonLayoutX * 17.5, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushRIGHT1.setFont(font)
         self.pushRIGHT1.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #a09100; border-radius: {borderRadius}px;")
         self.pushRIGHT1.setObjectName("pushRIGHT1")
         self.pushRIGHT10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.right10())
         self.pushRIGHT10.setGeometry(QtCore.QRect(butttonLayoutX * 24, butttonLayoutY * 12, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushRIGHT10.setFont(font)
         self.pushRIGHT10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushRIGHT10.setObjectName("pushRIGHT10")
         self.pushSlideLeft100 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideLeft100())
         self.pushSlideLeft100.setGeometry(QtCore.QRect(0, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushSlideLeft100.setFont(font)
         self.pushSlideLeft100.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #710080; border-radius: {borderRadius}px;")
         self.pushSlideLeft100.setObjectName("pushSlideLeft100")
         self.pushSlideLeft10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideLeft10())
         self.pushSlideLeft10.setGeometry(QtCore.QRect(butttonLayoutX * 6.5, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushSlideLeft10.setFont(font)
         self.pushSlideLeft10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #9100a0; border-radius: {borderRadius}px;")
         self.pushSlideLeft10.setObjectName("pushSlideLeft10")
         self.pushSlideRight10 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideRight10())
         self.pushSlideRight10.setGeometry(QtCore.QRect(butttonLayoutX * 17.5, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushSlideRight10.setFont(font)
         self.pushSlideRight10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #9100a0; border-radius: {borderRadius}px;")
         self.pushSlideRight10.setObjectName("pushSlideRight10")
         self.pushSlideRight100 = QtWidgets.QPushButton(self.centralwidget, clicked= lambda: self.slideRight100())
         self.pushSlideRight100.setGeometry(QtCore.QRect(butttonLayoutX * 24, butttonLayoutY * 32, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushSlideRight100.setFont(font)
         self.pushSlideRight100.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #710080; border-radius: {borderRadius}px;")
         self.pushSlideRight100.setObjectName("pushSlideRight100")
@@ -1797,7 +1815,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushZoomInFast.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 2.5, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushZoomInFast.setFont(font)
         self.pushZoomInFast.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushZoomInFast.setObjectName("pushZoomInFast")
@@ -1805,7 +1823,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushZoomInSlow.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 9, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushZoomInSlow.setFont(font)
         self.pushZoomInSlow.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #607Ca0; border-radius: {borderRadius}px;")
         self.pushZoomInSlow.setObjectName("pushZoomInSlow")
@@ -1813,7 +1831,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushZoomOutSlow.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 20, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushZoomOutSlow.setFont(font)
         self.pushZoomOutSlow.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #607Ca0; border-radius: {borderRadius}px;")
         self.pushZoomOutSlow.setObjectName("pushZoomOutSlow")
@@ -1821,7 +1839,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushZoomOutFast.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 26.5, buttonGoX + 1, buttonGoY + 1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2.2)
+        font.setPointSize(butttonLayoutX * winSize * 2.2)
         self.pushZoomOutFast.setFont(font)
         self.pushZoomOutFast.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushZoomOutFast.setObjectName("pushZoomOutFast")
@@ -1829,7 +1847,7 @@ class Ui_MoverWindow(QMainWindow):
         self.pushClose.setGeometry(QtCore.QRect(butttonLayoutX * 0.5, 0, (buttonGoX * 0.8333333333)+1, (buttonGoY * 0.8333333333)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 3)
+        font.setPointSize(butttonLayoutX * winSize * 3)
         self.pushClose.setFont(font)
         self.pushClose.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #cc7777; border-radius: {borderRadius}px;")
         self.pushClose.setObjectName("pushClose")
@@ -1994,6 +2012,7 @@ class PTSapp(QMainWindow):
     global buttonGoX
     global buttonGoY
     global buttonCamY
+    global winSize
 
     def __init__(self, txt):
         self.text = txt
@@ -2062,6 +2081,7 @@ class PTSapp(QMainWindow):
         global buttonCamY
         global agX
         global agY
+        global winSize
 
         self.setObjectName("PTSapp")
 
@@ -2135,6 +2155,7 @@ class PTSapp(QMainWindow):
             global butttonLayoutY
             global buttonGoX
             global buttonGoY
+            global winSize
             
             #updater.now_call_latest()
             joyName = str(key.joystick)
@@ -2288,7 +2309,7 @@ class PTSapp(QMainWindow):
         self.pushButton11.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton11.setFont(font)
         self.pushButton11.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton11.setFlat(False)
@@ -2297,7 +2318,7 @@ class PTSapp(QMainWindow):
         self.pushButton12.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton12.setFont(font)
         self.pushButton12.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton12.setFlat(False)
@@ -2306,7 +2327,7 @@ class PTSapp(QMainWindow):
         self.pushButton13.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton13.setFont(font)
         self.pushButton13.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton13.setFlat(False)
@@ -2315,7 +2336,7 @@ class PTSapp(QMainWindow):
         self.pushButton14.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton14.setFont(font)
         self.pushButton14.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton14.setFlat(False)
@@ -2324,7 +2345,7 @@ class PTSapp(QMainWindow):
         self.pushButton15.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton15.setFont(font)
         self.pushButton15.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton15.setFlat(False)
@@ -2333,7 +2354,7 @@ class PTSapp(QMainWindow):
         self.pushButton16.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton16.setFont(font)
         self.pushButton16.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton16.setFlat(False)
@@ -2342,7 +2363,7 @@ class PTSapp(QMainWindow):
         self.pushButton17.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton17.setFont(font)
         self.pushButton17.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton17.setFlat(False)
@@ -2351,7 +2372,7 @@ class PTSapp(QMainWindow):
         self.pushButton18.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton18.setFont(font)
         self.pushButton18.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton18.setFlat(False)
@@ -2360,7 +2381,7 @@ class PTSapp(QMainWindow):
         self.pushButton19.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton19.setFont(font)
         self.pushButton19.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton19.setFlat(False)
@@ -2369,7 +2390,7 @@ class PTSapp(QMainWindow):
         self.pushButton10.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton10.setFont(font)
         self.pushButton10.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;")
         self.pushButton10.setFlat(False)
@@ -2424,7 +2445,7 @@ class PTSapp(QMainWindow):
         self.pushButton21.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton21.setFont(font)
         self.pushButton21.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton21.setFlat(False)
@@ -2433,7 +2454,7 @@ class PTSapp(QMainWindow):
         self.pushButton22.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton22.setFont(font)
         self.pushButton22.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton22.setFlat(False)
@@ -2442,7 +2463,7 @@ class PTSapp(QMainWindow):
         self.pushButton23.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton23.setFont(font)
         self.pushButton23.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton23.setFlat(False)
@@ -2451,7 +2472,7 @@ class PTSapp(QMainWindow):
         self.pushButton24.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton24.setFont(font)
         self.pushButton24.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton24.setFlat(False)
@@ -2460,7 +2481,7 @@ class PTSapp(QMainWindow):
         self.pushButton25.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton25.setFont(font)
         self.pushButton25.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton25.setFlat(False)
@@ -2469,7 +2490,7 @@ class PTSapp(QMainWindow):
         self.pushButton26.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton26.setFont(font)
         self.pushButton26.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton26.setFlat(False)
@@ -2478,7 +2499,7 @@ class PTSapp(QMainWindow):
         self.pushButton27.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton27.setFont(font)
         self.pushButton27.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton27.setFlat(False)
@@ -2487,7 +2508,7 @@ class PTSapp(QMainWindow):
         self.pushButton28.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton28.setFont(font)
         self.pushButton28.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton28.setFlat(False)
@@ -2496,7 +2517,7 @@ class PTSapp(QMainWindow):
         self.pushButton29.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton29.setFont(font)
         self.pushButton29.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton29.setFlat(False)
@@ -2505,7 +2526,7 @@ class PTSapp(QMainWindow):
         self.pushButton20.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton20.setFont(font)
         self.pushButton20.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;")
         self.pushButton20.setFlat(False)
@@ -2561,7 +2582,7 @@ class PTSapp(QMainWindow):
         self.pushButton31.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton31.setFont(font)
         self.pushButton31.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton31.setFlat(False)
@@ -2570,7 +2591,7 @@ class PTSapp(QMainWindow):
         self.pushButton32.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton32.setFont(font)
         self.pushButton32.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton32.setFlat(False)
@@ -2579,7 +2600,7 @@ class PTSapp(QMainWindow):
         self.pushButton33.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton33.setFont(font)
         self.pushButton33.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton33.setFlat(False)
@@ -2588,7 +2609,7 @@ class PTSapp(QMainWindow):
         self.pushButton34.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton34.setFont(font)
         self.pushButton34.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton34.setFlat(False)
@@ -2597,7 +2618,7 @@ class PTSapp(QMainWindow):
         self.pushButton35.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton35.setFont(font)
         self.pushButton35.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton35.setFlat(False)
@@ -2606,7 +2627,7 @@ class PTSapp(QMainWindow):
         self.pushButton36.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton36.setFont(font)
         self.pushButton36.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton36.setFlat(False)
@@ -2615,7 +2636,7 @@ class PTSapp(QMainWindow):
         self.pushButton37.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton37.setFont(font)
         self.pushButton37.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton37.setFlat(False)
@@ -2624,7 +2645,7 @@ class PTSapp(QMainWindow):
         self.pushButton38.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton38.setFont(font)
         self.pushButton38.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton38.setFlat(False)
@@ -2633,7 +2654,7 @@ class PTSapp(QMainWindow):
         self.pushButton39.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton39.setFont(font)
         self.pushButton39.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton39.setFlat(False)
@@ -2642,7 +2663,7 @@ class PTSapp(QMainWindow):
         self.pushButton30.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton30.setFont(font)
         self.pushButton30.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;")
         self.pushButton30.setFlat(False)
@@ -2697,7 +2718,7 @@ class PTSapp(QMainWindow):
         self.pushButton41.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton41.setFont(font)
         self.pushButton41.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton41.setFlat(False)
@@ -2706,7 +2727,7 @@ class PTSapp(QMainWindow):
         self.pushButton42.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton42.setFont(font)
         self.pushButton42.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton42.setFlat(False)
@@ -2715,7 +2736,7 @@ class PTSapp(QMainWindow):
         self.pushButton43.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton43.setFont(font)
         self.pushButton43.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton43.setFlat(False)
@@ -2724,7 +2745,7 @@ class PTSapp(QMainWindow):
         self.pushButton44.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton44.setFont(font)
         self.pushButton44.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton44.setFlat(False)
@@ -2733,7 +2754,7 @@ class PTSapp(QMainWindow):
         self.pushButton45.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton45.setFont(font)
         self.pushButton45.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton45.setFlat(False)
@@ -2742,7 +2763,7 @@ class PTSapp(QMainWindow):
         self.pushButton46.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton46.setFont(font)
         self.pushButton46.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton46.setFlat(False)
@@ -2751,7 +2772,7 @@ class PTSapp(QMainWindow):
         self.pushButton47.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton47.setFont(font)
         self.pushButton47.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton47.setFlat(False)
@@ -2760,7 +2781,7 @@ class PTSapp(QMainWindow):
         self.pushButton48.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton48.setFont(font)
         self.pushButton48.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton48.setFlat(False)
@@ -2769,7 +2790,7 @@ class PTSapp(QMainWindow):
         self.pushButton49.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton49.setFont(font)
         self.pushButton49.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton49.setFlat(False)
@@ -2778,7 +2799,7 @@ class PTSapp(QMainWindow):
         self.pushButton40.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton40.setFont(font)
         self.pushButton40.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;")
         self.pushButton40.setFlat(False)
@@ -2833,7 +2854,7 @@ class PTSapp(QMainWindow):
         self.pushButton51.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton51.setFont(font)
         self.pushButton51.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton51.setFlat(False)
@@ -2842,7 +2863,7 @@ class PTSapp(QMainWindow):
         self.pushButton52.setGeometry(QtCore.QRect(butttonLayoutX * 8, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton52.setFont(font)
         self.pushButton52.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton52.setFlat(False)
@@ -2851,7 +2872,7 @@ class PTSapp(QMainWindow):
         self.pushButton53.setGeometry(QtCore.QRect(buttonGoX * 2.5, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton53.setFont(font)
         self.pushButton53.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton53.setFlat(False)
@@ -2860,7 +2881,7 @@ class PTSapp(QMainWindow):
         self.pushButton54.setGeometry(QtCore.QRect(butttonLayoutX * 22, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton54.setFont(font)
         self.pushButton54.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton54.setFlat(False)
@@ -2869,7 +2890,7 @@ class PTSapp(QMainWindow):
         self.pushButton55.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton55.setFont(font)
         self.pushButton55.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton55.setFlat(False)
@@ -2878,7 +2899,7 @@ class PTSapp(QMainWindow):
         self.pushButton56.setGeometry(QtCore.QRect(butttonLayoutX * 36, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton56.setFont(font)
         self.pushButton56.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton56.setFlat(False)
@@ -2887,7 +2908,7 @@ class PTSapp(QMainWindow):
         self.pushButton57.setGeometry(QtCore.QRect(butttonLayoutX * 43, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton57.setFont(font)
         self.pushButton57.setAutoFillBackground(False)
         self.pushButton57.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
@@ -2897,7 +2918,7 @@ class PTSapp(QMainWindow):
         self.pushButton58.setGeometry(QtCore.QRect(butttonLayoutX * 50, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton58.setFont(font)
         self.pushButton58.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton58.setFlat(False)
@@ -2906,7 +2927,7 @@ class PTSapp(QMainWindow):
         self.pushButton59.setGeometry(QtCore.QRect(butttonLayoutX * 57, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton59.setFont(font)
         self.pushButton59.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton59.setFlat(False)
@@ -2915,7 +2936,7 @@ class PTSapp(QMainWindow):
         self.pushButton50.setGeometry(QtCore.QRect(butttonLayoutX * 64, butttonLayoutY, buttonGoX, buttonGoY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButton50.setFont(font)
         self.pushButton50.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;")
         self.pushButton50.setFlat(False)
@@ -2964,7 +2985,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam1.setGeometry(QtCore.QRect(butttonLayoutX * 29, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.5)
+        font.setPointSize(butttonLayoutX * winSize * 1.5)
         self.pushButtonCam1.setFont(font)
         self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam1.setFlat(False)
@@ -2973,7 +2994,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam2.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.5)
+        font.setPointSize(butttonLayoutX * winSize * 1.5)
         self.pushButtonCam2.setFont(font)
         self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setFlat(False)
@@ -2982,7 +3003,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam3.setGeometry(QtCore.QRect(butttonLayoutX * 45, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.5)
+        font.setPointSize(butttonLayoutX * winSize * 1.5)
         self.pushButtonCam3.setFont(font)
         self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonCam3.setFlat(False)
@@ -2991,7 +3012,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam4.setGeometry(QtCore.QRect(butttonLayoutX * 53, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.5)
+        font.setPointSize(butttonLayoutX * winSize * 1.5)
         self.pushButtonCam4.setFont(font)
         self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam4.setFlat(False)
@@ -3000,7 +3021,7 @@ class PTSapp(QMainWindow):
         self.pushButtonCam5.setGeometry(QtCore.QRect(butttonLayoutX * 61, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.5)
+        font.setPointSize(butttonLayoutX * winSize * 1.5)
         self.pushButtonCam5.setFont(font)
         self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setFlat(False)
@@ -3012,7 +3033,7 @@ class PTSapp(QMainWindow):
         self.labelDialPT.setGeometry(QtCore.QRect(butttonLayoutX * 76.5, butttonLayoutY * 6, buttonGoX, butttonLayoutY * 0.8))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 0.8)
+        font.setPointSize(butttonLayoutX * winSize * 0.8)
         self.labelDialPT.setFont(font)
         self.labelDialPT.setStyleSheet("color:grey;")
         self.labelDialPT.setAlignment(QtCore.Qt.AlignCenter)
@@ -3022,7 +3043,7 @@ class PTSapp(QMainWindow):
         self.labelDialSL.setGeometry(QtCore.QRect(butttonLayoutX * 85.5, butttonLayoutY * 6, buttonGoX / 1.2, butttonLayoutY * 0.8))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 0.8)
+        font.setPointSize(butttonLayoutX * winSize * 0.8)
         self.labelDialSL.setFont(font)
         self.labelDialSL.setStyleSheet("color:grey;")
         self.labelDialSL.setAlignment(QtCore.Qt.AlignCenter)
@@ -3031,7 +3052,7 @@ class PTSapp(QMainWindow):
         self.pushButtonSet = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.setPos(3))
         self.pushButtonSet.setGeometry(QtCore.QRect(butttonLayoutX * 88, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonSet.setFont(font)
         self.pushButtonSet.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #bbbbbb; border-radius: {borderRadius2}px;")
         self.pushButtonSet.setFlat(False)
@@ -3040,7 +3061,7 @@ class PTSapp(QMainWindow):
         self.pushButtonEdit.setGeometry(QtCore.QRect(butttonLayoutX * 2, butttonLayoutY * 1.5, buttonGoX, buttonCamY))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonEdit.setFont(font)
         self.pushButtonEdit.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonEdit.setFlat(False)
@@ -3049,7 +3070,7 @@ class PTSapp(QMainWindow):
         self.pushButtonRun.setGeometry(QtCore.QRect(butttonLayoutX * 74.5, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonRun.setFont(font)
         self.pushButtonRun.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonRun.setFlat(False)
@@ -3058,7 +3079,7 @@ class PTSapp(QMainWindow):
         self.pushButtonSLonly.setGeometry(QtCore.QRect(butttonLayoutX * 87, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonSLonly.setFont(font)
         self.pushButtonSLonly.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         self.pushButtonSLonly.setFlat(False)
@@ -3067,7 +3088,7 @@ class PTSapp(QMainWindow):
         self.pushButtonFileLoad.setGeometry(QtCore.QRect(butttonLayoutX * 2, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonFileLoad.setFont(font)
         self.pushButtonFileLoad.setStyleSheet(f"border: {borderSize2}px solid #FFFC67; background-color: #33A000; border-radius: {borderRadius2}px;")
         self.pushButtonFileLoad.setFlat(False)
@@ -3077,7 +3098,7 @@ class PTSapp(QMainWindow):
         self.pushButtonFileSave.setGeometry(QtCore.QRect(butttonLayoutX * 16, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonFileSave.setFont(font)
         self.pushButtonFileSave.setStyleSheet(f"border: {borderSize2}px solid #d74444; background-color: #F76666; border-radius: {borderRadius2}px;")
         self.pushButtonFileSave.setFlat(False)
@@ -3087,7 +3108,7 @@ class PTSapp(QMainWindow):
         self.pushButtonSettings.setGeometry(QtCore.QRect(butttonLayoutX * 51, butttonLayoutY * 49.5, buttonGoX * 2.17, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonSettings.setFont(font)
         self.pushButtonSettings.setStyleSheet(f"border: {borderSize2}px solid #FFFC67; background-color: #33A000; border-radius: {borderRadius2}px;")
         self.pushButtonSettings.setFlat(False)
@@ -3097,7 +3118,7 @@ class PTSapp(QMainWindow):
         self.pushButtonLED.setGeometry(QtCore.QRect(butttonLayoutX * 74.5, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonLED.setFont(font)
         self.pushButtonLED.setStyleSheet(f"border: {borderSize2}px solid #FFFC67; background-color: #C39300; border-radius: {borderRadius2}px;")
         self.pushButtonLED.setFlat(False)
@@ -3107,7 +3128,7 @@ class PTSapp(QMainWindow):
         self.pushButtonExit.setGeometry(QtCore.QRect(butttonLayoutX * 87, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 2)
+        font.setPointSize(butttonLayoutX * winSize * 2)
         self.pushButtonExit.setFont(font)
         self.pushButtonExit.setStyleSheet(f"border: {borderSize2}px solid #ff0000; background-color: #CC5050; border-radius: {borderRadius2}px;")
         self.pushButtonExit.setFlat(False)
@@ -3117,7 +3138,7 @@ class PTSapp(QMainWindow):
         self.labelFilename.setGeometry(QtCore.QRect(butttonLayoutX * 23, butttonLayoutY * 49.5, buttonGoX * 3.33333, buttonCamY * 0.7183))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.1)
+        font.setPointSize(butttonLayoutX * winSize * 1.1)
         self.labelFilename.setFont(font)
         self.labelFilename.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #333333; border-radius: {borderRadius2}px;")
         self.labelFilename.setText("")
@@ -3128,7 +3149,7 @@ class PTSapp(QMainWindow):
         self.labelInfo.setGeometry(QtCore.QRect(butttonLayoutX * 68, butttonLayoutY * 2.5, buttonGoX * 3.0917, buttonCamY * 0.6))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.1)
+        font.setPointSize(butttonLayoutX * winSize * 1.1)
         self.labelInfo.setFont(font)
         self.labelInfo.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #333333; border-radius: {borderRadius2}px;")
         self.labelInfo.setText("")
@@ -3138,7 +3159,7 @@ class PTSapp(QMainWindow):
         self.comboBox.setGeometry(QtCore.QRect(butttonLayoutX * 9.5, butttonLayoutY * 2.5, buttonGoX * 3.0917, buttonCamY * 0.6))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * 1.1)
+        font.setPointSize(butttonLayoutX * winSize * 1.1)
         self.comboBox.setFont(font)
         self.comboBox.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #333333; border-radius: {borderRadius2}px;")
         self.comboBox.setCurrentText("")
@@ -3346,6 +3367,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         if SetPosToggle:
             self.openMoverWindow()
@@ -3468,6 +3490,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         buttonColourSet = "#ff0000"
         buttonColourAt = "#00ff00"
@@ -5998,6 +6021,7 @@ class PTSapp(QMainWindow):
         global butttonLayoutY
         global buttonGoX
         global buttonGoY
+        global winSize
 
         cam1Pos1Set = False
         cam1Pos2Set = False
@@ -6091,6 +6115,7 @@ class PTSapp(QMainWindow):
         global butttonLayoutY
         global buttonGoX
         global buttonGoY
+        global winSize
 
         cam2Pos1Set = False
         cam2Pos2Set = False
@@ -6183,6 +6208,7 @@ class PTSapp(QMainWindow):
         global butttonLayoutY
         global buttonGoX
         global buttonGoY
+        global winSize
 
         cam3Pos1Set = False
         cam3Pos2Set = False
@@ -6275,6 +6301,7 @@ class PTSapp(QMainWindow):
         global butttonLayoutY
         global buttonGoX
         global buttonGoY
+        global winSize
 
         cam4Pos1Set = False
         cam4Pos2Set = False
@@ -6367,6 +6394,7 @@ class PTSapp(QMainWindow):
         global butttonLayoutY
         global buttonGoX
         global buttonGoY
+        global winSize
 
         cam5Pos1Set = False
         cam5Pos2Set = False
@@ -6531,6 +6559,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         global flashTick
 
@@ -7035,6 +7064,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         global resetButtons
 
@@ -8015,6 +8045,7 @@ class PTSapp(QMainWindow):
         global butttonLayoutY
         global buttonGoX
         global buttonGoY
+        global winSize
 
         cam1Pos1Set = False
         cam1Pos2Set = False
@@ -8249,6 +8280,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         if serialLoop and not isConnected:
             self.comboBox.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #229922; border-radius: {borderRadius2}px;")
@@ -8492,6 +8524,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
         
         if (SetPosToggle == True and state == 3) or state == 0:
             SetPosToggle = False
@@ -8550,6 +8583,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         global cam1Pos1Set
         global cam1Pos2Set
@@ -8619,6 +8653,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         global cam2Pos1Set
         global cam2Pos2Set
@@ -8688,6 +8723,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         global cam3Pos1Set
         global cam3Pos2Set
@@ -8757,6 +8793,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         global cam4Pos1Set
         global cam4Pos2Set
@@ -8826,6 +8863,7 @@ class PTSapp(QMainWindow):
         global borderSize2
         global borderRadius
         global borderRadius2
+        global winSize
 
         global cam5Pos1Set
         global cam5Pos2Set
