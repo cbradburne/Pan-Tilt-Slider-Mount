@@ -37,6 +37,9 @@ from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 from sys import platform
 from pathlib import Path
 
+if sys.platform != "win32":
+    os.environ["QT_IM_MODULE"] = "qtvirtualkeyboard"
+
 #from qt_thread_updater import ThreadUpdater
 #updater = ThreadUpdater()
 
