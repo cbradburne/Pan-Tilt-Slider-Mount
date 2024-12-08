@@ -1628,7 +1628,7 @@ class Ui_editWindow(QMainWindow):
         global winSize
 
         self.setObjectName("editWindow")
-        self.resize(buttonGoX * 3, buttonGoY* 1.7)
+        self.resize(buttonGoX * 3, buttonGoY* 1.4)
         self.setAutoFillBackground(False)
         self.setStyleSheet("background-color: #7593BC;")
         self.centralwidget = QtWidgets.QWidget(self)
@@ -1678,8 +1678,7 @@ class Ui_editWindow(QMainWindow):
         y = int(y)
         
         self.move(x, y)
-
-        #self.move(buttonGoX * 6.5, buttonGoY * 1.25)
+        self.move(buttonGoX * 6.5, buttonGoY * 1.25)
 
         self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
         self.lineEdit.setFocus()
