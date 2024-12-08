@@ -1668,7 +1668,7 @@ class Ui_editWindow(QMainWindow):
         widget = self.geometry()
 
         x = (ag.width() / 2) - (widget.width() / 2)
-        y = ag.height() / 2.4                #2 * ag.height() - ag.height() - widget.height() - 50
+        y = ag.height() / 4                #2 * ag.height() - ag.height() - widget.height() - 50
 
         #if debug:
         #    x = x - 100
@@ -1678,7 +1678,7 @@ class Ui_editWindow(QMainWindow):
         y = int(y)
         
         self.move(x, y)
-        self.move(buttonGoX * 6.5, buttonGoY * 1.25)
+        #self.move(buttonGoX * 6.5, buttonGoY * 1.25)
 
         self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
         self.lineEdit.setFocus()
