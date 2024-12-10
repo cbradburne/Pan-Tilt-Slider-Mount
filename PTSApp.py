@@ -1079,7 +1079,10 @@ class Ui_SettingsWindow(QMainWindow):
             self.show()
         else:
             #self.showMaximized()
-            self.showFullScreen()
+            if sys.platform == "win32":
+                self.showFullScreen()
+            else:
+                self.showMaximized()
 
         self.getSettings()
 
@@ -1683,8 +1686,8 @@ class Ui_editWindow(QMainWindow):
         self.move(x, y)
         #self.move(buttonGoX * 6.5, buttonGoY * 1.25)
 
-        self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus)  
-        self.lineEdit.setFocus()
+        self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus) #StrongFocus  ClickFocus
+        #self.lineEdit.setFocus()
 
     def editSet(self):
         global newText
@@ -1694,6 +1697,13 @@ class Ui_editWindow(QMainWindow):
             os.system('wmic process where name="osk.exe" delete')
         elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
+        #else:
+        #    QGuiApplication.inputMethod.show()
+            #self.VTkeyboardTimer = QTimer()
+            #self.VTkeyboardTimer.singleShot(2000,self.autoSerial)
+
+    #QInputMethod *inputMethod = QGuiApplication::inputMethod();
+        
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_Return:
@@ -2044,7 +2054,8 @@ class PTSapp(QMainWindow):
         elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
 
-
+        #QInputMethod.setVisible(True)
+        #QInputMethod.show()
 
     
     def openMoverWindow(self):
@@ -2103,8 +2114,8 @@ class PTSapp(QMainWindow):
         agY = agY * 0.97
 
 
-        #if sys.platform != "win32":
-        #    agY = agY - 20
+        if sys.platform != "win32":
+            agY = agY * 0.96
 
         #if debug:
 
@@ -3275,7 +3286,10 @@ class PTSapp(QMainWindow):
             self.show()
         else:
             #self.showMaximized()
-            self.showFullScreen()
+            if sys.platform == "win32":
+                self.showFullScreen()
+            else:
+                self.showMaximized()
         
         self.autoFileLoad()
 
