@@ -1686,9 +1686,11 @@ class Ui_editWindow(QMainWindow):
         self.move(x, y)
         #self.move(buttonGoX * 6.5, buttonGoY * 1.25)
 
-        self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus) #StrongFocus  ClickFocus
+        #self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus) #StrongFocus  ClickFocus
         #self.lineEdit.setFocus()
 
+        self.lineEdit.setFocus()
+        
     def editSet(self):
         global newText
         newText = self.lineEdit.text()
@@ -8697,7 +8699,7 @@ class PTSapp(QMainWindow):
             editButton = 62
             currentText = self.pushButtonCam2.text()
             self.openEditWindow(currentText)
-        if SetPosToggle:
+        elif SetPosToggle:
             self.setPos(3)
             self.sendSerial('&2D')
         elif runToggle:
