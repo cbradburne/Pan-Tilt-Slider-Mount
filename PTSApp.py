@@ -49,6 +49,29 @@ if sys.platform != "win32":
 
 #if getattr(sys, 'frozen', False) and hasattr(sys, '_MEIPASS'):
 
+
+# Colours - SlideToggle
+# Cam1
+#4C8A4C
+#40D140
+
+# Cam2
+#405C80
+#5C8BC9
+
+# Cam3
+#807100
+#B4A21C
+
+# Cam4
+#008071
+#01E6CC
+
+# Cam5
+#8D5395
+#E97CF9
+
+
 debug = False
 
 serial_port = None
@@ -629,21 +652,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSlideSetHome.setFont(font)
         self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonSlideSetHome.setObjectName("pushButtonSlideSetHome")
-        #self.checkBoxCamHasSlider
-        self.checkBoxCamHasSlider = QtWidgets.QCheckBox(self.groupBox, clicked = lambda: self.checkBoxHasSlider())
-        self.checkBoxCamHasSlider.setGeometry(QtCore.QRect(butttonLayoutX * 35.5, butttonLayoutY * 40, (buttonGoX * 1.6), (buttonGoY * 0.3)))
-        self.checkBoxCamHasSlider.setSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
-        font = QtGui.QFont()
-        font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * winSize * 2.2)
-        self.checkBoxCamHasSlider.setFont(font)
-        self.checkBoxCamHasSlider.setStyleSheet("QCheckBox::indicator { width: 50px; height: 50px;}")
-        self.checkBoxCamHasSlider.setText("")
-        self.checkBoxCamHasSlider.setIconSize(QtCore.QSize(64, 64))
-        self.checkBoxCamHasSlider.setChecked(False)
-        self.checkBoxCamHasSlider.setObjectName("checkBoxCamHasSlider")
         self.labelCamHasSlider = QtWidgets.QLabel(self.groupBox)
-        self.labelCamHasSlider.setGeometry(QtCore.QRect(butttonLayoutX * 37, butttonLayoutY * 40.3, buttonGoX * 1.2, butttonLayoutY * 1.2))
+        self.labelCamHasSlider.setGeometry(QtCore.QRect(butttonLayoutX * 35, butttonLayoutY * 30.3, buttonGoX * 1.2, butttonLayoutY * 1.2))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(butttonLayoutX * winSize * 1.1)
@@ -651,6 +661,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelCamHasSlider.setStyleSheet("border: 0px; color:grey;")
         self.labelCamHasSlider.setAlignment(QtCore.Qt.AlignCenter)
         self.labelCamHasSlider.setObjectName("labelCamHasSlider")
+        self.labelCamHasSlider.setVisible(False)
         self.pushButtonPTS4 = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.labelPTspeed4.setFocus())
         self.pushButtonPTS4.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 10.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
@@ -1223,9 +1234,9 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setText(str(cam1ZoomLimit))
 
         if cam1HasSlider == True:
-            self.checkBoxCamHasSlider.setChecked(True)
+            self.labelCamHasSlider.setVisible(True)
         else:
-            self.checkBoxCamHasSlider.setChecked(False)
+            self.labelCamHasSlider.setVisible(False)
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
@@ -1304,9 +1315,9 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setText(str(cam2ZoomLimit))
 
         if cam2HasSlider == True:
-            self.checkBoxCamHasSlider.setChecked(True)
+            self.labelCamHasSlider.setVisible(True)
         else:
-            self.checkBoxCamHasSlider.setChecked(False)
+            self.labelCamHasSlider.setVisible(False)
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #405C80; border-radius: {borderRadius2}px;")
@@ -1385,9 +1396,9 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setText(str(cam3ZoomLimit))
 
         if cam3HasSlider == True:
-            self.checkBoxCamHasSlider.setChecked(True)
+            self.labelCamHasSlider.setVisible(True)
         else:
-            self.checkBoxCamHasSlider.setChecked(False)
+            self.labelCamHasSlider.setVisible(False)
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
@@ -1466,9 +1477,9 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setText(str(cam4ZoomLimit))
 
         if cam4HasSlider == True:
-            self.checkBoxCamHasSlider.setChecked(True)
+            self.labelCamHasSlider.setVisible(True)
         else:
-            self.checkBoxCamHasSlider.setChecked(False)
+            self.labelCamHasSlider.setVisible(False)
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
@@ -1547,9 +1558,9 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setText(str(cam5ZoomLimit))
 
         if cam5HasSlider == True:
-            self.checkBoxCamHasSlider.setChecked(True)
+            self.labelCamHasSlider.setVisible(True)
         else:
-            self.checkBoxCamHasSlider.setChecked(False)
+            self.labelCamHasSlider.setVisible(False)
 
         self.pushButtonCam1.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
         self.pushButtonCam2.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
@@ -1674,20 +1685,12 @@ class Ui_editWindow(QMainWindow):
         widget = self.geometry()
 
         x = (ag.width() / 2) - (widget.width() / 2)
-        y = ag.height() / 4                #2 * ag.height() - ag.height() - widget.height() - 50
-
-        #if debug:
-        #    x = x - 100
-        #    y = y - 100
+        y = ag.height() / 4
 
         x = int(x)
         y = int(y)
         
         self.move(x, y)
-        #self.move(buttonGoX * 6.5, buttonGoY * 1.25)
-
-        #self.lineEdit.setFocusPolicy(QtCore.Qt.StrongFocus) #StrongFocus  ClickFocus
-        #self.lineEdit.setFocus()
 
         self.lineEdit.setFocus()
         
@@ -1699,12 +1702,6 @@ class Ui_editWindow(QMainWindow):
             os.system('wmic process where name="osk.exe" delete')
         elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
-        #else:
-        #    QGuiApplication.inputMethod.show()
-            #self.VTkeyboardTimer = QTimer()
-            #self.VTkeyboardTimer.singleShot(2000,self.autoSerial)
-
-    #QInputMethod *inputMethod = QGuiApplication::inputMethod();
         
 
     def keyPressEvent(self, e):
@@ -1878,14 +1875,11 @@ class Ui_MoverWindow(QMainWindow):
         QtCore.QMetaObject.connectSlotsByName(self)
 
         self.showNormal()
-        #self.move(buttonGoX * 6.5, buttonGoY * 1.25)
     
         if debug:
             ag = self.geometry
         else:
             ag = QtGui.QGuiApplication.primaryScreen().size()
-        #sg = QtGui.QGuiApplication.primaryScreen().screenGeometry()
-        #sg = self.screen()[0].size().toTuple()
 
         widget = self.geometry()
         x = (ag.width() / 2) - (widget.width() / 2)
@@ -1957,8 +1951,6 @@ class Ui_MoverWindow(QMainWindow):
             self.sendSerial(zoomSerial + 'q')
             self.sendSerial(zoomSerial + 'q')
 
-        #manualMove = "z" + str(speed)
-
     def up10(self):
         global manualMove
         manualMove = "u10"
@@ -2009,8 +2001,6 @@ class Ui_MoverWindow(QMainWindow):
         global manualMove
         manualMove = "sr100"
 
-    
-
     def sendSerial(self, toSendData):
         global sendData
         sendData = toSendData
@@ -2032,19 +2022,6 @@ class PTSapp(QMainWindow):
         self.text = txt
         super(PTSapp, self).__init__()
         self.setupUi()
-
-        #self.createWorkerThread()
-
-    
-    #def createWorkerThread(self):
-        # Setup the worker object and the worker_thread.
-        #self.worker = WorkerObject()
-        #self.worker_thread = QtCore.QThread()
-        #self.worker.moveToThread(self.worker_thread)
-        #self.worker_thread.start()
-
-        # Connect any worker signals
-        #self.worker.startWork
     
     def openEditWindow(self, text):
         self.ui2 = Ui_editWindow()
@@ -2055,16 +2032,11 @@ class PTSapp(QMainWindow):
             os.startfile("C:\\\Windows\\System32\\osk.exe")
         elif sys.platform == "linux" or sys.platform == "linux2":
             os.system('/usr/bin/toggle-keyboard.sh')
-
-        #QInputMethod.setVisible(True)
-        #QInputMethod.show()
-
     
     def openMoverWindow(self):
         self.ui3 = Ui_MoverWindow()
         self.ui3.setupUi()
         self.setPos(3)
-
     
     def openSettingsWindow(self):
         self.sendSerial('&1K')
@@ -2081,10 +2053,8 @@ class PTSapp(QMainWindow):
         self.ui4 = Ui_SettingsWindow()
         self.ui4.setupUi()
 
-
     def setupUi(self):
         global debug
-
         global butttonLayoutX
         global butttonLayoutY
         global buttonGoX
@@ -2115,16 +2085,8 @@ class PTSapp(QMainWindow):
         
         agY = agY * 0.97
 
-
         if sys.platform != "win32":
             agY = agY * 0.96
-
-        #if debug:
-
-        #    agX = agX - 500
-        #    agY = agY - 330
-        #else:
-        #    agY = agY + 30
         
         buttonGoX = agX * 0.0625        # 120,  120/1920
         buttonGoY = agY * 0.1111        # 120,  120/1080
@@ -2172,12 +2134,10 @@ class PTSapp(QMainWindow):
             global buttonGoY
             global winSize
             
-            #updater.now_call_latest()
             joyName = str(key.joystick)
             joyName = joyName.lower()
 
             joyType = str(key)
-            #print(joyType[-6:])
 
             deadRange = 0.15
 
@@ -2218,37 +2178,7 @@ class PTSapp(QMainWindow):
                     else:
                         axisW = 0
 
-                    #axisW = int(self.scale(key.value, (-1, 1), (8,-8)))
-                '''
-                elif joyType[-6:] == "tton 0" and (key.value == 0):
-                    if whichCamSerial == 1:
-                        if cam1AF:
-                            self.sendSerial('&' + str(whichCamSerial) + 'P')
-                        else:
-                            self.sendSerial('&' + str(whichCamSerial) + 'p')
-                    elif whichCamSerial == 2:
-                        if cam2AF:
-                            self.sendSerial('&' + str(whichCamSerial) + 'P')
-                        else:
-                            self.sendSerial('&' + str(whichCamSerial) + 'p')
-                    elif whichCamSerial == 3:
-                        if cam3AF:
-                            self.sendSerial('&' + str(whichCamSerial) + 'P')
-                        else:
-                            self.sendSerial('&' + str(whichCamSerial) + 'p')
-                    elif whichCamSerial == 4:
-                        if cam4AF:
-                            self.sendSerial('&' + str(whichCamSerial) + 'P')
-                        else:
-                            self.sendSerial('&' + str(whichCamSerial) + 'P')
-                    elif whichCamSerial == 5:
-                        if cam5AF:
-                            self.sendSerial('&' + str(whichCamSerial) + 'P')
-                        else:
-                            self.sendSerial('&' + str(whichCamSerial) + 'p')
-                '''
-
-            
+                    #axisW = int(self.scale(key.value, (-1, 1), (8,-8)))            
             else:
                 if joyType[-6:] == "Axis 2":
                     if (key.value < -deadRange):
@@ -2289,16 +2219,6 @@ class PTSapp(QMainWindow):
                         axisZ = 0
                     #print(axisZ)
 
-                    #axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
-                    #scale(self, val, src, dst):
-                    #return ((val - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
-                    #               -1      /   -0.1    - -1   *   0 - 8 + 8
-                    #       -0.1    -1      /    0.9           *   8 - 0 
-                    #
-                    #         0.5   1       /    0.2  -   1    *   0 - 8 + 8
-                    #
-                    #   axisW = int(self.scale(key.value, (-1, -(deadRange*2)), (8, 0)))
-
                 elif joyType[-6:] == "Axis 1":
                     if (key.value < -deadRange):
                         axisW = int(self.scale(key.value, (-1, (deadRange*2)), (8, 0)))
@@ -2307,15 +2227,11 @@ class PTSapp(QMainWindow):
                     else:
                         axisW = 0
 
-            #if debug:
-            #    print("from handle_key_event")
             self.doJoyMoves(1)
 
 
         mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
         mngr.start()
-
-        #def QAnalogAxisInput(self):
 
         borderSize = butttonLayoutX / 2
         borderRadius = butttonLayoutX * 1.8
@@ -3287,7 +3203,6 @@ class PTSapp(QMainWindow):
         if debug:
             self.show()
         else:
-            #self.showMaximized()
             if sys.platform == "win32":
                 self.showFullScreen()
             else:
@@ -3301,7 +3216,6 @@ class PTSapp(QMainWindow):
     def initFlashTimer(self):
         global whichCamSerial
         global SetPosToggle
-        # self.timer.singleShot(2000,self.update_function)  # for one time call only (once)
 
         self.timer = QTimer()
         self.timer.timeout.connect(self.flash)
@@ -3421,15 +3335,6 @@ class PTSapp(QMainWindow):
             self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
             self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
             self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
-
-
-            #if cam1Running == True:
-            #    self.pushButtonCam1.setStyleSheet(f"border: {borderSize2}px solid yellow; background-color: #4C8A4C; border-radius: {borderRadius2}px;")
-            #    self.pushButtonCam2.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
-            #    self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
-            #    self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
-            #    self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
-
 
         else:
             runToggle = False
@@ -3574,7 +3479,7 @@ class PTSapp(QMainWindow):
             elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
                 self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
             elif not cam4Pos10Set:
-                self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;') #01E6CC
+                self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
 
             
@@ -3595,93 +3500,84 @@ class PTSapp(QMainWindow):
         else:
             slideToggle = True
 
-            self.pushButtonSLonly.setStyleSheet(f"border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius2}px;")
+            self.pushButtonSLonly.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #01E6CC; border-radius: {borderRadius2}px;")
 
             if cam1HasSlider:
-
                 if cam1Pos1Set and not cam1Pos1Run and not cam1AtPos1:                                  # Set , not Run or At
-                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #40D140; border-radius: {borderRadius}px;')
                 elif cam1Pos1Set and not cam1Pos1Run and cam1AtPos1:                                    # Set & At, not Run
-                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #40D140; border-radius: {borderRadius}px;')
                 elif not cam1Pos1Set:
-                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #40D140; border-radius: {borderRadius}px;')
 
                 if cam1Pos10Set and not cam1Pos10Run and not cam1AtPos10:                                  # Position LEDs cam1
-                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #40D140; border-radius: {borderRadius}px;')
                 elif cam1Pos10Set and not cam1Pos10Run and cam1AtPos10:
-                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #40D140; border-radius: {borderRadius}px;')
                 elif not cam1Pos10Set:
-                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #40D140; border-radius: {borderRadius}px;')
 
 
             if cam2HasSlider:
-
                 if cam2Pos1Set and not cam2Pos1Run and not cam2AtPos1:                                  # Set , not Run or At
-                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #f05C80; border-radius: {borderRadius}px;')
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
                 elif cam2Pos1Set and not cam2Pos1Run and cam2AtPos1:                                    # Set & At, not Run
-                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #f05C80; border-radius: {borderRadius}px;')
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
                 elif not cam2Pos1Set:
-                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #f05C80; border-radius: {borderRadius}px;')
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #5C8BC9; border-radius: {borderRadius}px;')
 
                 if cam2Pos10Set and not cam2Pos10Run and not cam2AtPos10:                                  # Position LEDs cam2
-                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
                 elif cam2Pos10Set and not cam2Pos10Run and cam2AtPos10:
-                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
                 elif not cam2Pos10Set:
-                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #5C8BC9; border-radius: {borderRadius}px;')
 
 
             if cam3HasSlider:
-
                 if cam3Pos1Set and not cam3Pos1Run and not cam3AtPos1:                                  # Set , not Run or At
-                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #B4A21C; border-radius: {borderRadius}px;')
                 elif cam3Pos1Set and not cam3Pos1Run and cam3AtPos1:                                    # Set & At, not Run
-                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #B4A21C; border-radius: {borderRadius}px;')
                 elif not cam3Pos1Set:
-                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #B4A21C; border-radius: {borderRadius}px;')
 
                 if cam3Pos10Set and not cam3Pos10Run and not cam3AtPos10:                                  # Position LEDs cam3
-                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #B4A21C; border-radius: {borderRadius}px;')
                 elif cam3Pos10Set and not cam3Pos10Run and cam3AtPos10:
-                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #B4A21C; border-radius: {borderRadius}px;')
                 elif not cam3Pos10Set:
-                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #B4A21C; border-radius: {borderRadius}px;')
 
 
             if cam4HasSlider:
-
                 if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
-                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
+                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #01E6CC; border-radius: {borderRadius}px;')
                 elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
-                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
+                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #01E6CC; border-radius: {borderRadius}px;')
                 elif not cam4Pos1Set:
                     self.pushButton41.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
 
                 if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:                                  # Position LEDs cam4
-                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
+                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #01E6CC; border-radius: {borderRadius}px;')
                 elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
-                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
+                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #01E6CC; border-radius: {borderRadius}px;')
                 elif not cam4Pos10Set:
                     self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
 
 
             if cam5HasSlider:
-            #if self.line1s.geometry()[3] == 0:      #butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
-                print(self.line1s.geometry()[3])
-                #dial5sHeight = self.line1s.geometry()
-                #dial5sHeight = dial5sHeight[3]
-
                 if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
-                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
+                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #E97CF9; border-radius: {borderRadius}px;')
                 elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:                                    # Set & At, not Run
-                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
+                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #E97CF9; border-radius: {borderRadius}px;')
                 elif not cam5Pos1Set:
                     self.pushButton51.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
 
                 if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:                                  # Position LEDs cam5
-                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
+                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #E97CF9; border-radius: {borderRadius}px;')
                 elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
-                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
+                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #E97CF9; border-radius: {borderRadius}px;')
                 elif not cam5Pos10Set:
                     self.pushButton50.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
     
@@ -3942,18 +3838,9 @@ class PTSapp(QMainWindow):
         global previousTime
         global moveCheckInterval
         global whichCamSerial
-
-        #if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
-        #    currentMillisMoveCheck = time.time()
-        #    if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
-        #        previousMillisMoveCheck = currentMillisMoveCheck
-                #arr = [4, axisZh, axisXh, axisYh]                                          # for debugging
-        #        self.sendJoystick(arr)
+        
         if ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
             previousTime = time.time()
-            #oldAxisX = axisX
-            #oldAxisY = axisY
-            #oldAxisZ = axisZ
             axisXh = self.toHex(axisX, 16)
             axisYh = self.toHex(axisY, 16)
             axisZh = self.toHex(axisZ, 16)
@@ -4053,8 +3940,6 @@ class PTSapp(QMainWindow):
         panInt = int(arr[2], 16)
         tiltInt = int(arr[3], 16)
 
-        #print(sliderInt)
-
         data[0] = 4
         
         if ((sliderInt > 0) and (sliderInt < 256)):
@@ -4088,16 +3973,7 @@ class PTSapp(QMainWindow):
             data[6] = 0
         
         data[7] = whichCamSerial
-        #print(data[2])
         self.sendSerial(data)
-
-        #print(data)                   
-
-        #if not self.serial_port:
-        #    pass
-        #else:
-            #self.serial_port.write(data)
-        #   print(data)                                    # for debugging
         
         if whichCamSerial == 1 and (cam1AtPos1 or cam1AtPos2 or cam1AtPos3 or cam1AtPos4 or cam1AtPos5 or cam1AtPos6 or cam1AtPos7 or cam1AtPos8 or cam1AtPos9 or cam1AtPos10):
             cam1AtPos1 = False
@@ -4179,7 +4055,6 @@ class PTSapp(QMainWindow):
 
         if not isConnected:
             device_name_list = device_list
-            #print(device_name_list)
 
             usb_port = 'usbmodem'
             usb_port2 = 'usb/00'
@@ -4204,9 +4079,6 @@ class PTSapp(QMainWindow):
                 self.autoPortTimer = QTimer()
                 self.autoPortTimer.singleShot(2000,self.autoSerial)
 
-        #else:
-        #    self.resetButtonColours()
-
     def autoSerial(self):
         global btn_scan_show
         global device_name
@@ -4218,12 +4090,9 @@ class PTSapp(QMainWindow):
             device_name = device_name[0]
             self.comboBox.setCurrentText(device_name)
         
-        #print(device_name)
-        #print("Connecting")
         self.thread = ThreadClass(parent=None, index=1)
         self.thread.start()
         self.thread.any_signal.connect(self.readSerial)
-        #self.pushButtonConnect.setEnabled(False)
 
     def stopping(self, dt):
         global whileLoopRun
@@ -4508,10 +4377,6 @@ class PTSapp(QMainWindow):
         if debug:
             print(msg)
 
-        #textLength = len(self.root.get_screen('main').ids.txtInput_read.text)
-        #if textLength > 8000:
-            #self.root.get_screen('main').ids.txtInput_read.text = self.root.get_screen('main').ids.txtInput_read.text[1000:textLength]
-
         if msg == '':
             return
         if msg[0] == "":
@@ -4719,14 +4584,8 @@ class PTSapp(QMainWindow):
                     self.runCam1()
             elif msg[1:4] == "114":
                 cam1isRecording = False
-                #self.root.get_screen('main').ids.cam1Record.background_color = get_color_from_hex("#666666")
-                #self.root.get_screen('main').ids.cam1Record.text = "Record"
-                #client.send_message("/style/bgcolor/4/16", [50, 50, 50])
             elif msg[1:4] == "124":
                 cam1isRecording = True
-                #self.root.get_screen('main').ids.cam1Record.background_color = get_color_from_hex("#7D0000")
-                #self.root.get_screen('main').ids.cam1Record.text = "Recording"
-                #client.send_message("/style/bgcolor/4/16", [225, 0, 0])
             elif msg[1:4] == "115":
                 #cam1AF = True
                 pass
@@ -4956,14 +4815,8 @@ class PTSapp(QMainWindow):
                     self.runCam2()
             elif msg[1:4] == "214":
                 cam2isRecording = False
-                #self.root.get_screen('main').ids.cam2Record.background_color = get_color_from_hex("#666666")
-                #self.root.get_screen('main').ids.cam2Record.text = "Record"
-                #client.send_message("/style/bgcolor/5/16", [50, 50, 50])
             elif msg[1:4] == "224":
                 cam2isRecording = True
-                #self.root.get_screen('main').ids.cam2Record.background_color = get_color_from_hex("#7D0000")
-                #self.root.get_screen('main').ids.cam2Record.text = "Recording"
-                #client.send_message("/style/bgcolor/5/16", [225, 0, 0])
             elif msg[1:4] == "215":
                 #cam2# = True
                 pass
@@ -5193,14 +5046,8 @@ class PTSapp(QMainWindow):
                     self.runCam3()
             elif msg[1:4] == "314":
                 cam3isRecording = False
-                #self.root.get_screen('main').ids.cam3Record.background_color = get_color_from_hex("#666666")
-                #self.root.get_screen('main').ids.cam3Record.text = "Record"
-                #client.send_message("/style/bgcolor/6/16", [50, 50, 50])
             elif msg[1:4] == "324":
                 cam3isRecording = True
-                #self.root.get_screen('main').ids.cam3Record.background_color = get_color_from_hex("#7D0000")
-                #self.root.get_screen('main').ids.cam3Record.text = "Recording"
-                #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
             elif msg[1:4] == "315":
                 #cam3AF = True
                 pass
@@ -5430,14 +5277,8 @@ class PTSapp(QMainWindow):
                     self.runCam4()
             elif msg[1:4] == "414":
                 cam4isRecording = False
-                #self.root.get_screen('main').ids.cam4Record.background_color = get_color_from_hex("#666666")
-                #self.root.get_screen('main').ids.cam4Record.text = "Record"
-                #client.send_message("/style/bgcolor/6/16", [50, 50, 50])
             elif msg[1:4] == "424":
                 cam4isRecording = True
-                #self.root.get_screen('main').ids.cam4Record.background_color = get_color_from_hex("#7D0000")
-                #self.root.get_screen('main').ids.cam4Record.text = "Recording"
-                #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
             elif msg[1:4] == "415":
                 #cam4AF = True
                 pass
@@ -5667,14 +5508,8 @@ class PTSapp(QMainWindow):
                     self.runCam5()
             elif msg[1:4] == "514":
                 cam5isRecording = False
-                #self.root.get_screen('main').ids.cam5Record.background_color = get_color_from_hex("#666666")
-                #self.root.get_screen('main').ids.cam5Record.text = "Record"
-                #client.send_message("/style/bgcolor/6/16", [50, 50, 50])
             elif msg[1:4] == "524":
                 cam5isRecording = True
-                #self.root.get_screen('main').ids.cam5Record.background_color = get_color_from_hex("#7D0000")
-                #self.root.get_screen('main').ids.cam5Record.text = "Recording"
-                #client.send_message("/style/bgcolor/6/16", [225, 0, 0])
             elif msg[1:4] == "515":
                 #cam5AF = True
                 pass
@@ -5939,49 +5774,17 @@ class PTSapp(QMainWindow):
             return
         elif msg[0:4] == "Cam1":
             whichCamRead = 1
-            #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam1TextColour + "]" + msg + "[/color]")
-            #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
         elif msg[0:4] == "Cam2":
             whichCamRead = 2
-            #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam2TextColour + "]" + msg + "[/color]")
-            #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
         elif msg[0:4] == "Cam3":
             whichCamRead = 3
-            #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam3TextColour + "]" + msg + "[/color]")
-            #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
         elif msg[0:4] == "Cam4":
             whichCamRead = 4
-            #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam4TextColour + "]" + msg + "[/color]")
-            #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
         elif msg[0:4] == "Cam5":
             whichCamRead = 5
-            #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam5TextColour + "]" + msg + "[/color]")
-            #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
         else:
-            if whichCamRead == 1:
-                #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam1TextColour + "]" + msg + "[/color]")
-                #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
-                pass
-            elif whichCamRead == 2:
-                #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam2TextColour + "]" + msg + "[/color]")
-                #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
-                pass
-            elif whichCamRead == 3:
-                #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam3TextColour + "]" + msg + "[/color]")
-                #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
-                pass
-            elif whichCamRead == 4:
-                #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam4TextColour + "]" + msg + "[/color]")
-                #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
-                pass
-            elif whichCamRead == 5:
-                #self.root.get_screen('main').ids.txtInput_read.text += ("[color=" + Cam5TextColour + "]" + msg + "[/color]")
-                #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
-                pass
-            else:
-                #self.root.get_screen('main').ids.txtInput_read.text += ("[color=ffffff]") + msg + ("[/color]")
-                #self.root.get_screen('main').ids.scroll_view.scroll_y = 0
-                pass
+            pass
+
         msg = ''
 
         self.doButtonColours()
@@ -6481,6 +6284,8 @@ class PTSapp(QMainWindow):
         global cam1Pos8Run
         global cam1Pos9Run
         global cam1Pos10Run
+        global cam1HasSlider
+
         global cam2Pos1Run
         global cam2Pos2Run
         global cam2Pos3Run
@@ -6491,6 +6296,8 @@ class PTSapp(QMainWindow):
         global cam2Pos8Run
         global cam2Pos9Run
         global cam2Pos10Run
+        global cam2HasSlider
+
         global cam3Pos1Run
         global cam3Pos2Run
         global cam3Pos3Run
@@ -6501,6 +6308,8 @@ class PTSapp(QMainWindow):
         global cam3Pos8Run
         global cam3Pos9Run
         global cam3Pos10Run
+        global cam3HasSlider
+
         global cam4Pos1Run
         global cam4Pos2Run
         global cam4Pos3Run
@@ -6511,6 +6320,8 @@ class PTSapp(QMainWindow):
         global cam4Pos8Run
         global cam4Pos9Run
         global cam4Pos10Run
+        global cam4HasSlider
+
         global cam5Pos1Run
         global cam5Pos2Run
         global cam5Pos3Run
@@ -6521,6 +6332,8 @@ class PTSapp(QMainWindow):
         global cam5Pos8Run
         global cam5Pos9Run
         global cam5Pos10Run
+        global cam5HasSlider
+
         global cam1AtPos1
         global cam1AtPos2
         global cam1AtPos3
@@ -6598,7 +6411,10 @@ class PTSapp(QMainWindow):
             buttonColourFlash = "#000000"
 
         if cam1Pos1Run and not cam1AtPos1:
-            self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+            if slideToggle and cam1HasSlider:
+                self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #40D140; border-radius: {borderRadius}px;')
+            elif not slideToggle:
+                self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos2Run and not cam1AtPos2:
             self.pushButton12.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos3Run and not cam1AtPos3:
@@ -6616,11 +6432,17 @@ class PTSapp(QMainWindow):
         if cam1Pos9Run and not cam1AtPos9:
             self.pushButton19.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
         if cam1Pos10Run and not cam1AtPos10:
-            self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+            if slideToggle and cam1HasSlider:
+                self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #40D140; border-radius: {borderRadius}px;')
+            elif not slideToggle:
+                self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         
         if cam2Pos1Run and not cam2AtPos1:
-            self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
+            if slideToggle and cam2HasSlider:
+                self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
+            elif not slideToggle:
+                self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos2Run and not cam2AtPos2:
             self.pushButton22.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos3Run and not cam2AtPos3:
@@ -6638,11 +6460,17 @@ class PTSapp(QMainWindow):
         if cam2Pos9Run and not cam2AtPos9:
             self.pushButton29.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
         if cam2Pos10Run and not cam2AtPos10:
-            self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
+            if slideToggle and cam2HasSlider:
+                self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
+            elif not slideToggle:
+                self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #405C80; border-radius: {borderRadius}px;')
 
         
         if cam3Pos1Run and not cam3AtPos1:
-            self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
+            if slideToggle and cam3HasSlider:
+                self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #B4A21C; border-radius: {borderRadius}px;')
+            elif not slideToggle:
+                self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos2Run and not cam3AtPos2:
             self.pushButton32.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos3Run and not cam3AtPos3:
@@ -6660,13 +6488,16 @@ class PTSapp(QMainWindow):
         if cam3Pos9Run and not cam3AtPos9:
             self.pushButton39.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
         if cam3Pos10Run and not cam3AtPos10:
-            self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
+            if slideToggle and cam3HasSlider:
+                self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #B4A21C; border-radius: {borderRadius}px;')
+            elif not slideToggle:
+                self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius}px;')
 
         
         if cam4Pos1Run and not cam4AtPos1:
-            if slideToggle == True:
+            if slideToggle and cam4HasSlider:
                 self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #01E6CC; border-radius: {borderRadius}px;')
-            else:
+            elif not slideToggle:
                 self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos2Run and not cam4AtPos2:
             self.pushButton42.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
@@ -6685,16 +6516,16 @@ class PTSapp(QMainWindow):
         if cam4Pos9Run and not cam4AtPos9:
             self.pushButton49.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
         if cam4Pos10Run and not cam4AtPos10:
-            if slideToggle == True:
+            if slideToggle and cam4HasSlider:
                 self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #01E6CC; border-radius: {borderRadius}px;')
-            else:
+            elif not slideToggle:
                 self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius}px;')
 
         
         if cam5Pos1Run and not cam5AtPos1:
-            if slideToggle == True: 
+            if slideToggle and cam5HasSlider:
                 self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #E97CF9; border-radius: {borderRadius}px;')
-            else:
+            elif not slideToggle:
                 self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos2Run and not cam5AtPos2:
             self.pushButton52.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
@@ -6713,9 +6544,9 @@ class PTSapp(QMainWindow):
         if cam5Pos9Run and not cam5AtPos9:
             self.pushButton59.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
         if cam5Pos10Run and not cam5AtPos10:
-            if slideToggle == True: 
+            if slideToggle and cam5HasSlider:
                 self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #E97CF9; border-radius: {borderRadius}px;')
-            else:
+            elif not slideToggle:
                 self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius}px;')
 
         if cam1Running:
@@ -6725,21 +6556,14 @@ class PTSapp(QMainWindow):
         if cam3Running:
             self.pushButtonCam3.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #807100; border-radius: {borderRadius2}px;")
         if cam4Running:
-            #if slideToggle == True:
-                #self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius2}px;")
-            #else:
             self.pushButtonCam4.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #008071; border-radius: {borderRadius2}px;")
         if cam5Running:
-            #if slideToggle == True:
-                #self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius2}px;")
-            #else:
             self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
 
         
 
     def doButtonColours(self):
-        #print("Button Colours")
         global cam1AtPos1
         global cam1AtPos2
         global cam1AtPos3
@@ -7102,12 +6926,20 @@ class PTSapp(QMainWindow):
             OLDcam1Pos1Set = cam1Pos1Set
             OLDcam1Pos1Run = cam1Pos1Run
             OLDcam1AtPos1 = cam1AtPos1
-            if cam1Pos1Set and not cam1Pos1Run and not cam1AtPos1:                                  # Set , not Run or At
-                self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
-            elif cam1Pos1Set and not cam1Pos1Run and cam1AtPos1:                                    # Set & At, not Run
-                self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
-            elif not cam1Pos1Set:
-                self.pushButton11.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+            if slideToggle and cam1HasSlider:
+                if cam1Pos1Set and not cam1Pos1Run and not cam1AtPos1:                                  # Set , not Run or At
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #40D140; border-radius: {borderRadius}px;')
+                elif cam1Pos1Set and not cam1Pos1Run and cam1AtPos1:                                    # Set & At, not Run
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #40D140; border-radius: {borderRadius}px;')
+                elif not cam1Pos1Set:
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #40D140; border-radius: {borderRadius}px;')
+            else:
+                if cam1Pos1Set and not cam1Pos1Run and not cam1AtPos1:                                  # Set , not Run or At
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                elif cam1Pos1Set and not cam1Pos1Run and cam1AtPos1:                                    # Set & At, not Run
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                elif not cam1Pos1Set:
+                    self.pushButton11.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
         if cam1Pos2Set != OLDcam1Pos2Set or cam1Pos2Run != OLDcam1Pos2Run or cam1AtPos2 != OLDcam1AtPos2 or resetButtons:
             OLDcam1Pos2Set = cam1Pos2Set
@@ -7201,12 +7033,20 @@ class PTSapp(QMainWindow):
             OLDcam1Pos10Set = cam1Pos10Set
             OLDcam1Pos10Run = cam1Pos10Run
             OLDcam1AtPos10 = cam1AtPos10
-            if cam1Pos10Set and not cam1Pos10Run and not cam1AtPos10:                                  # Position LEDs Cam1
-                self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
-            elif cam1Pos10Set and not cam1Pos10Run and cam1AtPos10:
-                self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
-            elif not cam1Pos10Set:
-                self.pushButton10.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+            if slideToggle and cam1HasSlider:
+                if cam1Pos10Set and not cam1Pos10Run and not cam1AtPos10:                                  # Position LEDs Cam1
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #40D140; border-radius: {borderRadius}px;')
+                elif cam1Pos10Set and not cam1Pos10Run and cam1AtPos10:
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #40D140; border-radius: {borderRadius}px;')
+                elif not cam1Pos10Set:
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #40D140; border-radius: {borderRadius}px;')
+            else:
+                if cam1Pos10Set and not cam1Pos10Run and not cam1AtPos10:                                  # Position LEDs Cam1
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                elif cam1Pos10Set and not cam1Pos10Run and cam1AtPos10:
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #4C8A4C; border-radius: {borderRadius}px;')
+                elif not cam1Pos10Set:
+                    self.pushButton10.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius}px;')
 
 
 
@@ -7217,12 +7057,20 @@ class PTSapp(QMainWindow):
             OLDcam2Pos1Set = cam2Pos1Set
             OLDcam2Pos1Run = cam2Pos1Run
             OLDcam2AtPos1 = cam2AtPos1
-            if cam2Pos1Set and not cam2Pos1Run and not cam2AtPos1:                                  # Set , not Run or At
-                self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
-            elif cam2Pos1Set and not cam2Pos1Run and cam2AtPos1:                                    # Set & At, not Run
-                self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
-            elif not cam2Pos1Set:
-                self.pushButton21.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
+            if slideToggle and cam2HasSlider:
+                if cam2Pos1Set and not cam2Pos1Run and not cam2AtPos1:                                  # Set , not Run or At
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
+                elif cam2Pos1Set and not cam2Pos1Run and cam2AtPos1:                                    # Set & At, not Run
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
+                elif not cam2Pos1Set:
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #5C8BC9; border-radius: {borderRadius}px;')
+            else:
+                if cam2Pos1Set and not cam2Pos1Run and not cam2AtPos1:                                  # Set , not Run or At
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
+                elif cam2Pos1Set and not cam2Pos1Run and cam2AtPos1:                                    # Set & At, not Run
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
+                elif not cam2Pos1Set:
+                    self.pushButton21.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
         if cam2Pos2Set != OLDcam2Pos2Set or cam2Pos2Run != OLDcam2Pos2Run or cam2AtPos2 != OLDcam2AtPos2 or resetButtons:
             OLDcam2Pos2Set = cam2Pos2Set
@@ -7316,13 +7164,20 @@ class PTSapp(QMainWindow):
             OLDcam2Pos10Set = cam2Pos10Set
             OLDcam2Pos10Run = cam2Pos10Run
             OLDcam2AtPos10 = cam2AtPos10
-            if cam2Pos10Set and not cam2Pos10Run and not cam2AtPos10:                                  # Position LEDs cam2
-                self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
-            elif cam2Pos10Set and not cam2Pos10Run and cam2AtPos10:
-                self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
-            elif not cam2Pos10Set:
-                self.pushButton20.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
-
+            if slideToggle and cam2HasSlider:
+                if cam2Pos10Set and not cam2Pos10Run and not cam2AtPos10:                                  # Position LEDs cam2
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
+                elif cam2Pos10Set and not cam2Pos10Run and cam2AtPos10:
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #5C8BC9; border-radius: {borderRadius}px;')
+                elif not cam2Pos10Set:
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #5C8BC9; border-radius: {borderRadius}px;')
+            else:
+                if cam2Pos10Set and not cam2Pos10Run and not cam2AtPos10:                                  # Position LEDs cam2
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #405C80; border-radius: {borderRadius}px;')
+                elif cam2Pos10Set and not cam2Pos10Run and cam2AtPos10:
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #405C80; border-radius: {borderRadius}px;')
+                elif not cam2Pos10Set:
+                    self.pushButton20.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #405C80; border-radius: {borderRadius}px;')
 
 
 
@@ -7330,12 +7185,20 @@ class PTSapp(QMainWindow):
             OLDcam3Pos1Set = cam3Pos1Set
             OLDcam3Pos1Run = cam3Pos1Run
             OLDcam3AtPos1 = cam3AtPos1
-            if cam3Pos1Set and not cam3Pos1Run and not cam3AtPos1:                                  # Set , not Run or At
-                self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
-            elif cam3Pos1Set and not cam3Pos1Run and cam3AtPos1:                                    # Set & At, not Run
-                self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
-            elif not cam3Pos1Set:
-                self.pushButton31.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
+            if slideToggle and cam3HasSlider:
+                if cam3Pos1Set and not cam3Pos1Run and not cam3AtPos1:                                  # Set , not Run or At
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #B4A21C; border-radius: {borderRadius}px;')
+                elif cam3Pos1Set and not cam3Pos1Run and cam3AtPos1:                                    # Set & At, not Run
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #B4A21C; border-radius: {borderRadius}px;')
+                elif not cam3Pos1Set:
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #B4A21C; border-radius: {borderRadius}px;')
+            else:
+                if cam3Pos1Set and not cam3Pos1Run and not cam3AtPos1:                                  # Set , not Run or At
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
+                elif cam3Pos1Set and not cam3Pos1Run and cam3AtPos1:                                    # Set & At, not Run
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
+                elif not cam3Pos1Set:
+                    self.pushButton31.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
         if cam3Pos2Set != OLDcam3Pos2Set or cam3Pos2Run != OLDcam3Pos2Run or cam3AtPos2 != OLDcam3AtPos2 or resetButtons:
             OLDcam3Pos2Set = cam3Pos2Set
@@ -7429,12 +7292,20 @@ class PTSapp(QMainWindow):
             OLDcam3Pos10Set = cam3Pos10Set
             OLDcam3Pos10Run = cam3Pos10Run
             OLDcam3AtPos10 = cam3AtPos10
-            if cam3Pos10Set and not cam3Pos10Run and not cam3AtPos10:                                  # Position LEDs cam3
-                self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
-            elif cam3Pos10Set and not cam3Pos10Run and cam3AtPos10:
-                self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
-            elif not cam3Pos10Set:
-                self.pushButton30.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
+            if slideToggle and cam3HasSlider:
+                if cam3Pos10Set and not cam3Pos10Run and not cam3AtPos10:                                  # Position LEDs cam3
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #B4A21C; border-radius: {borderRadius}px;')
+                elif cam3Pos10Set and not cam3Pos10Run and cam3AtPos10:
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #B4A21C; border-radius: {borderRadius}px;')
+                elif not cam3Pos10Set:
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #B4A21C; border-radius: {borderRadius}px;')
+            else:
+                if cam3Pos10Set and not cam3Pos10Run and not cam3AtPos10:                                  # Position LEDs cam3
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #807100; border-radius: {borderRadius}px;')
+                elif cam3Pos10Set and not cam3Pos10Run and cam3AtPos10:
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #807100; border-radius: {borderRadius}px;')
+                elif not cam3Pos10Set:
+                    self.pushButton30.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #807100; border-radius: {borderRadius}px;')
 
 
 
@@ -7443,12 +7314,20 @@ class PTSapp(QMainWindow):
             OLDcam4Pos1Set = cam4Pos1Set
             OLDcam4Pos1Run = cam4Pos1Run
             OLDcam4AtPos1 = cam4AtPos1
-            if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
-                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
-            elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
-                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
-            elif not cam4Pos1Set:
-                self.pushButton41.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
+            if slideToggle and cam4HasSlider:
+                if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
+                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #01E6CC; border-radius: {borderRadius}px;')
+                elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
+                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #01E6CC; border-radius: {borderRadius}px;')
+                elif not cam4Pos1Set:
+                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
+            else:
+                if cam4Pos1Set and not cam4Pos1Run and not cam4AtPos1:                                  # Set , not Run or At
+                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
+                elif cam4Pos1Set and not cam4Pos1Run and cam4AtPos1:                                    # Set & At, not Run
+                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
+                elif not cam4Pos1Set:
+                    self.pushButton41.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
         if cam4Pos2Set != OLDcam4Pos2Set or cam4Pos2Run != OLDcam4Pos2Run or cam4AtPos2 != OLDcam4AtPos2 or resetButtons:
             OLDcam4Pos2Set = cam4Pos2Set
@@ -7542,22 +7421,21 @@ class PTSapp(QMainWindow):
             OLDcam4Pos10Set = cam4Pos10Set
             OLDcam4Pos10Run = cam4Pos10Run
             OLDcam4AtPos10 = cam4AtPos10
-            if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:                                  # Position LEDs cam4
-                if slideToggle == True:
-                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
-            elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
-                if slideToggle == True:
-                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
-            elif not cam4Pos10Set:
-                if slideToggle == True:
-                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
+            if slideToggle and cam4HasSlider:
+                if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:                                  # Position LEDs cam4
+                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #01E6CC; border-radius: {borderRadius}px;')
+                elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
+                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #01E6CC; border-radius: {borderRadius}px;')
+                elif not cam4Pos10Set:
+                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #01E6CC; border-radius: {borderRadius}px;')
+            else:
 
+                if cam4Pos10Set and not cam4Pos10Run and not cam4AtPos10:
+                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #008071; border-radius: {borderRadius}px;')
+                elif cam4Pos10Set and not cam4Pos10Run and cam4AtPos10:
+                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #008071; border-radius: {borderRadius}px;')
+                elif not cam4Pos10Set:
+                    self.pushButton40.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #008071; border-radius: {borderRadius}px;')
 
 
 
@@ -7567,22 +7445,20 @@ class PTSapp(QMainWindow):
             OLDcam5Pos1Set = cam5Pos1Set
             OLDcam5Pos1Run = cam5Pos1Run
             OLDcam5AtPos1 = cam5AtPos1
-            if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
-                if slideToggle == True:
+            if slideToggle and cam5HasSlider:
+                if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
+                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #E97CF9; border-radius: {borderRadius}px;')
+                elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:
+                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #E97CF9; border-radius: {borderRadius}px;')
+                elif not cam5Pos1Set:
+                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
+            else:
+                if cam5Pos1Set and not cam5Pos1Run and not cam5AtPos1:                                  # Set , not Run or At
                     self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
-            elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:   
-                if slideToggle == True:                                 # Set & At, not Run
+                elif cam5Pos1Set and not cam5Pos1Run and cam5AtPos1:
                     self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
-            elif not cam5Pos1Set:
-                if slideToggle == True:
+                elif not cam5Pos1Set:
                     self.pushButton51.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton51.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
-
 
         if cam5Pos2Set != OLDcam5Pos2Set or cam5Pos2Run != OLDcam5Pos2Run or cam5AtPos2 != OLDcam5AtPos2 or resetButtons:
             OLDcam5Pos2Set = cam5Pos2Set
@@ -7676,23 +7552,20 @@ class PTSapp(QMainWindow):
             OLDcam5Pos10Set = cam5Pos10Set
             OLDcam5Pos10Run = cam5Pos10Run
             OLDcam5AtPos10 = cam5AtPos10
-            if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:                                  # Position LEDs cam5
-                if slideToggle == True:
+            if slideToggle and cam5HasSlider:
+                if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:                                  # Position LEDs cam5
+                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #E97CF9; border-radius: {borderRadius}px;')
+                elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
+                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #E97CF9; border-radius: {borderRadius}px;')
+                elif not cam5Pos10Set:
+                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #E97CF9; border-radius: {borderRadius}px;')
+            else:
+                if cam5Pos10Set and not cam5Pos10Run and not cam5AtPos10:
                     self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourSet}; background-color: #8D5395; border-radius: {borderRadius}px;')
-            elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
-                if slideToggle == True:
+                elif cam5Pos10Set and not cam5Pos10Run and cam5AtPos10:
                     self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid {buttonColourAt}; background-color: #8D5395; border-radius: {borderRadius}px;')
-            elif not cam5Pos10Set:
-                if slideToggle == True:
+                elif not cam5Pos10Set:
                     self.pushButton50.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
-                else:
-                    self.pushButton50.setStyleSheet(f'border: {borderSize}px solid grey; background-color: #8D5395; border-radius: {borderRadius}px;')
-
-
 
 
 
@@ -7778,7 +7651,7 @@ class PTSapp(QMainWindow):
             oldcam1Speed = cam1SliderSpeed
             if cam1SliderSpeed == 1:
                 self.dial1s.setValue(1)
-                self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8) #1820, 115, 20, 36)            #    10, 141      30, 121     50, 101     70, 81      90, 61      110, 41     130, 21
+                self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, butttonLayoutY * 1.8)
                 cam1HasSlider = True
             elif cam1SliderSpeed == 3:
                 self.dial1s.setValue(2)
@@ -8259,26 +8132,26 @@ class PTSapp(QMainWindow):
         oldcam5PTSpeed = 9
 
         self.dial1p.setValue(1)
-        self.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0) #1470, 115, 20, 36)
+        self.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
         self.dial2p.setValue(1)
-        self.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0) #1470, 115, 20, 36)
+        self.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
         self.dial3p.setValue(1)
-        self.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0) #1470, 115, 20, 36)
+        self.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
         self.dial4p.setValue(1)
-        self.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0) #1470, 115, 20, 36)
+        self.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
         self.dial5p.setValue(1)
-        self.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0) #1470, 115, 20, 36)
+        self.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
         
         self.dial1s.setValue(1)
-        self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)   #1820, 115, 20, 36)
+        self.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
         self.dial2s.setValue(1)
-        self.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)   #1820, 115, 20, 36)
+        self.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
         self.dial3s.setValue(1)
-        self.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)   #1820, 115, 20, 36)
+        self.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
         self.dial4s.setValue(1)
-        self.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)   #1820, 115, 20, 36)
+        self.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
         self.dial5s.setValue(1)
-        self.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)   #1820, 115, 20, 36)
+        self.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
 
         self.setPos(3)
         self.doButtonColours()
