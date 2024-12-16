@@ -1639,7 +1639,7 @@ class Ui_SettingsWindow(QMainWindow):
             if whichCamSerial == 1:
                 self.sendSerial('&1T')
             elif whichCamSerial == 2:
-                self.sendSerial('&2T')
+                self.sendSeriale('&2T')
             elif whichCamSerial == 3:
                 self.sendSerial('&3T')
             elif whichCamSerial == 4:
@@ -1672,43 +1672,57 @@ class Ui_SettingsWindow(QMainWindow):
         global whichCamSerial
 
         if whichCamSerial == 1:
-            self.sendSerial('&1L' + self.labelTLSteps.text())
+            self.sendSerial('&1o' + self.labelTLSteps.text())
         elif whichCamSerial == 2:
-            self.sendSerial('&2L' + self.labelTLSteps.text())
+            self.sendSerial('&2o' + self.labelTLSteps.text())
         elif whichCamSerial == 3:
-            self.sendSerial('&3L' + self.labelTLSteps.text())
+            self.sendSerial('&3o' + self.labelTLSteps.text())
         elif whichCamSerial == 4:
-            self.sendSerial('&4L' + self.labelTLSteps.text())
+            self.sendSerial('&4o' + self.labelTLSteps.text())
         elif whichCamSerial == 5:
-            self.sendSerial('&5L' + self.labelTLSteps.text())
+            self.sendSerial('&5o' + self.labelTLSteps.text())
 
     def TLStart(self):
         global whichCamSerial
 
         if whichCamSerial == 1:
-            self.sendSerial('&1K')
+            self.sendSerial('&1e')
         elif whichCamSerial == 2:
-            self.sendSerial('&2K')
+            self.sendSerial('&2e')
         elif whichCamSerial == 3:
-            self.sendSerial('&3K')
+            self.sendSerial('&3e')
         elif whichCamSerial == 4:
-            self.sendSerial('&4K')
+            self.sendSerial('&4e')
         elif whichCamSerial == 5:
-            self.sendSerial('&5K')
+            self.sendSerial('&5e')
 
     def TLStop(self):
         global whichCamSerial
 
         if whichCamSerial == 1:
-            self.sendSerial('&1n')
+            self.sendSerial('&1E')
         elif whichCamSerial == 2:
-            self.sendSerial('&2n')
+            self.sendSerial('&2E')
         elif whichCamSerial == 3:
-            self.sendSerial('&3n')
+            self.sendSerial('&3E')
         elif whichCamSerial == 4:
-            self.sendSerial('&4n')
+            self.sendSerial('&4E')
         elif whichCamSerial == 5:
-            self.sendSerial('&5n')
+            self.sendSerial('&5E')
+
+    def TLStep(self):
+        global whichCamSerial
+
+        if whichCamSerial == 1:
+            self.sendSerial('&1O')
+        elif whichCamSerial == 2:
+            self.sendSerial('&2O')
+        elif whichCamSerial == 3:
+            self.sendSerial('&3O')
+        elif whichCamSerial == 4:
+            self.sendSerial('&4O')
+        elif whichCamSerial == 5:
+            self.sendSerial('&5O')
 
 class Ui_editWindow(QMainWindow):
     def __init__(self):
