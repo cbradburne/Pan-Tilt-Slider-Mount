@@ -875,17 +875,12 @@ void SerialData(void) {
     case INSTRUCTION_TIMELAPSE_STEPS:
       {
         numberOfSteps = SerialCommandValueFloat;
-        //numberOfSteps = (int)numberOfStepsFloat;
-        Serial1.println(String("numberOfSteps: ") + numberOfSteps);
-        Serial1.println("#$");
       }
       break;
     case INSTRUCTION_TIMELAPSE_START:
       {
         if (TLStarted == false) {
           TLStarted = true;
-        Serial1.println("TLStart");
-        Serial1.println("#$");
         }
       }
       break;
@@ -900,28 +895,18 @@ void SerialData(void) {
     case INSTRUCTION_TIMELAPSE_STEP:
       {
         if (TLStarted) {
-
           panStepDelta = (keyframe_array[0].panStepCount + ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) * (numberOfStepsCount / numberOfSteps)));
-          //panStepDelta = (keyframe_array[9].panStepCount - keyframe_array[0].panStepCount);
-          //stepDelta = (numberOfStepsCount / numberOfSteps);
-          //panStepDelta2 = (panStepDelta * stepDelta);
-          //panStepDelta3 = (keyframe_array[0].panStepCount + panStepDelta2);
-
           tiltStepDelta = (keyframe_array[0].tiltStepCount + ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) * (numberOfStepsCount / numberOfSteps)));
           sliderStepDelta = (keyframe_array[0].sliderStepCount + ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) * (numberOfStepsCount / numberOfSteps)));
           zoomStepDelta = (keyframe_array[0].zoomStepCount + ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) * (numberOfStepsCount / numberOfSteps)));
 
-          Serial1.println("TLSTEP");
-          Serial1.println(String("numberOfStepsCount: ") + numberOfStepsCount);
-          Serial1.println(String("numberOfSteps: ") + numberOfSteps);
-          Serial1.println(String("[0].panStepCount: ") + keyframe_array[0].panStepCount);
-          Serial1.println(String("[9].panStepCount: ") + keyframe_array[9].panStepCount);
-          Serial1.println(String("panStepDelta: ") + panStepDelta);
-          //Serial1.println(String("stepDelta: ") + stepDelta);
-          //Serial1.println(String("panStepDelta2: ") + panStepDelta2);
-          //Serial1.println(String("panStepDelta3: ") + panStepDelta3);
-          Serial1.println("#$");
-
+          //Serial1.println("TLSTEP");
+          //Serial1.println(String("numberOfStepsCount: ") + numberOfStepsCount);
+          //Serial1.println(String("numberOfSteps: ") + numberOfSteps);
+          //Serial1.println(String("[0].panStepCount: ") + keyframe_array[0].panStepCount);
+          //Serial1.println(String("[9].panStepCount: ") + keyframe_array[9].panStepCount);
+          //Serial1.println(String("panStepDelta: ") + panStepDelta);
+          //Serial1.println("#$");
 
           stepper_pan.setTargetAbs(panStepDelta);
           stepper_tilt.setTargetAbs(tiltStepDelta);
@@ -930,14 +915,11 @@ void SerialData(void) {
 
           StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
 
-          
-
           if (numberOfSteps == numberOfStepsCount) {
             TLStarted = false;
             numberOfStepsCount = 0;
             return;
           }
-
           numberOfStepsCount++;
         }
       }
