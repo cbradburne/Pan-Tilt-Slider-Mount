@@ -72,7 +72,7 @@ if sys.platform != "win32":
 #E97CF9
 
 
-debug = False
+debug = True
 
 serial_port = None
 
@@ -799,6 +799,14 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonTLStop.setFont(font)
         self.pushButtonTLStop.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
         self.pushButtonTLStop.setObjectName("pushButtonTLStop")
+        self.pushButtonTLStep = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.TLStep())
+        self.pushButtonTLStep.setGeometry(QtCore.QRect(butttonLayoutX * 10.5, butttonLayoutY * 48.5, (buttonGoX * 1)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1.5)
+        self.pushButtonTLStep.setFont(font)
+        self.pushButtonTLStep.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+        self.pushButtonTLStep.setObjectName("pushButtonTLStep")
         self.labelPTspeed4 = QtWidgets.QLineEdit(self.groupBox)
         self.labelPTspeed4.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 10.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
@@ -1126,6 +1134,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonTLSteps.setText(_translate("settingsWindow", "TimeLapse Steps"))
         self.pushButtonTLStart.setText(_translate("settingsWindow", "Start"))
         self.pushButtonTLStop.setText(_translate("settingsWindow", "Stop"))
+        self.pushButtonTLStep.setText(_translate("settingsWindow", "Step"))
         
 
         if debug:
@@ -10992,8 +11001,8 @@ class ThreadClass(QtCore.QThread):
                     msg=''
 
                 if sendData != "":
-                    #if debug:
-                        #print(sendData)
+                    if debug:
+                        print(sendData)
 
                     if type(sendData) is str:
                         data = bytes((sendData + '\n'), 'utf8')

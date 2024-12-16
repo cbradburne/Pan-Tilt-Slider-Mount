@@ -874,14 +874,18 @@ void SerialData(void) {
       break;
     case INSTRUCTION_TIMELAPSE_STEPS:
       {
-        numberOfStepsFloat = SerialCommandValueFloat;
-        numberOfSteps = (int)numberOfStepsFloat;
+        numberOfSteps = SerialCommandValueFloat;
+        //numberOfSteps = (int)numberOfStepsFloat;
+        Serial1.println(String("numberOfSteps: ") + numberOfSteps);
+        Serial1.println("#$");
       }
       break;
     case INSTRUCTION_TIMELAPSE_START:
       {
-        if ((TLStarted == false) && (panStepDelta != 0)) {}
+        if (TLStarted == false) {
           TLStarted = true;
+        Serial1.println("TLStart");
+        Serial1.println("#$");
         }
       }
       break;
@@ -895,26 +899,46 @@ void SerialData(void) {
       break;
     case INSTRUCTION_TIMELAPSE_STEP:
       {
-        if (TLStarted)) {
+        if (TLStarted) {
 
-          //panStepDelta = ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) / numberOfSteps);
-          //tiltStepDelta = ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) / numberOfSteps);
-          //sliderStepDelta = ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) / numberOfSteps);
-          //zoomStepDelta = ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) / numberOfSteps);
+          panStepDelta = (keyframe_array[0].panStepCount + ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) * (numberOfStepsCount / numberOfSteps)));
+          //panStepDelta = (keyframe_array[9].panStepCount - keyframe_array[0].panStepCount);
+          //stepDelta = (numberOfStepsCount / numberOfSteps);
+          //panStepDelta2 = (panStepDelta * stepDelta);
+          //panStepDelta3 = (keyframe_array[0].panStepCount + panStepDelta2);
 
-          stepper_pan.setTargetAbs(keyframe_array[0].panStepCount + ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) * (numberOfStepsCount / numberOfSteps));
-          stepper_tilt.setTargetAbs(keyframe_array[0].tiltStepCount + ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) * (numberOfStepsCount / numberOfSteps));
-          stepper_slider.setTargetAbs(keyframe_array[0].sliderStepCount + ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) * (numberOfStepsCount / numberOfSteps));
-          stepper_zoom.setTargetAbs(keyframe_array[0].zoomStepCount + ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) * (numberOfStepsCount / numberOfSteps));
+          tiltStepDelta = (keyframe_array[0].tiltStepCount + ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) * (numberOfStepsCount / numberOfSteps)));
+          sliderStepDelta = (keyframe_array[0].sliderStepCount + ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) * (numberOfStepsCount / numberOfSteps)));
+          zoomStepDelta = (keyframe_array[0].zoomStepCount + ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) * (numberOfStepsCount / numberOfSteps)));
+
+          Serial1.println("TLSTEP");
+          Serial1.println(String("numberOfStepsCount: ") + numberOfStepsCount);
+          Serial1.println(String("numberOfSteps: ") + numberOfSteps);
+          Serial1.println(String("[0].panStepCount: ") + keyframe_array[0].panStepCount);
+          Serial1.println(String("[9].panStepCount: ") + keyframe_array[9].panStepCount);
+          Serial1.println(String("panStepDelta: ") + panStepDelta);
+          //Serial1.println(String("stepDelta: ") + stepDelta);
+          //Serial1.println(String("panStepDelta2: ") + panStepDelta2);
+          //Serial1.println(String("panStepDelta3: ") + panStepDelta3);
+          Serial1.println("#$");
+
+
+          stepper_pan.setTargetAbs(panStepDelta);
+          stepper_tilt.setTargetAbs(tiltStepDelta);
+          stepper_slider.setTargetAbs(sliderStepDelta);
+          stepper_zoom.setTargetAbs(zoomStepDelta);
 
           StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
 
-          numberOfStepsCount++;
+          
 
           if (numberOfSteps == numberOfStepsCount) {
             TLStarted = false;
             numberOfStepsCount = 0;
+            return;
           }
+
+          numberOfStepsCount++;
         }
       }
       break;

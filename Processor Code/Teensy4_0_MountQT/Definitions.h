@@ -95,6 +95,7 @@
 #define INSTRUCTION_TIMELAPSE_STOP 'n'
 #define INSTRUCTION_TIMELAPSE_STEP 'A'
 
+#define INSTRUCTION_ZOOM_IN 'Z'
 #define INSTRUCTION_ZOOM_OUT 'z'
 #define INSTRUCTION_STOP_ZOOM 'N'
 
@@ -194,13 +195,16 @@ int SerialCommandValueInt;
 float SerialCommandValueFloat;
 
 float panStepDelta;
+float panStepDelta2;
+float panStepDelta3;
+float stepDelta;
 float tiltStepDelta;
 float sliderStepDelta;
-float zoomStepDelta
+float zoomStepDelta;
 
-int numberOfSteps = 0;
+float numberOfSteps = 0;
 float numberOfStepsFloat = 0.0;
-int numberOfStepsCount = 0;
+float numberOfStepsCount = 0;
 
 String atIndex = "";
 
