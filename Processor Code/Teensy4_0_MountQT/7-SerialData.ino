@@ -880,6 +880,15 @@ void SerialData(void) {
     case INSTRUCTION_TIMELAPSE_START:
       {
         if (TLStarted == false) {
+          stepper_pan.setTargetAbs(keyframe_array[0].panStepCount);
+          stepper_tilt.setTargetAbs(keyframe_array[0].tiltStepCount);
+          stepper_slider.setTargetAbs(keyframe_array[0].sliderStepCount);
+          stepper_zoom.setTargetAbs(keyframe_array[0].zoomStepCount);
+
+          isMoving = true;
+          StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+          isMoving = false;
+
           TLStarted = true;
         }
       }
@@ -895,6 +904,8 @@ void SerialData(void) {
     case INSTRUCTION_TIMELAPSE_STEP:
       {
         if (TLStarted) {
+          numberOfStepsCount++;
+
           panStepDelta = (keyframe_array[0].panStepCount + ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) * (numberOfStepsCount / numberOfSteps)));
           tiltStepDelta = (keyframe_array[0].tiltStepCount + ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) * (numberOfStepsCount / numberOfSteps)));
           sliderStepDelta = (keyframe_array[0].sliderStepCount + ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) * (numberOfStepsCount / numberOfSteps)));
@@ -913,14 +924,15 @@ void SerialData(void) {
           stepper_slider.setTargetAbs(sliderStepDelta);
           stepper_zoom.setTargetAbs(zoomStepDelta);
 
+          isMoving = true;
           StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+          isMoving = false;
 
           if (numberOfSteps == numberOfStepsCount) {
             TLStarted = false;
             numberOfStepsCount = 0;
             return;
           }
-          numberOfStepsCount++;
         }
       }
       break;
