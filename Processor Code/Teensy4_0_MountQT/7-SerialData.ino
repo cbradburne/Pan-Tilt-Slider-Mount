@@ -872,6 +872,50 @@ void SerialData(void) {
         }
       }
       break;
+    case INSTRUCTION_TIMELAPSE_STEPS:
+      {
+        numberOfSteps = SerialCommandValueFloat;
+
+        panStepDelta = ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) / numberOfSteps);
+        tiltStepDelta = ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) / numberOfSteps);
+        sliderStepDelta = ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) / numberOfSteps);
+        zoomStepDelta = ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) / numberOfSteps);
+      }
+      break;
+    case INSTRUCTION_TIMELAPSE_START:
+      {
+        if ((TLStarted == false) && (panStepDelta != 0)) {}
+          TLStarted = true;
+        }
+      }
+      break;
+    case INSTRUCTION_TIMELAPSE_STOP:
+      {
+        if (TLStarted) {
+          TLStarted = false;
+          numberOfStepsCount = 0;
+        }
+      }
+      break;
+    case INSTRUCTION_TIMELAPSE_STEP:
+      {
+        if (TLStarted && (panStepDelta != 0)) {
+          stepper_pan.setTargetRel(panStepDelta);
+          stepper_tilt.setTargetRel(tiltStepDelta);
+          stepper_slider.setTargetRel(sliderStepDelta);
+          stepper_zoom.setTargetRel(zoomStepDelta);
+
+          StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+
+          numberOfStepsCount++;
+
+          if (numberOfSteps == numberOfStepsCount) {
+            TLStarted = false;
+            numberOfStepsCount = 0;
+          }
+        }
+      }
+      break;
     default:
       break;  // if unrecognised charater, do nothing
   }

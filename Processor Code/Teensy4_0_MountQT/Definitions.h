@@ -90,7 +90,11 @@
 #define INSTRUCTION_SLIDE_END1 'v'
 #define INSTRUCTION_SLIDE_END2 'V'
 
-#define INSTRUCTION_ZOOM_IN 'Z'
+#define INSTRUCTION_TIMELAPSE_STEPS 'L'
+#define INSTRUCTION_TIMELAPSE_START 'K'
+#define INSTRUCTION_TIMELAPSE_STOP 'n'
+#define INSTRUCTION_TIMELAPSE_STEP 'A'
+
 #define INSTRUCTION_ZOOM_OUT 'z'
 #define INSTRUCTION_STOP_ZOOM 'N'
 
@@ -149,6 +153,8 @@ bool findingHome = false;
 bool zoomedIn = false;
 bool zoomedOut = false;
 
+bool TLStarted = false;
+
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
 
@@ -186,6 +192,14 @@ bool zoomNeg = false;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
+
+float panStepDelta;
+float tiltStepDelta;
+float sliderStepDelta;
+float zoomStepDelta
+
+int numberOfSteps = 0;
+int numberOfStepsCount = 0;
 
 String atIndex = "";
 

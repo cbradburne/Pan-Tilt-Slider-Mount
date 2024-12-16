@@ -488,6 +488,12 @@ cam3ZoomLimit = 0
 cam4ZoomLimit = 0
 cam5ZoomLimit = 0
 
+cam1TLSteps = 0
+cam2TLSteps = 0
+cam3TLSteps = 0
+cam4TLSteps = 0
+cam5TLSteps = 0
+
 oldcam1PTSpeed = 9
 oldcam2PTSpeed = 9
 oldcam3PTSpeed = 9
@@ -760,6 +766,39 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelZoomLimit.setStyleSheet("color:#ffffff;border: 2px solid grey;")
         self.labelZoomLimit.setText("")
         self.labelZoomLimit.setObjectName("labelZoomLimit")
+        self.labelTLSteps = QtWidgets.QLineEdit(self.groupBox)
+        self.labelTLSteps.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 40.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 3.2)
+        self.labelTLSteps.setFont(font)
+        self.labelTLSteps.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.labelTLSteps.setText("")
+        self.labelTLSteps.setObjectName("labelTLSteps")
+        self.pushButtonTLSteps = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.TLSet())
+        self.pushButtonTLSteps.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 40.5, (buttonGoX * 2.5)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1.3)
+        self.pushButtonTLSteps.setFont(font)
+        self.pushButtonTLSteps.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+        self.pushButtonTLSteps.setObjectName("pushButtonTLSteps")
+        self.pushButtonTLStart = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.TLStart())
+        self.pushButtonTLStart.setGeometry(QtCore.QRect(butttonLayoutX * 1.5, butttonLayoutY * 44.5, (buttonGoX * 1)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1.5)
+        self.pushButtonTLStart.setFont(font)
+        self.pushButtonTLStart.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+        self.pushButtonTLStart.setObjectName("pushButtonTLStart")
+        self.pushButtonTLStop = QtWidgets.QPushButton(self.groupBox, clicked = lambda: self.TLStop())
+        self.pushButtonTLStop.setGeometry(QtCore.QRect(butttonLayoutX * 10.5, butttonLayoutY * 44.5, (buttonGoX * 1)+1, (buttonGoY * 0.5)+1))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1.5)
+        self.pushButtonTLStop.setFont(font)
+        self.pushButtonTLStop.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+        self.pushButtonTLStop.setObjectName("pushButtonTLStop")
         self.labelPTspeed4 = QtWidgets.QLineEdit(self.groupBox)
         self.labelPTspeed4.setGeometry(QtCore.QRect(butttonLayoutX * 18, butttonLayoutY * 10.5, (buttonGoX * 1.833333)+1, (buttonGoY * 0.5)+1))
         font = QtGui.QFont()
@@ -1084,6 +1123,9 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonClose.setText(_translate("settingsWindow", "Close"))
         self.pushButtonStore.setText(_translate("settingsWindow", "Store"))
         self.labelCamHasSlider.setText(_translate("settingsWindow", "Has Slider"))
+        self.pushButtonTLSteps.setText(_translate("settingsWindow", "TimeLapse Steps"))
+        self.pushButtonTLStart.setText(_translate("settingsWindow", "Start"))
+        self.pushButtonTLStop.setText(_translate("settingsWindow", "Stop"))
         
 
         if debug:
@@ -1625,6 +1667,48 @@ class Ui_SettingsWindow(QMainWindow):
                 self.sendSerial('&5u')
 
         self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
+
+    def TLSet(self):
+        global whichCamSerial
+
+        if whichCamSerial == 1:
+            self.sendSerial('&1L' + self.labelTLSteps.text())
+        elif whichCamSerial == 2:
+            self.sendSerial('&2L' + self.labelTLSteps.text())
+        elif whichCamSerial == 3:
+            self.sendSerial('&3L' + self.labelTLSteps.text())
+        elif whichCamSerial == 4:
+            self.sendSerial('&4L' + self.labelTLSteps.text())
+        elif whichCamSerial == 5:
+            self.sendSerial('&5L' + self.labelTLSteps.text())
+
+    def TLStart(self):
+        global whichCamSerial
+
+        if whichCamSerial == 1:
+            self.sendSerial('&1K')
+        elif whichCamSerial == 2:
+            self.sendSerial('&2K')
+        elif whichCamSerial == 3:
+            self.sendSerial('&3K')
+        elif whichCamSerial == 4:
+            self.sendSerial('&4K')
+        elif whichCamSerial == 5:
+            self.sendSerial('&5K')
+
+    def TLStop(self):
+        global whichCamSerial
+
+        if whichCamSerial == 1:
+            self.sendSerial('&1n')
+        elif whichCamSerial == 2:
+            self.sendSerial('&2n')
+        elif whichCamSerial == 3:
+            self.sendSerial('&3n')
+        elif whichCamSerial == 4:
+            self.sendSerial('&4n')
+        elif whichCamSerial == 5:
+            self.sendSerial('&5n')
 
 class Ui_editWindow(QMainWindow):
     def __init__(self):
