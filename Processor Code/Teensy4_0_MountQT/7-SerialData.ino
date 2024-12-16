@@ -874,12 +874,8 @@ void SerialData(void) {
       break;
     case INSTRUCTION_TIMELAPSE_STEPS:
       {
-        numberOfSteps = SerialCommandValueFloat;
-
-        panStepDelta = ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) / numberOfSteps);
-        tiltStepDelta = ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) / numberOfSteps);
-        sliderStepDelta = ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) / numberOfSteps);
-        zoomStepDelta = ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) / numberOfSteps);
+        numberOfStepsFloat = SerialCommandValueFloat;
+        numberOfSteps = (int)numberOfStepsFloat;
       }
       break;
     case INSTRUCTION_TIMELAPSE_START:
@@ -899,11 +895,17 @@ void SerialData(void) {
       break;
     case INSTRUCTION_TIMELAPSE_STEP:
       {
-        if (TLStarted && (panStepDelta != 0)) {
-          stepper_pan.setTargetRel(panStepDelta);
-          stepper_tilt.setTargetRel(tiltStepDelta);
-          stepper_slider.setTargetRel(sliderStepDelta);
-          stepper_zoom.setTargetRel(zoomStepDelta);
+        if (TLStarted)) {
+
+          //panStepDelta = ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) / numberOfSteps);
+          //tiltStepDelta = ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) / numberOfSteps);
+          //sliderStepDelta = ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) / numberOfSteps);
+          //zoomStepDelta = ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) / numberOfSteps);
+
+          stepper_pan.setTargetAbs(keyframe_array[0].panStepCount + ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) * (numberOfStepsCount / numberOfSteps));
+          stepper_tilt.setTargetAbs(keyframe_array[0].tiltStepCount + ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) * (numberOfStepsCount / numberOfSteps));
+          stepper_slider.setTargetAbs(keyframe_array[0].sliderStepCount + ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) * (numberOfStepsCount / numberOfSteps));
+          stepper_zoom.setTargetAbs(keyframe_array[0].zoomStepCount + ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) * (numberOfStepsCount / numberOfSteps));
 
           StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
 

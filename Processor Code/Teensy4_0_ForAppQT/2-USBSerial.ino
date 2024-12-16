@@ -65,6 +65,11 @@ void USBSerialData() {
 
         D = Clear Positions
 
+        e = TL Start
+        E = TL Stop
+        o = TL Steps
+        O = TL Step
+
         r = Report All
         R = Report positions
         k = Keyframe report
@@ -81,7 +86,7 @@ void USBSerialData() {
         j = Set Sl speed 4
 
         L = Set PT Accel
-        l = Set Sl Access
+        l = Set Sl Accel
 
         t = Set Slide Limit
         T = Home Locate
@@ -661,6 +666,68 @@ void USBSerialData() {
                 Serial4.println("?Y");
               } else if (camNumInst == '5') {
                 Serial5.println("?Y");
+              }
+            }
+            break;
+          case 'e':
+            {  // TL Start
+              if (camNumInst == '1') {
+                Serial1.println("?K");
+              } else if (camNumInst == '2') {
+                Serial2.println("?K");
+              } else if (camNumInst == '3') {
+                Serial3.println("?K");
+              } else if (camNumInst == '4') {
+                Serial4.println("?K");
+              } else if (camNumInst == '5') {
+                Serial5.println("?K");
+              }
+            }
+            break;
+          case 'E':
+            {  // TL Stop
+              if (camNumInst == '1') {
+                Serial1.println("?n");
+              } else if (camNumInst == '2') {
+                Serial2.println("?n");
+              } else if (camNumInst == '3') {
+                Serial3.println("?n");
+              } else if (camNumInst == '4') {
+                Serial4.println("?n");
+              } else if (camNumInst == '5') {
+                Serial5.println("?n");
+              }
+            }
+            break;
+          case 'o':
+            {  // TL Steps
+              String stringText = Serial.readStringUntil('\n');
+              SerialCommandValueInt = stringText.toInt();
+              if (camNumInst == '1') {
+                Serial1.println(String("?L") + SerialCommandValueInt);
+              } else if (camNumInst == '2') {
+                Serial1.println(String("?L") + SerialCommandValueInt);
+              } else if (camNumInst == '3') {
+                Serial1.println(String("?L") + SerialCommandValueInt);
+              } else if (camNumInst == '4') {
+                Serial1.println(String("?L") + SerialCommandValueInt);
+              } else if (camNumInst == '5') {
+                Serial1.println(String("?L") + SerialCommandValueInt);
+              }
+            }
+            break;
+          case 'O':
+            {  // TL Step
+              if (camNumInst == '1') {
+                Serial1.println("?A");
+              } else if (camNumInst == '2') {
+                Serial2.println("?A");
+              } else if (camNumInst == '3') {
+                Serial3.println("?A");
+              } else if (camNumInst == '4') {
+                Serial4.println("?A");
+              } else if (camNumInst == '5') {
+                Serial5.println("?A");
               }
             }
             break;

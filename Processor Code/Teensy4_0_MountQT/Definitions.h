@@ -199,6 +199,7 @@ float sliderStepDelta;
 float zoomStepDelta
 
 int numberOfSteps = 0;
+float numberOfStepsFloat = 0.0;
 int numberOfStepsCount = 0;
 
 String atIndex = "";
