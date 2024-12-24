@@ -1229,9 +1229,9 @@ class Ui_SettingsWindow(QMainWindow):
             self.labelSLaccel.setFocus()
 
 
-    def updateSerialText(self):
-        global serialText
-        self.serialText.setHtml(serialText)
+    def updateSerialText(self, serialTextSent):
+        #global serialText
+        self.serialText.setHtml(serialTextSent)
         self.serialText.verticalScrollBar().setValue(self.serialText.verticalScrollBar().maximum())
 
     def sendStoreEEPROM(self):
@@ -5912,35 +5912,35 @@ class PTSapp(QMainWindow):
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#40D140 size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self)
+            Ui_SettingsWindow.updateSerialText(self, serialText)
         elif msg[0:4] == "Cam2":
             whichCamRead = 2
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#5C8BC9 size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self)
+            Ui_SettingsWindow.updateSerialText(self, serialText)
         elif msg[0:4] == "Cam3":
             whichCamRead = 3
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#B4A21C size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self)
+            Ui_SettingsWindow.updateSerialText(self, serialText)
         elif msg[0:4] == "Cam4":
             whichCamRead = 4
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#01E6CC size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self)
+            Ui_SettingsWindow.updateSerialText(self, serialText)
         elif msg[0:4] == "Cam5":
             whichCamRead = 5
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#E97CF9 size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self)
+            Ui_SettingsWindow.updateSerialText(self, serialText)
         else:
             pass
 
