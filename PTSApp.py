@@ -592,6 +592,7 @@ class Ui_SettingsWindow(QMainWindow):
         QMainWindow.__init__(self, None, QtCore.Qt.WindowStaysOnTopHint)
         self.setupUi()
         self.installEventFilter(self) #keyboard control
+        #self.valueChanged.connect(self.checkzero)
 
     def eventFilter(self, obj, event):
         if (event.type() == QtCore.QEvent.KeyPress):
@@ -910,16 +911,16 @@ class Ui_SettingsWindow(QMainWindow):
         self.labelSlideLimit.setText("")
         self.labelSlideLimit.setObjectName("labelSlideLimit")
 
-        self.serialText = QtWidgets.QTextEdit(self.groupBox)
-        self.serialText.setGeometry(QtCore.QRect(butttonLayoutX * 30, butttonLayoutY * 40.5, (buttonGoX * 5.5)+1, (buttonGoY * 1.4)+1))
+        self.serialTextWindow = QtWidgets.QTextEdit(self.groupBox)
+        self.serialTextWindow.setGeometry(QtCore.QRect(butttonLayoutX * 30, butttonLayoutY * 40.5, (buttonGoX * 5.5)+1, (buttonGoY * 1.4)+1))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(butttonLayoutX * winSize * 0.8)
-        self.serialText.setFont(font)
-        self.serialText.setStyleSheet("color:#ffffff;border: 2px solid grey;")
-        self.serialText.setHtml(serialText)
-        self.serialText.setObjectName("serialText")
-        self.serialText.verticalScrollBar().setValue(self.serialText.verticalScrollBar().maximum())
+        self.serialTextWindow.setFont(font)
+        self.serialTextWindow.setStyleSheet("color:#ffffff;border: 2px solid grey;")
+        self.serialTextWindow.setHtml(serialText)
+        self.serialTextWindow.setObjectName("serialTextWindow")
+        self.serialTextWindow.verticalScrollBar().setValue(self.serialTextWindow.verticalScrollBar().maximum())
 
         self.groupBox_2 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox_2.setGeometry(QtCore.QRect(butttonLayoutX * 67.5, butttonLayoutY * 33.5, (buttonGoX * 4.5833333333)+1, (buttonGoY * 2.8333333333)+1))
@@ -1163,13 +1164,13 @@ class Ui_SettingsWindow(QMainWindow):
         if debug:
             self.show()
         else:
-            #self.showMaximized()
             if sys.platform == "win32":
                 self.showFullScreen()
             else:
                 self.showMaximized()
 
         self.getSettings()
+        QtCore.QTimer.singleShot(500,self.scrollText)
 
     def getSettings(self):
         self.sendSerial('&1K')
@@ -1177,7 +1178,6 @@ class Ui_SettingsWindow(QMainWindow):
         self.sendSerial('&3K')
         self.sendSerial('&4K')
         self.sendSerial('&5K')
-
 
     def emulateKey(self, key):
         widget = QtWidgets.QApplication.focusWidget()
@@ -1227,15 +1227,19 @@ class Ui_SettingsWindow(QMainWindow):
         elif widget.objectName() == "labelZoomLimit":
             self.sendSerial('&' + str(whichCamSerial) + 'w' + widget.text())
             self.labelSLaccel.setFocus()
+            
+        QtCore.QTimer.singleShot(500,self.scrollText)
 
+    #@QtCore.Slot(str)
+    def scrollText(self):
+        global serialText
 
-    def updateSerialText(self, serialTextSent):
-        #global serialText
-        self.serialText.setHtml(serialTextSent)
-        self.serialText.verticalScrollBar().setValue(self.serialText.verticalScrollBar().maximum())
+        self.serialTextWindow.setHtml(serialText)
+        self.serialTextWindow.verticalScrollBar().setValue(self.serialTextWindow.verticalScrollBar().maximum())
 
     def sendStoreEEPROM(self):
         self.sendSerial('&' + str(whichCamSerial) + 'U')
+        QtCore.QTimer.singleShot(500,self.scrollText)
 
     def pushToClose(self):
         self.close()
@@ -1321,6 +1325,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
+        QtCore.QTimer.singleShot(500,self.scrollText)
+
     def cam2GetSettings(self):
         global whichCamSerial
         global cam2ptAccel
@@ -1401,6 +1407,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
+
+        QtCore.QTimer.singleShot(500,self.scrollText)
 
     def cam3GetSettings(self):
         global whichCamSerial
@@ -1483,6 +1491,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
+        QtCore.QTimer.singleShot(500,self.scrollText)
+
     def cam4GetSettings(self):
         global whichCamSerial
         global cam4ptAccel
@@ -1564,6 +1574,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
+        QtCore.QTimer.singleShot(500,self.scrollText)
+
     def cam5GetSettings(self):
         global whichCamSerial
         global cam5ptAccel
@@ -1644,6 +1656,8 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonCam3.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #807100; border-radius: {borderRadius2}px;")
         self.pushButtonCam4.setStyleSheet(f"color: black; border: {borderSize2}px solid grey; background-color: #008071; border-radius: {borderRadius2}px;")
         self.pushButtonCam5.setStyleSheet(f"color: black; border: {borderSize2}px solid red; background-color: #8D5395; border-radius: {borderRadius2}px;")
+
+        QtCore.QTimer.singleShot(500,self.scrollText)
 
     def sendSerial(self, toSendData):
         global sendData
@@ -3213,7 +3227,7 @@ class PTSapp(QMainWindow):
         self.labelInfo.setGeometry(QtCore.QRect(butttonLayoutX * 68, butttonLayoutY * 2.5, buttonGoX * 3.0917, buttonCamY * 0.6))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
-        font.setPointSize(butttonLayoutX * winSize * 1.1)
+        font.setPointSize(butttonLayoutX * winSize * 0.8)
         self.labelInfo.setFont(font)
         self.labelInfo.setStyleSheet(f"color: white; border: {borderSize2}px solid grey; background-color: #333333; border-radius: {borderRadius2}px;")
         self.labelInfo.setText("")
@@ -4507,6 +4521,7 @@ class PTSapp(QMainWindow):
 
         global whichCamRead
         global serialText
+        #print(msg)
 
         if debug:
             print(msg)
@@ -5905,44 +5920,40 @@ class PTSapp(QMainWindow):
             self.deadCam5()
 
         elif msg[0:2] == "#$":
-            return
+            serialText += "</font><br>"
+
         elif msg[0:4] == "Cam1":
             whichCamRead = 1
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#40D140 size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self, serialText)
+            serialText += "<font color=#40D140 size='5'>Cam1:<br>"
         elif msg[0:4] == "Cam2":
             whichCamRead = 2
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#5C8BC9 size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self, serialText)
         elif msg[0:4] == "Cam3":
             whichCamRead = 3
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#B4A21C size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self, serialText)
         elif msg[0:4] == "Cam4":
             whichCamRead = 4
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#01E6CC size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self, serialText)
         elif msg[0:4] == "Cam5":
             whichCamRead = 5
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
             serialText += "<font color=#E97CF9 size='5'>" + msg + "</font><br>"
-            Ui_SettingsWindow.updateSerialText(self, serialText)
         else:
-            pass
+            serialText += msg + "<br>"
 
         msg = ''
 
@@ -11047,7 +11058,7 @@ class ThreadClass(QtCore.QThread):
                 serialLoop = False
             else:
                 while (self.serial_port.in_waiting > 0):
-                    received_msg = self.serial_port.readline()
+                    received_msg = self.serial_port.readline() #read_until(b'\r\n') #readline()
                     msg = bytes(received_msg).decode('utf8', "ignore")
                     self.any_signal.emit(msg)
                     msg=''
@@ -11101,6 +11112,4 @@ if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
     MainWindow = PTSapp("")
-    #sys.exit(app.quit())
-    #sys.exit(app.exec())
     app.exec()
