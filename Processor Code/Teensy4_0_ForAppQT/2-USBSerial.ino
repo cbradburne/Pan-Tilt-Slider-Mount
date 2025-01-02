@@ -18,7 +18,7 @@ void USBSerialData() {
 
       sendSliderPanTiltStepSpeed(4, shortVals, whichSerialCam);
 
-      Serial.println("Joystick");
+      //Serial.println("Joystick");
     } else if (instruction == '&') {
       while (Serial.available() < 1) {  //  Wait for 1 byte to be available.
         delayMicroseconds(1);
