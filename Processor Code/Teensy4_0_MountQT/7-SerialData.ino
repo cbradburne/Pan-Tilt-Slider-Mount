@@ -147,13 +147,13 @@ void SerialData(void) {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))))) {
             if (!sliderRunning && (speedFactorS > 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(10000);
+              stepper_slider.setAcceleration(50000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = false;
             } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(10000);
+              stepper_slider.setAcceleration(50000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = true;
@@ -169,13 +169,13 @@ void SerialData(void) {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
             if (!sliderRunning && (speedFactorS > 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(10000);
+              stepper_slider.setAcceleration(50000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = false;
             } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(10000);
+              stepper_slider.setAcceleration(50000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = true;
