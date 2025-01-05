@@ -938,7 +938,7 @@ void SerialData(void) {
       break;
     case INSTRUCTION_IS_TOGGLE_SET_SPEEDS:
       {
-        if (useKeyframeSpeeds == false;) {
+        if (useKeyframeSpeeds == false) {
           useKeyframeSpeeds = true;
           Serial1.println("#I");
         }

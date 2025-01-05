@@ -124,13 +124,13 @@ void Serial4Data() {
       else if (h == '+') {
         Serial.println("=-4+");
         cam4Alive = true;
-        previousCam4Alive = timeElaps
+        previousCam4Alive = timeElapsed;
+      }
       else if (h == 'i') {
         Serial.println("~405");
       }
       else if (h == 'I') {
         Serial.println("~415");
-      }ed;
       }
     }
     else if (g == '^') {
