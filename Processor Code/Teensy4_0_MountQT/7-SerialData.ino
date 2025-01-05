@@ -936,6 +936,18 @@ void SerialData(void) {
         }
       }
       break;
+    case INSTRUCTION_IS_TOGGLE_SET_SPEEDS:
+      {
+        if (useKeyframeSpeeds == false;) {
+          useKeyframeSpeeds = true;
+          Serial1.println("#I");
+        }
+        else if (useKeyframeSpeeds == true) {
+          useKeyframeSpeeds = false;
+          Serial1.println("#i");
+        }
+      }
+      break;
     default:
       break;  // if unrecognised charater, do nothing
   }

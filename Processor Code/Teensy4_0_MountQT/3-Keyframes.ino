@@ -84,7 +84,7 @@ void editKeyframe(int keyframeEdit) {
   Serial1.println(String("Pan angle         : ") + panStepsToDegrees(stepper_pan.getPosition()) + String("°"));
   Serial1.println(String("Tilt angle        : ") + tiltStepsToDegrees(stepper_tilt.getPosition()) + String("°"));
   Serial1.println(String("Slider position   : ") + sliderStepsToMillimetres(stepper_slider.getPosition()) + String("mm"));
-  Serial1.println(String("Zoom position   : ") + stepper_zoom.getPosition());
+  Serial1.println(String("Zoom position     : ") + stepper_zoom.getPosition());
   Serial1.println("#$");
 
   sentMoved = false;
@@ -193,6 +193,9 @@ void moveToIndex(int index) {
   Serial1.println(String("Tilt  : ") + tiltStepsToDegrees(keyframe_array[index - 1].tiltStepCount) + String("°"));
   Serial1.println(String("Slider: ") + sliderStepsToMillimetres(keyframe_array[index - 1].sliderStepCount) + String("mm"));
   Serial1.println(String("Zoom  : ") + (keyframe_array[index - 1].zoomStepCount));
+  Serial1.println(String("Pan steps    : ") + (keyframe_array[index - 1].panStepCount));
+  Serial1.println(String("Tilt steps   : ") + (keyframe_array[index - 1].tiltStepCount));
+  Serial1.println(String("Slider steps : ") + (keyframe_array[index - 1].sliderStepCount));
   Serial1.println("#$");
 
   if (useKeyframeSpeeds) {

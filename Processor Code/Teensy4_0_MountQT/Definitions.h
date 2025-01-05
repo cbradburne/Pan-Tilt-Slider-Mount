@@ -93,7 +93,8 @@
 #define INSTRUCTION_SET_AUTOFOCUS_ON 'O'
 #define INSTRUCTION_SET_AUTOFOCUS_OFF 'o'
 #define INSTRUCTION_IS_AUTOFOCUS_ON 'I'
-#define INSTRUCTION_IS_AUTOFOCUS_OFF 'i'
+
+#define INSTRUCTION_IS_TOGGLE_SET_SPEEDS 'i'
 
 #define INSTRUCTION_TOGGLE_RECORDING 'u'
 #define INSTRUCTION_IS_RECORDING 'G'
@@ -117,7 +118,7 @@
 #define VERSION_NUMBER "27 Mar 2024"
 
 float slideLimit = 130000;     // 3 metres
-float zoomLimit = 5550;      // 12 - 35mm
+float zoomLimit = 5550;        // 12 - 35mm
 
 bool withSlider = false;
 bool DEBUG1 = false;

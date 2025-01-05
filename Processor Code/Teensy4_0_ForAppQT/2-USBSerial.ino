@@ -731,6 +731,21 @@ void USBSerialData() {
               }
             }
             break;
+          case 'i':
+            {  // Toggle use Set Speeds
+              if (camNumInst == '1') {
+                Serial1.println("?i");
+              } else if (camNumInst == '2') {
+                Serial2.println("?i");
+              } else if (camNumInst == '3') {
+                Serial3.println("?i");
+              } else if (camNumInst == '4') {
+                Serial4.println("?i");
+              } else if (camNumInst == '5') {
+                Serial5.println("?i");
+              }
+            }
+            break;
           case 'r':
             {  // Report
               if (camNumInst == '1') {
@@ -1138,21 +1153,6 @@ void USBSerialData() {
                 } else if (camNumInst == '5') {
                   Serial5.println("?a4");
                 }
-              }
-            }
-            break;
-          case 'P':
-            {  // Toggle auto-focus
-              if (camNumInst == '1') {
-                Serial1.println("?O");
-              } else if (camNumInst == '2') {
-                Serial2.println("?O");
-              } else if (camNumInst == '3') {
-                Serial3.println("?O");
-              } else if (camNumInst == '4') {
-                Serial4.println("?O");
-              } else if (camNumInst == '5') {
-                Serial5.println("?O");
               }
             }
             break;

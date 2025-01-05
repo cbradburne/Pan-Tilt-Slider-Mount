@@ -99,6 +99,11 @@ isConnected = False
 whichCamRead = 1
 whichCamSerial = 1
 SetPosToggle = False
+useSavedSpeedsCam1 = False
+useSavedSpeedsCam2 = False
+useSavedSpeedsCam3 = False
+useSavedSpeedsCam4 = False
+useSavedSpeedsCam5 = False
 
 serialText = ""
 
@@ -1246,29 +1251,6 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam1GetSettings(self):
         global whichCamSerial
-        global cam1ptAccel
-        global cam1slAccel
-        global cam1ptSpeed1
-        global cam1ptSpeed2
-        global cam1ptSpeed3
-        global cam1ptSpeed4
-        global cam1slSpeed1
-        global cam1slSpeed2
-        global cam1slSpeed3
-        global cam1slSpeed4
-        global cam1SlideLimit
-        global cam1ZoomLimit
-        global cam1HasSlider
-
-        global butttonLayoutX
-        global butttonLayoutY
-        global buttonGoX
-        global buttonGoY
-        global borderSize
-        global borderSize2
-        global borderRadius
-        global borderRadius2
-        global winSize
 
         whichCamSerial = 1
         self.sendSerial('&1K')
@@ -1329,29 +1311,6 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam2GetSettings(self):
         global whichCamSerial
-        global cam2ptAccel
-        global cam2slAccel
-        global cam2ptSpeed1
-        global cam2ptSpeed2
-        global cam2ptSpeed3
-        global cam2ptSpeed4
-        global cam2slSpeed1
-        global cam2slSpeed2
-        global cam2slSpeed3
-        global cam2slSpeed4
-        global cam2SlideLimit
-        global cam2ZoomLimit
-        global cam2HasSlider
-
-        global butttonLayoutX
-        global butttonLayoutY
-        global buttonGoX
-        global buttonGoY
-        global borderSize
-        global borderSize2
-        global borderRadius
-        global borderRadius2
-        global winSize
 
         whichCamSerial = 2
         self.sendSerial('&2K')
@@ -1412,29 +1371,6 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam3GetSettings(self):
         global whichCamSerial
-        global cam3ptAccel
-        global cam3slAccel
-        global cam3ptSpeed1
-        global cam3ptSpeed2
-        global cam3ptSpeed3
-        global cam3ptSpeed4
-        global cam3slSpeed1
-        global cam3slSpeed2
-        global cam3slSpeed3
-        global cam3slSpeed4
-        global cam3SlideLimit
-        global cam3ZoomLimit
-        global cam3HasSlider
-
-        global butttonLayoutX
-        global butttonLayoutY
-        global buttonGoX
-        global buttonGoY
-        global borderSize
-        global borderSize2
-        global borderRadius
-        global borderRadius2
-        global winSize
 
         whichCamSerial = 3
         self.sendSerial('&3K')
@@ -1495,29 +1431,6 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam4GetSettings(self):
         global whichCamSerial
-        global cam4ptAccel
-        global cam4slAccel
-        global cam4ptSpeed1
-        global cam4ptSpeed2
-        global cam4ptSpeed3
-        global cam4ptSpeed4
-        global cam4slSpeed1
-        global cam4slSpeed2
-        global cam4slSpeed3
-        global cam4slSpeed4
-        global cam4SlideLimit
-        global cam4ZoomLimit
-        global cam4HasSlider
-
-        global butttonLayoutX
-        global butttonLayoutY
-        global buttonGoX
-        global buttonGoY
-        global borderSize
-        global borderSize2
-        global borderRadius
-        global borderRadius2
-        global winSize
 
         whichCamSerial = 4
         self.sendSerial('&4K')
@@ -1578,29 +1491,6 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam5GetSettings(self):
         global whichCamSerial
-        global cam5ptAccel
-        global cam5slAccel
-        global cam5ptSpeed1
-        global cam5ptSpeed2
-        global cam5ptSpeed3
-        global cam5ptSpeed4
-        global cam5slSpeed1
-        global cam5slSpeed2
-        global cam5slSpeed3
-        global cam5slSpeed4
-        global cam5SlideLimit
-        global cam5ZoomLimit
-        global cam5HasSlider
-
-        global butttonLayoutX
-        global butttonLayoutY
-        global buttonGoX
-        global buttonGoY
-        global borderSize
-        global borderSize2
-        global borderRadius
-        global borderRadius2
-        global winSize
 
         whichCamSerial = 5
         self.sendSerial('&5K')
@@ -2506,6 +2396,15 @@ class PTSapp(QMainWindow):
         self.line1s.setLineWidth(20)
         self.line1s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line1s.setObjectName("line1s")
+        self.pushButtonSetSpeedCam1 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1SetSpeed())
+        self.pushButtonSetSpeedCam1.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1)
+        self.pushButtonSetSpeedCam1.setFont(font)
+        self.pushButtonSetSpeedCam1.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius*0.3}px;")
+        self.pushButtonSetSpeedCam1.setFlat(False)
+        self.pushButtonSetSpeedCam1.setObjectName("pushButtonSetSpeedCam1")
 
         self.groupBox11 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox11.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 7, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
@@ -2643,6 +2542,15 @@ class PTSapp(QMainWindow):
         self.line2s.setLineWidth(20)
         self.line2s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line2s.setObjectName("line2s")
+        self.pushButtonSetSpeedCam2 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2SetSpeed())
+        self.pushButtonSetSpeedCam2.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1)
+        self.pushButtonSetSpeedCam2.setFont(font)
+        self.pushButtonSetSpeedCam2.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #405C80; border-radius: {borderRadius*0.3}px;")
+        self.pushButtonSetSpeedCam2.setFlat(False)
+        self.pushButtonSetSpeedCam2.setObjectName("pushButtonSetSpeedCam2")
 
         self.groupBox21 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox21.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 15.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
@@ -2779,6 +2687,15 @@ class PTSapp(QMainWindow):
         self.line3s.setLineWidth(20)
         self.line3s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line3s.setObjectName("line3s")
+        self.pushButtonSetSpeedCam3 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3SetSpeed())
+        self.pushButtonSetSpeedCam3.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1)
+        self.pushButtonSetSpeedCam3.setFont(font)
+        self.pushButtonSetSpeedCam3.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #807100; border-radius: {borderRadius*0.3}px;")
+        self.pushButtonSetSpeedCam3.setFlat(False)
+        self.pushButtonSetSpeedCam3.setObjectName("pushButtonSetSpeedCam3")
 
         self.groupBox31 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox31.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 24, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
@@ -2915,6 +2832,15 @@ class PTSapp(QMainWindow):
         self.line4s.setLineWidth(20)
         self.line4s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line4s.setObjectName("line4s")
+        self.pushButtonSetSpeedCam4 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4SetSpeed())
+        self.pushButtonSetSpeedCam4.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1)
+        self.pushButtonSetSpeedCam4.setFont(font)
+        self.pushButtonSetSpeedCam4.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #008071; border-radius: {borderRadius*0.3}px;")
+        self.pushButtonSetSpeedCam4.setFlat(False)
+        self.pushButtonSetSpeedCam4.setObjectName("pushButtonSetSpeedCam4")
 
         self.groupBox41 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox41.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 32.5, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
@@ -3052,6 +2978,15 @@ class PTSapp(QMainWindow):
         self.line5s.setLineWidth(20)
         self.line5s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line5s.setObjectName("line5s")
+        self.pushButtonSetSpeedCam5 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5SetSpeed())
+        self.pushButtonSetSpeedCam5.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        font = QtGui.QFont()
+        font.setFamily("Helvetica Neue")
+        font.setPointSize(butttonLayoutX * winSize * 1)
+        self.pushButtonSetSpeedCam5.setFont(font)
+        self.pushButtonSetSpeedCam5.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #8D5395; border-radius: {borderRadius*0.3}px;")
+        self.pushButtonSetSpeedCam5.setFlat(False)
+        self.pushButtonSetSpeedCam5.setObjectName("pushButtonSetSpeedCam5")
 
         self.groupBox51 = QtWidgets.QGroupBox(self.centralwidget)
         self.groupBox51.setGeometry(QtCore.QRect(butttonLayoutX, butttonLayoutY * 41, (butttonLayoutX * 94) +1, butttonLayoutY * 8))
@@ -3333,6 +3268,11 @@ class PTSapp(QMainWindow):
         self.pushButtonCam3.setText(_translate("MainWindow", cam3Label))
         self.pushButtonCam4.setText(_translate("MainWindow", cam4Label))
         self.pushButtonCam5.setText(_translate("MainWindow", cam5Label))
+        self.pushButtonSetSpeedCam1.setText(_translate("MainWindow", "SS"))
+        self.pushButtonSetSpeedCam2.setText(_translate("MainWindow", "SS"))
+        self.pushButtonSetSpeedCam3.setText(_translate("MainWindow", "SS"))
+        self.pushButtonSetSpeedCam4.setText(_translate("MainWindow", "SS"))
+        self.pushButtonSetSpeedCam5.setText(_translate("MainWindow", "SS"))
         self.labelDialPT.setText(_translate("MainWindow", "Pan/Tilt Speed"))
         self.labelDialSL.setText(_translate("MainWindow", "Slide Speed"))
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
@@ -4460,6 +4400,7 @@ class PTSapp(QMainWindow):
         global cam1slSpeed4
         global cam1SlideLimit
         global cam1ZoomLimit
+        global useSavedSpeedsCam1
 
         global cam2ptAccel
         global cam2slAccel
@@ -4473,6 +4414,7 @@ class PTSapp(QMainWindow):
         global cam2slSpeed4
         global cam2SlideLimit
         global cam2ZoomLimit
+        global useSavedSpeedsCam2
 
         global cam3ptAccel
         global cam3slAccel
@@ -4486,6 +4428,7 @@ class PTSapp(QMainWindow):
         global cam3slSpeed4
         global cam3SlideLimit
         global cam3ZoomLimit
+        global useSavedSpeedsCam3
 
         global cam4ptAccel
         global cam4slAccel
@@ -4499,6 +4442,7 @@ class PTSapp(QMainWindow):
         global cam4slSpeed4
         global cam4SlideLimit
         global cam4ZoomLimit
+        global useSavedSpeedsCam4
 
         global cam5ptAccel
         global cam5slAccel
@@ -4512,6 +4456,7 @@ class PTSapp(QMainWindow):
         global cam5slSpeed4
         global cam5SlideLimit
         global cam5ZoomLimit
+        global useSavedSpeedsCam5
 
         global cam1Running
         global cam1Running
@@ -4736,11 +4681,9 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "124":
                 cam1isRecording = True
             elif msg[1:4] == "115":
-                #cam1AF = True
-                pass
+                useSavedSpeedsCam1 = True
             elif msg[1:4] == "105":
-                #cam1AF = False
-                pass
+                useSavedSpeedsCam1 = False
             elif msg[1:4] == "100":
                 cam1Pos1Run = False
                 cam1Pos1Set = False
@@ -4967,11 +4910,9 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "224":
                 cam2isRecording = True
             elif msg[1:4] == "215":
-                #cam2# = True
-                pass
+                useSavedSpeedsCam2 = True
             elif msg[1:4] == "205":
-                #cam2AF = False
-                pass
+                useSavedSpeedsCam2 = False
             elif msg[1:4] == "200":
                 cam2Pos1Run = False
                 cam2Pos1Set = False
@@ -5198,11 +5139,9 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "324":
                 cam3isRecording = True
             elif msg[1:4] == "315":
-                #cam3AF = True
-                pass
+                useSavedSpeedsCam3 = True
             elif msg[1:4] == "305":
-                #cam3AF = False
-                pass
+                useSavedSpeedsCam3 = False
             elif msg[1:4] == "300":
                 cam3Pos1Run = False
                 cam3Pos1Set = False
@@ -5429,11 +5368,9 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "424":
                 cam4isRecording = True
             elif msg[1:4] == "415":
-                #cam4AF = True
-                pass
+                useSavedSpeedsCam4 = True
             elif msg[1:4] == "405":
-                #cam4AF = False
-                pass
+                useSavedSpeedsCam4 = False
             elif msg[1:4] == "400":
                 cam4Pos1Run = False
                 cam4Pos1Set = False
@@ -5660,11 +5597,9 @@ class PTSapp(QMainWindow):
             elif msg[1:4] == "524":
                 cam5isRecording = True
             elif msg[1:4] == "515":
-                #cam5AF = True
-                pass
+                useSavedSpeedsCam5 = True
             elif msg[1:4] == "505":
-                #cam5AF = False
-                pass
+                useSavedSpeedsCam5 = False
             elif msg[1:4] == "500":
                 cam5Pos1Run = False
                 cam5Pos1Set = False
@@ -6730,6 +6665,31 @@ class PTSapp(QMainWindow):
         if cam5Running:
             self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
+        if useSavedSpeedsCam1:
+            self.pushButtonSetSpeedCam1.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #40D140; border-radius: {borderRadius*0.3}px;")
+        elif not useSavedSpeedsCam1:
+            self.pushButtonSetSpeedCam1.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius*0.3}px;")
+
+        if useSavedSpeedsCam2:
+            self.pushButtonSetSpeedCam2.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #5C8BC9; border-radius: {borderRadius*0.3}px;")
+        elif not useSavedSpeedsCam2:
+            self.pushButtonSetSpeedCam2.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #405C80; border-radius: {borderRadius*0.3}px;")
+        
+        if useSavedSpeedsCam3:
+            self.pushButtonSetSpeedCam3.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #B4A21C; border-radius: {borderRadius*0.3}px;")
+        elif not useSavedSpeedsCam3:
+            self.pushButtonSetSpeedCam3.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #807100; border-radius: {borderRadius*0.3}px;")
+
+        if useSavedSpeedsCam4:
+            self.pushButtonSetSpeedCam4.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #01E6CC; border-radius: {borderRadius*0.3}px;")
+        elif not useSavedSpeedsCam4:
+            self.pushButtonSetSpeedCam4.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #008071; border-radius: {borderRadius*0.3}px;")
+        
+        if useSavedSpeedsCam5:
+            self.pushButtonSetSpeedCam5.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #E97CF9; border-radius: {borderRadius*0.3}px;")
+        elif not useSavedSpeedsCam5:
+            self.pushButtonSetSpeedCam5.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #8D5395; border-radius: {borderRadius*0.3}px;")
+        
 
         
 
@@ -11017,6 +10977,22 @@ class PTSapp(QMainWindow):
             self.sendSerial('&5/')
         elif cam5Pos10Set and not cam5AtPos10 and slideToggle:
             self.sendSerial('&5Y')
+
+    def Cam1SetSpeed(self):
+        self.sendSerial('&1i')
+
+    def Cam2SetSpeed(self):
+        self.sendSerial('&2i')
+
+    def Cam3SetSpeed(self):
+        self.sendSerial('&3i')
+        
+    def Cam4SetSpeed(self):
+        self.sendSerial('&4i')
+
+    def Cam5SetSpeed(self):
+        self.sendSerial('&5i')
+
 
 class ThreadClass(QtCore.QThread):
     any_signal = QtCore.Signal(str)

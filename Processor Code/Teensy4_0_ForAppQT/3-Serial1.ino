@@ -126,6 +126,12 @@ void Serial1Data() {
         cam1Alive = true;
         previousCam1Alive = timeElapsed;
       }
+      else if (d == 'i') {
+        Serial.println("~105");
+      }
+      else if (d == 'I') {
+        Serial.println("~115");
+      }
     }
     else if (c == '^') {
       while (Serial1.available() < 2) {                        //  Wait for 1 byts to be available
