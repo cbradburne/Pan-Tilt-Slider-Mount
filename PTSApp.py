@@ -2368,8 +2368,8 @@ class PTSapp(QMainWindow):
         self.dial1p.setStyleSheet("background: black;")
         self.dial1p.setMinimum(1)
         self.dial1p.setMaximum(4)
-        self.dial1p.setInvertedAppearance(False)
-        self.dial1p.setInvertedControls(False)
+        #self.dial1p.setInvertedAppearance(False)
+        #self.dial1p.setInvertedControls(False)
         self.dial1p.setWrapping(False)
         self.dial1p.setNotchTarget(11.7)
         self.dial1p.setNotchesVisible(True)
@@ -2397,7 +2397,7 @@ class PTSapp(QMainWindow):
         self.line1s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line1s.setObjectName("line1s")
         self.pushButtonSetSpeedCam1 = QtWidgets.QPushButton(self.groupBox, clicked= lambda: self.Cam1SetSpeed())
-        self.pushButtonSetSpeedCam1.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        self.pushButtonSetSpeedCam1.setGeometry(QtCore.QRect(butttonLayoutX * 81.65, butttonLayoutY * 5.5, buttonGoX * 0.36, buttonGoY * 0.36))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(butttonLayoutX * winSize * 1)
@@ -2543,7 +2543,7 @@ class PTSapp(QMainWindow):
         self.line2s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line2s.setObjectName("line2s")
         self.pushButtonSetSpeedCam2 = QtWidgets.QPushButton(self.groupBox_2, clicked= lambda: self.Cam2SetSpeed())
-        self.pushButtonSetSpeedCam2.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        self.pushButtonSetSpeedCam2.setGeometry(QtCore.QRect(butttonLayoutX * 81.65, butttonLayoutY * 5.5, buttonGoX * 0.36, buttonGoY * 0.36))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(butttonLayoutX * winSize * 1)
@@ -2688,7 +2688,7 @@ class PTSapp(QMainWindow):
         self.line3s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line3s.setObjectName("line3s")
         self.pushButtonSetSpeedCam3 = QtWidgets.QPushButton(self.groupBox_3, clicked= lambda: self.Cam3SetSpeed())
-        self.pushButtonSetSpeedCam3.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        self.pushButtonSetSpeedCam3.setGeometry(QtCore.QRect(butttonLayoutX * 81.65, butttonLayoutY * 5.5, buttonGoX * 0.36, buttonGoY * 0.36))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(butttonLayoutX * winSize * 1)
@@ -2833,7 +2833,7 @@ class PTSapp(QMainWindow):
         self.line4s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line4s.setObjectName("line4s")
         self.pushButtonSetSpeedCam4 = QtWidgets.QPushButton(self.groupBox_4, clicked= lambda: self.Cam4SetSpeed())
-        self.pushButtonSetSpeedCam4.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        self.pushButtonSetSpeedCam4.setGeometry(QtCore.QRect(butttonLayoutX * 81.65, butttonLayoutY * 5.5, buttonGoX * 0.36, buttonGoY * 0.36))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(butttonLayoutX * winSize * 1)
@@ -2979,7 +2979,7 @@ class PTSapp(QMainWindow):
         self.line5s.setFrameShape(QtWidgets.QFrame.VLine)
         self.line5s.setObjectName("line5s")
         self.pushButtonSetSpeedCam5 = QtWidgets.QPushButton(self.groupBox_5, clicked= lambda: self.Cam5SetSpeed())
-        self.pushButtonSetSpeedCam5.setGeometry(QtCore.QRect(butttonLayoutX * 91, butttonLayoutY * 5, buttonGoX * 0.4, buttonGoY * 0.4))
+        self.pushButtonSetSpeedCam5.setGeometry(QtCore.QRect(butttonLayoutX * 81.65, butttonLayoutY * 5.5, buttonGoX * 0.36, buttonGoY * 0.36))
         font = QtGui.QFont()
         font.setFamily("Helvetica Neue")
         font.setPointSize(butttonLayoutX * winSize * 1)
@@ -6666,27 +6666,27 @@ class PTSapp(QMainWindow):
             self.pushButtonCam5.setStyleSheet(f"border: {borderSize2}px solid {buttonColourFlash}; background-color: #8D5395; border-radius: {borderRadius2}px;")
 
         if useSavedSpeedsCam1:
-            self.pushButtonSetSpeedCam1.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #40D140; border-radius: {borderRadius*0.3}px;")
+            self.pushButtonSetSpeedCam1.setStyleSheet(f"border: {(borderSize* 0.4)}px solid red; background-color: #40D140; border-radius: {borderRadius*0.3}px;")
         elif not useSavedSpeedsCam1:
             self.pushButtonSetSpeedCam1.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #4C8A4C; border-radius: {borderRadius*0.3}px;")
 
         if useSavedSpeedsCam2:
-            self.pushButtonSetSpeedCam2.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #5C8BC9; border-radius: {borderRadius*0.3}px;")
+            self.pushButtonSetSpeedCam2.setStyleSheet(f"border: {(borderSize* 0.4)}px solid red; background-color: #5C8BC9; border-radius: {borderRadius*0.3}px;")
         elif not useSavedSpeedsCam2:
             self.pushButtonSetSpeedCam2.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #405C80; border-radius: {borderRadius*0.3}px;")
         
         if useSavedSpeedsCam3:
-            self.pushButtonSetSpeedCam3.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #B4A21C; border-radius: {borderRadius*0.3}px;")
+            self.pushButtonSetSpeedCam3.setStyleSheet(f"border: {(borderSize* 0.4)}px solid red; background-color: #B4A21C; border-radius: {borderRadius*0.3}px;")
         elif not useSavedSpeedsCam3:
             self.pushButtonSetSpeedCam3.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #807100; border-radius: {borderRadius*0.3}px;")
 
         if useSavedSpeedsCam4:
-            self.pushButtonSetSpeedCam4.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #01E6CC; border-radius: {borderRadius*0.3}px;")
+            self.pushButtonSetSpeedCam4.setStyleSheet(f"border: {(borderSize* 0.4)}px solid red; background-color: #01E6CC; border-radius: {borderRadius*0.3}px;")
         elif not useSavedSpeedsCam4:
             self.pushButtonSetSpeedCam4.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #008071; border-radius: {borderRadius*0.3}px;")
         
         if useSavedSpeedsCam5:
-            self.pushButtonSetSpeedCam5.setStyleSheet(f"border: {(borderSize* 0.4)}px solid green; background-color: #E97CF9; border-radius: {borderRadius*0.3}px;")
+            self.pushButtonSetSpeedCam5.setStyleSheet(f"border: {(borderSize* 0.4)}px solid red; background-color: #E97CF9; border-radius: {borderRadius*0.3}px;")
         elif not useSavedSpeedsCam5:
             self.pushButtonSetSpeedCam5.setStyleSheet(f"border: {(borderSize* 0.4)}px solid grey; background-color: #8D5395; border-radius: {borderRadius*0.3}px;")
         
