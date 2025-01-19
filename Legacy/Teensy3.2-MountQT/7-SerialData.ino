@@ -750,44 +750,6 @@ void SerialData(void) {
         Serial1.println("#$");
       }
       break;
-    case INSTRUCTION_SET_AUTOFOCUS_ON:
-      {
-        Serial2.println("#F");
-      }
-      break;
-    case INSTRUCTION_SET_AUTOFOCUS_OFF:
-      {
-        Serial2.println("#f");
-      }
-      break;
-    case INSTRUCTION_IS_AUTOFOCUS_ON:
-      {
-        Serial1.println("#O");
-      }
-      break;
-    case INSTRUCTION_IS_AUTOFOCUS_OFF:
-      {
-        Serial1.println("#o");
-      }
-      break;
-    case INSTRUCTION_TOGGLE_RECORDING:
-      {
-        Serial2.println("#O");
-
-        Serial1.println("Toggle Record.\n");
-        Serial1.println("#$");
-      }
-      break;
-    case INSTRUCTION_IS_RECORDING:
-      {
-        Serial1.println("#P");
-      }
-      break;
-    case INSTRUCTION_IS_NOT_RECORDING:
-      {
-        Serial1.println("#p");
-      }
-      break;
     case INSTRUCTION_SET_ZERO_POS:
       {
         stepper_slider.setPosition(0);
@@ -800,6 +762,84 @@ void SerialData(void) {
           findingHome = true;
         } else {
           findingHome = false;
+        }
+      }
+      break;
+    case INSTRUCTION_TIMELAPSE_STEPS:
+      {
+        numberOfSteps = SerialCommandValueFloat;
+      }
+      break;
+    case INSTRUCTION_TIMELAPSE_START:
+      {
+        if (TLStarted == false) {
+          stepper_pan.setTargetAbs(keyframe_array[0].panStepCount);
+          stepper_tilt.setTargetAbs(keyframe_array[0].tiltStepCount);
+          stepper_slider.setTargetAbs(keyframe_array[0].sliderStepCount);
+          //stepper_zoom.setTargetAbs(keyframe_array[0].zoomStepCount);
+
+          isMoving = true;
+          multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
+          //StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+          isMoving = false;
+
+          TLStarted = true;
+        }
+      }
+      break;
+    case INSTRUCTION_TIMELAPSE_STOP:
+      {
+        if (TLStarted) {
+          TLStarted = false;
+          numberOfStepsCount = 0;
+        }
+      }
+      break;
+    case INSTRUCTION_TIMELAPSE_STEP:
+      {
+        if (TLStarted) {
+          numberOfStepsCount++;
+
+          panStepDelta = (keyframe_array[0].panStepCount + ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) * (numberOfStepsCount / numberOfSteps)));
+          tiltStepDelta = (keyframe_array[0].tiltStepCount + ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) * (numberOfStepsCount / numberOfSteps)));
+          sliderStepDelta = (keyframe_array[0].sliderStepCount + ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) * (numberOfStepsCount / numberOfSteps)));
+          //zoomStepDelta = (keyframe_array[0].zoomStepCount + ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) * (numberOfStepsCount / numberOfSteps)));
+
+          //Serial1.println("TLSTEP");
+          //Serial1.println(String("numberOfStepsCount: ") + numberOfStepsCount);
+          //Serial1.println(String("numberOfSteps: ") + numberOfSteps);
+          //Serial1.println(String("[0].panStepCount: ") + keyframe_array[0].panStepCount);
+          //Serial1.println(String("[9].panStepCount: ") + keyframe_array[9].panStepCount);
+          //Serial1.println(String("panStepDelta: ") + panStepDelta);
+          //Serial1.println("#$");
+
+          stepper_pan.setTargetAbs(panStepDelta);
+          stepper_tilt.setTargetAbs(tiltStepDelta);
+          stepper_slider.setTargetAbs(sliderStepDelta);
+          //stepper_zoom.setTargetAbs(zoomStepDelta);
+
+          isMoving = true;
+          multi_stepper.move(stepper_pan, stepper_tilt, stepper_slider);
+          //StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+          isMoving = false;
+
+          if (numberOfSteps == numberOfStepsCount) {
+            TLStarted = false;
+            numberOfStepsCount = 0;
+            return;
+          }
+        }
+      }
+      break;
+    case INSTRUCTION_IS_TOGGLE_SET_SPEEDS:
+      {
+        if (useKeyframeSpeeds == false) {
+          useKeyframeSpeeds = true;
+          Serial1.println("#I");
+        }
+        else if (useKeyframeSpeeds == true) {
+          useKeyframeSpeeds = false;
+          Serial1.println("#i");
         }
       }
       break;

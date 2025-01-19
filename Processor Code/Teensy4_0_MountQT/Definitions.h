@@ -90,10 +90,6 @@
 #define INSTRUCTION_ZOOM_OUT 'z'
 #define INSTRUCTION_STOP_ZOOM 'N'
 
-#define INSTRUCTION_SET_AUTOFOCUS_ON 'O'
-#define INSTRUCTION_SET_AUTOFOCUS_OFF 'o'
-#define INSTRUCTION_IS_AUTOFOCUS_ON 'I'
-
 #define INSTRUCTION_IS_TOGGLE_SET_SPEEDS 'i'
 
 #define INSTRUCTION_TOGGLE_RECORDING 'u'
@@ -115,7 +111,7 @@
 #define EEPROM_ADDRESS_SLIDER_SPEED3 46
 #define EEPROM_ADDRESS_SLIDER_SPEED4 50
 
-#define VERSION_NUMBER "27 Mar 2024"
+#define VERSION_NUMBER "29 Jan 2025"
 
 float slideLimit = 130000;     // 3 metres
 float zoomLimit = 5550;        // 12 - 35mm
@@ -171,7 +167,7 @@ float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
 
-float zoom_set_speed = 500;
+float zoom_set_speed = 1000;
 float zoom_accel = 16000;
 
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )

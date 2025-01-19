@@ -16,7 +16,7 @@
 #define PIN_SW2 12
 #define PIN_SW3 6
 
-#define SLIDER_PULLEY_TEETH 36.0
+#define SLIDER_PULLEY_TEETH 20      // old value 36.0  // 36 teeth, 1.8 deg stepper
 //#define PAN_GEAR_RATIO 8.4705882352941176470588235294118  //  144/17 teeth      - Original Mount
 //#define TILT_GEAR_RATIO 3.047619047619047619047619047619  //  64/21 teeth       - Original Mount
 
@@ -86,18 +86,16 @@
 #define INSTRUCTION_SLIDE_END1 'v'
 #define INSTRUCTION_SLIDE_END2 'V'
 
+#define INSTRUCTION_TIMELAPSE_STEPS 'L'
+#define INSTRUCTION_TIMELAPSE_START 'K'
+#define INSTRUCTION_TIMELAPSE_STOP 'n'
+#define INSTRUCTION_TIMELAPSE_STEP 'A'
+
 #define INSTRUCTION_ZOOM_IN 'Z'
 #define INSTRUCTION_ZOOM_OUT 'z'
 #define INSTRUCTION_STOP_ZOOM 'N'
 
-#define INSTRUCTION_SET_AUTOFOCUS_ON 'O'
-#define INSTRUCTION_SET_AUTOFOCUS_OFF 'o'
-#define INSTRUCTION_IS_AUTOFOCUS_ON 'I'
-#define INSTRUCTION_IS_AUTOFOCUS_OFF 'i'
-
-#define INSTRUCTION_TOGGLE_RECORDING 'u'
-#define INSTRUCTION_IS_RECORDING 'G'
-#define INSTRUCTION_IS_NOT_RECORDING 'g'
+#define INSTRUCTION_IS_TOGGLE_SET_SPEEDS 'i'
 
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
@@ -114,7 +112,7 @@
 #define EEPROM_ADDRESS_SLIDER_SPEED3 46
 #define EEPROM_ADDRESS_SLIDER_SPEED4 50
 
-#define VERSION_NUMBER "2 June 2024"
+#define VERSION_NUMBER "19 Jan 2025"
 
 float slideLimit = 130000;     // 3 metres
 float zoomLimit = 5550;      // 12 - 35mm
@@ -125,6 +123,7 @@ bool useKeyframeSpeeds = false;
 bool upsideDown = false;
 bool slideReverse = false;
 bool startedAsync = false;
+bool isMoving = false;
 
 bool panAsync = false;
 bool tiltAsync = false;
@@ -142,6 +141,8 @@ bool findingHome = false;
 
 bool zoomedIn = false;
 bool zoomedOut = false;
+
+bool TLStarted = false;
 
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
@@ -166,7 +167,7 @@ float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
 
-float zoom_set_speed = 8000;
+float zoom_set_speed = 1000;
 float zoom_accel = 16000;
 
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
@@ -180,6 +181,18 @@ bool zoomNeg = false;
 
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
+
+float panStepDelta;
+float panStepDelta2;
+float panStepDelta3;
+float stepDelta;
+float tiltStepDelta;
+float sliderStepDelta;
+float zoomStepDelta;
+
+float numberOfSteps = 0;
+float numberOfStepsFloat = 0.0;
+float numberOfStepsCount = 0;
 
 String atIndex = "";
 

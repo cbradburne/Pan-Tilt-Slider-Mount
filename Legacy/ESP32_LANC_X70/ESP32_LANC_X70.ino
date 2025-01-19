@@ -3,7 +3,12 @@
   Big thanks to Tony McGuire for all his help testing the LANC control.
   
   https://espressif.github.io/arduino-esp32/package_esp32_index.json
+  
+  
+  IMPORTANT!!! 
   Boards version 2.0.4 works, later versions don't work.
+
+  
 */
 
 #define CMDBUFFER_SIZE 32
