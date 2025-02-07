@@ -5857,40 +5857,42 @@ class PTSapp(QMainWindow):
         elif msg[0:2] == "#$":
             serialText += "</font><br>"
             QtWidgets.QApplication.processEvents()
+            QtCore.QTimer.singleShot(500,Ui_SettingsWindow.scrollText)
 
         elif msg[0:4] == "Cam1":
             whichCamRead = 1
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#40D140 size='5'>Cam1:<br>"
+            serialText += "<font color=#40D140 size='3'>Cam1:<br>"
         elif msg[0:4] == "Cam2":
             whichCamRead = 2
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#5C8BC9 size='5'>" + msg + "</font><br>"
+            serialText += "<font color=#5C8BC9 size='3'>Cam2:<br>"
         elif msg[0:4] == "Cam3":
             whichCamRead = 3
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#B4A21C size='5'>" + msg + "</font><br>"
+            serialText += "<font color=#B4A21C size='3'>Cam3:<br>"
         elif msg[0:4] == "Cam4":
             whichCamRead = 4
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#01E6CC size='5'>" + msg + "</font><br>"
+            serialText += "<font color=#01E6CC size='3'>Cam4:<br>"
         elif msg[0:4] == "Cam5":
             whichCamRead = 5
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#E97CF9 size='5'>" + msg + "</font><br>"
+            serialText += "<font color=#E97CF9 size='3'>Cam5:<br>"
         else:
             serialText += msg + "<br>"
             QtWidgets.QApplication.processEvents()
+            QtCore.QTimer.singleShot(500,Ui_SettingsWindow.scrollText)
 
         msg = ''
 
@@ -11089,5 +11091,6 @@ class ThreadClass(QtCore.QThread):
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
+    #app = QtGui.QApplication(sys.argv)
     MainWindow = PTSapp("")
     app.exec()

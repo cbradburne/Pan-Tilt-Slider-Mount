@@ -912,15 +912,15 @@ void SerialData(void) {
           zoomStepDelta = (keyframe_array[0].zoomStepCount + ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) * (numberOfStepsCount / numberOfSteps)));
 
           Serial1.println("TLSTEP");
-          Serial1.println(String("numberOfStepsCount: ") + numberOfStepsCount);
-          Serial1.println(String("numberOfSteps: ") + numberOfSteps);
-          //Serial1.println(String("[0].panStepCount: ") + keyframe_array[0].panStepCount);
-          //Serial1.println(String("[9].panStepCount: ") + keyframe_array[9].panStepCount);
-          Serial1.println(String("panStepABS:    ") + panStepDelta);
-          Serial1.println(String("tiltStepABS:   ") + tiltStepDelta);
-          Serial1.println(String("sliderStepABS: ") + sliderStepDelta);
-          Serial1.println(String("sliderStepDelta: ") + ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) * (numberOfStepsCount / numberOfSteps)));
-          //Serial1.println(String("zoomStepABS:   ") + zoomStepDelta);
+          Serial1.println(String("Current Step: ") + numberOfStepsCount);
+          Serial1.println(String("Total Steps:  ") + numberOfSteps);
+          //Serial1.println(String("panStepABS:         ") + panStepDelta);
+          //Serial1.println(String("tiltStepABS:        ") + tiltStepDelta);
+          //Serial1.println(String("sliderStepABS:      ") + sliderStepDelta);
+          Serial1.println(String("pan Delta:    ") + ((keyframe_array[9].panStepCount - keyframe_array[0].panStepCount) * (1 / numberOfSteps)));
+          Serial1.println(String("Tilt Delta:   ") + ((keyframe_array[9].tiltStepCount - keyframe_array[0].tiltStepCount) * (1 / numberOfSteps)));
+          Serial1.println(String("slider Delta: ") + ((keyframe_array[9].sliderStepCount - keyframe_array[0].sliderStepCount) * (1 / numberOfSteps)));
+          Serial1.println(String("Zoom Delta:   ") + ((keyframe_array[9].zoomStepCount - keyframe_array[0].zoomStepCount) * (1 / numberOfSteps)));
           Serial1.println("#$");
 
           stepper_pan.setTargetAbs(panStepDelta);
