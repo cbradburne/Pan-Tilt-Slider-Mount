@@ -5856,6 +5856,7 @@ class PTSapp(QMainWindow):
 
         elif msg[0:2] == "#$":
             serialText += "</font><br>"
+            QtWidgets.QApplication.processEvents()
 
         elif msg[0:4] == "Cam1":
             whichCamRead = 1
@@ -5889,6 +5890,7 @@ class PTSapp(QMainWindow):
             serialText += "<font color=#E97CF9 size='5'>" + msg + "</font><br>"
         else:
             serialText += msg + "<br>"
+            QtWidgets.QApplication.processEvents()
 
         msg = ''
 
