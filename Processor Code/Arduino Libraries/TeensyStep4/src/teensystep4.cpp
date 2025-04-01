@@ -14,6 +14,7 @@ namespace TS4
         if(useDefaultModule)
         {
             TimerFactory::attachModule(new TMRModule<3>());
+            TimerFactory::attachModule(new TMRModule<0>()); // added for more than 4 motors, remove to restore to original file
         }
     }
 }
