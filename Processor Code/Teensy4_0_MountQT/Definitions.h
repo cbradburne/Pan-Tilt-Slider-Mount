@@ -19,7 +19,7 @@
 #define PIN_SW3 11
 #define PIN_SW4 12
 
-#define SLIDER_PULLEY_TEETH 20.0      // old value 36.0  // 36 teeth, 1.8 deg stepper
+#define SLIDER_PULLEY_TEETH 30.0      // old value 36.0  // 36 teeth, 1.8 deg stepper
 
 #define PAN_GEAR_RATIO 15             //  270/36 * 2 - (270 tooth / 36 tooth) * 2 mm (GT2 belt)     - 0.9 degree steppers
 #define TILT_GEAR_RATIO 15            //  120/16 * 2 - (120 tooth / 16 tooth) * 2 mm (GT2 belt)     - 0.9 degree steppers
