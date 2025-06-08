@@ -45,7 +45,7 @@ void SerialData(void) {
     //Serial.println(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
-      while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial1.available() < 8) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
         count++;
         if (count > 100) {
@@ -71,14 +71,17 @@ void SerialData(void) {
       }
       short panStepSpeed = (Serial1.read() << 8) + Serial1.read();
       short tiltStepSpeed = (Serial1.read() << 8) + Serial1.read();
+      short zoomStepSpeed = (Serial1.read() << 8) + Serial1.read();
 
       float sliderStepSpeed2 = sliderStepSpeed;
       float panStepSpeed2 = panStepSpeed;
       float tiltStepSpeed2 = tiltStepSpeed;
+      float zoomStepSpeed2 = zoomStepSpeed;
 
       float speedFactorS = map(sliderStepSpeed2, -255, 255, -sliderMaxFactor, sliderMaxFactor);
       float speedFactorP = map(panStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
+      float speedFactorZ = map(zoomStepSpeed2, -255, 255, -1, 1);
 
       previousMillisMoveCheck = millis();
 
@@ -135,6 +138,64 @@ void SerialData(void) {
         }
       }
 
+      if (speedFactorZ == 0) {
+        if (zoomRunning) {
+          zoomRunning = false;
+          stepper_zoom.overrideSpeed(0);
+          stepper_zoom.stopAsync();
+          stepper_zoom.setAcceleration(zoom_set_speed * 10);
+        }
+      } else {
+        if (zoomReversed) {
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
+          //if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0) && (!zoomedIn))) {
+            if (!zoomRunning && (speedFactorZ > 0)) {
+              zoomRunning = true;
+              stepper_zoom.setAcceleration(zoom_set_speed * 8);
+              stepper_zoom.rotateAsync(zoom_set_speed);
+              stepper_zoom.overrideSpeed(0);
+              zoomNeg = false;
+            } else if (!zoomRunning && (speedFactorZ < 0)) {
+              zoomRunning = true;
+              stepper_zoom.setAcceleration(zoom_set_speed * 8);
+              stepper_zoom.rotateAsync(-zoom_set_speed);
+              stepper_zoom.overrideSpeed(0);
+              zoomNeg = true;
+            }
+
+            if (zoomNeg == false) {
+              stepper_zoom.overrideSpeed(speedFactorZ);
+            } else {
+              stepper_zoom.overrideSpeed(-speedFactorZ);
+            }
+          }
+        } else {
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
+          //if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0) && (!zoomedIn))) {
+            if (!zoomRunning && (speedFactorZ > 0)) {
+              zoomRunning = true;
+              stepper_zoom.setAcceleration(zoom_set_speed * 8);
+              stepper_zoom.rotateAsync(zoom_set_speed);
+              stepper_zoom.overrideSpeed(0);
+              zoomNeg = false;
+            } else if (!zoomRunning && (speedFactorZ < 0)) {
+              zoomRunning = true;
+              stepper_zoom.setAcceleration(zoom_set_speed * 8);
+              stepper_zoom.rotateAsync(-zoom_set_speed);
+              stepper_zoom.overrideSpeed(0);
+              zoomNeg = true;
+            }
+
+            if (zoomNeg == false) {
+              stepper_zoom.overrideSpeed(speedFactorZ);
+            } else {
+              stepper_zoom.overrideSpeed(-speedFactorZ);
+            }
+          }
+        }
+      }
+
+
       if (speedFactorS == 0.0) {
         if (sliderRunning) {
           sliderRunning = false;
@@ -147,13 +208,13 @@ void SerialData(void) {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))))) {
             if (!sliderRunning && (speedFactorS > 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(50000);
+              stepper_slider.setAcceleration(30000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = false;
             } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(50000);
+              stepper_slider.setAcceleration(30000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = true;
@@ -169,13 +230,13 @@ void SerialData(void) {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
             if (!sliderRunning && (speedFactorS > 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(50000);
+              stepper_slider.setAcceleration(30000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = false;
             } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
-              stepper_slider.setAcceleration(50000);
+              stepper_slider.setAcceleration(30000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
               stepper_slider.overrideSpeed(0);
               slideNeg = true;
@@ -200,6 +261,10 @@ void SerialData(void) {
         stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
       }
 
+      //if (speedFactorZ == 0.0) {
+      //  stepper_zoom.setAcceleration((slider_accel / 20) * slider_set_speed);
+      //}
+
 
       if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
         isManualMove = false;
@@ -209,8 +274,9 @@ void SerialData(void) {
       }
 
 
+
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);                                         //wait to make sure all data in the Serial1 message has arived
+      delay(2);  //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
@@ -220,8 +286,8 @@ void SerialData(void) {
           char digit = Serial1.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                                 //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
+        Serial1Flush();                            //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
       } else if (instruction == INSTRUCTION_IS_SETTINGS_REQUESTED) {
         delay(2);
         whichSetting = Serial1.read();
@@ -231,12 +297,12 @@ void SerialData(void) {
           char digit = Serial1.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                                 //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);     //converts stringText to a float
-        if (instruction == '+') {                       //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                   //wait to make sure all data in the Serial1 message has arived
-          Serial1Flush();                               //Clear any excess data in the Serial1 buffer
+        Serial1Flush();                              //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
+        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                //wait to make sure all data in the Serial1 message has arived
+          Serial1Flush();                            //Clear any excess data in the Serial1 buffer
           return;
         }
       }
@@ -769,8 +835,7 @@ void SerialData(void) {
           if (zoomReversed) {
             stepper_zoom.rotateAsync(-zoom_set_speed);
             stepper_zoom.overrideSpeed(0);
-          }
-          else {
+          } else {
             stepper_zoom.rotateAsync(zoom_set_speed);
             stepper_zoom.overrideSpeed(0);
           }
@@ -784,8 +849,7 @@ void SerialData(void) {
             stepper_zoom.overrideSpeed(0);
             stepper_zoom.stopAsync();
           }
-        }
-        else {
+        } else {
           if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0) && (!zoomedIn))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
@@ -812,8 +876,7 @@ void SerialData(void) {
           if (zoomReversed) {
             stepper_zoom.rotateAsync(zoom_set_speed);
             stepper_zoom.overrideSpeed(0);
-          }
-          else {
+          } else {
             stepper_zoom.rotateAsync(-zoom_set_speed);
             stepper_zoom.overrideSpeed(0);
           }
@@ -827,8 +890,7 @@ void SerialData(void) {
             stepper_zoom.overrideSpeed(0);
             stepper_zoom.stopAsync();
           }
-        }
-        else {
+        } else {
           if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > 0) && (speedFactorZ > 0) && (!zoomedOut))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
@@ -851,7 +913,7 @@ void SerialData(void) {
         zoomRunning = false;
         stepper_zoom.overrideSpeed(0);
         stepper_zoom.stopAsync();
-        zoomRunning = false;
+        stepper_zoom.setAcceleration(zoom_set_speed * 2);
       }
       break;
     case INSTRUCTION_SET_ZERO_POS:
@@ -886,7 +948,7 @@ void SerialData(void) {
           stepper_zoom.setTargetAbs(keyframe_array[0].zoomStepCount);
 
           isMoving = true;
-          StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+          StepperGroup({ stepper_pan, stepper_tilt, stepper_slider, stepper_zoom }).move();
           isMoving = false;
 
           TLStarted = true;
@@ -929,7 +991,7 @@ void SerialData(void) {
           stepper_zoom.setTargetAbs(zoomStepDelta);
 
           isMoving = true;
-          StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+          StepperGroup({ stepper_pan, stepper_tilt, stepper_slider, stepper_zoom }).move();
           isMoving = false;
 
           if (numberOfSteps == numberOfStepsCount) {
@@ -945,8 +1007,7 @@ void SerialData(void) {
         if (useKeyframeSpeeds == false) {
           useKeyframeSpeeds = true;
           Serial1.println("#I");
-        }
-        else if (useKeyframeSpeeds == true) {
+        } else if (useKeyframeSpeeds == true) {
           useKeyframeSpeeds = false;
           Serial1.println("#i");
         }
