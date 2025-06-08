@@ -589,7 +589,7 @@ locateHomeActive = False
 
 winSize = 1
 
-if sys.platform == "win32":
+if sys.platform == "win32" or sys.platform == "linux":
     winSize = 0.7
 
 class Ui_SettingsWindow(QMainWindow):
