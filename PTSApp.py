@@ -4130,7 +4130,6 @@ class PTSapp(QMainWindow):
     def toHex(self, val, nbits):
         return hex((val + (1 << nbits)) % (1 << nbits))
 
-
     def buttonConnect(self, device_list):
         global btn_scan_show
         global whichCamSerial
@@ -4147,6 +4146,7 @@ class PTSapp(QMainWindow):
             usb_port2 = 'usb/00'
             usb_port3 = 'COM8'
             usb_port4 = 'COM3'
+            usb_port5 = 'ACM0'
             
             if (usb_port in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port in string]
@@ -4156,6 +4156,8 @@ class PTSapp(QMainWindow):
                 serialPortSelect = [string for string in device_name_list if usb_port3 in string]
             elif (usb_port4 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port4 in string]
+            elif (usb_port5 in '\t'.join(device_name_list)):
+                serialPortSelect = [string for string in device_name_list if usb_port5 in string]
             else:
                 message = ("No USB Serial Found")
 

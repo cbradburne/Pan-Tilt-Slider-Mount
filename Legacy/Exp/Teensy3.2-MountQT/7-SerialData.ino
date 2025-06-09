@@ -129,13 +129,15 @@ void SerialData(void) {
             zoomRunning = true;
             Serial2.print("#i");
             Serial2.println(speedFactorZ);
-            Serial1.println("Zoom OUT.");
+            Serial1.print("Zoom OUT - ");
+            Serial1.println(speedFactorZ);
             Serial1.println("#$");
           } else if (!zoomRunning && (speedFactorZ < 0) {
             zoomRunning = true;
             Serial2.print("#I");
             Serial2.println(-speedFactorZ);
-            Serial1.println("Zoom IN.");
+            Serial1.print("Zoom IN - ");
+            Serial1.println(speedFactorZ);
             Serial1.println("#$");
           } 
         } else {
@@ -143,13 +145,15 @@ void SerialData(void) {
             zoomRunning = true;
             Serial2.print("#I");
             Serial2.println(speedFactorZ);
-            Serial1.println("Zoom IN.");
+            Serial1.print("Zoom IN - ");
+            Serial1.println(speedFactorZ);
             Serial1.println("#$");
           } else if (!zoomRunning && (speedFactorZ < 0) {
             zoomRunning = true;
             Serial2.print("#i");
             Serial2.println(-speedFactorZ);
-            Serial1.println("Zoom OUT.");
+            Serial1.print("Zoom OUT - ");
+            Serial1.println(speedFactorZ);
             Serial1.println("#$");
           }
         }

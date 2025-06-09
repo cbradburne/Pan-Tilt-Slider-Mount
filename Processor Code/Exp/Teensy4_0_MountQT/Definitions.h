@@ -144,6 +144,8 @@ bool zoomedOut = false;
 
 bool TLStarted = false;
 
+bool joyMove = false;
+
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
 
