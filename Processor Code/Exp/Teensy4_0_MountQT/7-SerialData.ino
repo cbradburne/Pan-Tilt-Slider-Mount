@@ -86,18 +86,18 @@ void SerialData(void) {
       //float tiltStepSpeed2 = (Serial1.read() << 8) + Serial1.read();
       //float zoomStepSpeed2 = (Serial1.read() << 8) + Serial1.read();
 
-      float speedFactorS = (((Serial1.read() << 8) + Serial1.read()) / 255);
-      if (!withSlider) {
-        speedFactorS = 0;
-      }
-      float speedFactorP = (((Serial1.read() << 8) + Serial1.read()) / 255);
-      float speedFactorT = (((Serial1.read() << 8) + Serial1.read()) / 255);
-      float speedFactorZ = (((Serial1.read() << 8) + Serial1.read()) / 255);
-
       //float speedFactorS = map(sliderStepSpeed2, -255, 255, -sliderMaxFactor, sliderMaxFactor);
       //float speedFactorP = map(panStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
       //float speedFactorT = map(tiltStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
       //float speedFactorZ = map(zoomStepSpeed2, -255, 255, -1, 1);
+
+      float speedFactorS = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
+      if (!withSlider) {
+        speedFactorS = 0;
+      }
+      float speedFactorP = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
+      float speedFactorT = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
+      float speedFactorZ = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
 
       previousMillisMoveCheck = millis();
 
@@ -277,7 +277,7 @@ void SerialData(void) {
       //}
       //if (speedFactorS == 0.0) {
       //  stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-      /}
+      //}
 
       if ((speedFactorP == 0.0) && (speedFactorT == 0.0) && (speedFactorS == 0.0) && (speedFactorZ == 0.0) && (joyMove == true)) {
         stepper_pan.stopAsync();
