@@ -101,7 +101,7 @@ void SerialData(void) {
 
       previousMillisMoveCheck = millis();
 
-      if (((speedFactorP != 0.0) || (speedFactorT == 0.0) || (speedFactorS == 0.0) || (speedFactorZ == 0.0)) && (joyMove == false)) {
+      if (((speedFactorP != 0.0) || (speedFactorT != 0.0) || (speedFactorS != 0.0) || (speedFactorZ != 0.0)) && (joyMove == false)) {
         joyMove = true;
       }
 
