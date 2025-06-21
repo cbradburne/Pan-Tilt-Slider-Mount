@@ -101,15 +101,15 @@ void SerialData(void) {
 
       previousMillisMoveCheck = millis();
 
-      if (((speedFactorP != 0.0) || (speedFactorT != 0.0) || (speedFactorS != 0.0) || (speedFactorZ != 0.0)) && (joyMove == false)) {
-        joyMove = true;
-      }
+      //if (((speedFactorP != 0.0) || (speedFactorT != 0.0) || (speedFactorS != 0.0) || (speedFactorZ != 0.0)) && (joyMove == false)) {
+      //  joyMove = true;
+      //}
 
       if (speedFactorP == 0.0) {
         if (panRunning) {
           panRunning = false;
           stepper_pan.overrideSpeed(0);
-          //stepper_pan.stopAsync();
+          stepper_pan.stopAsync();
         }
       } else {
         if (!panRunning && (speedFactorP > 0)) {
@@ -137,7 +137,7 @@ void SerialData(void) {
         if (tiltRunning) {
           tiltRunning = false;
           stepper_tilt.overrideSpeed(0);
-          //stepper_tilt.stopAsync();
+          stepper_tilt.stopAsync();
         }
       } else {
         if (!tiltRunning && (speedFactorT > 0)) {
@@ -162,7 +162,7 @@ void SerialData(void) {
         if (zoomRunning) {
           zoomRunning = false;
           stepper_zoom.overrideSpeed(0);
-          //stepper_zoom.stopAsync();
+          stepper_zoom.stopAsync();
           //stepper_zoom.setAcceleration(zoom_set_speed * 10);
         }
       } else {
@@ -218,7 +218,7 @@ void SerialData(void) {
         if (sliderRunning) {
           sliderRunning = false;
           stepper_slider.overrideSpeed(0);
-          //stepper_slider.stopAsync();
+          stepper_slider.stopAsync();
         }
       } else {
         if (slideReverse) {
@@ -269,16 +269,16 @@ void SerialData(void) {
         }
       }
 
-      //if (speedFactorP == 0.0) {
-      //  stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      //}
-      //if (speedFactorT == 0.0) {
-      //  stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      //}
-      //if (speedFactorS == 0.0) {
-      //  stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-      //}
-
+      if (speedFactorP == 0.0) {
+        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+      if (speedFactorT == 0.0) {
+        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+      if (speedFactorS == 0.0) {
+        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+      }
+/*
       if ((speedFactorP == 0.0) && (speedFactorT == 0.0) && (speedFactorS == 0.0) && (speedFactorZ == 0.0) && (joyMove == true)) {
         stepper_pan.stopAsync();
         stepper_tilt.stopAsync();
@@ -290,7 +290,7 @@ void SerialData(void) {
 
         joyMove = false;
       }
-
+*/
       
 
       //if (speedFactorZ == 0.0) {
