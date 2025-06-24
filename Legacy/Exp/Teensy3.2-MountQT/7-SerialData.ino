@@ -39,14 +39,15 @@ void SerialData(void) {
   } else if (Serial1.available() > 0) {
     instruction = Serial1.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
-      int count = 0;
+      //int count = 0;
       while (Serial1.available() < 8) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
-        delayMicroseconds(200);
-        count++;
-        if (count > 100) {
-          Serial1Flush();  //  Clear the Serial1 buffer
-          break;
-        }
+        //delayMicroseconds(200);
+        //count++;
+        //if (count > 100) {
+        //  Serial1Flush();  //  Clear the Serial1 buffer
+        //  break;
+        //}
+        ;
       }
 
       atPos1 = false;
@@ -132,7 +133,7 @@ void SerialData(void) {
             Serial1.print("Zoom OUT - ");
             Serial1.println(speedFactorZ);
             Serial1.println("#$");
-          } else if (!zoomRunning && (speedFactorZ < 0) {
+          } else if (!zoomRunning && (speedFactorZ < 0)) {
             zoomRunning = true;
             Serial2.print("#I");
             Serial2.println(-speedFactorZ);
@@ -148,7 +149,7 @@ void SerialData(void) {
             Serial1.print("Zoom IN - ");
             Serial1.println(speedFactorZ);
             Serial1.println("#$");
-          } else if (!zoomRunning && (speedFactorZ < 0) {
+          } else if (!zoomRunning && (speedFactorZ < 0)) {
             zoomRunning = true;
             Serial2.print("#i");
             Serial2.println(-speedFactorZ);

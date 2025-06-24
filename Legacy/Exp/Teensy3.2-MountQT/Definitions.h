@@ -124,6 +124,7 @@ bool upsideDown = false;
 bool slideReverse = false;
 bool startedAsync = false;
 bool isMoving = false;
+bool zoomReversed = false;
 
 bool panAsync = false;
 bool tiltAsync = false;

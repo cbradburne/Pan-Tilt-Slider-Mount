@@ -158,7 +158,7 @@ void Serial2Data() {
 
     else if (e == 4) {
       delay(1);
-      while (Serial2.available() < 9) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial2.available() < 8) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
       }
       char readSerialC2 = Serial2.read();
@@ -169,7 +169,7 @@ void Serial2Data() {
       readSerialC2 = Serial2.read();
       readSerialC2 = Serial2.read();
       readSerialC2 = Serial2.read();
-      readSerialC2 = Serial2.read();
+      //readSerialC2 = Serial2.read();
     }
 
     else {

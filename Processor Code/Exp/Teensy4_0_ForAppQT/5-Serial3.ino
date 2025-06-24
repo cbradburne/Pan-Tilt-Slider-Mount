@@ -158,7 +158,7 @@ void Serial3Data() {
 
     else if (g == 4) {
       delay(1);
-      while (Serial3.available() < 9) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial3.available() < 8) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
       }
       char readSerialC3 = Serial3.read();
@@ -169,7 +169,7 @@ void Serial3Data() {
       readSerialC3 = Serial3.read();
       readSerialC3 = Serial3.read();
       readSerialC3 = Serial3.read();
-      readSerialC3 = Serial3.read();
+      //readSerialC3 = Serial3.read();
     }
 
     else {

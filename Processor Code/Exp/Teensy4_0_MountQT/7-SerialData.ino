@@ -42,16 +42,17 @@ void SerialData(void) {
 
   if (Serial1.available() > 0) {
     instruction = Serial1.read();
-    //Serial.println(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
-      int count = 0;
+      //int count = 0;
+      
       while (Serial1.available() < 8) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
-        delayMicroseconds(200);
-        count++;
-        if (count > 100) {
-          Serial1Flush();  //  Clear the Serial1 buffer
-          break;
-        }
+        //delayMicroseconds(200);
+        //count++;
+        //if (count > 100) {
+        //  Serial1Flush();               //  Clear the Serial1 buffer
+        //  break;
+        //}
+        ;
       }
 
       atPos1 = false;
@@ -65,32 +66,6 @@ void SerialData(void) {
       atPos9 = false;
       atPos0 = false;
 
-      //short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
-      //if (!withSlider) {
-      //  sliderStepSpeed = 0;
-      //}
-      //short panStepSpeed = (Serial1.read() << 8) + Serial1.read();
-      //short tiltStepSpeed = (Serial1.read() << 8) + Serial1.read();
-      //short zoomStepSpeed = (Serial1.read() << 8) + Serial1.read();
-
-      //float sliderStepSpeed2 = sliderStepSpeed;
-      //float panStepSpeed2 = panStepSpeed;
-      //float tiltStepSpeed2 = tiltStepSpeed;
-      //float zoomStepSpeed2 = zoomStepSpeed;
-
-      //float sliderStepSpeed2 = (Serial1.read() << 8) + Serial1.read();
-      //if (!withSlider) {
-      //  sliderStepSpeed2 = 0;
-      //}
-      //float panStepSpeed2 = (Serial1.read() << 8) + Serial1.read();
-      //float tiltStepSpeed2 = (Serial1.read() << 8) + Serial1.read();
-      //float zoomStepSpeed2 = (Serial1.read() << 8) + Serial1.read();
-
-      //float speedFactorS = map(sliderStepSpeed2, -255, 255, -sliderMaxFactor, sliderMaxFactor);
-      //float speedFactorP = map(panStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
-      //float speedFactorT = map(tiltStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
-      //float speedFactorZ = map(zoomStepSpeed2, -255, 255, -1, 1);
-
       float speedFactorS = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
       if (!withSlider) {
         speedFactorS = 0;
@@ -101,9 +76,88 @@ void SerialData(void) {
 
       previousMillisMoveCheck = millis();
 
-      //if (((speedFactorP != 0.0) || (speedFactorT != 0.0) || (speedFactorS != 0.0) || (speedFactorZ != 0.0)) && (joyMove == false)) {
-      //  joyMove = true;
-      //}
+      if ((speedFactorP != 0.0) && !panRunning) {
+        panRunning = true;
+        stepper_pan.rotateAsync(panDegreesToSteps(pantilt_set_speed));
+        stepper_pan.setAcceleration(10000);
+      }
+      if ((speedFactorP != 0.0) && panRunning) {
+        stepper_pan.overrideSpeed(speedFactorP);
+      } else if ((speedFactorP == 0.0) && panRunning) {
+        panRunning = false;
+        stepper_pan.overrideSpeed(0);
+        stepper_pan.stopAsync();
+        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+
+      if ((speedFactorT != 0.0) && !tiltRunning) {
+        tiltRunning = true;
+        stepper_tilt.rotateAsync(panDegreesToSteps(pantilt_set_speed));
+        stepper_tilt.setAcceleration(10000);
+      }
+      if ((speedFactorT != 0.0) && tiltRunning) {
+        stepper_tilt.overrideSpeed(speedFactorT);
+      } else if ((speedFactorT == 0.0) && tiltRunning) {
+        tiltRunning = false;
+        stepper_tilt.overrideSpeed(0);
+        stepper_tilt.stopAsync();
+        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+
+      if ((speedFactorS != 0.0) && !sliderRunning) {
+        if (slideReverse) {
+          speedFactorS = -speedFactorS;
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))))) {
+            sliderRunning = true;
+            stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.setAcceleration(10000);
+          }
+        } else {
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
+            sliderRunning = true;
+            stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.setAcceleration(10000);
+          }
+        }
+      }
+      if ((speedFactorS != 0.0) && sliderRunning) {
+        stepper_slider.overrideSpeed(speedFactorS);
+      } 
+      if ((speedFactorS == 0.0) && sliderRunning) {
+        sliderRunning = false;
+        stepper_slider.overrideSpeed(0);
+        stepper_slider.stopAsync();
+        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+      }
+
+         
+      if ((speedFactorZ != 0.0) && !zoomRunning) {
+        if (zoomReversed) {
+          speedFactorZ = -speedFactorZ;
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
+            zoomRunning = true;
+            stepper_zoom.rotateAsync(zoom_set_speed);
+            stepper_zoom.setAcceleration(10000);
+          }
+        } else {
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
+            zoomRunning = true;
+            stepper_zoom.rotateAsync(zoom_set_speed);
+            stepper_zoom.setAcceleration(10000);
+          }
+        }
+      }
+      if ((speedFactorZ != 0.0) && zoomRunning) {
+        stepper_zoom.overrideSpeed(speedFactorZ);
+      }
+      if ((speedFactorZ == 0.0) && zoomRunning) {
+        zoomRunning = false;
+        stepper_zoom.overrideSpeed(0);
+        stepper_zoom.stopAsync();
+      }
+
+
+/*
 
       if (speedFactorP == 0.0) {
         if (panRunning) {
@@ -172,13 +226,11 @@ void SerialData(void) {
               zoomRunning = true;
               //stepper_zoom.setAcceleration(zoom_set_speed * 8);
               stepper_zoom.rotateAsync(zoom_set_speed);
-              //stepper_zoom.overrideSpeed(0);
               zoomNeg = false;
             } else if (!zoomRunning && (speedFactorZ < 0)) {
               zoomRunning = true;
               //stepper_zoom.setAcceleration(zoom_set_speed * 8);
               stepper_zoom.rotateAsync(-zoom_set_speed);
-              //stepper_zoom.overrideSpeed(0);
               zoomNeg = true;
             }
 
@@ -194,13 +246,11 @@ void SerialData(void) {
               zoomRunning = true;
               //stepper_zoom.setAcceleration(zoom_set_speed * 8);
               stepper_zoom.rotateAsync(zoom_set_speed);
-              //stepper_zoom.overrideSpeed(0);
               zoomNeg = false;
             } else if (!zoomRunning && (speedFactorZ < 0)) {
               zoomRunning = true;
               //stepper_zoom.setAcceleration(zoom_set_speed * 8);
               stepper_zoom.rotateAsync(-zoom_set_speed);
-              //stepper_zoom.overrideSpeed(0);
               zoomNeg = true;
             }
 
@@ -228,13 +278,11 @@ void SerialData(void) {
               sliderRunning = true;
               stepper_slider.setAcceleration(30000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
-              //stepper_slider.overrideSpeed(0);
               slideNeg = false;
             } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
               stepper_slider.setAcceleration(30000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
-              //stepper_slider.overrideSpeed(0);
               slideNeg = true;
             }
 
@@ -250,13 +298,11 @@ void SerialData(void) {
               sliderRunning = true;
               stepper_slider.setAcceleration(30000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
-              //stepper_slider.overrideSpeed(0);
               slideNeg = false;
             } else if (!sliderRunning && (speedFactorS < 0)) {
               sliderRunning = true;
               stepper_slider.setAcceleration(30000);
               stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
-              //stepper_slider.overrideSpeed(0);
               slideNeg = true;
             }
 
@@ -269,8 +315,10 @@ void SerialData(void) {
         }
       }
 
+
       if (speedFactorP == 0.0) {
         stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+        panRunning = false;
       }
       if (speedFactorT == 0.0) {
         stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
@@ -278,33 +326,18 @@ void SerialData(void) {
       if (speedFactorS == 0.0) {
         stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
       }
-/*
-      if ((speedFactorP == 0.0) && (speedFactorT == 0.0) && (speedFactorS == 0.0) && (speedFactorZ == 0.0) && (joyMove == true)) {
-        stepper_pan.stopAsync();
-        stepper_tilt.stopAsync();
-        stepper_slider.stopAsync();
-        
-        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-
-        joyMove = false;
-      }
-*/
-      
-
       //if (speedFactorZ == 0.0) {
       //  stepper_zoom.setAcceleration((slider_accel / 20) * slider_set_speed);
       //}
+*/
 
-
-      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
+      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0) && (speedFactorZ == 0.0)) {
         isManualMove = false;
       } else {
         isManualMove = true;
         previousMillisMoveCheck = millis();
       }
-
+      
 
 
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
