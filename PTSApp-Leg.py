@@ -589,7 +589,7 @@ locateHomeActive = False
 
 winSize = 1
 
-if sys.platform == "win32":
+if sys.platform == "win32" or sys.platform == "linux":
     winSize = 0.7
 
 class Ui_SettingsWindow(QMainWindow):
@@ -4130,7 +4130,6 @@ class PTSapp(QMainWindow):
     def toHex(self, val, nbits):
         return hex((val + (1 << nbits)) % (1 << nbits))
 
-
     def buttonConnect(self, device_list):
         global btn_scan_show
         global whichCamSerial
@@ -4147,6 +4146,7 @@ class PTSapp(QMainWindow):
             usb_port2 = 'usb/00'
             usb_port3 = 'COM8'
             usb_port4 = 'COM3'
+            usb_port5 = 'ACM0'
             
             if (usb_port in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port in string]
@@ -4156,6 +4156,8 @@ class PTSapp(QMainWindow):
                 serialPortSelect = [string for string in device_name_list if usb_port3 in string]
             elif (usb_port4 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port4 in string]
+            elif (usb_port5 in '\t'.join(device_name_list)):
+                serialPortSelect = [string for string in device_name_list if usb_port5 in string]
             else:
                 message = ("No USB Serial Found")
 
@@ -5856,39 +5858,43 @@ class PTSapp(QMainWindow):
 
         elif msg[0:2] == "#$":
             serialText += "</font><br>"
+            QtWidgets.QApplication.processEvents()
+            QtCore.QTimer.singleShot(500,Ui_SettingsWindow.scrollText)
 
         elif msg[0:4] == "Cam1":
             whichCamRead = 1
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#40D140 size='5'>Cam1:<br>"
+            serialText += "<font color=#40D140 size='3'>Cam1:<br>"
         elif msg[0:4] == "Cam2":
             whichCamRead = 2
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#5C8BC9 size='5'>" + msg + "</font><br>"
+            serialText += "<font color=#5C8BC9 size='3'>Cam2:<br>"
         elif msg[0:4] == "Cam3":
             whichCamRead = 3
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#B4A21C size='5'>" + msg + "</font><br>"
+            serialText += "<font color=#B4A21C size='3'>Cam3:<br>"
         elif msg[0:4] == "Cam4":
             whichCamRead = 4
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#01E6CC size='5'>" + msg + "</font><br>"
+            serialText += "<font color=#01E6CC size='3'>Cam4:<br>"
         elif msg[0:4] == "Cam5":
             whichCamRead = 5
             textLength = len(serialText)
             if textLength > 8000:
                 serialText = (serialText[1000:textLength])
-            serialText += "<font color=#E97CF9 size='5'>" + msg + "</font><br>"
+            serialText += "<font color=#E97CF9 size='3'>Cam5:<br>"
         else:
             serialText += msg + "<br>"
+            QtWidgets.QApplication.processEvents()
+            QtCore.QTimer.singleShot(500,Ui_SettingsWindow.scrollText)
 
         msg = ''
 

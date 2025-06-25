@@ -1013,7 +1013,7 @@ void SerialData(void) {
           stepper_zoom.setTargetAbs(keyframe_array[0].zoomStepCount);
 
           isMoving = true;
-          StepperGroup({ stepper_pan, stepper_tilt, stepper_slider, stepper_zoom }).move();
+          StepperGroup({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
           isMoving = false;
 
           TLStarted = true;
@@ -1056,7 +1056,7 @@ void SerialData(void) {
           stepper_zoom.setTargetAbs(zoomStepDelta);
 
           isMoving = true;
-          StepperGroup({ stepper_pan, stepper_tilt, stepper_slider, stepper_zoom }).move();
+          StepperGroup({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
           isMoving = false;
 
           if (numberOfSteps == numberOfStepsCount) {

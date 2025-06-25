@@ -770,24 +770,24 @@ void SerialData(void) {
           if (zoomReversed) {
             stepper_zoom.rotateAsync(-zoom_set_speed);
             stepper_zoom.overrideSpeed(0);
-          }
-          else {
+          } else {
             stepper_zoom.rotateAsync(zoom_set_speed);
             stepper_zoom.overrideSpeed(0);
           }
         }
 
         if (zoomReversed) {
-          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0) && (!zoomedIn))) {
+          //if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
+          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0))) {// && (!zoomedOut))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
             zoomRunning = false;
             stepper_zoom.overrideSpeed(0);
             stepper_zoom.stopAsync();
           }
-        }
-        else {
-          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0) && (!zoomedIn))) {
+        } else {
+          //if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
+          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0))){// && (!zoomedIn))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
             zoomRunning = false;
@@ -813,24 +813,24 @@ void SerialData(void) {
           if (zoomReversed) {
             stepper_zoom.rotateAsync(zoom_set_speed);
             stepper_zoom.overrideSpeed(0);
-          }
-          else {
+          } else {
             stepper_zoom.rotateAsync(-zoom_set_speed);
             stepper_zoom.overrideSpeed(0);
           }
         }
 
         if (zoomReversed) {
-          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > (zoomLimit * -1)) && (speedFactorZ > 0) && (!zoomedOut))) {
+          //if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
+          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > (zoomLimit * -1)) && (speedFactorZ > 0))){// && (!zoomedIn))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
             zoomRunning = false;
             stepper_zoom.overrideSpeed(0);
             stepper_zoom.stopAsync();
           }
-        }
-        else {
-          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > 0) && (speedFactorZ > 0) && (!zoomedOut))) {
+        } else {
+          //if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
+          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > 0) && (speedFactorZ > 0))) {// && (!zoomedOut))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
             zoomRunning = false;
@@ -887,7 +887,7 @@ void SerialData(void) {
           stepper_zoom.setTargetAbs(keyframe_array[0].zoomStepCount);
 
           isMoving = true;
-          StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+          StepperGroup({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
           isMoving = false;
 
           TLStarted = true;
@@ -930,7 +930,7 @@ void SerialData(void) {
           stepper_zoom.setTargetAbs(zoomStepDelta);
 
           isMoving = true;
-          StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
+          StepperGroup({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
           isMoving = false;
 
           if (numberOfSteps == numberOfStepsCount) {
@@ -946,8 +946,7 @@ void SerialData(void) {
         if (useKeyframeSpeeds == false) {
           useKeyframeSpeeds = true;
           Serial1.println("#I");
-        }
-        else if (useKeyframeSpeeds == true) {
+        } else if (useKeyframeSpeeds == true) {
           useKeyframeSpeeds = false;
           Serial1.println("#i");
         }
