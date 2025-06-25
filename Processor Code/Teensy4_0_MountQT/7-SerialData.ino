@@ -44,14 +44,15 @@ void SerialData(void) {
     instruction = Serial1.read();
     //Serial.println(instruction);
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
-      int count = 0;
+      //int count = 0;
       while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
-        delayMicroseconds(200);
-        count++;
-        if (count > 100) {
-          Serial1Flush();  //  Clear the Serial1 buffer
-          break;
-        }
+        //delayMicroseconds(200);
+        //count++;
+        //if (count > 100) {
+        //  Serial1Flush();  //  Clear the Serial1 buffer
+        //  break;
+        //}
+        ;
       }
 
       atPos1 = false;
