@@ -30,7 +30,7 @@ void initPanTilt(void) {
 
   //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
-  //Serial2.begin(BAUD_RATE);
+  Serial2.begin(BAUD_RATE);
 
   TS4::begin();
 
@@ -148,11 +148,11 @@ void Serial1Flush(void) {
   }
 }
 
-//void Serial2Flush(void) {
-//  while (Serial2.available() > 0) {
-//    c = Serial2.read();
-//  }
-//}
+void Serial2Flush(void) {
+  while (Serial2.available() > 0) {
+    c = Serial2.read();
+  }
+}
 
 void sendCamSettings() {
 

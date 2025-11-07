@@ -5,54 +5,162 @@ void SerialData(void) {
   /*
   if (Serial2.available() > 0) {
     instruction = Serial2.read();
-    if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);                                             //wait to make sure all data in the Serial message has arived
+    if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
+      while (Serial2.available() < 8) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+        ;
+      }
+
+      atPos1 = false;
+      atPos2 = false;
+      atPos3 = false;
+      atPos4 = false;
+      atPos5 = false;
+      atPos6 = false;
+      atPos7 = false;
+      atPos8 = false;
+      atPos9 = false;
+      atPos0 = false;
+
+      float speedFactorS = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
+      if (!withSlider) {
+        speedFactorS = 0;
+      }
+      float speedFactorP = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
+      float speedFactorT = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
+      float speedFactorZ = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
+
+      previousMillisMoveCheck = millis();
+
+      if ((speedFactorP != 0.0) && !panRunning) {
+        panRunning = true;
+        stepper_pan.rotateAsync(panDegreesToSteps(pantilt_set_speed));
+        stepper_pan.setAcceleration(10000);
+      }
+      if ((speedFactorP != 0.0) && panRunning) {
+        stepper_pan.overrideSpeed(speedFactorP);
+      } else if ((speedFactorP == 0.0) && panRunning) {
+        panRunning = false;
+        stepper_pan.overrideSpeed(0);
+        stepper_pan.stopAsync();
+        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+
+      if ((speedFactorT != 0.0) && !tiltRunning) {
+        tiltRunning = true;
+        stepper_tilt.rotateAsync(panDegreesToSteps(pantilt_set_speed));
+        stepper_tilt.setAcceleration(10000);
+      }
+      if ((speedFactorT != 0.0) && tiltRunning) {
+        stepper_tilt.overrideSpeed(speedFactorT);
+      } else if ((speedFactorT == 0.0) && tiltRunning) {
+        tiltRunning = false;
+        stepper_tilt.overrideSpeed(0);
+        stepper_tilt.stopAsync();
+        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+
+      if ((speedFactorS != 0.0) && !sliderRunning) {
+        if (slideReverse) {
+          speedFactorS = -speedFactorS;
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))))) {
+            sliderRunning = true;
+            stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.setAcceleration(10000);
+          }
+        } else {
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
+            sliderRunning = true;
+            stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
+            stepper_slider.setAcceleration(10000);
+          }
+        }
+      }
+      if ((speedFactorS != 0.0) && sliderRunning) {
+        stepper_slider.overrideSpeed(speedFactorS);
+      } 
+      if ((speedFactorS == 0.0) && sliderRunning) {
+        sliderRunning = false;
+        stepper_slider.overrideSpeed(0);
+        stepper_slider.stopAsync();
+        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+      }
+
+         
+      if ((speedFactorZ != 0.0) && !zoomRunning) {
+        if (zoomReversed) {
+          speedFactorZ = -speedFactorZ;
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
+            zoomRunning = true;
+            stepper_zoom.rotateAsync(zoom_set_speed);
+            stepper_zoom.setAcceleration(10000);
+          }
+        } else {
+          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
+            zoomRunning = true;
+            stepper_zoom.rotateAsync(zoom_set_speed);
+            stepper_zoom.setAcceleration(10000);
+          }
+        }
+      }
+      if ((speedFactorZ != 0.0) && zoomRunning) {
+        stepper_zoom.overrideSpeed(speedFactorZ);
+      }
+      if ((speedFactorZ == 0.0) && zoomRunning) {
+        zoomRunning = false;
+        stepper_zoom.overrideSpeed(0);
+        stepper_zoom.stopAsync();
+      }
+      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0) && (speedFactorZ == 0.0)) {
+        isManualMove = false;
+      } else {
+        isManualMove = true;
+        previousMillisMoveCheck = millis();
+      }
+    } else if (instruction == INSTRUCTION_IS_COMMAND) {
+      delay(2);  //wait to make sure all data in the Serial2 message has arived
       instruction = Serial2.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
         dlyPos = Serial2.read();
-        memset(&stringText[0], 0, sizeof(stringText));      //clear the array
-        while (Serial2.available()) {                       //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial2.read();                      //read in a char
-          strncat(stringText, &digit, 1);                   //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
+        while (Serial2.available()) {                   //set elemetns of stringText to the Serial2 values sent
+          char digit = Serial2.read();                  //read in a char
+          strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                                     //Clear any excess data in the Serial2 buffer
-        SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
+        Serial2Flush();                            //Clear any excess data in the Serial2 buffer
+        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
+      } else if (instruction == INSTRUCTION_IS_SETTINGS_REQUESTED) {
+        delay(2);
+        whichSetting = Serial2.read();
       } else {
-        memset(&stringText[0], 0, sizeof(stringText));      //clear the array
-        while (Serial2.available()) {                       //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial2.read();                      //read in a char
-          strncat(stringText, &digit, 1);                   //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
+        while (Serial2.available()) {                   //set elemetns of stringText to the Serial2 values sent
+          char digit = Serial2.read();                  //read in a char
+          strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                                     //Clear any excess data in the Serial2 buffer
-        SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);         //converts stringText to a float
-        if (instruction == '+') {                           //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                       //wait to make sure all data in the Serial2 message has arived
-          Serial2Flush();                                   //Clear any excess data in the Serial2 buffer
+        Serial2Flush();                              //Clear any excess data in the Serial2 buffer
+        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
+        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                //wait to make sure all data in the Serial2 message has arived
+          Serial2Flush();                            //Clear any excess data in the Serial2 buffer
           return;
         }
       }
     } else {
       return;
     }
+
+
+    
   } else 
-  
   */
 
   if (Serial1.available() > 0) {
     instruction = Serial1.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
-      //int count = 0;
-      
       while (Serial1.available() < 8) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
-        //delayMicroseconds(200);
-        //count++;
-        //if (count > 100) {
-        //  Serial1Flush();               //  Clear the Serial1 buffer
-        //  break;
-        //}
-        ;
+        delayMicroseconds(200);
       }
 
       atPos1 = false;
@@ -464,7 +572,8 @@ void SerialData(void) {
             Serial1.println("ms");
             previousTime = dlyPos1Time + timeElapsed;
             while (timeElapsed < previousTime) {
-              delay(2);
+              //delay(2);
+              ;
             }
             moveToIndex(2);
             timeElapsed = 0;
@@ -475,7 +584,8 @@ void SerialData(void) {
             Serial1.println("ms");
             previousTime = dlyPos2Time + timeElapsed;
             while (timeElapsed < previousTime) {
-              delay(2);
+              //delay(2);
+              ;
             }
             moveToIndex(3);
             timeElapsed = 0;
@@ -486,7 +596,8 @@ void SerialData(void) {
             Serial1.println("ms");
             previousTime = dlyPos3Time + timeElapsed;
             while (timeElapsed < previousTime) {
-              delay(2);
+              //delay(2);
+              ;
             }
             moveToIndex(4);
             timeElapsed = 0;
@@ -497,7 +608,8 @@ void SerialData(void) {
             Serial1.println("ms");
             previousTime = dlyPos4Time + timeElapsed;
             while (timeElapsed < previousTime) {
-              delay(2);
+              //delay(2);
+              ;
             }
             moveToIndex(5);
             timeElapsed = 0;
@@ -508,7 +620,8 @@ void SerialData(void) {
             Serial1.println("ms");
             previousTime = dlyPos5Time + timeElapsed;
             while (timeElapsed < previousTime) {
-              delay(2);
+              //delay(2);
+              ;
             }
             moveToIndex(6);
             timeElapsed = 0;

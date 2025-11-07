@@ -148,11 +148,11 @@ void Serial1Flush(void) {
   }
 }
 
-//void Serial2Flush(void) {
-//  while (Serial2.available() > 0) {
-//    c = Serial2.read();
-//  }
-//}
+void Serial2Flush(void) {
+  while (Serial2.available() > 0) {
+    c = Serial2.read();
+  }
+}
 
 void sendCamSettings() {
 
@@ -195,28 +195,28 @@ void mainLoop(void) {
         panRunning = false;
         stepper_pan.overrideSpeed(0);
         stepper_pan.stopAsync();
-        delay(10);
+        //delay(10);
       }
 
       if (stepper_tilt.isMoving) {
         tiltRunning = false;
         stepper_tilt.overrideSpeed(0);
         stepper_tilt.stopAsync();
-        delay(10);
+        //delay(10);
       }
 
       if (stepper_slider.isMoving) {
         sliderRunning = false;
         stepper_slider.overrideSpeed(0);
         stepper_slider.stopAsync();
-        delay(10);
+        //delay(10);
       }
 
       if (stepper_zoom.isMoving) {
         zoomRunning = false;
         stepper_zoom.overrideSpeed(0);
         stepper_zoom.stopAsync();
-        delay(10);
+        //delay(10);
       }
       isManualMove = false;
     }
