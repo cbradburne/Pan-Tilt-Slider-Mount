@@ -1169,7 +1169,7 @@ class Ui_SettingsWindow(QMainWindow):
         if debug:
             self.show()
         else:
-            if sys.platform == "win32":
+            if sys.platform == "win32" or sys.platform == "linux":
                 self.showFullScreen()
             else:
                 self.showMaximized()
@@ -3290,7 +3290,7 @@ class PTSapp(QMainWindow):
         if debug:
             self.show()
         else:
-            if sys.platform == "win32":
+            if sys.platform == "win32" or sys.platform == "linux":
                 self.showFullScreen()
             else:
                 self.showMaximized()

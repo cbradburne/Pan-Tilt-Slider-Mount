@@ -93,9 +93,9 @@ void sendSliderPanTiltStepSpeed(int command, short* arr, int whichCamJoy) {
   data[3] = (arr[1] >> 8);
   data[4] = (arr[1] & 0xFF);
   data[5] = (arr[2] >> 8);
-  data[6] = (arr[2] & 0xFF);  // Gets the least significant byte
+  data[6] = (arr[2] & 0xFF);
   data[7] = (arr[3] >> 8);
-  data[8] = (arr[3] & 0xFF);  // Gets the least significant byte
+  data[8] = (arr[3] & 0xFF);
 
   delay(20);
 

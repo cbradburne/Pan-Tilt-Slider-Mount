@@ -161,12 +161,13 @@ void Serial3Data() {
       while (Serial3.available() < 7) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
       }
-      char readSerialC3 = Serial3.read();
-      readSerialC3 = Serial3.read();
-      readSerialC3 = Serial3.read();
-      readSerialC3 = Serial3.read();
-      readSerialC3 = Serial3.read();
-      readSerialC3 = Serial3.read();
+      char readSerialC3 = Serial3.read();                     // Read Z
+      readSerialC3 = Serial3.read();                          // Read Z
+      readSerialC3 = Serial3.read();                          // Read X
+      readSerialC3 = Serial3.read();                          // Read X
+      readSerialC3 = Serial3.read();                          // Read Y
+      readSerialC3 = Serial3.read();                          // Read Y
+      readSerialC3 = Serial3.read();                          // Read Camera ID
     }
 
     else {

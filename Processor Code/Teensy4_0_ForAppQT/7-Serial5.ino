@@ -161,12 +161,13 @@ void Serial5Data() {
       while (Serial5.available() < 7) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
       }
-      char readSerialC5 = Serial5.read();
-      readSerialC5 = Serial5.read();
-      readSerialC5 = Serial5.read();
-      readSerialC5 = Serial5.read();
-      readSerialC5 = Serial5.read();
-      readSerialC5 = Serial5.read();
+      char readSerialC5 = Serial5.read();                     // Read Z
+      readSerialC5 = Serial5.read();                          // Read Z
+      readSerialC5 = Serial5.read();                          // Read X
+      readSerialC5 = Serial5.read();                          // Read X
+      readSerialC5 = Serial5.read();                          // Read Y
+      readSerialC5 = Serial5.read();                          // Read Y
+      readSerialC5 = Serial5.read();                          // Read Camera ID
     }
 
     else {
