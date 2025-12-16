@@ -28,9 +28,9 @@ IntervalTimer aliveTimer;
 void initPanTilt(void) {
   getEEPROMVariables();
 
-  //Serial.begin(BAUD_RATE);
+  Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
-  //Serial2.begin(BAUD_RATE);
+  Serial2.begin(BAUD_RATE);
 
   TS4::begin();
 
