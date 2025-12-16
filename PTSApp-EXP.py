@@ -1578,7 +1578,7 @@ class Ui_SettingsWindow(QMainWindow):
             if whichCamSerial == 1:
                 self.sendSerial('&1T')
             elif whichCamSerial == 2:
-                self.sendSeriale('&2T')
+                self.sendSerial('&2T')
             elif whichCamSerial == 3:
                 self.sendSerial('&3T')
             elif whichCamSerial == 4:
