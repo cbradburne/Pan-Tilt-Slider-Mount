@@ -1,13 +1,12 @@
 //  Receive Serial data, and process
 
-
 void SerialData(void) {
   char instruction;
   if (Serial2.available() > 0) {
     instruction = Serial2.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
-      while (Serial2.available() < 8) {  //  Wait for 8 bytes to be available. Breaks after ~20ms if bytes are not received.
-        ;
+      while (Serial2.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+        delayMicroseconds(200);
       }
 
       atPos1 = false;
@@ -21,13 +20,20 @@ void SerialData(void) {
       atPos9 = false;
       atPos0 = false;
 
-      float speedFactorS = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
+      short sliderStepSpeed = (Serial2.read() << 8) + Serial2.read();
       if (!withSlider) {
-        speedFactorS = 0;
+        sliderStepSpeed = 0;
       }
-      float speedFactorP = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
-      float speedFactorT = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
-      float speedFactorZ = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
+      short panStepSpeed = (Serial2.read() << 8) + Serial2.read();
+      short tiltStepSpeed = (Serial2.read() << 8) + Serial2.read();
+
+      float sliderStepSpeed2 = sliderStepSpeed;
+      float panStepSpeed2 = panStepSpeed;
+      float tiltStepSpeed2 = tiltStepSpeed;
+
+      float speedFactorS = map(sliderStepSpeed2, -255, 255, -sliderMaxFactor, sliderMaxFactor);
+      float speedFactorP = map(panStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
+      float speedFactorT = map(tiltStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
 
       previousMillisMoveCheck = millis();
 
@@ -38,9 +44,6 @@ void SerialData(void) {
           stepper_pan.stopAsync();
         }
       } else {
-        if (upsideDown) {
-          speedFactorP = (speedFactorP * -1);
-        }
         if (!panRunning && (speedFactorP > 0)) {
           panRunning = true;
           stepper_pan.setAcceleration(10000);
@@ -51,6 +54,9 @@ void SerialData(void) {
           stepper_pan.setAcceleration(10000);
           stepper_pan.rotateAsync(panDegreesToSteps(-pantilt_set_speed));
           panNeg = true;
+        }
+        if (upsideDown) {
+          speedFactorP = (speedFactorP * -1);
         }
         if (panNeg == false) {
           stepper_pan.overrideSpeed(speedFactorP);
@@ -139,63 +145,6 @@ void SerialData(void) {
         }
       }
 
-
-
-      if (speedFactorZ == 0.0) {
-        if (zoomRunning) {
-          zoomRunning = false;
-          stepper_zoom.overrideSpeed(0);
-          stepper_zoom.stopAsync();
-        }
-      } else {
-        if (zoomReversed) {
-          speedFactorZ = -speedFactorZ;
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
-            if (!zoomRunning && (speedFactorZ > 0)) {
-              zoomRunning = true;
-              stepper_zoom.setAcceleration(50000);
-              stepper_zoom.rotateAsync(zoom_set_speed);
-              stepper_zoom.overrideSpeed(0);
-              zoomNeg = false;
-            } else if (!sliderRunning && (speedFactorZ < 0)) {
-              zoomRunning = true;
-              stepper_zoom.setAcceleration(50000);
-              stepper_zoom.rotateAsync(-zoom_set_speed);
-              stepper_zoom.overrideSpeed(0);
-              zoomNeg = true;
-            }
-
-            if (slideNeg == false) {
-              stepper_zoom.overrideSpeed(speedFactorZ);
-            } else {
-              stepper_zoom.overrideSpeed(-speedFactorZ);
-            }
-          }
-        } else {
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
-            if (!sliderRunning && (speedFactorZ > 0)) {
-              zoomRunning = true;
-              stepper_zoom.setAcceleration(50000);
-              stepper_zoom.rotateAsync(zoom_set_speed);
-              stepper_zoom.overrideSpeed(0);
-              zoomNeg = false;
-            } else if (!zoomRunning && (zoom_set_speed < 0)) {
-              zoomRunning = true;
-              stepper_zoom.setAcceleration(50000);
-              stepper_zoom.rotateAsync(-zoom_set_speed);
-              stepper_zoom.overrideSpeed(0);
-              zoomNeg = true;
-            }
-
-            if (zoomNeg == false) {
-              stepper_zoom.overrideSpeed(speedFactorZ);
-            } else {
-              stepper_zoom.overrideSpeed(-speedFactorZ);
-            }
-          }
-        }
-      }
-         
       if (speedFactorP == 0.0) {
         stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
       }
@@ -205,11 +154,9 @@ void SerialData(void) {
       if (speedFactorS == 0.0) {
         stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
       }
-      if (speedFactorZ == 0.0) {
-        stepper_zoom.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
 
-      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0) && (speedFactorZ == 0.0)) {
+
+      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
         isManualMove = false;
       } else {
         isManualMove = true;
@@ -218,7 +165,7 @@ void SerialData(void) {
 
 
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);  //wait to make sure all data in the Serial2 message has arived
+      delay(2);                                         //wait to make sure all data in the Serial2 message has arived
       instruction = Serial2.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
@@ -228,8 +175,8 @@ void SerialData(void) {
           char digit = Serial2.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                            //Clear any excess data in the Serial2 buffer
-        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
+        Serial2Flush();                                 //Clear any excess data in the Serial2 buffer
+        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
       } else if (instruction == INSTRUCTION_IS_SETTINGS_REQUESTED) {
         delay(2);
         whichSetting = Serial2.read();
@@ -239,446 +186,12 @@ void SerialData(void) {
           char digit = Serial2.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial2Flush();                              //Clear any excess data in the Serial2 buffer
-        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
-        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                //wait to make sure all data in the Serial2 message has arived
-          Serial2Flush();                            //Clear any excess data in the Serial2 buffer
-          return;
-        }
-      }
-    } else {
-      return;
-    }
-
-    
-  } else if (Serial1.available() > 0) {
-    instruction = Serial1.read();
-    if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
-      while (Serial1.available() < 8) {  //  Wait for 8 bytes to be available. Breaks after ~20ms if bytes are not received.
-        ;
-      }
-
-      atPos1 = false;
-      atPos2 = false;
-      atPos3 = false;
-      atPos4 = false;
-      atPos5 = false;
-      atPos6 = false;
-      atPos7 = false;
-      atPos8 = false;
-      atPos9 = false;
-      atPos0 = false;
-
-      float speedFactorS = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
-      if (!withSlider) {
-        speedFactorS = 0;
-      }
-      float speedFactorP = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
-      float speedFactorT = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
-      float speedFactorZ = float(short(((Serial1.read() << 8) + Serial1.read()))) / 256;
-
-      previousMillisMoveCheck = millis();
-
-      if (speedFactorP == 0.0) {
-        if (panRunning) {
-          panRunning = false;
-          stepper_pan.overrideSpeed(0);
-          stepper_pan.stopAsync();
-        }
-      } else {
-        if (upsideDown) {
-          speedFactorP = (speedFactorP * -1);
-        }
-        if (!panRunning && (speedFactorP > 0)) {
-          panRunning = true;
-          stepper_pan.setAcceleration(10000);
-          stepper_pan.rotateAsync(panDegreesToSteps(pantilt_set_speed));
-          panNeg = false;
-        } else if (!panRunning && (speedFactorP < 0)) {
-          panRunning = true;
-          stepper_pan.setAcceleration(10000);
-          stepper_pan.rotateAsync(panDegreesToSteps(-pantilt_set_speed));
-          panNeg = true;
-        }
-        if (panNeg == false) {
-          stepper_pan.overrideSpeed(speedFactorP);
-        } else {
-          stepper_pan.overrideSpeed(-speedFactorP);
-        }
-      }
-
-      if (speedFactorT == 0.0) {
-        if (tiltRunning) {
-          tiltRunning = false;
-          stepper_tilt.overrideSpeed(0);
-          stepper_tilt.stopAsync();
-        }
-      } else {
-        if (!tiltRunning && (speedFactorT > 0)) {
-          tiltRunning = true;
-          stepper_tilt.setAcceleration(10000);
-          stepper_tilt.rotateAsync(panDegreesToSteps(pantilt_set_speed));
-          tiltNeg = false;
-        } else if (!tiltRunning && (speedFactorT < 0)) {
-          tiltRunning = true;
-          stepper_tilt.setAcceleration(10000);
-          stepper_tilt.rotateAsync(panDegreesToSteps(-pantilt_set_speed));
-          tiltNeg = true;
-        }
-        if (tiltNeg == false) {
-          stepper_tilt.overrideSpeed(speedFactorT);
-        } else {
-          stepper_tilt.overrideSpeed(-speedFactorT);
-        }
-      }
-
-      if (speedFactorS == 0.0) {
-        if (sliderRunning) {
-          sliderRunning = false;
-          stepper_slider.overrideSpeed(0);
-          stepper_slider.stopAsync();
-        }
-      } else {
-        if (slideReverse) {
-          speedFactorS = -speedFactorS;
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))))) {
-            if (!sliderRunning && (speedFactorS > 0)) {
-              sliderRunning = true;
-              stepper_slider.setAcceleration(50000);
-              stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
-              stepper_slider.overrideSpeed(0);
-              slideNeg = false;
-            } else if (!sliderRunning && (speedFactorS < 0)) {
-              sliderRunning = true;
-              stepper_slider.setAcceleration(50000);
-              stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
-              stepper_slider.overrideSpeed(0);
-              slideNeg = true;
-            }
-
-            if (slideNeg == false) {
-              stepper_slider.overrideSpeed(speedFactorS);
-            } else {
-              stepper_slider.overrideSpeed(-speedFactorS);
-            }
-          }
-        } else {
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
-            if (!sliderRunning && (speedFactorS > 0)) {
-              sliderRunning = true;
-              stepper_slider.setAcceleration(50000);
-              stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
-              stepper_slider.overrideSpeed(0);
-              slideNeg = false;
-            } else if (!sliderRunning && (speedFactorS < 0)) {
-              sliderRunning = true;
-              stepper_slider.setAcceleration(50000);
-              stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
-              stepper_slider.overrideSpeed(0);
-              slideNeg = true;
-            }
-
-            if (slideNeg == false) {
-              stepper_slider.overrideSpeed(speedFactorS);
-            } else {
-              stepper_slider.overrideSpeed(-speedFactorS);
-            }
-          }
-        }
-      }
-
-
-
-      if (speedFactorZ == 0.0) {
-        if (zoomRunning) {
-          zoomRunning = false;
-          stepper_zoom.overrideSpeed(0);
-          stepper_zoom.stopAsync();
-        }
-      } else {
-        if (zoomReversed) {
-          speedFactorZ = -speedFactorZ;
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
-            if (!zoomRunning && (speedFactorZ > 0)) {
-              zoomRunning = true;
-              stepper_zoom.setAcceleration(50000);
-              stepper_zoom.rotateAsync(zoom_set_speed);
-              stepper_zoom.overrideSpeed(0);
-              zoomNeg = false;
-            } else if (!sliderRunning && (speedFactorZ < 0)) {
-              zoomRunning = true;
-              stepper_zoom.setAcceleration(50000);
-              stepper_zoom.rotateAsync(-zoom_set_speed);
-              stepper_zoom.overrideSpeed(0);
-              zoomNeg = true;
-            }
-
-            if (slideNeg == false) {
-              stepper_zoom.overrideSpeed(speedFactorZ);
-            } else {
-              stepper_zoom.overrideSpeed(-speedFactorZ);
-            }
-          }
-        } else {
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
-            if (!sliderRunning && (speedFactorZ > 0)) {
-              zoomRunning = true;
-              stepper_zoom.setAcceleration(50000);
-              stepper_zoom.rotateAsync(zoom_set_speed);
-              stepper_zoom.overrideSpeed(0);
-              zoomNeg = false;
-            } else if (!zoomRunning && (zoom_set_speed < 0)) {
-              zoomRunning = true;
-              stepper_zoom.setAcceleration(50000);
-              stepper_zoom.rotateAsync(-zoom_set_speed);
-              stepper_zoom.overrideSpeed(0);
-              zoomNeg = true;
-            }
-
-            if (zoomNeg == false) {
-              stepper_zoom.overrideSpeed(speedFactorZ);
-            } else {
-              stepper_zoom.overrideSpeed(-speedFactorZ);
-            }
-          }
-        }
-      }
-         
-      if (speedFactorP == 0.0) {
-        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
-      if (speedFactorT == 0.0) {
-        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
-      if (speedFactorS == 0.0) {
-        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-      }
-      if (speedFactorZ == 0.0) {
-        stepper_zoom.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
-
-      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0) && (speedFactorZ == 0.0)) {
-        isManualMove = false;
-      } else {
-        isManualMove = true;
-        previousMillisMoveCheck = millis();
-      }
-
-
-/*
-
-      if (speedFactorP == 0.0) {
-        if (panRunning) {
-          panRunning = false;
-          stepper_pan.overrideSpeed(0);
-          stepper_pan.stopAsync();
-        }
-      } else {
-        if (!panRunning && (speedFactorP > 0)) {
-          panRunning = true;
-          stepper_pan.setAcceleration(10000);
-          stepper_pan.rotateAsync(panDegreesToSteps(pantilt_set_speed));
-          panNeg = false;
-        } else if (!panRunning && (speedFactorP < 0)) {
-          panRunning = true;
-          stepper_pan.setAcceleration(10000);
-          stepper_pan.rotateAsync(panDegreesToSteps(-pantilt_set_speed));
-          panNeg = true;
-        }
-        if (upsideDown) {
-          speedFactorP = (speedFactorP * -1);
-        }
-        if (panNeg == false) {
-          stepper_pan.overrideSpeed(speedFactorP);
-        } else {
-          stepper_pan.overrideSpeed(-speedFactorP);
-        }
-      }
-
-      if (speedFactorT == 0.0) {
-        if (tiltRunning) {
-          tiltRunning = false;
-          stepper_tilt.overrideSpeed(0);
-          stepper_tilt.stopAsync();
-        }
-      } else {
-        if (!tiltRunning && (speedFactorT > 0)) {
-          tiltRunning = true;
-          stepper_tilt.setAcceleration(10000);
-          stepper_tilt.rotateAsync(panDegreesToSteps(pantilt_set_speed));
-          tiltNeg = false;
-        } else if (!tiltRunning && (speedFactorT < 0)) {
-          tiltRunning = true;
-          stepper_tilt.setAcceleration(10000);
-          stepper_tilt.rotateAsync(panDegreesToSteps(-pantilt_set_speed));
-          tiltNeg = true;
-        }
-        if (tiltNeg == false) {
-          stepper_tilt.overrideSpeed(speedFactorT);
-        } else {
-          stepper_tilt.overrideSpeed(-speedFactorT);
-        }
-      }
-
-      if (speedFactorZ == 0) {
-        if (zoomRunning) {
-          zoomRunning = false;
-          stepper_zoom.overrideSpeed(0);
-          stepper_zoom.stopAsync();
-          //stepper_zoom.setAcceleration(zoom_set_speed * 10);
-        }
-      } else {
-        if (zoomReversed) {
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
-            if (!zoomRunning && (speedFactorZ > 0)) {
-              zoomRunning = true;
-              //stepper_zoom.setAcceleration(zoom_set_speed * 8);
-              stepper_zoom.rotateAsync(zoom_set_speed);
-              zoomNeg = false;
-            } else if (!zoomRunning && (speedFactorZ < 0)) {
-              zoomRunning = true;
-              //stepper_zoom.setAcceleration(zoom_set_speed * 8);
-              stepper_zoom.rotateAsync(-zoom_set_speed);
-              zoomNeg = true;
-            }
-
-            if (zoomNeg == false) {
-              stepper_zoom.overrideSpeed(speedFactorZ);
-            } else {
-              stepper_zoom.overrideSpeed(-speedFactorZ);
-            }
-          }
-        } else {
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
-            if (!zoomRunning && (speedFactorZ > 0)) {
-              zoomRunning = true;
-              //stepper_zoom.setAcceleration(zoom_set_speed * 8);
-              stepper_zoom.rotateAsync(zoom_set_speed);
-              zoomNeg = false;
-            } else if (!zoomRunning && (speedFactorZ < 0)) {
-              zoomRunning = true;
-              //stepper_zoom.setAcceleration(zoom_set_speed * 8);
-              stepper_zoom.rotateAsync(-zoom_set_speed);
-              zoomNeg = true;
-            }
-
-            if (zoomNeg == false) {
-              stepper_zoom.overrideSpeed(speedFactorZ);
-            } else {
-              stepper_zoom.overrideSpeed(-speedFactorZ);
-            }
-          }
-        }
-      }
-
-
-      if (speedFactorS == 0.0) {
-        if (sliderRunning) {
-          sliderRunning = false;
-          stepper_slider.overrideSpeed(0);
-          stepper_slider.stopAsync();
-        }
-      } else {
-        if (slideReverse) {
-          speedFactorS = -speedFactorS;
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() > ((slideLimit * -1) * 0.97)) && (speedFactorS < 0)) || ((stepper_slider.getPosition() < ((slideLimit * -1) * 0.03)) && (speedFactorS > 0))))) {
-            if (!sliderRunning && (speedFactorS > 0)) {
-              sliderRunning = true;
-              stepper_slider.setAcceleration(30000);
-              stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
-              slideNeg = false;
-            } else if (!sliderRunning && (speedFactorS < 0)) {
-              sliderRunning = true;
-              stepper_slider.setAcceleration(30000);
-              stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
-              slideNeg = true;
-            }
-
-            if (slideNeg == false) {
-              stepper_slider.overrideSpeed(speedFactorS);
-            } else {
-              stepper_slider.overrideSpeed(-speedFactorS);
-            }
-          }
-        } else {
-          if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
-            if (!sliderRunning && (speedFactorS > 0)) {
-              sliderRunning = true;
-              stepper_slider.setAcceleration(30000);
-              stepper_slider.rotateAsync(sliderMillimetresToSteps(slider_set_speed));
-              slideNeg = false;
-            } else if (!sliderRunning && (speedFactorS < 0)) {
-              sliderRunning = true;
-              stepper_slider.setAcceleration(30000);
-              stepper_slider.rotateAsync(sliderMillimetresToSteps(-slider_set_speed));
-              slideNeg = true;
-            }
-
-            if (slideNeg == false) {
-              stepper_slider.overrideSpeed(speedFactorS);
-            } else {
-              stepper_slider.overrideSpeed(-speedFactorS);
-            }
-          }
-        }
-      }
-
-
-      if (speedFactorP == 0.0) {
-        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-        panRunning = false;
-      }
-      if (speedFactorT == 0.0) {
-        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
-      if (speedFactorS == 0.0) {
-        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-      }
-      //if (speedFactorZ == 0.0) {
-      //  stepper_zoom.setAcceleration((slider_accel / 20) * slider_set_speed);
-      //}
-
-
-      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0) && (speedFactorZ == 0.0)) {
-        isManualMove = false;
-      } else {
-        isManualMove = true;
-        previousMillisMoveCheck = millis();
-      }
-
-
-
-
-    } else if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);                                         //wait to make sure all data in the Serial2 message has arived
-      instruction = Serial1.read();
-      if (instruction == INSTRUCTION_IS_CAM_DELAY) {
-        delay(2);
-        dlyPos = Serial1.read();
-        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
-        while (Serial1.available()) {                   //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial1.read();                  //read in a char
-          strncat(stringText, &digit, 1);               //add digit to the end of the array
-        }
-        Serial1Flush();                                 //Clear any excess data in the Serial2 buffer
-        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
-      } else if (instruction == INSTRUCTION_IS_SETTINGS_REQUESTED) {
-        delay(2);
-        whichSetting = Serial1.read();
-      } else {
-        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
-        while (Serial1.available()) {                   //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial1.read();                  //read in a char
-          strncat(stringText, &digit, 1);               //add digit to the end of the array
-        }
-        Serial1Flush();                                 //Clear any excess data in the Serial2 buffer
+        Serial2Flush();                                 //Clear any excess data in the Serial2 buffer
         SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
         SerialCommandValueFloat = atof(stringText);     //converts stringText to a float
         if (instruction == '+') {                       //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
           delay(100);                                   //wait to make sure all data in the Serial2 message has arived
-          Serial1Flush();                               //Clear any excess data in the Serial2 buffer
+          Serial2Flush();                               //Clear any excess data in the Serial2 buffer
           return;
         }
       }
@@ -845,23 +358,23 @@ void SerialData(void) {
         isManualMove = true;
         previousMillisMoveCheck = millis();
       }
-*/
+
 
     } else if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);  //wait to make sure all data in the Serial1 message has arived
+      //delay(2);                                         //wait to make sure all data in the Serial1 message has arived
       instruction = Serial1.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
-        delay(2);
+        //delay(2);
         dlyPos = Serial1.read();
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
         while (Serial1.available()) {                   //set elemetns of stringText to the Serial1 values sent
           char digit = Serial1.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                            //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
+        Serial1Flush();                                 //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
       } else if (instruction == INSTRUCTION_IS_SETTINGS_REQUESTED) {
-        delay(2);
+        //delay(2);
         whichSetting = Serial1.read();
       } else {
         memset(&stringText[0], 0, sizeof(stringText));  //clear the array
@@ -869,12 +382,12 @@ void SerialData(void) {
           char digit = Serial1.read();                  //read in a char
           strncat(stringText, &digit, 1);               //add digit to the end of the array
         }
-        Serial1Flush();                              //Clear any excess data in the Serial1 buffer
-        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
-        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                //wait to make sure all data in the Serial1 message has arived
-          Serial1Flush();                            //Clear any excess data in the Serial1 buffer
+        Serial1Flush();                                 //Clear any excess data in the Serial1 buffer
+        SerialCommandValueInt = atoi(stringText);       //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);     //converts stringText to a float
+        if (instruction == '+') {                       //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          //delay(100);                                   //wait to make sure all data in the Serial1 message has arived
+          Serial1Flush();                               //Clear any excess data in the Serial1 buffer
           return;
         }
       }
@@ -971,7 +484,7 @@ void SerialData(void) {
             Serial1.println("ms");
             previousTime = dlyPos1Time + timeElapsed;
             while (timeElapsed < previousTime) {
-              //delay(2);
+              //(2);
               ;
             }
             moveToIndex(2);
@@ -1234,34 +747,6 @@ void SerialData(void) {
         }
       }
       break;
-    case INSTRUCTION_SPEED_INC:
-      {
-        if (pantilt_set_speed == pantilt_speed1) {
-          pantilt_set_speed = pantilt_speed2;
-          slider_set_speed = slider_speed2;
-        } else if (pantilt_set_speed == pantilt_speed2) {
-          pantilt_set_speed = pantilt_speed3;
-          slider_set_speed = slider_speed3;
-        } else if (pantilt_set_speed == pantilt_speed3) {
-          pantilt_set_speed = pantilt_speed4;
-          slider_set_speed = slider_speed4;
-        }
-      }
-      break;
-    case INSTRUCTION_SPEED_DEC:
-      {
-        if (pantilt_set_speed == pantilt_speed4) {
-          pantilt_set_speed = pantilt_speed3;
-          slider_set_speed = slider_speed3;
-        } else if (pantilt_set_speed == pantilt_speed3) {
-          pantilt_set_speed = pantilt_speed2;
-          slider_set_speed = slider_speed2;
-        } else if (pantilt_set_speed == pantilt_speed2) {
-          pantilt_set_speed = pantilt_speed1;
-          slider_set_speed = slider_speed1;
-        }
-      }
-      break;
     case INSTRUCTION_SAVE_TO_EEPROM:
       {
         saveEEPROM();
@@ -1447,7 +932,8 @@ void SerialData(void) {
         }
 
         if (zoomReversed) {
-          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0) && (!zoomedIn))) {
+          //if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
+          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= 0) && (speedFactorZ > 0))) {// && (!zoomedOut))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
             zoomRunning = false;
@@ -1455,7 +941,8 @@ void SerialData(void) {
             stepper_zoom.stopAsync();
           }
         } else {
-          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0) && (!zoomedIn))) {
+          //if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
+          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() <= zoomLimit) && (speedFactorZ > 0))){// && (!zoomedIn))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
             zoomRunning = false;
@@ -1488,7 +975,8 @@ void SerialData(void) {
         }
 
         if (zoomReversed) {
-          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > (zoomLimit * -1)) && (speedFactorZ > 0) && (!zoomedOut))) {
+          //if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (speedFactorZ < 0)) || ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (speedFactorZ > 0))))) {
+          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > (zoomLimit * -1)) && (speedFactorZ > 0))){// && (!zoomedIn))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
             zoomRunning = false;
@@ -1496,7 +984,8 @@ void SerialData(void) {
             stepper_zoom.stopAsync();
           }
         } else {
-          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > 0) && (speedFactorZ > 0) && (!zoomedOut))) {
+          //if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
+          if ((findingHome == true) || ((findingHome == false) && (stepper_zoom.getPosition() > 0) && (speedFactorZ > 0))) {// && (!zoomedOut))) {
             stepper_zoom.overrideSpeed(speedFactorZ);
           } else {
             zoomRunning = false;
@@ -1518,7 +1007,7 @@ void SerialData(void) {
         zoomRunning = false;
         stepper_zoom.overrideSpeed(0);
         stepper_zoom.stopAsync();
-        stepper_zoom.setAcceleration(zoom_set_speed * 2);
+        zoomRunning = false;
       }
       break;
     case INSTRUCTION_SET_ZERO_POS:

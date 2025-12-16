@@ -40,7 +40,7 @@ void SerialData(void) {
     instruction = Serial1.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
-      while (Serial1.available() < 8) {  //  Wait for 8 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
         count++;
         if (count > 100) {
@@ -59,7 +59,7 @@ void SerialData(void) {
       atPos8 = false;
       atPos9 = false;
       atPos0 = false;
-      /*
+
       short sliderStepSpeed = (Serial1.read() << 8) + Serial1.read();
       if (!withSlider) {
         sliderStepSpeed = 0;
@@ -74,16 +74,6 @@ void SerialData(void) {
       float speedFactorS = map(sliderStepSpeed2, -255, 255, -sliderMaxFactor, sliderMaxFactor);
       float speedFactorP = map(panStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
-*/
-      float speedFactorS = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
-      if (!withSlider) {
-        speedFactorS = 0;
-      }
-      float speedFactorP = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
-      float speedFactorT = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
-      float speedFactorZ2 = float(short(((Serial2.read() << 8) + Serial2.read()))) / 256;
-
-      int speedFactorZ = map(speedFactorZ2, -1, 1, -8, 8);
 
       previousMillisMoveCheck = millis();
 
@@ -151,36 +141,6 @@ void SerialData(void) {
         }
       }
 
-      if (speedFactorZ == 0) {
-        zoomIN = false;
-        zoomOUT = false;
-
-        Serial2.println("#o");
-        Serial2.println("#o");  // Just in case, it's important!
-
-        Serial1.println("STOP Zooming.\n");
-        Serial1.println("#$");
-      } else if (speedFactorZ > 0) {
-        zoomIN = true;
-        zoomOUT = false;
-
-        Serial2.print("#I");
-        Serial2.println(speedFactorZ);
-
-        Serial1.println("Zoom IN.");
-        Serial1.println("#$");
-      } else if (speedFactorZ < 0) {
-        zoomIN = false;
-        zoomOUT = true;
-
-        Serial2.print("#i");
-        Serial2.println(speedFactorZ);
-
-        Serial1.println("Zoom OUT.");
-        Serial1.println("#$");
-      }
-
-
       if (speedFactorP == 0.0) {
         rotate_stepperP.stopAsync();
         stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
@@ -192,16 +152,6 @@ void SerialData(void) {
       if (speedFactorS == 0.0) {
         rotate_stepperS.stopAsync();
         stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-      }
-      if (speedFactorZ == 0) {
-        zoomIN = false;
-        zoomOUT = false;
-        
-        Serial2.println("#o");
-        Serial2.println("#o");  // Just in case, it's important!
-
-        Serial1.println("STOP Zooming.\n");
-        Serial1.println("#$");
       }
 
       if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
@@ -886,7 +836,8 @@ void SerialData(void) {
         if (useKeyframeSpeeds == false) {
           useKeyframeSpeeds = true;
           Serial1.println("#I");
-        } else if (useKeyframeSpeeds == true) {
+        }
+        else if (useKeyframeSpeeds == true) {
           useKeyframeSpeeds = false;
           Serial1.println("#i");
         }

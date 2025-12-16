@@ -86,7 +86,7 @@ void RefreshLEDs() {
 }
 
 void sendSliderPanTiltStepSpeed(int command, short* arr, int whichCamJoy) {
-  byte data[7];  // Data array to send
+  byte data[9];  // Data array to send
   data[0] = command;
   data[1] = (arr[0] >> 8);    // Gets the most significant byte
   data[2] = (arr[0] & 0xFF);  // Gets the second most significant byte
@@ -94,6 +94,8 @@ void sendSliderPanTiltStepSpeed(int command, short* arr, int whichCamJoy) {
   data[4] = (arr[1] & 0xFF);
   data[5] = (arr[2] >> 8);
   data[6] = (arr[2] & 0xFF);
+  data[7] = (arr[3] >> 8);
+  data[8] = (arr[3] & 0xFF);
 
   delay(20);
 

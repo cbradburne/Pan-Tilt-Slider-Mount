@@ -28,7 +28,7 @@ IntervalTimer aliveTimer;
 void initPanTilt(void) {
   getEEPROMVariables();
 
-  Serial.begin(BAUD_RATE);
+  //Serial.begin(BAUD_RATE);
   Serial1.begin(BAUD_RATE);
   Serial2.begin(BAUD_RATE);
 
@@ -55,7 +55,7 @@ void initPanTilt(void) {
   stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
   stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
   stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-  stepper_zoom.setAcceleration(zoom_set_speed * 10);
+  stepper_zoom.setAcceleration(zoom_set_speed * 2);
 
 
   delay(200);
@@ -195,28 +195,28 @@ void mainLoop(void) {
         panRunning = false;
         stepper_pan.overrideSpeed(0);
         stepper_pan.stopAsync();
-        //delay(10);
+        delay(10);
       }
 
       if (stepper_tilt.isMoving) {
         tiltRunning = false;
         stepper_tilt.overrideSpeed(0);
         stepper_tilt.stopAsync();
-        //delay(10);
+        delay(10);
       }
 
       if (stepper_slider.isMoving) {
         sliderRunning = false;
         stepper_slider.overrideSpeed(0);
         stepper_slider.stopAsync();
-        //delay(10);
+        delay(10);
       }
 
       if (stepper_zoom.isMoving) {
         zoomRunning = false;
         stepper_zoom.overrideSpeed(0);
         stepper_zoom.stopAsync();
-        //delay(10);
+        delay(10);
       }
       isManualMove = false;
     }
@@ -231,22 +231,21 @@ void zoomLimitCheck() {
         zoomRunning = false;
         zoomedIn = true;
         zoomedOut = false;
-        stepper_zoom.moveRel(20);
+        stepper_zoom.moveRel(80);
       } 
       else if ((stepper_zoom.getPosition() > 0) && (zoomRunning == true) && (zoomedOut == false)) {
         stepper_zoom.emergencyStop();
         zoomRunning = false;
         zoomedIn = false;
         zoomedOut = true;
-        stepper_zoom.moveRel(-20);
+        stepper_zoom.moveRel(-80);
       }
 
-      //if ((stepper_zoom.getPosition() > ((zoomLimit * -1) + 100)) && (zoomedIn == true)) {
-      if ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (zoomedOut == true)) {
-        zoomedOut = false;
-      }
-      if ((stepper_zoom.getPosition() > ((zoomLimit * -1) * 0.97)) && (zoomedIn == true)) {
+      if ((stepper_zoom.getPosition() > ((zoomLimit * -1) + 100)) && (zoomedIn == true)) {
         zoomedIn = false;
+      }
+      if ((stepper_zoom.getPosition() < -100) && (zoomedOut == true)) {
+        zoomedOut = false;
       }
     }
     else {
@@ -255,21 +254,21 @@ void zoomLimitCheck() {
         zoomRunning = false;
         zoomedIn = true;
         zoomedOut = false;
-        stepper_zoom.moveRel(-20);
+        stepper_zoom.moveRel(-80);
       } 
       else if ((stepper_zoom.getPosition() < 0) && (zoomRunning == true) && (zoomedOut == false)) {
         stepper_zoom.emergencyStop();
         zoomRunning = false;
         zoomedIn = false;
         zoomedOut = true;
-        stepper_zoom.moveRel(20);
+        stepper_zoom.moveRel(80);
       }
 
-      if ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (zoomedOut == true)) {
-        zoomedOut = false;
-      }
-      if ((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (zoomedIn == true)) {
+      if ((stepper_zoom.getPosition() < (zoomLimit - 100)) && (zoomedIn == true)) {
         zoomedIn = false;
+      }
+      if ((stepper_zoom.getPosition() > 100) && (zoomedOut == true)) {
+        zoomedOut = false;
       }
     }
     

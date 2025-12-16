@@ -1,12 +1,10 @@
-short shortVals[4] = {0, 0, 0, 0};
+short shortVals[3] = {0, 0, 0};
 short XShort = 0;
 short YShort = 0;
 short ZShort = 0;
-short WShort = 0;
 short oldShortVal0 = 0;
 short oldShortVal1 = 0;
 short oldShortVal2 = 0;
-short oldShortVal3 = 0;
 
 String inData1;
 String inData2;
@@ -14,8 +12,6 @@ String inData3;
 String inData4;
 String inData5;
 String inData6;
-String inData7;
-String inData8;
 
 String inData1Temp;
 String inData2Temp;

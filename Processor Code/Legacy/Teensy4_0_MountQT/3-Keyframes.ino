@@ -159,43 +159,33 @@ void moveToIndex(int index) {
   if (index == 1) { 
     Serial1.println("#A"); 
     Serial1.println("#A"); 
-    Serial2.println("#A"); 
     } else if (index == 2) { 
     Serial1.println("#S"); 
     Serial1.println("#S"); 
-    Serial2.println("#S"); 
     } else if (index == 3) { 
     Serial1.println("#D"); 
     Serial1.println("#D"); 
-    Serial2.println("#D"); 
     } else if (index == 4) { 
     Serial1.println("#F"); 
     Serial1.println("#F"); 
-    Serial2.println("#F"); 
     } else if (index == 5) { 
     Serial1.println("#G"); 
     Serial1.println("#G"); 
-    Serial2.println("#G"); 
     } else if (index == 6) { 
     Serial1.println("#H"); 
     Serial1.println("#H"); 
-    Serial2.println("#H"); 
     } else if (index == 7) { 
     Serial1.println("#J"); 
     Serial1.println("#J"); 
-    Serial2.println("#J"); 
     } else if (index == 8) { 
     Serial1.println("#K"); 
     Serial1.println("#K"); 
-    Serial2.println("#K"); 
     } else if (index == 9) { 
     Serial1.println("#L"); 
     Serial1.println("#L"); 
-    Serial2.println("#L"); 
     } else if (index == 10) { 
     Serial1.println("#:"); 
     Serial1.println("#:"); 
-    Serial2.println("#:"); 
     }
 
   Serial1.println(String("Moving to Index: ") + index);
@@ -225,7 +215,6 @@ void moveToIndex(int index) {
   StepperGroup ({stepper_pan, stepper_tilt, stepper_slider, stepper_zoom}).move();
 
   Serial1Flush(); 
-  Serial2Flush(); 
 
   if (index == 1) {
     atIndex = "#z";
@@ -349,11 +338,10 @@ void moveToIndex(int index) {
     atPos9 = false;
   }
 
-  //delay(100);     // delay for serial read
+  delay(100);     // delay for serial read
 
   Serial1.println(atIndex);
   Serial1.println(atIndex);
-  Serial2.println(atIndex);
   Serial1.println(String("At index: ") + index + String("\n"));
   Serial1.println("#$");
 

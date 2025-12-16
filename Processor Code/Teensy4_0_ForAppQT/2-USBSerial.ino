@@ -2,32 +2,36 @@ void USBSerialData() {
   if (Serial.available()) {  // If anything comes in Serial (USB),
     char instruction = Serial.read();
     if (instruction == 4) {
-      delay(1);
-      while (Serial.available() < 7) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      //delay(1);
+      while (Serial.available() < 9) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
       }
       short ZShortPC = (Serial.read() << 8) + Serial.read();
       short XShortPC = (Serial.read() << 8) + Serial.read();
       short YShortPC = (Serial.read() << 8) + Serial.read();
+      short WShortPC = (Serial.read() << 8) + Serial.read();
 
       whichSerialCam = Serial.read();
 
       shortVals[0] = ZShortPC;
       shortVals[1] = XShortPC;
       shortVals[2] = YShortPC;
+      shortVals[3] = WShortPC;
 
       sendSliderPanTiltStepSpeed(4, shortVals, whichSerialCam);
 
       //Serial.println("Joystick");
     } else if (instruction == '&') {
       while (Serial.available() < 1) {  //  Wait for 1 byte to be available.
-        delayMicroseconds(1);
+        //delayMicroseconds(1);
+        ;
       }
       instruction = Serial.read();
       if (instruction == '1' || instruction == '2' || instruction == '3' || instruction == '4' || instruction == '5') {
         char camNumInst = instruction;
         while (Serial.available() < 1) {  //  Wait for 1 byte to be available.
-          delayMicroseconds(1);
+          //delayMicroseconds(1);
+          ;
         }
         instruction = Serial.read();
 
@@ -1045,7 +1049,8 @@ void USBSerialData() {
           case 's':
             {
               while (Serial.available() < 1) {  //  Wait for 1 byte to be available.
-                delayMicroseconds(1);
+                //delayMicroseconds(1);
+                ;
               }
               instruction = Serial.read();
               if (instruction == '1') {
@@ -1102,7 +1107,8 @@ void USBSerialData() {
           case 'W':
             {
               while (Serial.available() < 1) {  //  Wait for 1 byte to be available.
-                delayMicroseconds(1);
+                //delayMicroseconds(1);
+                ;
               }
               instruction = Serial.read();
               if (instruction == '1') {

@@ -5,24 +5,29 @@
 
 #define BAUD_RATE 38400 //9600 //57600
 
-#define PIN_STEP_PAN 21
-#define PIN_DIRECTION_PAN 20
-#define PIN_STEP_TILT 19
-#define PIN_DIRECTION_TILT 18
-#define PIN_STEP_SLIDER 17
-#define PIN_DIRECTION_SLIDER 16
-#define PIN_STEP_ZOOM 15
-#define PIN_DIRECTION_ZOOM 14
+#define PIN_STEP_PAN 19
+#define PIN_DIRECTION_PAN 18
+#define PIN_STEP_TILT 17
+#define PIN_DIRECTION_TILT 16
+#define PIN_STEP_SLIDER 15
+#define PIN_DIRECTION_SLIDER 14
 
-#define PIN_SW1 9
-#define PIN_SW2 10
-#define PIN_SW3 11
-#define PIN_SW4 12
+#define PIN_SW1 11
+#define PIN_SW2 12
+#define PIN_SW3 6
 
-#define SLIDER_PULLEY_TEETH 20.0      // old value 36.0  // 36 teeth, 1.8 deg stepper
+#define SLIDER_PULLEY_TEETH 20      // old value 36.0  // 36 teeth, 1.8 deg stepper
+//#define PAN_GEAR_RATIO 8.4705882352941176470588235294118  //  144/17 teeth      - Original Mount
+//#define TILT_GEAR_RATIO 3.047619047619047619047619047619  //  64/21 teeth       - Original Mount
 
-#define PAN_GEAR_RATIO 15             //  270/36 * 2 - (270 tooth / 36 tooth) * 2 mm (GT2 belt)     - 0.9 degree steppers
-#define TILT_GEAR_RATIO 15            //  120/16 * 2 - (120 tooth / 16 tooth) * 2 mm (GT2 belt)     - 0.9 degree steppers
+//#define PAN_GEAR_RATIO 4    //  160/40 teeth          - New Mount 1.8 degree steppers
+//#define TILT_GEAR_RATIO 4   //  80/20 teeth           - New Mount
+
+//#define PAN_GEAR_RATIO 8    //  160/40 *2 teeth       - New Mount 0.9 degree steppers
+//#define TILT_GEAR_RATIO 8   //  80/20 *2 teeth        - New Mount
+
+#define PAN_GEAR_RATIO 15   //  270/36 *2 teeth      - New Mount 0.9 degree steppers Pulley drive
+#define TILT_GEAR_RATIO 15  //  120/16 *2 teeth      - New Mount
 
 #define MAX_STRING_LENGTH 10
 
@@ -92,13 +97,6 @@
 
 #define INSTRUCTION_IS_TOGGLE_SET_SPEEDS 'i'
 
-#define INSTRUCTION_TOGGLE_RECORDING 'u'
-#define INSTRUCTION_IS_RECORDING 'G'
-#define INSTRUCTION_IS_NOT_RECORDING 'g'
-
-#define INSTRUCTION_SPEED_INC 'O'
-#define INSTRUCTION_SPEED_DEC 'o'
-
 #define EEPROM_ADDRESS_PANTILT_SET_SPEED 54
 #define EEPROM_ADDRESS_SLIDER_SET_SPEED 58
 #define EEPROM_ADDRESS_ZOOM_LIMIT 62
@@ -114,18 +112,17 @@
 #define EEPROM_ADDRESS_SLIDER_SPEED3 46
 #define EEPROM_ADDRESS_SLIDER_SPEED4 50
 
-#define VERSION_NUMBER "29 Jan 2025"
+#define VERSION_NUMBER "19 Jan 2025"
 
 float slideLimit = 130000;     // 3 metres
-float zoomLimit = 5550;        // 12 - 35mm
+float zoomLimit = 5550;      // 12 - 35mm
 
-bool withSlider = false;
+bool withSlider = true;
 bool DEBUG1 = false;
 bool useKeyframeSpeeds = false;
 bool upsideDown = false;
 bool slideReverse = false;
 bool startedAsync = false;
-bool zoomReversed = false;
 bool isMoving = false;
 
 bool panAsync = false;
@@ -147,20 +144,18 @@ bool zoomedOut = false;
 
 bool TLStarted = false;
 
-bool joyMove = false;
-
 char stringText[MAX_STRING_LENGTH + 1];
 char c;
 
-float pan_steps_per_degree = (400.0 * 16 * PAN_GEAR_RATIO) / 360.0;            //  Stepper motor has 400 steps per 360 degrees (0.9 deg per step). Steps per full motor rotation * micro stepping / 360 (per deg)
+float pan_steps_per_degree = (400.0 * 16 * PAN_GEAR_RATIO) / 360.0;            //  Stepper motor has 400 steps per 360 degrees
 float tilt_steps_per_degree = (400.0 * 16 * TILT_GEAR_RATIO) / 360.0;          //  Stepper motor has 400 steps per 360 degrees
-float slider_steps_per_millimetre = (200.0 * 16) / (SLIDER_PULLEY_TEETH * 2);  //  Stepper motor has 200 steps per 360 degrees, the timing pully has 20 teeth and the belt has a pitch of 2mm
+float slider_steps_per_millimetre = (200.0 * 16) / (SLIDER_PULLEY_TEETH * 2);  //  Stepper motor has 200 steps per 360 degrees, the timing pully has 36 teeth and the belt has a pitch of 2mm
 
 float pantilt_set_speed = 20;     //  degrees/second.
 float slider_set_speed = 60;      //  mm/second.
 
 float pantilt_accel = 200;
-float slider_accel = 8000;
+float slider_accel = 1000;
 
 float pantilt_speed1 = 1;
 float pantilt_speed2 = 5;
@@ -172,7 +167,7 @@ float slider_speed2 = 40;
 float slider_speed3 = 80;
 float slider_speed4 = 120;
 
-float zoom_set_speed = 2000;
+float zoom_set_speed = 1000;
 float zoom_accel = 16000;
 
 float pantiltMaxFactor = 1.0;    // Speed factor of joystick moves ( 1 = 100% )
@@ -264,7 +259,6 @@ struct KeyframeElement {
   float panTiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
-  long zoomStepCount = 0;
   int isRecorded = 0;
 };
 
@@ -277,8 +271,8 @@ void Serial1Flush(void);
 void Serial1Data(void);
 void Serial2Flush(void);
 void Serial2Data(void);
-//void Serial3Flush(void);
-//void Serial3Data(void);
+void Serial3Flush(void);
+void Serial3Data(void);
 void mainLoop(void);
 void panDegrees(float);
 void tiltDegrees(float);

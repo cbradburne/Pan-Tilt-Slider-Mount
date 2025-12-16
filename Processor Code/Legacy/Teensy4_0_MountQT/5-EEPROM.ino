@@ -57,9 +57,9 @@ void printEEPROM(void) {
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SET_SPEED, ftemp);
   Serial1.println(String("Slider Speed        : ") + ftemp + String(" mm/s\n"));
   EEPROM.get(EEPROM_ADDRESS_SLIDE_LIMIT, ftemp);
-  Serial1.println(String("Slide Limit         : ") + sliderStepsToMillimetres(ftemp) + String(" mm"));
+  Serial1.println(String("Slide Limit         : ") + sliderStepsToMillimetres(ftemp) + String(" mm\n"));
   EEPROM.get(EEPROM_ADDRESS_ZOOM_LIMIT, ftemp);
-  Serial1.println(String("Zoom Limit          : ") + ftemp + String("\n"));
+  Serial1.println(String("Zoom Limit          : ") + ftemp);
   EEPROM.get(EEPROM_ADDRESS_PANTILT_ACCEL, ftemp);
   Serial1.println(String("Pan/Tilt accel      : ") + ftemp + String(" steps/sSq"));
   EEPROM.get(EEPROM_ADDRESS_SLIDER_ACCEL, ftemp);
@@ -80,4 +80,7 @@ void printEEPROM(void) {
   Serial1.println(String("Slider Speed 3      : ") + ftemp + String(" mm/s"));
   EEPROM.get(EEPROM_ADDRESS_SLIDER_SPEED4, ftemp);
   Serial1.println(String("Slider Speed 4      : ") + ftemp + String(" mm/s\n"));
+
+  Serial1.print("\n");
+  Serial1.println("#$");
 }

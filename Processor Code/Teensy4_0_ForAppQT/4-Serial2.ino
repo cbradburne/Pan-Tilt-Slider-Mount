@@ -158,7 +158,7 @@ void Serial2Data() {
 
     else if (e == 4) {
       delay(1);
-      while (Serial2.available() < 7) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+      while (Serial2.available() < 9) {                        //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
         delayMicroseconds(200);
       }
       char readSerialC2 = Serial2.read();                     // Read Z
@@ -167,6 +167,8 @@ void Serial2Data() {
       readSerialC2 = Serial2.read();                          // Read X
       readSerialC2 = Serial2.read();                          // Read Y
       readSerialC2 = Serial2.read();                          // Read Y
+      readSerialC2 = Serial2.read();                          // Read W
+      readSerialC2 = Serial2.read();                          // Read W
       readSerialC2 = Serial2.read();                          // Read Camera ID
     }
 
