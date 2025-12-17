@@ -199,7 +199,7 @@ String atIndex = "";
 float speedFactorS = 0.0;
 float speedFactorP = 0.0;
 float speedFactorT = 0.0;
-float speedFactorZ = 0.0;
+int speedFactorZ = 0;
 
 bool sentMoved = false;
 

@@ -4,7 +4,8 @@ void USBSerialData() {
     if (instruction == 4) {
       //delay(1);
       while (Serial.available() < 9) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
-        delayMicroseconds(200);
+        //delayMicroseconds(200);
+        ;
       }
       short ZShortPC = (Serial.read() << 8) + Serial.read();
       short XShortPC = (Serial.read() << 8) + Serial.read();

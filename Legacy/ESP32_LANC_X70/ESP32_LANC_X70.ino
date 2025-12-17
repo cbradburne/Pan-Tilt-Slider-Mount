@@ -42,14 +42,20 @@ void loop() {
     if (Serial2.available()) {
       char c = Serial2.read();
       if (c == '#') {
-        while (Serial2.available() < 1) { delayMicroseconds(1); }     //  Wait for 1 byte to be available.
+        while (Serial2.available() < 1) {
+           //delayMicroseconds(1); }     //  Wait for 1 byte to be available.
+           ;
+        }
 
         c = Serial2.read();
         if (c == 'o') Serial.print("#7590*");                         //  Send Stop Zooming
 
         // ZOOM Send
         else if (c == 'I') {
-          while (Serial2.available() < 1) { delayMicroseconds(1); }   //  Wait for 1 byte to be available.
+          while (Serial2.available() < 1) { 
+            //delayMicroseconds(1); }   //  Wait for 1 byte to be available.
+            ;
+          }
 
           c = Serial2.read();
           if (c == '1') Serial.print("#7410*");                       //  Send Zoom IN
@@ -62,7 +68,10 @@ void loop() {
           else if (c == '8') Serial.print("#7480*");
 
         } else if (c == 'i') {
-          while (Serial2.available() < 1) { delayMicroseconds(1); }   //  Wait for 1 byte to be available.
+          while (Serial2.available() < 1) { 
+            //delayMicroseconds(1); }   //  Wait for 1 byte to be available.
+            ;
+          }
 
           c = Serial2.read();
           if (c == '1') Serial.print("#7510*");                       //  Send Zoom OUT
