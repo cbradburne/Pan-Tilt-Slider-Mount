@@ -124,7 +124,7 @@ axisX = 0
 axisY = 0
 axisZ = 0
 axisW = 0
-data = bytearray(10)
+data = bytearray(8)
 
 previousTime = time.time()
 currentMillisMoveCheck = time.time()
@@ -1169,7 +1169,7 @@ class Ui_SettingsWindow(QMainWindow):
         if debug:
             self.show()
         else:
-            if sys.platform == "win32" or sys.platform == "linux":
+            if sys.platform == "win32":
                 self.showFullScreen()
             else:
                 self.showMaximized()
@@ -1578,7 +1578,7 @@ class Ui_SettingsWindow(QMainWindow):
             if whichCamSerial == 1:
                 self.sendSerial('&1T')
             elif whichCamSerial == 2:
-                self.sendSerial('&2T')
+                self.sendSeriale('&2T')
             elif whichCamSerial == 3:
                 self.sendSerial('&3T')
             elif whichCamSerial == 4:
@@ -2209,9 +2209,9 @@ class PTSapp(QMainWindow):
                     #axisZ = int(self.scale(key.value, (-1, 1), (-255,255)))
                 elif joyType[-6:] == "Axis 1":
                     if (key.value < -deadRange):
-                        axisW = int(self.scale(key.value, (-1, (deadRange*2)), (255, 0)))
+                        axisW = int(self.scale(key.value, (-1, (deadRange*2)), (8, 0)))
                     elif (key.value > deadRange):
-                        axisW = int(self.scale(key.value, (1, -(deadRange*2)), (-255, 0)))
+                        axisW = int(self.scale(key.value, (1, -(deadRange*2)), (-8, 0)))
                     else:
                         axisW = 0
 
@@ -2258,9 +2258,9 @@ class PTSapp(QMainWindow):
 
                 elif joyType[-6:] == "Axis 1":
                     if (key.value < -deadRange):
-                        axisW = int(self.scale(key.value, (-1, (deadRange*2)), (255, 0)))
+                        axisW = int(self.scale(key.value, (-1, (deadRange*2)), (8, 0)))
                     elif (key.value > deadRange):
-                        axisW = int(self.scale(key.value, (1, -(deadRange*2)), (-255, 0)))
+                        axisW = int(self.scale(key.value, (1, -(deadRange*2)), (-8, 0)))
                     else:
                         axisW = 0
 
@@ -3290,7 +3290,7 @@ class PTSapp(QMainWindow):
         if debug:
             self.show()
         else:
-            if sys.platform == "win32" or sys.platform == "linux":
+            if sys.platform == "win32":
                 self.showFullScreen()
             else:
                 self.showMaximized()
@@ -3926,19 +3926,18 @@ class PTSapp(QMainWindow):
         global moveCheckInterval
         global whichCamSerial
         
-        if ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ) or (axisW != oldAxisW)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
+        if ((axisX != oldAxisX) or (axisY != oldAxisY) or (axisZ != oldAxisZ)): # or doKeyControlA or doKeyControlD or doKeyControlW or doKeyControlS or doKeyControlSL or doKeyControlSR) and ((time.time() - previousTime) > 0.03) :
             previousTime = time.time()
             axisXh = self.toHex(axisX, 16)
             axisYh = self.toHex(axisY, 16)
             axisZh = self.toHex(axisZ, 16)
-            axisWh = self.toHex(axisW, 16)
 
-            arr = [4, axisZh, axisXh, axisYh, axisWh]
+            arr = [4, axisZh, axisXh, axisYh]
             #if debug:
                 #print(arr)
             self.sendJoystick(arr)
             previousMillisMoveCheck = time.time()
-        '''
+
         if (axisW != oldAxisW):                                     # ZOOM
             oldAxisW = axisW
             zoomSerial = "&"
@@ -3969,7 +3968,6 @@ class PTSapp(QMainWindow):
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
                 self.sendSerial(zoomSerial + 'q')
-        '''
 
     def sendJoystick(self, arr):
         global data
@@ -4028,7 +4026,6 @@ class PTSapp(QMainWindow):
         sliderInt = int(arr[1], 16)
         panInt = int(arr[2], 16)
         tiltInt = int(arr[3], 16)
-        zoomInt = int(arr[4], 16)
 
         data[0] = 4
         
@@ -4061,18 +4058,8 @@ class PTSapp(QMainWindow):
         else:
             data[5] = 0
             data[6] = 0
-
-        if ((zoomInt > 0) and (zoomInt < 256)):
-            data[7] = 0
-            data[8] = zoomInt
-        elif zoomInt > 256:
-            data[7] = 255
-            data[8] = (zoomInt-65281)
-        else:
-            data[7] = 0
-            data[8] = 0
         
-        data[9] = whichCamSerial
+        data[7] = whichCamSerial
         self.sendSerial(data)
         
         if whichCamSerial == 1 and (cam1AtPos1 or cam1AtPos2 or cam1AtPos3 or cam1AtPos4 or cam1AtPos5 or cam1AtPos6 or cam1AtPos7 or cam1AtPos8 or cam1AtPos9 or cam1AtPos10):
@@ -4143,7 +4130,6 @@ class PTSapp(QMainWindow):
     def toHex(self, val, nbits):
         return hex((val + (1 << nbits)) % (1 << nbits))
 
-
     def buttonConnect(self, device_list):
         global btn_scan_show
         global whichCamSerial
@@ -4160,6 +4146,7 @@ class PTSapp(QMainWindow):
             usb_port2 = 'usb/00'
             usb_port3 = 'COM8'
             usb_port4 = 'COM3'
+            usb_port5 = 'ACM0'
             
             if (usb_port in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port in string]
@@ -4169,6 +4156,8 @@ class PTSapp(QMainWindow):
                 serialPortSelect = [string for string in device_name_list if usb_port3 in string]
             elif (usb_port4 in '\t'.join(device_name_list)):
                 serialPortSelect = [string for string in device_name_list if usb_port4 in string]
+            elif (usb_port5 in '\t'.join(device_name_list)):
+                serialPortSelect = [string for string in device_name_list if usb_port5 in string]
             else:
                 message = ("No USB Serial Found")
 
@@ -11074,7 +11063,6 @@ class ThreadClass(QtCore.QThread):
                         oldAxisX = axisX
                         oldAxisY = axisY
                         oldAxisZ = axisZ
-                        oldAxisW = axisW
                         try:
                             self.serial_port.write(sendData)
                             previousMillisMoveCheck = time.time()
@@ -11084,7 +11072,7 @@ class ThreadClass(QtCore.QThread):
 
                     sendData = ""
 
-                if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and (axisW == oldAxisW) and ((abs(axisX) + abs(axisY) + abs(axisZ) + abs(axisW)) != 0):
+                if (axisX == oldAxisX) and (axisY == oldAxisY) and (axisZ == oldAxisZ) and ((abs(axisX) + abs(axisY) + abs(axisZ)) != 0):
                     currentMillisMoveCheck = time.time()
                     if (currentMillisMoveCheck - previousMillisMoveCheck > moveCheckInterval):
                         previousMillisMoveCheck = currentMillisMoveCheck
