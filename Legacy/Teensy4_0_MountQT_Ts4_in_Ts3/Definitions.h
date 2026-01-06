@@ -5,24 +5,33 @@
 
 #define BAUD_RATE 38400 //9600 //57600
 
-#define PIN_STEP_PAN 21
-#define PIN_DIRECTION_PAN 20
-#define PIN_STEP_TILT 19
-#define PIN_DIRECTION_TILT 18
-#define PIN_STEP_SLIDER 17
-#define PIN_DIRECTION_SLIDER 16
-#define PIN_STEP_ZOOM 15
-#define PIN_DIRECTION_ZOOM 14
+#define PIN_STEP_PAN 19
+#define PIN_DIRECTION_PAN 18
+#define PIN_STEP_TILT 17
+#define PIN_DIRECTION_TILT 16
+#define PIN_STEP_SLIDER 15
+#define PIN_DIRECTION_SLIDER 14
+//#define PIN_STEP_ZOOM 21
+//#define PIN_DIRECTION_ZOOM 20
 
-#define PIN_SW1 9
-#define PIN_SW2 10
-#define PIN_SW3 11
-#define PIN_SW4 12
+#define PIN_SW1 11
+#define PIN_SW2 12
+#define PIN_SW3 6
+#define PIN_SW4 5
 
-#define SLIDER_PULLEY_TEETH 20.0      // old value 36.0  // 36 teeth, 1.8 deg stepper
+#define SLIDER_PULLEY_TEETH 20.0  // old value 36 teeth, 1.8 deg stepper
 
-#define PAN_GEAR_RATIO 15             //  270/36 * 2 - (270 tooth / 36 tooth) * 2 mm (GT2 belt)     - 0.9 degree steppers
-#define TILT_GEAR_RATIO 15            //  120/16 * 2 - (120 tooth / 16 tooth) * 2 mm (GT2 belt)     - 0.9 degree steppers
+//#define PAN_GEAR_RATIO 8.4705882352941176470588235294118  //  144/17 teeth      - Original Mount
+//#define TILT_GEAR_RATIO 3.047619047619047619047619047619  //  64/21 teeth       - Original Mount
+
+//#define PAN_GEAR_RATIO 4    //  160/40 teeth          - New Mount 1.8 degree steppers
+//#define TILT_GEAR_RATIO 4   //  80/20 teeth           - New Mount
+
+//#define PAN_GEAR_RATIO 8    //  160/40 *2 teeth       - New Mount 0.9 degree steppers
+//#define TILT_GEAR_RATIO 8   //  80/20 *2 teeth        - New Mount
+
+#define PAN_GEAR_RATIO 15   //  270/36 *2 teeth      - New Mount 0.9 degree steppers Pulley drive
+#define TILT_GEAR_RATIO 15  //  120/16 *2 teeth      - New Mount
 
 #define MAX_STRING_LENGTH 10
 
@@ -81,11 +90,6 @@
 #define INSTRUCTION_SLIDE_END1 'v'
 #define INSTRUCTION_SLIDE_END2 'V'
 
-#define INSTRUCTION_TIMELAPSE_STEPS 'L'
-#define INSTRUCTION_TIMELAPSE_START 'K'
-#define INSTRUCTION_TIMELAPSE_STOP 'n'
-#define INSTRUCTION_TIMELAPSE_STEP 'A'
-
 #define INSTRUCTION_ZOOM_IN 'Z'
 #define INSTRUCTION_ZOOM_OUT 'z'
 #define INSTRUCTION_STOP_ZOOM 'N'
@@ -114,7 +118,7 @@
 #define EEPROM_ADDRESS_SLIDER_SPEED3 46
 #define EEPROM_ADDRESS_SLIDER_SPEED4 50
 
-#define VERSION_NUMBER "29 Jan 2025"
+#define VERSION_NUMBER "6 Jan 2026"
 
 float slideLimit = 130000;      // 3 metres
 float zoomLimit = 5550;         // 12 - 35mm
@@ -187,18 +191,6 @@ bool zoomNeg = false;
 int SerialCommandValueInt;
 float SerialCommandValueFloat;
 
-float panStepDelta;
-float panStepDelta2;
-float panStepDelta3;
-float stepDelta;
-float tiltStepDelta;
-float sliderStepDelta;
-float zoomStepDelta;
-
-float numberOfSteps = 0;
-float numberOfStepsFloat = 0.0;
-float numberOfStepsCount = 0;
-
 String atIndex = "";
 
 float speedFactorS = 0.0;
@@ -264,7 +256,7 @@ struct KeyframeElement {
   float panTiltSpeed = 0;
   long sliderStepCount = 0;
   float sliderSpeed = 0;
-  long zoomStepCount = 0;
+  //long zoomStepCount = 0;
   int isRecorded = 0;
 };
 

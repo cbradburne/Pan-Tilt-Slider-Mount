@@ -2,34 +2,33 @@
 
 void SerialData(void) {
   char instruction;
-
   if (Serial2.available() > 0) {
     instruction = Serial2.read();
     if (instruction == INSTRUCTION_IS_COMMAND) {
-      delay(2);  //wait to make sure all data in the Serial message has arived
+      delay(2);                                             //wait to make sure all data in the Serial2 message has arived
       instruction = Serial2.read();
       if (instruction == INSTRUCTION_IS_CAM_DELAY) {
         delay(2);
         dlyPos = Serial2.read();
-        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
-        while (Serial2.available()) {                   //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial2.read();                  //read in a char
-          strncat(stringText, &digit, 1);               //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));      //clear the array
+        while (Serial2.available()) {                       //set elemetns of stringText to the Serial2 values sent
+          char digit = Serial2.read();                      //read in a char
+          strncat(stringText, &digit, 1);                   //add digit to the end of the array
         }
-        Serial2Flush();                            //Clear any excess data in the Serial2 buffer
-        SerialCommandValueInt = atoi(stringText);  //converts stringText to an int
+        Serial2Flush();                                     //Clear any excess data in the Serial2 buffer
+        SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
       } else {
-        memset(&stringText[0], 0, sizeof(stringText));  //clear the array
-        while (Serial2.available()) {                   //set elemetns of stringText to the Serial2 values sent
-          char digit = Serial2.read();                  //read in a char
-          strncat(stringText, &digit, 1);               //add digit to the end of the array
+        memset(&stringText[0], 0, sizeof(stringText));      //clear the array
+        while (Serial2.available()) {                       //set elemetns of stringText to the Serial2 values sent
+          char digit = Serial2.read();                      //read in a char
+          strncat(stringText, &digit, 1);                   //add digit to the end of the array
         }
-        Serial2Flush();                              //Clear any excess data in the Serial2 buffer
-        SerialCommandValueInt = atoi(stringText);    //converts stringText to an int
-        SerialCommandValueFloat = atof(stringText);  //converts stringText to a float
-        if (instruction == '+') {                    //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
-          delay(100);                                //wait to make sure all data in the Serial2 message has arived
-          Serial2Flush();                            //Clear any excess data in the Serial2 buffer
+        Serial2Flush();                                     //Clear any excess data in the Serial2 buffer
+        SerialCommandValueInt = atoi(stringText);           //converts stringText to an int
+        SerialCommandValueFloat = atof(stringText);         //converts stringText to a float
+        if (instruction == '+') {                           //The Bluetooth module sends a message starting with "+CONNECTING" which should be discarded.
+          delay(100);                                       //wait to make sure all data in the Serial2 message has arived
+          Serial2Flush();                                   //Clear any excess data in the Serial2 buffer
           return;
         }
       }
@@ -40,11 +39,11 @@ void SerialData(void) {
     instruction = Serial1.read();
     if (instruction == INSTRUCTION_BYTES_SLIDER_PAN_TILT_SPEED) {
       int count = 0;
-      while (Serial1.available() < 6) {  //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
-        delayMicroseconds(200);
+      while (Serial1.available() < 6) {                     //  Wait for 6 bytes to be available. Breaks after ~20ms if bytes are not received.
+        ;
         count++;
         if (count > 100) {
-          Serial1Flush();  //  Clear the Serial1 buffer
+          Serial1Flush();                                   //  Clear the Serial1 buffer
           break;
         }
       }
@@ -76,7 +75,6 @@ void SerialData(void) {
       float speedFactorT = map(tiltStepSpeed2, -255, 255, -pantiltMaxFactor, pantiltMaxFactor);
 
       previousMillisMoveCheck = millis();
-
 
       if (speedFactorP == 0.0) {
         if (panRunning) {
