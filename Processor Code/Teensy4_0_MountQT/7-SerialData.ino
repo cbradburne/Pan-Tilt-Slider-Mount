@@ -156,7 +156,7 @@ void SerialData(void) {
               stepper_zoom.rotateAsync(zoom_set_speed);
               stepper_zoom.overrideSpeed(0);
               zoomNeg = false;
-            } else if (!sliderRunning && (speedFactorZ < 0)) {
+            } else if (!zoomRunning && (speedFactorZ < 0)) {
               zoomRunning = true;
               stepper_zoom.setAcceleration(50000);
               stepper_zoom.rotateAsync(-zoom_set_speed);
@@ -164,7 +164,7 @@ void SerialData(void) {
               zoomNeg = true;
             }
 
-            if (slideNeg == false) {
+            if (zoomNeg == false) {
               stepper_zoom.overrideSpeed(speedFactorZ);
             } else {
               stepper_zoom.overrideSpeed(-speedFactorZ);
@@ -172,13 +172,13 @@ void SerialData(void) {
           }
         } else {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_zoom.getPosition() < (zoomLimit * 0.97)) && (speedFactorZ > 0)) || ((stepper_zoom.getPosition() > (zoomLimit * 0.03)) && (speedFactorZ < 0))))) {
-            if (!sliderRunning && (speedFactorZ > 0)) {
+            if (!zoomRunning && (speedFactorZ > 0)) {
               zoomRunning = true;
               stepper_zoom.setAcceleration(50000);
               stepper_zoom.rotateAsync(zoom_set_speed);
               stepper_zoom.overrideSpeed(0);
               zoomNeg = false;
-            } else if (!zoomRunning && (zoom_set_speed < 0)) {
+            } else if (!zoomRunning && (speedFactorZ < 0)) {
               zoomRunning = true;
               stepper_zoom.setAcceleration(50000);
               stepper_zoom.rotateAsync(-zoom_set_speed);

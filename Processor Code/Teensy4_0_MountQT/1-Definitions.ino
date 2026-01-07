@@ -239,7 +239,6 @@ void zoomLimitCheck() {
         stepper_zoom.moveRel(-20);
       }
 
-      //if ((stepper_zoom.getPosition() > ((zoomLimit * -1) + 100)) && (zoomedIn == true)) {
       if ((stepper_zoom.getPosition() < ((zoomLimit * -1) * 0.03)) && (zoomedOut == true)) {
         zoomedOut = false;
       }
