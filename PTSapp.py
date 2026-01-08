@@ -1956,8 +1956,7 @@ class Ui_MoverWindow(QMainWindow):
     def zoomMove(self, speed):
         global manualMove
         global whichCamSerial
-        global axisZ
-
+        global axisW
 
         zoomSerial = "&"
         
@@ -1967,29 +1966,31 @@ class Ui_MoverWindow(QMainWindow):
         elif whichCamSerial == 4: zoomSerial = zoomSerial + "4"
         elif whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
-        if speed == -8: axisZ = -255 # self.sendSerial(zoomSerial + 'a8')
-        elif speed == -7: axisZ = -210 # self.sendSerial(zoomSerial + 'a7')
-        elif speed == -6: axisZ = -180 # self.sendSerial(zoomSerial + 'a6')
-        elif speed == -5: axisZ = -150 # self.sendSerial(zoomSerial + 'a5')
-        elif speed == -4: axisZ = -120 # self.sendSerial(zoomSerial + 'a4')
-        elif speed == -3: axisZ = -90 # self.sendSerial(zoomSerial + 'a3')
-        elif speed == -2: axisZ = -60 # self.sendSerial(zoomSerial + 'a2')
-        elif speed == -1: axisZ = -30 # self.sendSerial(zoomSerial + 'a1')
-        elif speed == 1: axisZ = 30 # self.sendSerial(zoomSerial + 'A1')
-        elif speed == 2: axisZ = 60 # self.sendSerial(zoomSerial + 'A2')
-        elif speed == 3: axisZ = 90 # self.sendSerial(zoomSerial + 'A3')
-        elif speed == 4: axisZ = 120 # self.sendSerial(zoomSerial + 'A4')
-        elif speed == 5: axisZ = 150 # self.sendSerial(zoomSerial + 'A5')
-        elif speed == 6: axisZ = 180 # self.sendSerial(zoomSerial + 'A6')
-        elif speed == 7: axisZ = 210 # self.sendSerial(zoomSerial + 'A7')
-        elif speed == 8: axisZ = 255 # self.sendSerial(zoomSerial + 'A8')
+        if speed == -8: axisW = -255 # self.sendSerial(zoomSerial + 'a8')
+        elif speed == -7: axisW = -210 # self.sendSerial(zoomSerial + 'a7')
+        elif speed == -6: axisW = -180 # self.sendSerial(zoomSerial + 'a6')
+        elif speed == -5: axisW = -150 # self.sendSerial(zoomSerial + 'a5')
+        elif speed == -4: axisW = -120 # self.sendSerial(zoomSerial + 'a4')
+        elif speed == -3: axisW = -90 # self.sendSerial(zoomSerial + 'a3')
+        elif speed == -2: axisW = -60 # self.sendSerial(zoomSerial + 'a2')
+        elif speed == -1: axisW = -30 # self.sendSerial(zoomSerial + 'a1')
+        elif speed == 1: axisW = 30 # self.sendSerial(zoomSerial + 'A1')
+        elif speed == 2: axisW = 60 # self.sendSerial(zoomSerial + 'A2')
+        elif speed == 3: axisW = 90 # self.sendSerial(zoomSerial + 'A3')
+        elif speed == 4: axisW = 120 # self.sendSerial(zoomSerial + 'A4')
+        elif speed == 5: axisW = 150 # self.sendSerial(zoomSerial + 'A5')
+        elif speed == 6: axisW = 180 # self.sendSerial(zoomSerial + 'A6')
+        elif speed == 7: axisW = 210 # self.sendSerial(zoomSerial + 'A7')
+        elif speed == 8: axisW = 255 # self.sendSerial(zoomSerial + 'A8')
         else: 
-            axisZ = 0
+            axisW = 0
             #self.sendSerial(zoomSerial + 'q')
             #self.sendSerial(zoomSerial + 'q')
             #self.sendSerial(zoomSerial + 'q')
             #self.sendSerial(zoomSerial + 'q')
             #self.sendSerial(zoomSerial + 'q')
+        
+        PTSapp.doJoyMoves(self, 1)
 
     def up10(self):
         global manualMove
