@@ -3938,7 +3938,7 @@ class PTSapp(QMainWindow):
 
             arr = [4, axisZh, axisXh, axisYh, axisWh]
             #if debug:
-                #print(arr)
+            #    print(arr)
             self.sendJoystick(arr)
             previousMillisMoveCheck = time.time()
         '''
@@ -11062,7 +11062,8 @@ class ThreadClass(QtCore.QThread):
 
                 if sendData != "":
                     if debug:
-                        print(sendData)
+                        #print(sendData)
+                        pass
 
                     if type(sendData) is str:
                         data = bytes((sendData + '\n'), 'utf8')
