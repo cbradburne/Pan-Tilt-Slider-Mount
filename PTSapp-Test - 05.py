@@ -443,8 +443,6 @@ class Worker(QtCore.QObject): # Changed from QThread to QObject
                 pass
 
         self.finished.emit()
-        
-        self.stop()
 
     def stop(self):
         self.is_running = False
@@ -505,11 +503,17 @@ class PTSapp(QMainWindow):
 
     def closeEvent(self, event):
         appSettings.running = False
+        # Stop joystick manager first
+        if hasattr(self, 'mngr') and self.mngr is not None:
+            try:
+                self.mngr.stop()
+            except:
+                pass
         # Wait for worker thread to finish properly
         if hasattr(self, 'thread') and self.thread is not None:
             if self.thread.isRunning():
                 self.thread.quit()
-                self.thread.wait()  # Wait for thread to finish
+                self.thread.wait(5000)  # Wait up to 5 seconds for thread to finish
         event.accept()
         
     def setupUi(self):
@@ -679,8 +683,8 @@ class PTSapp(QMainWindow):
             joystickMoves.doJoyMoves(self, 1)
 
 
-        mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
-        mngr.start()
+        self.mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
+        self.mngr.start()
 
         borderSize = butttonLayoutX / 2
         borderRadius = butttonLayoutX * 1.8
@@ -8352,6 +8356,6 @@ class setPos():
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    app.aboutToQuit.connect(app.quit)
     MainWindow = PTSapp("")
+    MainWindow.show()
     sys.exit(app.exec())
