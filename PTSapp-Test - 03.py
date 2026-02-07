@@ -323,23 +323,37 @@ class Worker(QtCore.QThread): #QObject):
         super(Worker, self).__init__(parent)
         self.index=index
         self.is_running = True
+        self.serial_port = None  # Persistent connection
 
 
     def sendSerial(self, command):
+        # Use the persistent connection instead of opening a new one
+        if self.serial_port is None or not self.serial_port.is_open:
+            if appSettings.debug:
+                print("Warning: Serial port not available for sendSerial()")
+            return
+            
         if type(command) is str:
             data = bytes((command + '\n'), 'utf8')
             try:
-                serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
-                serial_port.write(data)
+                self.serial_port.write(data)
                 #if appSettings.debug:
                 #    print("Serial Sent: ", data)
+            except PermissionError as error:
+                appSettings.message = ("COM port in use by another application")
+                print(f"Permission Error: {error} - Try closing other serial applications or run as Administrator")
+                if appSettings.running:
+                    self.finished.emit()
+                appSettings.running = False
             except Exception as error:
                 appSettings.message = ("Couldn't connect")
-                #PTSapp.setMessage(error)
                 print(error)
                 if appSettings.running:
                     self.finished.emit()
                 appSettings.running = False
+            finally:
+                if serial_port is not None and serial_port.is_open:
+                    serial_port.close()
 
         elif type(command) is bytearray:
             appSettings.joyData = command
@@ -348,14 +362,12 @@ class Worker(QtCore.QThread): #QObject):
             appSettings.oldAxisZ = appSettings.axisZ
             appSettings.oldAxisW = appSettings.axisW
             try:
-                serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
-                serial_port.write(command)
+                self.serial_port.write(command)
                 appSettings.previousMillisMoveCheck = time.time()
                 if appSettings.debug:
                     print("Serial Sent: ", command)
             except Exception as error:
                 appSettings.message = ("Couldn't connect")
-                #PTSapp.setMessage(error)
                 if appSettings.running:
                     self.finished.emit()
                 print("Didn't send joystick :(")
@@ -365,23 +377,33 @@ class Worker(QtCore.QThread): #QObject):
 
     def run(self):
         try:
-            serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
+            self.serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
+            time.sleep(0.1)  # Small delay to ensure port is ready
             appSettings.message = (f"Connected to {serialDeviceList.serialDevice}")
             index = PTSapp.comboBox.findText(serialDeviceList.serialDevice)
             PTSapp.comboBox.setCurrentIndex(index)
             appSettings.running = True
-        except:
-            appSettings.message = ("Couldn't connect")
-            #PTSapp.setMessage(self)
+        except PermissionError as error:
+            appSettings.message = ("COM port in use - Run as Administrator or close other applications")
+            print(f"Permission Error: {error}")
             self.finished.emit()
             appSettings.running = False
-            #self.stop()
+            return
+        except Exception as error:
+            appSettings.message = ("Couldn't connect")
+            print(f"Connection Error: {error}")
+            self.finished.emit()
+            appSettings.running = False
+            return
         
-        self.sendSerial('&-') 
+        try:
+            self.sendSerial('&-')
+        except:
+            pass
 
-        while appSettings.running:
-            if serial_port.in_waiting > 0:
-                received_msg = serial_port.readline()
+        while appSettings.running and self.serial_port is not None and self.serial_port.is_open:
+            if self.serial_port.in_waiting > 0:
+                received_msg = self.serial_port.readline()
                 msg = bytes(received_msg).decode('utf8', "ignore")
                 self.serialMsg.emit(msg)
                 msg=''
@@ -391,13 +413,20 @@ class Worker(QtCore.QThread): #QObject):
             if (appSettings.currentMillisMoveCheck - appSettings.previousMillisMoveCheck > appSettings.moveCheckInterval):
                 appSettings.previousMillisMoveCheck = appSettings.currentMillisMoveCheck
                 try:
-                    serial_port.write(appSettings.joyData)
+                    self.serial_port.write(appSettings.joyData)
                     appSettings.previousMillisMoveCheck = time.time()
                     if appSettings.debug:
                         print("Re-sending Joystick for keep-alive")    # debugging
                 except:
                     print("Didn't RE-send joystick :(")
                     #self.stop()
+
+        # Cleanup: close the port when loop exits
+        if self.serial_port is not None and self.serial_port.is_open:
+            try:
+                self.serial_port.close()
+            except:
+                pass
 
         self.finished.emit()
         
@@ -8212,7 +8241,7 @@ class appSettings():
     runToggle = False
     flashTick = False
     editNumber = 0
-    debug = True
+    debug = False
     message = ""
     running = False
 

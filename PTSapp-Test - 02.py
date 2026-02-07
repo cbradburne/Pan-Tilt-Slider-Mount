@@ -1,5 +1,5 @@
 from operator import index
-from PySide6.QtCore import Qt, QTimer, Signal, QThread, QObject
+from PySide6.QtCore import Qt, QTimer, Signal, QThread, QObject, QEvent, QCoreApplication
 from PySide6 import QtCore, QtGui, QtWidgets
 from PySide6.QtWidgets import QWidget, QMainWindow, QFileDialog, QApplication #, QDesktopWidget
 from PySide6.QtGui import *
@@ -9,6 +9,98 @@ import sys, time, os, subprocess, re, json, pkg_resources, pyjoystick
 from pyjoystick.sdl2 import Key, Joystick, run_event_loop
 from sys import platform
 from pathlib import Path
+import queue
+
+# Install Qt message handler to capture where QBasicTimer warnings originate
+def _qt_message_handler(mode, context, message):
+    try:
+        msg = str(message)
+        if 'QBasicTimer::start' in msg:
+            import traceback
+            print('\n[Qt Debug] Captured Qt message:', msg)
+            print('[Qt Debug] Python stack (most recent call last):')
+            traceback.print_stack()
+    except Exception:
+        pass
+
+try:
+    QtCore.qInstallMessageHandler(_qt_message_handler)
+except Exception:
+    pass
+
+# Safe wrappers: ensure QTimer.start and QTimer.singleShot invoked from main thread
+try:
+    import threading
+    _orig_qtimer_start = QtCore.QTimer.start
+    def _safe_qtimer_start(self, *args, **kwargs):
+        try:
+            if threading.current_thread() is not threading.main_thread():
+                # Defer timer start to main thread
+                defer_to_main_thread(lambda: _orig_qtimer_start(self, *args, **kwargs))
+                return True
+        except Exception:
+            pass
+        return _orig_qtimer_start(self, *args, **kwargs)
+    QtCore.QTimer.start = _safe_qtimer_start
+
+    _orig_qtimer_singleShot = QtCore.QTimer.singleShot
+    def _safe_qtimer_singleShot(msec, callback):
+        try:
+            if threading.current_thread() is not threading.main_thread():
+                defer_to_main_thread(lambda: _orig_qtimer_singleShot(msec, callback))
+                return
+        except Exception:
+            pass
+        return _orig_qtimer_singleShot(msec, callback)
+    QtCore.QTimer.singleShot = _safe_qtimer_singleShot
+except Exception:
+    pass
+
+# Instrument pyjoystick ThreadEventManager.start to help trace timing issues
+try:
+    if hasattr(pyjoystick, 'ThreadEventManager'):
+        _orig_mngr_start = pyjoystick.ThreadEventManager.start
+        def _dbg_mngr_start(self, *args, **kwargs):
+            try:
+                import threading, traceback
+                print('\n[DBG] ThreadEventManager.start called in thread:', threading.current_thread().name)
+                traceback.print_stack()
+            except Exception:
+                pass
+            return _orig_mngr_start(self, *args, **kwargs)
+        pyjoystick.ThreadEventManager.start = _dbg_mngr_start
+except Exception:
+    pass
+
+# Custom event for deferred GUI operations
+class DeferredCallEvent(QEvent):
+    EVENT_TYPE = QEvent.Type(QEvent.User + 1)
+    
+    def __init__(self, callback):
+        super().__init__(self.EVENT_TYPE)
+        self.callback = callback
+
+# Helper class to handle custom events
+class EventHandler(QObject):
+    def event(self, event):
+        if isinstance(event, DeferredCallEvent):
+            event.callback()
+            return True
+        return super().event(event)
+    
+    def eventFilter(self, obj, event):
+        if isinstance(event, DeferredCallEvent):
+            event.callback()
+            return True
+        return False
+
+event_handler = None
+
+def defer_to_main_thread(callback):
+    """Thread-safe way to defer a function to the main thread"""
+    global event_handler
+    if event_handler:
+        QCoreApplication.instance().postEvent(event_handler, DeferredCallEvent(callback))
 
 class camera:
     active = False
@@ -145,6 +237,8 @@ class serialDeviceList():
 serialPortList = serialDeviceList()
 #print(serialPortList.device_name_list)
 
+worker_instance = None  # Global reference to the worker
+
 class serialConnect():
     def __init__(self, parent=None,index=0):
         super(serialConnect, self).__init__(parent)
@@ -159,14 +253,18 @@ class serialConnect():
         self.startThread(self)
 
     def startThread(self):
+        global worker_instance
         self.thread = QThread()
         self.worker = Worker()
+        worker_instance = self.worker  # Store global reference
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.serialMsg.connect(repceiveMsg)
+        def handle_serial_message(msg):
+            repceiveMsg(msg)
+        self.worker.serialMsg.connect(handle_serial_message, Qt.QueuedConnection)
         self.thread.start()
 
     def quitThread(self):
@@ -245,7 +343,8 @@ class joystickMoves():
             appSettings.data[8] = 0
         
         appSettings.data[9] = appSettings.whichCamSerial
-        Worker.sendSerial(self, appSettings.data)
+        if worker_instance:
+            worker_instance.sendSerial(appSettings.data)
         
         if appSettings.whichCamSerial == 1 and (camera1.pos1At or camera1.pos2At or camera1.pos3At or camera1.pos4At or camera1.pos5At or camera1.pos6At or camera1.pos7At or camera1.pos8At or camera1.pos9At or camera1.pos10At):
             camera1.pos1At = False
@@ -258,7 +357,7 @@ class joystickMoves():
             camera1.pos8At = False
             camera1.pos9At = False
             camera1.pos10At = False
-            doButtonColours()
+            defer_to_main_thread(doButtonColours)
         elif appSettings.whichCamSerial == 1 and (camera2.pos1At or camera2.pos2At or camera2.pos3At or camera2.pos4At or camera2.pos5At or camera2.pos6At or camera2.pos7At or camera2.pos8At or camera2.pos9At or camera2.pos10At):
             camera2.pos1At = False
             camera2.pos2At = False
@@ -270,7 +369,7 @@ class joystickMoves():
             camera2.pos8At = False
             camera2.pos9At = False
             camera2.pos10At = False
-            doButtonColours()
+            defer_to_main_thread(doButtonColours)
         elif appSettings.whichCamSerial == 1 and (camera3.pos1At or camera3.pos2At or camera3.pos3At or camera3.pos4At or camera3.pos5At or camera3.pos6At or camera3.pos7At or camera3.pos8At or camera3.pos9At or camera3.pos10At):
             camera3.pos1At = False
             camera3.pos2At = False
@@ -282,7 +381,7 @@ class joystickMoves():
             camera3.pos8At = False
             camera3.pos9At = False
             camera3.pos10At = False
-            doButtonColours()
+            defer_to_main_thread(doButtonColours)
         elif appSettings.whichCamSerial == 1 and (camera4.pos1At or camera4.pos2At or camera4.pos3At or camera4.pos4At or camera4.pos5At or camera4.pos6At or camera4.pos7At or camera4.pos8At or camera4.pos9At or camera4.pos10At):
             camera4.pos1At = False
             camera4.pos2At = False
@@ -294,7 +393,7 @@ class joystickMoves():
             camera4.pos8At = False
             camera4.pos9At = False
             camera4.pos10At = False
-            doButtonColours()
+            defer_to_main_thread(doButtonColours)
         elif appSettings.whichCamSerial == 1 and (camera5.pos1At or camera5.pos2At or camera5.pos3At or camera5.pos4At or camera5.pos5At or camera5.pos6At or camera5.pos7At or camera5.pos8At or camera5.pos9At or camera5.pos10At):
             camera5.pos1At = False
             camera5.pos2At = False
@@ -306,7 +405,7 @@ class joystickMoves():
             camera5.pos8At = False
             camera5.pos9At = False
             camera5.pos10At = False
-            doButtonColours()
+            defer_to_main_thread(doButtonColours)
 
 
     def scale(self, val, src, dst):
@@ -315,22 +414,25 @@ class joystickMoves():
     def toHex(self, val, nbits):
         return hex((val + (1 << nbits)) % (1 << nbits))
 
-class Worker(QtCore.QThread): #QObject):
+class Worker(QtCore.QObject):
     finished = Signal()
-    serialMsg = Signal(bytes)
+    serialMsg = Signal(object)
 
     def __init__(self, parent=None,index=0):
         super(Worker, self).__init__(parent)
         self.index=index
         self.is_running = True
+        self.serial_port = None
 
 
     def sendSerial(self, command):
+        if not self.serial_port or not self.serial_port.is_open:
+            return
+            
         if type(command) is str:
             data = bytes((command + '\n'), 'utf8')
             try:
-                serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
-                serial_port.write(data)
+                self.serial_port.write(data)
                 #if appSettings.debug:
                 #    print("Serial Sent: ", data)
             except Exception as error:
@@ -348,8 +450,7 @@ class Worker(QtCore.QThread): #QObject):
             appSettings.oldAxisZ = appSettings.axisZ
             appSettings.oldAxisW = appSettings.axisW
             try:
-                serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
-                serial_port.write(command)
+                self.serial_port.write(command)
                 appSettings.previousMillisMoveCheck = time.time()
                 if appSettings.debug:
                     print("Serial Sent: ", command)
@@ -365,23 +466,25 @@ class Worker(QtCore.QThread): #QObject):
 
     def run(self):
         try:
-            serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
+            self.serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
             appSettings.message = (f"Connected to {serialDeviceList.serialDevice}")
-            index = PTSapp.comboBox.findText(serialDeviceList.serialDevice)
-            PTSapp.comboBox.setCurrentIndex(index)
+            # Defer comboBox update to main thread to avoid starting timers from worker thread
+            defer_to_main_thread(lambda: PTSapp.comboBox.setCurrentIndex(PTSapp.comboBox.findText(serialDeviceList.serialDevice)))
+            # Do not call other GUI methods from worker thread; main UI will read appSettings.message
             appSettings.running = True
-        except:
+        except Exception as e:
             appSettings.message = ("Couldn't connect")
+            print(f"Serial connection error: {e}")
             #PTSapp.setMessage(self)
             self.finished.emit()
             appSettings.running = False
-            #self.stop()
+            return
         
         self.sendSerial('&-') 
 
         while appSettings.running:
-            if serial_port.in_waiting > 0:
-                received_msg = serial_port.readline()
+            if self.serial_port.in_waiting > 0:
+                received_msg = self.serial_port.readline()
                 msg = bytes(received_msg).decode('utf8', "ignore")
                 self.serialMsg.emit(msg)
                 msg=''
@@ -391,7 +494,7 @@ class Worker(QtCore.QThread): #QObject):
             if (appSettings.currentMillisMoveCheck - appSettings.previousMillisMoveCheck > appSettings.moveCheckInterval):
                 appSettings.previousMillisMoveCheck = appSettings.currentMillisMoveCheck
                 try:
-                    serial_port.write(appSettings.joyData)
+                    self.serial_port.write(appSettings.joyData)
                     appSettings.previousMillisMoveCheck = time.time()
                     if appSettings.debug:
                         print("Re-sending Joystick for keep-alive")    # debugging
@@ -405,8 +508,6 @@ class Worker(QtCore.QThread): #QObject):
 
     def stop(self):
         self.is_running = False
-        Worker.exit
-        QThread.exit
         
 class PTSapp(QMainWindow):
     global agX
@@ -418,10 +519,14 @@ class PTSapp(QMainWindow):
     global buttonGoY
     global buttonCamY
     global winSize
+    global event_handler
 
     def __init__(self, txt):
+        global event_handler
         self.text = txt
         super(PTSapp, self).__init__()
+        event_handler = EventHandler()
+        event_handler.installEventFilter(event_handler)  # Install filter on itself
         self.setupUi()
     
     def openEditWindow(self, text):
@@ -441,14 +546,18 @@ class PTSapp(QMainWindow):
     
     def openSettingsWindow(self):
         if appSettings.running:
-            Worker.sendSerial(self, '&1K')
-            Worker.sendSerial(self, '&2K')
+            if worker_instance:
+                worker_instance.sendSerial('&1K')
+                worker_instance.sendSerial('&2K')
             time.sleep(0.1)
-            Worker.sendSerial(self, '&3K')
+            if worker_instance:
+                worker_instance.sendSerial('&3K')
             time.sleep(0.1)
-            Worker.sendSerial(self, '&4K')
+            if worker_instance:
+                worker_instance.sendSerial('&4K')
             time.sleep(0.1)
-            Worker.sendSerial(self, '&5K')
+            if worker_instance:
+                worker_instance.sendSerial('&5K')
 
         self.setPos(3)
         self.ui4 = Ui_SettingsWindow()
@@ -521,6 +630,10 @@ class PTSapp(QMainWindow):
         self.thread = None
 
         def handle_key_event(key):
+            try:
+                print('[DBG] handle_key_event called:', key, getattr(key, 'joystick', None), getattr(key, 'value', None))
+            except Exception:
+                pass
             #print(key, '-', key.keytype, '-', key.number, '-', key.value, '-', key.joystick)
             #keytest = key[1]
             #print(key.number)
@@ -621,11 +734,110 @@ class PTSapp(QMainWindow):
                     else:
                         appSettings.axisW = 0
 
+
             joystickMoves.doJoyMoves(self, 1)
 
+        # Defer joystick manager creation/start until the Qt event loop is running
+        if getattr(appSettings, 'enableJoystick', False):
+            # Signal-based dispatch: emit joystick events via a Qt Signal on the main thread
+            class _JoystickSignal(QObject):
+                joystick_event = Signal(object)
 
-        mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
-        mngr.start()
+            joystick_signal = _JoystickSignal()
+            try:
+                joystick_signal.joystick_event.connect(handle_key_event)
+            except Exception:
+                pass
+            def _start_joystick_manager():
+                global joystick_thread, joystick_event_queue, joystick_poll_timer
+                try:
+                    import threading
+                    # Use a plain Python thread to run the SDL event loop and enqueue events
+                    joystick_event_queue = queue.Queue()
+
+                    def _enqueue(key):
+                        try:
+                            joystick_event_queue.put(key)
+                        except Exception as ex:
+                            print('[ERROR] joystick enqueue failed:', ex)
+
+                    def _run_loop():
+                        try:
+                            # Try common call patterns for various pyjoystick versions
+                            try:
+                                run_event_loop(handle_key_event=_enqueue)
+                                return
+                            except TypeError:
+                                pass
+
+                            try:
+                                # some versions require add_joystick, remove_joystick positional args
+                                run_event_loop(lambda *a, **k: None, lambda *a, **k: None, _enqueue)
+                                return
+                            except TypeError:
+                                pass
+
+                            try:
+                                # fallback: single positional handler
+                                run_event_loop(_enqueue)
+                                return
+                            except Exception as ex2:
+                                print('[ERROR] run_event_loop failed (all attempts):', ex2)
+                        except Exception as ex:
+                            print('[ERROR] run_event_loop failed:', ex)
+
+                    joystick_thread = threading.Thread(target=_run_loop, name='pyjoystick-runloop', daemon=True)
+                    joystick_thread.start()
+
+                    # Poll the queue on the Qt main thread and dispatch to the existing handler
+                    def _process_queue():
+                        try:
+                            while not joystick_event_queue.empty():
+                                key = joystick_event_queue.get_nowait()
+                                try:
+                                    # Emit a Qt signal so the handler runs in the main thread's Qt context
+                                    try:
+                                        joystick_signal.joystick_event.emit(key)
+                                    except Exception:
+                                        # Fallback to direct call if signal emit fails
+                                        handle_key_event(key)
+                                except Exception as he:
+                                    print('[ERROR] handle_key_event failed:', he)
+                        except Exception as ex:
+                            print('[ERROR] joystick queue processing failed:', ex)
+
+                    joystick_poll_timer = QtCore.QTimer()
+                    joystick_poll_timer.setInterval(20)
+                    joystick_poll_timer.timeout.connect(_process_queue)
+                    joystick_poll_timer.start()
+
+                    print('[INFO] Joystick run_event_loop started in plain thread; polling on main thread.')
+
+                    # Automated test hook: if PTSAPP_JOY_TEST=1 in env, enqueue a synthetic event
+                    try:
+                        if os.environ.get('PTSAPP_JOY_TEST') == '1':
+                            class _FakeKey:
+                                def __init__(self):
+                                    self.joystick = 'TestJoystick'
+                                    self.value = 1.0
+                                    self.number = 0
+                                    self.keytype = 'axis'
+                                def __str__(self):
+                                    return 'Axis 3'
+                            fake = _FakeKey()
+                            # enqueue after short delay to allow poll timer to start
+                            QtCore.QTimer.singleShot(100, lambda: joystick_event_queue.put(fake))
+                            print('[INFO] Enqueued synthetic joystick event for automated test.')
+                    except Exception:
+                        pass
+                except Exception as e:
+                    print('[ERROR] Failed to start joystick thread/poller:', e)
+
+            # Schedule to run after the Qt event loop starts
+            QtCore.QTimer.singleShot(0, _start_joystick_manager)
+
+        else:
+            print('[INFO] Joystick manager disabled (appSettings.enableJoystick=False)')
 
         borderSize = butttonLayoutX / 2
         borderRadius = butttonLayoutX * 1.8
@@ -1548,6 +1760,7 @@ class PTSapp(QMainWindow):
         self.statusbar.setObjectName("statusbar")
         self.setStatusBar(self.statusbar)
 
+        # Automatic serial/joystick startup
         self.buttonConnect(serialPortList.device_name_list)
 
         PTSapp.comboBox.addItems(serialPortList.device_name_list)
@@ -1656,63 +1869,103 @@ class PTSapp(QMainWindow):
     def setDials(self, cam, ps, value):
         if cam == 1:
             if ps == 1:
-                if value == 1: Worker.sendSerial(self, '&1s1')
-                elif value == 2: Worker.sendSerial(self, '&1s2')
-                elif value == 3: Worker.sendSerial(self, '&1s3')
-                elif value == 4: Worker.sendSerial(self, '&1s4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&1s1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&1s2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&1s3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&1s4')
             else:
-                if value == 1: Worker.sendSerial(self, '&1W1')
-                elif value == 2: Worker.sendSerial(self, '&1W2')
-                elif value == 3: Worker.sendSerial(self, '&1W3')
-                elif value == 4: Worker.sendSerial(self, '&1W4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&1W1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&1W2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&1W3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&1W4')
 
         elif cam == 2:
             if ps == 1:
-                if value == 1: Worker.sendSerial(self, '&2s1')
-                elif value == 2: Worker.sendSerial(self, '&2s2')
-                elif value == 3: Worker.sendSerial(self, '&2s3')
-                elif value == 4: Worker.sendSerial(self, '&2s4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&2s1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&2s2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&2s3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&2s4')
             else:
-                if value == 1: Worker.sendSerial(self, '&2W1')
-                elif value == 2: Worker.sendSerial(self, '&2W2')
-                elif value == 3: Worker.sendSerial(self, '&2W3')
-                elif value == 4: Worker.sendSerial(self, '&2W4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&2W1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&2W2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&2W3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&2W4')
 
         elif cam == 3:
             if ps == 1:
-                if value == 1: Worker.sendSerial(self, '&3s1')
-                elif value == 2: Worker.sendSerial(self, '&3s2')
-                elif value == 3: Worker.sendSerial(self, '&3s3')
-                elif value == 4: Worker.sendSerial(self, '&3s4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&3s1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&3s2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&3s3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&3s4')
             else:
-                if value == 1: Worker.sendSerial(self, '&3W1')
-                elif value == 2: Worker.sendSerial(self, '&3W2')
-                elif value == 3: Worker.sendSerial(self, '&3W3')
-                elif value == 4: Worker.sendSerial(self, '&3W4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&3W1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&3W2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&3W3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&3W4')
 
         elif cam == 4:
             if ps == 1:
-                if value == 1: Worker.sendSerial(self, '&4s1')
-                elif value == 2: Worker.sendSerial(self, '&4s2')
-                elif value == 3: Worker.sendSerial(self, '&4s3')
-                elif value == 4: Worker.sendSerial(self, '&4s4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&4s1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&4s2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&4s3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&4s4')
             else:
-                if value == 1: Worker.sendSerial(self, '&4W1')
-                elif value == 2: Worker.sendSerial(self, '&4W2')
-                elif value == 3: Worker.sendSerial(self, '&4W3')
-                elif value == 4: Worker.sendSerial(self, '&4W4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&4W1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&4W2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&4W3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&4W4')
 
         elif cam == 5:
             if ps == 1:
-                if value == 1: Worker.sendSerial(self, '&5s1')
-                elif value == 2: Worker.sendSerial(self, '&5s2')
-                elif value == 3: Worker.sendSerial(self, '&5s3')
-                elif value == 4: Worker.sendSerial(self, '&5s4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&5s1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&5s2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&5s3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&5s4')
             else:
-                if value == 1: Worker.sendSerial(self, '&5W1')
-                elif value == 2: Worker.sendSerial(self, '&5W2')
-                elif value == 3: Worker.sendSerial(self, '&5W3')
-                elif value == 4: Worker.sendSerial(self, '&5W4')
+                if value == 1: 
+                    if worker_instance: worker_instance.sendSerial('&5W1')
+                elif value == 2: 
+                    if worker_instance: worker_instance.sendSerial('&5W2')
+                elif value == 3: 
+                    if worker_instance: worker_instance.sendSerial('&5W3')
+                elif value == 4: 
+                    if worker_instance: worker_instance.sendSerial('&5W4')
 
     def setPos(self, state):
         appSettings.setState = state
@@ -1815,7 +2068,7 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1D')
+            if worker_instance: worker_instance.sendSerial('&1D')
             appSettings.message = ("Clear Camera 1")
             PTSapp.setMessage(self)
         elif appSettings.runToggle:
@@ -1859,7 +2112,7 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2D')
+            if worker_instance: worker_instance.sendSerial('&2D')
             appSettings.message = ("Clear Camera 2")
             PTSapp.setMessage(self)
         elif appSettings.runToggle:
@@ -1903,7 +2156,7 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3D')
+            if worker_instance: worker_instance.sendSerial('&3D')
             appSettings.message = ("Clear Camera 3")
             PTSapp.setMessage(self)
         elif appSettings.runToggle:
@@ -1947,7 +2200,7 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4D')
+            if worker_instance: worker_instance.sendSerial('&4D')
             appSettings.message = ("Clear Camera 4")
             PTSapp.setMessage(self)
         elif appSettings.runToggle:
@@ -1991,7 +2244,7 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5D')
+            if worker_instance: worker_instance.sendSerial('&5D')
             appSettings.message = ("Clear Camera 5")
             PTSapp.setMessage(self)
         elif appSettings.runToggle:
@@ -2029,962 +2282,962 @@ class PTSapp(QMainWindow):
     def runCam1(self):
         if camera1.pos1At:
             if camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                if worker_instance: worker_instance.sendSerial('&1x')
             elif camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                if worker_instance: worker_instance.sendSerial('&1c')
             elif camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                if worker_instance: worker_instance.sendSerial('&1v')
             elif camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                if worker_instance: worker_instance.sendSerial('&1b')
             elif camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                if worker_instance: worker_instance.sendSerial('&1n')
             elif camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                if worker_instance: worker_instance.sendSerial('&1m')
             elif camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                if worker_instance: worker_instance.sendSerial('&1,')
             elif camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                if worker_instance: worker_instance.sendSerial('&1.')
             elif camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                if worker_instance: worker_instance.sendSerial('&1/')
         elif camera1.pos2At:
             if camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                if worker_instance: worker_instance.sendSerial('&1c')
             elif camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                if worker_instance: worker_instance.sendSerial('&1v')
             elif camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                if worker_instance: worker_instance.sendSerial('&1b')
             elif camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                if worker_instance: worker_instance.sendSerial('&1n')
             elif camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                if worker_instance: worker_instance.sendSerial('&1m')
             elif camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                if worker_instance: worker_instance.sendSerial('&1,')
             elif camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                if worker_instance: worker_instance.sendSerial('&1.')
             elif camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                if worker_instance: worker_instance.sendSerial('&1/')
             elif camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                if worker_instance: worker_instance.sendSerial('&1z')
         elif camera1.pos3At:
             if camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                if worker_instance: worker_instance.sendSerial('&1v')
             elif camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                worker_instance.sendSerial('&1b')
             elif camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                worker_instance.sendSerial('&1n')
             elif camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                worker_instance.sendSerial('&1m')
             elif camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                worker_instance.sendSerial('&1,')
             elif camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                worker_instance.sendSerial('&1.')
             elif camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                worker_instance.sendSerial('&1/')
             elif camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                worker_instance.sendSerial('&1z')
             elif camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                worker_instance.sendSerial('&1x')
         elif camera1.pos4At:
             if camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                worker_instance.sendSerial('&1b')
             elif camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                worker_instance.sendSerial('&1n')
             elif camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                worker_instance.sendSerial('&1m')
             elif camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                worker_instance.sendSerial('&1,')
             elif camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                worker_instance.sendSerial('&1.')
             elif camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                worker_instance.sendSerial('&1/')
             elif camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                worker_instance.sendSerial('&1z')
             elif camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                worker_instance.sendSerial('&1x')
             elif camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                worker_instance.sendSerial('&1c')
         elif camera1.pos5At:
             if camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                worker_instance.sendSerial('&1n')
             elif camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                worker_instance.sendSerial('&1m')
             elif camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                worker_instance.sendSerial('&1,')
             elif camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                worker_instance.sendSerial('&1.')
             elif camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                worker_instance.sendSerial('&1/')
             elif camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                worker_instance.sendSerial('&1z')
             elif camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                worker_instance.sendSerial('&1x')
             elif camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                worker_instance.sendSerial('&1c')
             elif camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                worker_instance.sendSerial('&1v')
         elif camera1.pos6At:
             if camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                worker_instance.sendSerial('&1m')
             elif camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                worker_instance.sendSerial('&1,')
             elif camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                worker_instance.sendSerial('&1.')
             elif camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                worker_instance.sendSerial('&1/')
             elif camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                worker_instance.sendSerial('&1z')
             elif camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                worker_instance.sendSerial('&1x')
             elif camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                worker_instance.sendSerial('&1c')
             elif camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                worker_instance.sendSerial('&1v')
             elif camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                worker_instance.sendSerial('&1b')
         elif camera1.pos7At:
             if camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                worker_instance.sendSerial('&1,')
             elif camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                worker_instance.sendSerial('&1.')
             elif camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                worker_instance.sendSerial('&1/')
             elif camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                worker_instance.sendSerial('&1z')
             elif camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                worker_instance.sendSerial('&1x')
             elif camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                worker_instance.sendSerial('&1c')
             elif camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                worker_instance.sendSerial('&1v')
             elif camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                worker_instance.sendSerial('&1b')
             elif camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                worker_instance.sendSerial('&1n')
         elif camera1.pos8At:
             if camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                worker_instance.sendSerial('&1.')
             elif camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                worker_instance.sendSerial('&1/')
             elif camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                worker_instance.sendSerial('&1z')
             elif camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                worker_instance.sendSerial('&1x')
             elif camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                worker_instance.sendSerial('&1c')
             elif camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                worker_instance.sendSerial('&1v')
             elif camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                worker_instance.sendSerial('&1b')
             elif camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                worker_instance.sendSerial('&1n')
             elif camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                worker_instance.sendSerial('&1m')
         elif camera1.pos9At:
             if camera1.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                worker_instance.sendSerial('&1/')
             elif camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                worker_instance.sendSerial('&1z')
             elif camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                worker_instance.sendSerial('&1x')
             elif camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                worker_instance.sendSerial('&1c')
             elif camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                worker_instance.sendSerial('&1v')
             elif camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                worker_instance.sendSerial('&1b')
             elif camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                worker_instance.sendSerial('&1n')
             elif camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                worker_instance.sendSerial('&1m')
             elif camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                worker_instance.sendSerial('&1,')
         elif camera1.pos10At:
             if camera1.pos1Set:
-                Worker.sendSerial(self, '&1z')
+                worker_instance.sendSerial('&1z')
             elif camera1.pos2Set:
-                Worker.sendSerial(self, '&1x')
+                worker_instance.sendSerial('&1x')
             elif camera1.pos3Set:
-                Worker.sendSerial(self, '&1c')
+                worker_instance.sendSerial('&1c')
             elif camera1.pos4Set:
-                Worker.sendSerial(self, '&1v')
+                worker_instance.sendSerial('&1v')
             elif camera1.pos5Set:
-                Worker.sendSerial(self, '&1b')
+                worker_instance.sendSerial('&1b')
             elif camera1.pos6Set:
-                Worker.sendSerial(self, '&1n')
+                worker_instance.sendSerial('&1n')
             elif camera1.pos7Set:
-                Worker.sendSerial(self, '&1m')
+                worker_instance.sendSerial('&1m')
             elif camera1.pos8Set:
-                Worker.sendSerial(self, '&1,')
+                worker_instance.sendSerial('&1,')
             elif camera1.pos9Set:
-                Worker.sendSerial(self, '&1.')
+                worker_instance.sendSerial('&1.')
     
     def runCam2(self):
         if camera2.pos1At:
             if camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
             elif camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
             elif camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
             elif camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
             elif camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
             elif camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
             elif camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
             elif camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
             elif camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
         elif camera2.pos2At:
             if camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
             elif camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
             elif camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
             elif camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
             elif camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
             elif camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
             elif camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
             elif camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
             elif camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
         elif camera2.pos3At:
             if camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
             elif camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
             elif camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
             elif camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
             elif camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
             elif camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
             elif camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
             elif camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
             elif camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
         elif camera2.pos4At:
             if camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
             elif camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
             elif camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
             elif camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
             elif camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
             elif camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
             elif camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
             elif camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
             elif camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
         elif camera2.pos5At:
             if camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
             elif camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
             elif camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
             elif camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
             elif camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
             elif camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
             elif camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
             elif camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
             elif camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
         elif camera2.pos6At:
             if camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
             elif camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
             elif camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
             elif camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
             elif camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
             elif camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
             elif camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
             elif camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
             elif camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
         elif camera2.pos7At:
             if camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
             elif camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
             elif camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
             elif camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
             elif camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
             elif camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
             elif camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
             elif camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
             elif camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
         elif camera2.pos8At:
             if camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
             elif camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
             elif camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
             elif camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
             elif camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
             elif camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
             elif camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
             elif camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
             elif camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
         elif camera2.pos9At:
             if camera2.pos10Set:
-                Worker.sendSerial(self, '&2/')
+                worker_instance.sendSerial('&2/')
             elif camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
             elif camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
             elif camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
             elif camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
             elif camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
             elif camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
             elif camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
             elif camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
         elif camera2.pos10At:
             if camera2.pos1Set:
-                Worker.sendSerial(self, '&2z')
+                worker_instance.sendSerial('&2z')
             elif camera2.pos2Set:
-                Worker.sendSerial(self, '&2x')
+                worker_instance.sendSerial('&2x')
             elif camera2.pos3Set:
-                Worker.sendSerial(self, '&2c')
+                worker_instance.sendSerial('&2c')
             elif camera2.pos4Set:
-                Worker.sendSerial(self, '&2v')
+                worker_instance.sendSerial('&2v')
             elif camera2.pos5Set:
-                Worker.sendSerial(self, '&2b')
+                worker_instance.sendSerial('&2b')
             elif camera2.pos6Set:
-                Worker.sendSerial(self, '&2n')
+                worker_instance.sendSerial('&2n')
             elif camera2.pos7Set:
-                Worker.sendSerial(self, '&2m')
+                worker_instance.sendSerial('&2m')
             elif camera2.pos8Set:
-                Worker.sendSerial(self, '&2,')
+                worker_instance.sendSerial('&2,')
             elif camera2.pos9Set:
-                Worker.sendSerial(self, '&2.')
+                worker_instance.sendSerial('&2.')
     
     def runCam3(self):
         if camera3.pos1At:
             if camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
             elif camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
             elif camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
             elif camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
             elif camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
             elif camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
             elif camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
             elif camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
             elif camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
         elif camera3.pos2At:
             if camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
             elif camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
             elif camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
             elif camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
             elif camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
             elif camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
             elif camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
             elif camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
             elif camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
         elif camera3.pos3At:
             if camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
             elif camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
             elif camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
             elif camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
             elif camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
             elif camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
             elif camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
             elif camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
             elif camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
         elif camera3.pos4At:
             if camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
             elif camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
             elif camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
             elif camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
             elif camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
             elif camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
             elif camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
             elif camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
             elif camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
         elif camera3.pos5At:
             if camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
             elif camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
             elif camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
             elif camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
             elif camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
             elif camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
             elif camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
             elif camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
             elif camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
         elif camera3.pos6At:
             if camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
             elif camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
             elif camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
             elif camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
             elif camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
             elif camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
             elif camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
             elif camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
             elif camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
         elif camera3.pos7At:
             if camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
             elif camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
             elif camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
             elif camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
             elif camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
             elif camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
             elif camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
             elif camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
             elif camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
         elif camera3.pos8At:
             if camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
             elif camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
             elif camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
             elif camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
             elif camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
             elif camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
             elif camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
             elif camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
             elif camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
         elif camera3.pos9At:
             if camera3.pos10Set:
-                Worker.sendSerial(self, '&3/')
+                worker_instance.sendSerial('&3/')
             elif camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
             elif camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
             elif camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
             elif camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
             elif camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
             elif camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
             elif camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
             elif camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
         elif camera3.pos10At:
             if camera3.pos1Set:
-                Worker.sendSerial(self, '&3z')
+                worker_instance.sendSerial('&3z')
             elif camera3.pos2Set:
-                Worker.sendSerial(self, '&3x')
+                worker_instance.sendSerial('&3x')
             elif camera3.pos3Set:
-                Worker.sendSerial(self, '&3c')
+                worker_instance.sendSerial('&3c')
             elif camera3.pos4Set:
-                Worker.sendSerial(self, '&3v')
+                worker_instance.sendSerial('&3v')
             elif camera3.pos5Set:
-                Worker.sendSerial(self, '&3b')
+                worker_instance.sendSerial('&3b')
             elif camera3.pos6Set:
-                Worker.sendSerial(self, '&3n')
+                worker_instance.sendSerial('&3n')
             elif camera3.pos7Set:
-                Worker.sendSerial(self, '&3m')
+                worker_instance.sendSerial('&3m')
             elif camera3.pos8Set:
-                Worker.sendSerial(self, '&3,')
+                worker_instance.sendSerial('&3,')
             elif camera3.pos9Set:
-                Worker.sendSerial(self, '&3.')
+                worker_instance.sendSerial('&3.')
     
     def runCam4(self):
         if camera4.pos1At:
             if camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
             elif camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
             elif camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
             elif camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
             elif camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
             elif camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
             elif camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
             elif camera4.pos10Set:
-                Worker.sendSerial(self, '&4/')
+                worker_instance.sendSerial('&4/')
         elif camera4.pos2At:
             if camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
             elif camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
             elif camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
             elif camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
             elif camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
             elif camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
             elif camera4.pos10Set:
-                Worker.sendSerial(self, '&4/')
+                worker_instance.sendSerial('&4/')
             elif camera4.pos1Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
         elif camera4.pos3At:
             if camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
             elif camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
             elif camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
             elif camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
             elif camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
             elif camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
             elif camera4.pos10Set:
-                Worker.sendSerial(self, '&4/')
+                worker_instance.sendSerial('&4/')
             elif camera4.pos1Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
             elif camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
         elif camera4.pos4At:
             if camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
             elif camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
             elif camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
             elif camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
             elif camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
             elif camera4.pos10Set:
-                Worker.sendSerial(self, '&4/')
+                worker_instance.sendSerial('&4/')
             elif camera4.pos1Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
             elif camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
             elif camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
         elif camera4.pos5At:
             if camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
             elif camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
             elif camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
             elif camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
             elif camera4.pos10Set:
-                Worker.sendSerial(self, '&1/')
+                worker_instance.sendSerial('&1/')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
             elif camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
             elif camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
         elif camera4.pos6At:
             if camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
             elif camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
             elif camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
             elif camera4.pos10Set:
-                Worker.sendSerial(self, '&4/')
+                worker_instance.sendSerial('&4/')
             elif camera4.pos1Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
             elif camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
             elif camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
             elif camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
         elif camera4.pos7At:
             if camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
             elif camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
             elif camera4.pos10Set:
-                Worker.sendSerial(self, '&4/')
+                worker_instance.sendSerial('&4/')
             elif camera4.pos1Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
             elif camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
             elif camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
             elif camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
             elif camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
         elif camera4.pos8At:
             if camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
             elif camera4.pos10Set:
-                Worker.sendSerial(self, '&4/')
+                worker_instance.sendSerial('&4/')
             elif camera4.pos1Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
             elif camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
             elif camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
             elif camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
             elif camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
             elif camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
         elif camera4.pos9At:
             if camera4.pos10Set:
-                Worker.sendSerial(self, '&4/')
+                worker_instance.sendSerial('&4/')
             elif camera4.pos1Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
             elif camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
             elif camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
             elif camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
             elif camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
             elif camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
             elif camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
         elif camera4.pos10At:
             if camera4.pos1Set:
-                Worker.sendSerial(self, '&4z')
+                worker_instance.sendSerial('&4z')
             elif camera4.pos2Set:
-                Worker.sendSerial(self, '&4x')
+                worker_instance.sendSerial('&4x')
             elif camera4.pos3Set:
-                Worker.sendSerial(self, '&4c')
+                worker_instance.sendSerial('&4c')
             elif camera4.pos4Set:
-                Worker.sendSerial(self, '&4v')
+                worker_instance.sendSerial('&4v')
             elif camera4.pos5Set:
-                Worker.sendSerial(self, '&4b')
+                worker_instance.sendSerial('&4b')
             elif camera4.pos6Set:
-                Worker.sendSerial(self, '&4n')
+                worker_instance.sendSerial('&4n')
             elif camera4.pos7Set:
-                Worker.sendSerial(self, '&4m')
+                worker_instance.sendSerial('&4m')
             elif camera4.pos8Set:
-                Worker.sendSerial(self, '&4,')
+                worker_instance.sendSerial('&4,')
             elif camera4.pos9Set:
-                Worker.sendSerial(self, '&4.')
+                worker_instance.sendSerial('&4.')
 
     def runCam5(self):
         if camera5.pos1At:
             if camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
             elif camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
             elif camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
             elif camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
             elif camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
             elif camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
             elif camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
             elif camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
             elif camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
         elif camera5.pos2At:
             if camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
             elif camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
             elif camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
             elif camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
             elif camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
             elif camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
             elif camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
             elif camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
             elif camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
         elif camera5.pos3At:
             if camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
             elif camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
             elif camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
             elif camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
             elif camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
             elif camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
             elif camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
             elif camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
             elif camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
         elif camera5.pos4At:
             if camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
             elif camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
             elif camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
             elif camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
             elif camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
             elif camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
             elif camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
             elif camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
             elif camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
         elif camera5.pos5At:
             if camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
             elif camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
             elif camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
             elif camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
             elif camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
             elif camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
             elif camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
             elif camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
             elif camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
         elif camera5.pos6At:
             if camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
             elif camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
             elif camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
             elif camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
             elif camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
             elif camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
             elif camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
             elif camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
             elif camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
         elif camera5.pos7At:
             if camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
             elif camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
             elif camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
             elif camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
             elif camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
             elif camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
             elif camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
             elif camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
             elif camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
         elif camera5.pos8At:
             if camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
             elif camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
             elif camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
             elif camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
             elif camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
             elif camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
             elif camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
             elif camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
             elif camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
         elif camera5.pos9At:
             if camera5.pos10Set:
-                Worker.sendSerial(self, '&5/')
+                worker_instance.sendSerial('&5/')
             elif camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
             elif camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
             elif camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
             elif camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
             elif camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
             elif camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
             elif camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
             elif camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
         elif camera5.pos10At:
             if camera5.pos1Set:
-                Worker.sendSerial(self, '&5z')
+                worker_instance.sendSerial('&5z')
             elif camera5.pos2Set:
-                Worker.sendSerial(self, '&5x')
+                worker_instance.sendSerial('&5x')
             elif camera5.pos3Set:
-                Worker.sendSerial(self, '&5c')
+                worker_instance.sendSerial('&5c')
             elif camera5.pos4Set:
-                Worker.sendSerial(self, '&5v')
+                worker_instance.sendSerial('&5v')
             elif camera5.pos5Set:
-                Worker.sendSerial(self, '&5b')
+                worker_instance.sendSerial('&5b')
             elif camera5.pos6Set:
-                Worker.sendSerial(self, '&5n')
+                worker_instance.sendSerial('&5n')
             elif camera5.pos7Set:
-                Worker.sendSerial(self, '&5m')
+                worker_instance.sendSerial('&5m')
             elif camera5.pos8Set:
-                Worker.sendSerial(self, '&5,')
+                worker_instance.sendSerial('&5,')
             elif camera5.pos9Set:
-                Worker.sendSerial(self, '&5.')
+                worker_instance.sendSerial('&5.')
 
     def flash(self):
         if appSettings.flashTick:
@@ -3452,10 +3705,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1Z')
+            worker_instance.sendSerial('&1Z')
             return
         elif camera1.pos1Set and not camera1.pos1At:
-            Worker.sendSerial(self, '&1z')
+            worker_instance.sendSerial('&1z')
 
     def Cam1Go2(self):
         if appSettings.editToggle:
@@ -3464,10 +3717,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1X')
+            worker_instance.sendSerial('&1X')
             return
         elif camera1.pos2Set and not camera1.pos2At:
-            Worker.sendSerial(self, '&1x')
+            worker_instance.sendSerial('&1x')
 
     def Cam1Go3(self):
         if appSettings.editToggle:
@@ -3476,10 +3729,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1C')
+            worker_instance.sendSerial('&1C')
             return
         elif camera1.pos3Set and not camera1.pos3At:
-            Worker.sendSerial(self, '&1c')
+            worker_instance.sendSerial('&1c')
 
     def Cam1Go4(self):
         if appSettings.editToggle:
@@ -3488,10 +3741,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1V')
+            worker_instance.sendSerial('&1V')
             return
         elif camera1.pos4Set and not camera1.pos4At:
-            Worker.sendSerial(self, '&1v')
+            worker_instance.sendSerial('&1v')
 
     def Cam1Go5(self):
         if appSettings.editToggle:
@@ -3500,10 +3753,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1B')
+            worker_instance.sendSerial('&1B')
             return
         elif camera1.pos5Set and not camera1.pos5At:
-            Worker.sendSerial(self, '&1b')
+            worker_instance.sendSerial('&1b')
 
     def Cam1Go6(self):
         if appSettings.editToggle:
@@ -3512,10 +3765,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1N')
+            worker_instance.sendSerial('&1N')
             return
         elif camera1.pos6Set and not camera1.pos6At:
-            Worker.sendSerial(self, '&1n')
+            worker_instance.sendSerial('&1n')
 
     def Cam1Go7(self):
         if appSettings.editToggle:
@@ -3524,10 +3777,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1M')
+            worker_instance.sendSerial('&1M')
             return
         elif camera1.pos7Set and not camera1.pos7At:
-            Worker.sendSerial(self, '&1m')
+            worker_instance.sendSerial('&1m')
 
     def Cam1Go8(self):
         if appSettings.editToggle:
@@ -3536,10 +3789,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1<')
+            worker_instance.sendSerial('&1<')
             return
         elif camera1.pos8Set and not camera1.pos8At:
-            Worker.sendSerial(self, '&1,')
+            worker_instance.sendSerial('&1,')
 
     def Cam1Go9(self):
         if appSettings.editToggle:
@@ -3548,10 +3801,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1>')
+            worker_instance.sendSerial('&1>')
             return
         elif camera1.pos9Set and not camera1.pos9At:
-            Worker.sendSerial(self, '&1.')
+            worker_instance.sendSerial('&1.')
 
     def Cam1Go10(self):
         if appSettings.editToggle:
@@ -3560,10 +3813,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&1?')
+            worker_instance.sendSerial('&1?')
             return
         elif camera1.pos10Set and not camera1.pos10At:
-            Worker.sendSerial(self, '&1/')
+            worker_instance.sendSerial('&1/')
 
     def Cam2Go1(self):
         if appSettings.editToggle:
@@ -3572,10 +3825,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2Z')
+            worker_instance.sendSerial('&2Z')
             return
         elif camera2.pos1Set and not camera2.pos1At:
-            Worker.sendSerial(self, '&2z')
+            worker_instance.sendSerial('&2z')
 
     def Cam2Go2(self):
         if appSettings.editToggle:
@@ -3584,10 +3837,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2X')
+            worker_instance.sendSerial('&2X')
             return
         elif camera2.pos2Set and not camera2.pos2At:
-            Worker.sendSerial(self, '&2x')
+            worker_instance.sendSerial('&2x')
 
     def Cam2Go3(self):
         if appSettings.editToggle:
@@ -3596,10 +3849,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2C')
+            worker_instance.sendSerial('&2C')
             return
         elif camera2.pos3Set and not camera2.pos3At:
-            Worker.sendSerial(self, '&2c')
+            worker_instance.sendSerial('&2c')
 
     def Cam2Go4(self):
         if appSettings.editToggle:
@@ -3608,10 +3861,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2V')
+            worker_instance.sendSerial('&2V')
             return
         elif camera2.pos4Set and not camera2.pos4At:
-            Worker.sendSerial(self, '&2v')
+            worker_instance.sendSerial('&2v')
 
     def Cam2Go5(self):
         if appSettings.editToggle:
@@ -3620,10 +3873,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2B')
+            worker_instance.sendSerial('&2B')
             return
         elif camera2.pos5Set and not camera2.pos5At:
-            Worker.sendSerial(self, '&2b')
+            worker_instance.sendSerial('&2b')
 
     def Cam2Go6(self):
         if appSettings.editToggle:
@@ -3632,10 +3885,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2N')
+            worker_instance.sendSerial('&2N')
             return
         elif camera2.pos6Set and not camera2.pos6At:
-            Worker.sendSerial(self, '&2n')
+            worker_instance.sendSerial('&2n')
 
     def Cam2Go7(self):
         if appSettings.editToggle:
@@ -3644,10 +3897,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2M')
+            worker_instance.sendSerial('&2M')
             return
         elif camera2.pos7Set and not camera2.pos7At:
-            Worker.sendSerial(self, '&2m')
+            worker_instance.sendSerial('&2m')
 
     def Cam2Go8(self):
         if appSettings.editToggle:
@@ -3656,10 +3909,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2<')
+            worker_instance.sendSerial('&2<')
             return
         elif camera2.pos8Set and not camera2.pos8At:
-            Worker.sendSerial(self, '&2,')
+            worker_instance.sendSerial('&2,')
 
     def Cam2Go9(self):
         if appSettings.editToggle:
@@ -3668,10 +3921,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2>')
+            worker_instance.sendSerial('&2>')
             return
         elif camera2.pos9Set and not camera2.pos9At:
-            Worker.sendSerial(self, '&2.')
+            worker_instance.sendSerial('&2.')
 
     def Cam2Go10(self):
         if appSettings.editToggle:
@@ -3680,10 +3933,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&2?')
+            worker_instance.sendSerial('&2?')
             return
         elif camera2.pos10Set and not camera2.pos10At:
-            Worker.sendSerial(self, '&2/')
+            worker_instance.sendSerial('&2/')
 
     def Cam3Go1(self):
         if appSettings.editToggle:
@@ -3692,10 +3945,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3Z')
+            worker_instance.sendSerial('&3Z')
             return
         elif camera3.pos1Set and not camera3.pos1At:
-            Worker.sendSerial(self, '&3z')
+            worker_instance.sendSerial('&3z')
 
     def Cam3Go2(self):
         if appSettings.editToggle:
@@ -3704,10 +3957,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3X')
+            worker_instance.sendSerial('&3X')
             return
         elif camera3.pos2Set and not camera3.pos2At:
-            Worker.sendSerial(self, '&3x')
+            worker_instance.sendSerial('&3x')
 
     def Cam3Go3(self):
         if appSettings.editToggle:
@@ -3716,10 +3969,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3C')
+            worker_instance.sendSerial('&3C')
             return
         elif camera3.pos3Set and not camera3.pos3At:
-            Worker.sendSerial(self, '&3c')
+            worker_instance.sendSerial('&3c')
 
     def Cam3Go4(self):
         if appSettings.editToggle:
@@ -3728,10 +3981,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3V')
+            worker_instance.sendSerial('&3V')
             return
         elif camera3.pos4Set and not camera3.pos4At:
-            Worker.sendSerial(self, '&3v')
+            worker_instance.sendSerial('&3v')
 
     def Cam3Go5(self):
         if appSettings.editToggle:
@@ -3740,10 +3993,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3B')
+            worker_instance.sendSerial('&3B')
             return
         elif camera3.pos5Set and not camera3.pos5At:
-            Worker.sendSerial(self, '&3b')
+            worker_instance.sendSerial('&3b')
 
     def Cam3Go6(self):
         if appSettings.editToggle:
@@ -3752,10 +4005,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3N')
+            worker_instance.sendSerial('&3N')
             return
         elif camera3.pos6Set and not camera3.pos6At:
-            Worker.sendSerial(self, '&3n')
+            worker_instance.sendSerial('&3n')
 
     def Cam3Go7(self):
         if appSettings.editToggle:
@@ -3764,10 +4017,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3M')
+            worker_instance.sendSerial('&3M')
             return
         elif camera3.pos7Set and not camera3.pos7At:
-            Worker.sendSerial(self, '&3m')
+            worker_instance.sendSerial('&3m')
 
     def Cam3Go8(self):
         if appSettings.editToggle:
@@ -3776,10 +4029,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3<')
+            worker_instance.sendSerial('&3<')
             return
         elif camera3.pos8Set and not camera3.pos8At:
-            Worker.sendSerial(self, '&3,')
+            worker_instance.sendSerial('&3,')
 
     def Cam3Go9(self):
         if appSettings.editToggle:
@@ -3788,10 +4041,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3>')
+            worker_instance.sendSerial('&3>')
             return
         elif camera3.pos9Set and not camera3.pos9At:
-            Worker.sendSerial(self, '&3.')
+            worker_instance.sendSerial('&3.')
 
     def Cam3Go10(self):
         if appSettings.editToggle:
@@ -3800,10 +4053,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&3?')
+            worker_instance.sendSerial('&3?')
             return
         elif camera3.pos10Set and not camera3.pos10At:
-            Worker.sendSerial(self, '&3/')
+            worker_instance.sendSerial('&3/')
 
     def Cam4Go1(self):
         if appSettings.editToggle:
@@ -3812,12 +4065,12 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4Z')
+            worker_instance.sendSerial('&4Z')
             return
         elif camera4.pos1Set and not camera4.pos1At and not camera4.slideToggle:
-            Worker.sendSerial(self, '&4z')
+            worker_instance.sendSerial('&4z')
         elif camera4.pos1Set and not camera4.pos1At and camera4.slideToggle:
-            Worker.sendSerial(self, '&4y')
+            worker_instance.sendSerial('&4y')
 
     def Cam4Go2(self):
         if appSettings.editToggle:
@@ -3826,10 +4079,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4X')
+            worker_instance.sendSerial('&4X')
             return
         elif camera4.pos2Set and not camera4.pos2At:
-            Worker.sendSerial(self, '&4x')
+            worker_instance.sendSerial('&4x')
 
     def Cam4Go3(self):
         if appSettings.editToggle:
@@ -3838,10 +4091,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4C')
+            worker_instance.sendSerial('&4C')
             return
         elif camera4.pos3Set and not camera4.pos3At:
-            Worker.sendSerial(self, '&4c')
+            worker_instance.sendSerial('&4c')
 
     def Cam4Go4(self):
         if appSettings.editToggle:
@@ -3850,10 +4103,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4V')
+            worker_instance.sendSerial('&4V')
             return
         elif camera4.pos4Set and not camera4.pos4At:
-            Worker.sendSerial(self, '&4v')
+            worker_instance.sendSerial('&4v')
 
     def Cam4Go5(self):
         if appSettings.editToggle:
@@ -3862,10 +4115,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4B')
+            worker_instance.sendSerial('&4B')
             return
         elif camera4.pos5Set and not camera4.pos5At:
-            Worker.sendSerial(self, '&4b')
+            worker_instance.sendSerial('&4b')
 
     def Cam4Go6(self):
         if appSettings.editToggle:
@@ -3874,10 +4127,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4N')
+            worker_instance.sendSerial('&4N')
             return
         elif camera4.pos6Set and not camera4.pos6At:
-            Worker.sendSerial(self, '&4n')
+            worker_instance.sendSerial('&4n')
 
     def Cam4Go7(self):
         if appSettings.editToggle:
@@ -3886,10 +4139,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4M')
+            worker_instance.sendSerial('&4M')
             return
         elif camera4.pos7Set and not camera4.pos7At:
-            Worker.sendSerial(self, '&4m')
+            worker_instance.sendSerial('&4m')
 
     def Cam4Go8(self):
         if appSettings.editToggle:
@@ -3898,10 +4151,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4<')
+            worker_instance.sendSerial('&4<')
             return
         elif camera4.pos8Set and not camera4.pos8At:
-            Worker.sendSerial(self, '&4,')
+            worker_instance.sendSerial('&4,')
 
     def Cam4Go9(self):
         if appSettings.editToggle:
@@ -3910,10 +4163,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4>')
+            worker_instance.sendSerial('&4>')
             return
         elif camera4.pos9Set and not camera4.pos9At:
-            Worker.sendSerial(self, '&4.')
+            worker_instance.sendSerial('&4.')
 
     def Cam4Go10(self):
         if appSettings.editToggle:
@@ -3922,13 +4175,13 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&4?')
+            worker_instance.sendSerial('&4?')
             return
             return
         elif camera4.pos10Set and not camera4.pos10At and not camera4.slideToggle:
-            Worker.sendSerial(self, '&4/')
+            worker_instance.sendSerial('&4/')
         elif camera4.pos10Set and not camera4.pos10At and camera4.slideToggle:
-            Worker.sendSerial(self, '&4Y')
+            worker_instance.sendSerial('&4Y')
 
     def Cam5Go1(self):
         if appSettings.editToggle:
@@ -3937,12 +4190,12 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5Z')
+            worker_instance.sendSerial('&5Z')
             return
         elif camera5.pos1Set and not camera5.pos1At and not camera5.slideToggle:
-            Worker.sendSerial(self, '&5z')
+            worker_instance.sendSerial('&5z')
         elif camera5.pos1Set and not camera5.pos1At and camera5.slideToggle:
-            Worker.sendSerial(self, '&5y')
+            worker_instance.sendSerial('&5y')
 
     def Cam5Go2(self):
         if appSettings.editToggle:
@@ -3951,10 +4204,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5X')
+            worker_instance.sendSerial('&5X')
             return
         elif camera5.pos2Set and not camera5.pos2At:
-            Worker.sendSerial(self, '&5x')
+            worker_instance.sendSerial('&5x')
 
     def Cam5Go3(self):
         if appSettings.editToggle:
@@ -3963,10 +4216,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5C')
+            worker_instance.sendSerial('&5C')
             return
         elif camera5.pos3Set and not camera5.pos3At:
-            Worker.sendSerial(self, '&5c')
+            worker_instance.sendSerial('&5c')
 
     def Cam5Go4(self):
         if appSettings.editToggle:
@@ -3975,10 +4228,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5V')
+            worker_instance.sendSerial('&5V')
             return
         elif camera5.pos4Set and not camera5.pos4At:
-            Worker.sendSerial(self, '&5v')
+            worker_instance.sendSerial('&5v')
 
     def Cam5Go5(self):
         if appSettings.editToggle:
@@ -3987,10 +4240,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5B')
+            worker_instance.sendSerial('&5B')
             return
         elif camera5.pos5Set and not camera5.pos5At:
-            Worker.sendSerial(self, '&5b')
+            worker_instance.sendSerial('&5b')
 
     def Cam5Go6(self):
         if appSettings.editToggle:
@@ -3999,10 +4252,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5N')
+            worker_instance.sendSerial('&5N')
             return
         elif camera5.pos6Set and not camera5.pos6At:
-            Worker.sendSerial(self, '&5n')
+            worker_instance.sendSerial('&5n')
 
     def Cam5Go7(self):
         if appSettings.editToggle:
@@ -4011,10 +4264,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5M')
+            worker_instance.sendSerial('&5M')
             return
         elif camera5.pos7Set and not camera5.pos7At:
-            Worker.sendSerial(self, '&5m')
+            worker_instance.sendSerial('&5m')
 
     def Cam5Go8(self):
         if appSettings.editToggle:
@@ -4023,10 +4276,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5<')
+            worker_instance.sendSerial('&5<')
             return
         elif camera5.pos8Set and not camera5.pos8At:
-            Worker.sendSerial(self, '&5,')
+            worker_instance.sendSerial('&5,')
 
     def Cam5Go9(self):
         if appSettings.editToggle:
@@ -4035,10 +4288,10 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5>')
+            worker_instance.sendSerial('&5>')
             return
         elif camera5.pos9Set and not camera5.pos9At:
-            Worker.sendSerial(self, '&5.')
+            worker_instance.sendSerial('&5.')
 
     def Cam5Go10(self):
         if appSettings.editToggle:
@@ -4047,27 +4300,27 @@ class PTSapp(QMainWindow):
             self.openEditWindow(currentText)
         elif appSettings.setPosToggle:
             self.setPos(3)
-            Worker.sendSerial(self, '&5?')
+            worker_instance.sendSerial('&5?')
             return
         elif camera5.pos10Set and not camera5.pos10At and not camera5.slideToggle:
-            Worker.sendSerial(self, '&5/')
+            worker_instance.sendSerial('&5/')
         elif camera5.pos10Set and not camera5.pos10At and camera5.slideToggle:
-            Worker.sendSerial(self, '&5Y')
+            worker_instance.sendSerial('&5Y')
 
     def Cam1SetSpeed(self):
-        Worker.sendSerial(self, '&1i')
+        worker_instance.sendSerial('&1i')
 
     def Cam2SetSpeed(self):
-        Worker.sendSerial(self, '&2i')
+        worker_instance.sendSerial('&2i')
 
     def Cam3SetSpeed(self):
-        Worker.sendSerial(self, '&3i')
+        worker_instance.sendSerial('&3i')
 
     def Cam4SetSpeed(self):
-        Worker.sendSerial(self, '&4i')
+        worker_instance.sendSerial('&4i')
 
     def Cam5SetSpeed(self):
-        Worker.sendSerial(self, '&5i')
+        worker_instance.sendSerial('&5i')
 
     def setMessage(self):
         if appSettings.message != "":
@@ -4686,11 +4939,11 @@ class Ui_SettingsWindow(QMainWindow):
         QtCore.QTimer.singleShot(500,self.scrollText)
 
     def getSettings(self):
-        Worker.sendSerial(self, '&1K')
-        Worker.sendSerial(self, '&2K')
-        Worker.sendSerial(self, '&3K')
-        Worker.sendSerial(self, '&4K')
-        Worker.sendSerial(self, '&5K')
+        worker_instance.sendSerial('&1K')
+        worker_instance.sendSerial('&2K')
+        worker_instance.sendSerial('&3K')
+        worker_instance.sendSerial('&4K')
+        worker_instance.sendSerial('&5K')
     def emulateKey(self, key):
         widget = QtWidgets.QApplication.focusWidget()
         widget.setText(widget.text() + key)
@@ -4704,40 +4957,40 @@ class Ui_SettingsWindow(QMainWindow):
         widget = QtWidgets.QApplication.focusWidget()
 
         if widget.objectName() == "labelPTaccel":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'L' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'L' + widget.text())
             self.labelPTspeed4.setFocus()
         elif widget.objectName() == "labelSLaccel":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'l' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'l' + widget.text())
             self.labelSLspeed4.setFocus()
         elif widget.objectName() == "labelPTspeed1":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'F' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'F' + widget.text())
             self.labelZoomLimit.setFocus()
         elif widget.objectName() == "labelPTspeed2":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'f' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'f' + widget.text())
             self.labelPTspeed1.setFocus()
         elif widget.objectName() == "labelPTspeed3":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'G' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'G' + widget.text())
             self.labelPTspeed2.setFocus()
         elif widget.objectName() == "labelPTspeed4":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'g' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'g' + widget.text())
             self.labelPTspeed3.setFocus()
         elif widget.objectName() == "labelSLspeed1":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'H' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'H' + widget.text())
             self.labelSlideLimit.setFocus()
         elif widget.objectName() == "labelSLspeed2":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'h' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'h' + widget.text())
             self.labelSLspeed1.setFocus()
         elif widget.objectName() == "labelSLspeed3":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'J' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'J' + widget.text())
             self.labelSLspeed2.setFocus()
         elif widget.objectName() == "labelSLspeed4":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'j' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'j' + widget.text())
             self.labelSLspeed3.setFocus()
         elif widget.objectName() == "labelSlideLimit":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 't' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 't' + widget.text())
             self.labelPTaccel.setFocus()
         elif widget.objectName() == "labelZoomLimit":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'w' + widget.text())
+            worker_instance.sendSerial('&' + str(whichCamSerial) + 'w' + widget.text())
             self.labelSLaccel.setFocus()
             
         QtCore.QTimer.singleShot(500,self.scrollText)
@@ -4747,7 +5000,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.serialTextWindow.verticalScrollBar().setValue(self.serialTextWindow.verticalScrollBar().maximum())
 
     def sendStoreEEPROM(self):
-        Worker.sendSerial(self, '&' + str(whichCamSerial) + 'U')
+        worker_instance.sendSerial('&' + str(whichCamSerial) + 'U')
         QtCore.QTimer.singleShot(500,self.scrollText)
 
     def pushToClose(self):
@@ -4851,7 +5104,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam1GetSettings(self):
         appSettings.whichCamSerial = 1
-        Worker.sendSerial(self, '&1K')
+        worker_instance.sendSerial('&1K')
 
         QtCore.QTimer.singleShot(200,self.showCam1Settings)
 
@@ -4888,7 +5141,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam2GetSettings(self):
         appSettings.whichCamSerial = 2
-        Worker.sendSerial(self, '&2K')
+        worker_instance.sendSerial('&2K')
 
         QtCore.QTimer.singleShot(200,self.showCam2Settings)
 
@@ -4925,7 +5178,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam3GetSettings(self):
         appSettings.whichCamSerial = 3
-        Worker.sendSerial(self, '&3K')
+        worker_instance.sendSerial('&3K')
 
         QtCore.QTimer.singleShot(200,self.showCam3Settings)
 
@@ -4962,7 +5215,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam4GetSettings(self):
         appSettings.whichCamSerial = 4
-        Worker.sendSerial(self, '&4K')
+        worker_instance.sendSerial('&4K')
 
         QtCore.QTimer.singleShot(200,self.showCam4Settings)
 
@@ -4999,7 +5252,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def cam5GetSettings(self):
         appSettings.whichCamSerial = 5
-        Worker.sendSerial(self, '&5K')
+        worker_instance.sendSerial('&5K')
 
         QtCore.QTimer.singleShot(200,self.showCam5Settings)
 
@@ -5047,29 +5300,29 @@ class Ui_SettingsWindow(QMainWindow):
             self.pushButtonSlideLocate.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
 
             if appSettings.whichCamSerial == 1:
-                Worker.sendSerial(self, '&1T')
+                worker_instance.sendSerial('&1T')
             elif appSettings.whichCamSerial == 2:
-                Worker.sendSerial(self, '&2T')
+                worker_instance.sendSerial('&2T')
             elif appSettings.whichCamSerial == 3:
-                Worker.sendSerial(self, '&3T')
+                worker_instance.sendSerial('&3T')
             elif appSettings.whichCamSerial == 4:
-                Worker.sendSerial(self, '&4T')
+                worker_instance.sendSerial('&4T')
             elif appSettings.whichCamSerial == 5:
-                Worker.sendSerial(self, '&5T')
+                worker_instance.sendSerial('&5T')
         else:
             locateHomeActive = True
             self.pushButtonSlideLocate.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #a0405C; border-radius: {borderRadius2}px;")
 
             if appSettings.whichCamSerial == 1:
-                Worker.sendSerial(self, '&1T')
+                worker_instance.sendSerial('&1T')
             elif appSettings.whichCamSerial == 2:
-                Worker.sendSerial(self, '&2T')
+                worker_instance.sendSerial('&2T')
             elif appSettings.whichCamSerial == 3:
-                Worker.sendSerial(self, '&3T')
+                worker_instance.sendSerial('&3T')
             elif appSettings.whichCamSerial == 4:
-                Worker.sendSerial(self, '&4T')
+                worker_instance.sendSerial('&4T')
             elif appSettings.whichCamSerial == 5:
-                Worker.sendSerial(self, '&5T')
+                worker_instance.sendSerial('&5T')
 
     def setHome(self):
         global locateHomeActive
@@ -5080,15 +5333,15 @@ class Ui_SettingsWindow(QMainWindow):
             self.pushButtonSlideLocate.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
 
             if appSettings.whichCamSerial == 1:
-                Worker.sendSerial(self, '&1u')
+                worker_instance.sendSerial('&1u')
             elif appSettings.whichCamSerial == 2:
-                Worker.sendSerial(self, '&2u')
+                worker_instance.sendSerial('&2u')
             elif appSettings.whichCamSerial == 3:
-                Worker.sendSerial(self, '&3u')
+                worker_instance.sendSerial('&3u')
             elif appSettings.whichCamSerial == 4:
-                Worker.sendSerial(self, '&4u')
+                worker_instance.sendSerial('&4u')
             elif appSettings.whichCamSerial == 5:
-                Worker.sendSerial(self, '&5u')
+                worker_instance.sendSerial('&5u')
 
         self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
 
@@ -5096,57 +5349,57 @@ class Ui_SettingsWindow(QMainWindow):
         global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&1o' + self.labelTLSteps.text())
+            worker_instance.sendSerial('&1o' + self.labelTLSteps.text())
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&2o' + self.labelTLSteps.text())
+            worker_instance.sendSerial('&2o' + self.labelTLSteps.text())
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&3o' + self.labelTLSteps.text())
+            worker_instance.sendSerial('&3o' + self.labelTLSteps.text())
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&4o' + self.labelTLSteps.text())
+            worker_instance.sendSerial('&4o' + self.labelTLSteps.text())
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&5o' + self.labelTLSteps.text())
+            worker_instance.sendSerial('&5o' + self.labelTLSteps.text())
 
     def TLStart(self):
         global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&1e')
+            worker_instance.sendSerial('&1e')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&2e')
+            worker_instance.sendSerial('&2e')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&3e')
+            worker_instance.sendSerial('&3e')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&4e')
+            worker_instance.sendSerial('&4e')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&5e')
+            worker_instance.sendSerial('&5e')
 
     def TLStop(self):
         global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&1E')
+            worker_instance.sendSerial('&1E')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&2E')
+            worker_instance.sendSerial('&2E')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&3E')
+            worker_instance.sendSerial('&3E')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&4E')
+            worker_instance.sendSerial('&4E')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&5E')
+            worker_instance.sendSerial('&5E')
 
     def TLStep(self):
         global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&1O')
+            worker_instance.sendSerial('&1O')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&2O')
+            worker_instance.sendSerial('&2O')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&3O')
+            worker_instance.sendSerial('&3O')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&4O')
+            worker_instance.sendSerial('&4O')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&5O')
+            worker_instance.sendSerial('&5O')
 
 class Ui_MoverWindow(QMainWindow):
     def __init__(self):
@@ -5359,175 +5612,175 @@ class Ui_MoverWindow(QMainWindow):
         elif appSettings.whichCamSerial == 4: zoomSerial = zoomSerial + "4"
         elif appSettings.whichCamSerial == 5: zoomSerial = zoomSerial + "5"
 
-        if speed == -8: Worker.sendSerial(self, zoomSerial + 'a8')
-        elif speed == -7: Worker.sendSerial(self, zoomSerial + 'a7')
-        elif speed == -6: Worker.sendSerial(self, zoomSerial + 'a6')
-        elif speed == -5: Worker.sendSerial(self, zoomSerial + 'a5')
-        elif speed == -4: Worker.sendSerial(self, zoomSerial + 'a4')
-        elif speed == -3: Worker.sendSerial(self, zoomSerial + 'a3')
-        elif speed == -2: Worker.sendSerial(self, zoomSerial + 'a2')
-        elif speed == -1: Worker.sendSerial(self, zoomSerial + 'a1')
-        elif speed == 1: Worker.sendSerial(self, zoomSerial + 'A1')
-        elif speed == 2: Worker.sendSerial(self, zoomSerial + 'A2')
-        elif speed == 3: Worker.sendSerial(self, zoomSerial + 'A3')
-        elif speed == 4: Worker.sendSerial(self, zoomSerial + 'A4')
-        elif speed == 5: Worker.sendSerial(self, zoomSerial + 'A5')
-        elif speed == 6: Worker.sendSerial(self, zoomSerial + 'A6')
-        elif speed == 7: Worker.sendSerial(self, zoomSerial + 'A7')
-        elif speed == 8: Worker.sendSerial(self, zoomSerial + 'A8')
+        if speed == -8: worker_instance.sendSerial(zoomSerial + 'a8')
+        elif speed == -7: worker_instance.sendSerial(zoomSerial + 'a7')
+        elif speed == -6: worker_instance.sendSerial(zoomSerial + 'a6')
+        elif speed == -5: worker_instance.sendSerial(zoomSerial + 'a5')
+        elif speed == -4: worker_instance.sendSerial(zoomSerial + 'a4')
+        elif speed == -3: worker_instance.sendSerial(zoomSerial + 'a3')
+        elif speed == -2: worker_instance.sendSerial(zoomSerial + 'a2')
+        elif speed == -1: worker_instance.sendSerial(zoomSerial + 'a1')
+        elif speed == 1: worker_instance.sendSerial(zoomSerial + 'A1')
+        elif speed == 2: worker_instance.sendSerial(zoomSerial + 'A2')
+        elif speed == 3: worker_instance.sendSerial(zoomSerial + 'A3')
+        elif speed == 4: worker_instance.sendSerial(zoomSerial + 'A4')
+        elif speed == 5: worker_instance.sendSerial(zoomSerial + 'A5')
+        elif speed == 6: worker_instance.sendSerial(zoomSerial + 'A6')
+        elif speed == 7: worker_instance.sendSerial(zoomSerial + 'A7')
+        elif speed == 8: worker_instance.sendSerial(zoomSerial + 'A8')
         else: 
-            Worker.sendSerial(self, zoomSerial + 'q')
-            Worker.sendSerial(self, zoomSerial + 'q')
-            Worker.sendSerial(self, zoomSerial + 'q')
-            Worker.sendSerial(self, zoomSerial + 'q')
-            Worker.sendSerial(self, zoomSerial + 'q')
+            worker_instance.sendSerial(zoomSerial + 'q')
+            worker_instance.sendSerial(zoomSerial + 'q')
+            worker_instance.sendSerial(zoomSerial + 'q')
+            worker_instance.sendSerial(zoomSerial + 'q')
+            worker_instance.sendSerial(zoomSerial + 'q')
 
     
     def up10(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??T10')
+            worker_instance.sendSerial('&??T10')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?T10')
+            worker_instance.sendSerial('&!?T10')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?T10')
+            worker_instance.sendSerial('&@?T10')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?T10')
+            worker_instance.sendSerial('&&?T10')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?T10')
+            worker_instance.sendSerial('&*?T10')
 
     def up1(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??T0.5')
+            worker_instance.sendSerial('&??T0.5')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?T0.5')
+            worker_instance.sendSerial('&!?T0.5')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?T0.5')
+            worker_instance.sendSerial('&@?T0.5')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?T0.5')
+            worker_instance.sendSerial('&&?T0.5')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?T0.5')
+            worker_instance.sendSerial('&*?T0.5')
 
     def down1(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??T-0.5')
+            worker_instance.sendSerial('&??T-0.5')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?T-0.5')
+            worker_instance.sendSerial('&!?T-0.5')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?T-0.5')
+            worker_instance.sendSerial('&@?T-0.5')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?T-0.5')
+            worker_instance.sendSerial('&&?T-0.5')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?T-0.5')
+            worker_instance.sendSerial('&*?T-0.5')
 
     def down10(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??T-10')
+            worker_instance.sendSerial('&??T-10')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?T-10')
+            worker_instance.sendSerial('&!?T-10')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?T-10')
+            worker_instance.sendSerial('&@?T-10')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?T-10')
+            worker_instance.sendSerial('&&?T-10')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?T-10')
+            worker_instance.sendSerial('&*?T-10')
 
     def left10(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??P-10')
+            worker_instance.sendSerial('&??P-10')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?P-10')
+            worker_instance.sendSerial('&!?P-10')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?P-10')
+            worker_instance.sendSerial('&@?P-10')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?P-10')
+            worker_instance.sendSerial('&&?P-10')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?P-10')
+            worker_instance.sendSerial('&*?P-10')
 
     def left1(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??P-0.5')
+            worker_instance.sendSerial('&??P-0.5')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?P-0.5')
+            worker_instance.sendSerial('&!?P-0.5')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?P-0.5')
+            worker_instance.sendSerial('&@?P-0.5')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?P-0.5')
+            worker_instance.sendSerial('&&?P-0.5')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?P-0.5')
+            worker_instance.sendSerial('&*?P-0.5')
 
     def right1(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??P0.5')
+            worker_instance.sendSerial('&??P0.5')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?P0.5')
+            worker_instance.sendSerial('&!?P0.5')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?P0.5')
+            worker_instance.sendSerial('&@?P0.5')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?P0.5')
+            worker_instance.sendSerial('&&?P0.5')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?P0.5')
+            worker_instance.sendSerial('&*?P0.5')
 
     def right10(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??P10')
+            worker_instance.sendSerial('&??P10')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?P10')
+            worker_instance.sendSerial('&!?P10')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?P10')
+            worker_instance.sendSerial('&@?P10')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?P10')
+            worker_instance.sendSerial('&&?P10')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?P10')
+            worker_instance.sendSerial('&*?P10')
 
 
 
     def slideLeft100(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??X-100')
+            worker_instance.sendSerial('&??X-100')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?X-100')
+            worker_instance.sendSerial('&!?X-100')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?X-100')
+            worker_instance.sendSerial('&@?X-100')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?X-100')
+            worker_instance.sendSerial('&&?X-100')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?X-100')
+            worker_instance.sendSerial('&*?X-100')
 
     def slideLeft10(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??X-10')
+            worker_instance.sendSerial('&??X-10')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?X-10')
+            worker_instance.sendSerial('&!?X-10')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?X-10')
+            worker_instance.sendSerial('&@?X-10')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?X-10')
+            worker_instance.sendSerial('&&?X-10')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?X-10')
+            worker_instance.sendSerial('&*?X-10')
 
     def slideRight10(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??X10')
+            worker_instance.sendSerial('&??X10')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?X10')
+            worker_instance.sendSerial('&!?X10')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?X10')
+            worker_instance.sendSerial('&@?X10')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?X10')
+            worker_instance.sendSerial('&&?X10')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?X10')
+            worker_instance.sendSerial('&*?X10')
 
     def slideRight100(self):
         if appSettings.whichCamSerial == 1:
-            Worker.sendSerial(self, '&??X100')
+            worker_instance.sendSerial('&??X100')
         elif appSettings.whichCamSerial == 2:
-            Worker.sendSerial(self, '&!?X100')
+            worker_instance.sendSerial('&!?X100')
         elif appSettings.whichCamSerial == 3:
-            Worker.sendSerial(self, '&@?X100')
+            worker_instance.sendSerial('&@?X100')
         elif appSettings.whichCamSerial == 4:
-            Worker.sendSerial(self, '&&?X100')
+            worker_instance.sendSerial('&&?X100')
         elif appSettings.whichCamSerial == 5:
-            Worker.sendSerial(self, '&*?X100')
+            worker_instance.sendSerial('&*?X100')
 
 class Ui_editWindow(QMainWindow):
     def __init__(self):
@@ -7088,7 +7341,8 @@ class repceiveMsg():
             elif msg[0:2] == "#$":
                 serialText += "</font><br>"
                 #QtWidgets.QApplication.processEvents()
-                QtCore.QTimer.singleShot(500,self.scrollText())
+                # Defer timer to main thread
+                defer_to_main_thread(lambda: QtCore.QTimer.singleShot(500, self.scrollText))
 
             elif msg[0:4] == "Cam1":
                 whichCamRead = 1
@@ -7123,35 +7377,38 @@ class repceiveMsg():
             else:
                 appSettings.serialText += msg + "<br>"
                 #QtWidgets.QApplication.processEvents()
-                QtCore.QTimer.singleShot(500,self.scrollText)
+                # Defer timer to main thread
+                defer_to_main_thread(lambda: QtCore.QTimer.singleShot(500, self.scrollText))
 
                 #QtCore.QTimer.singleShot(500,Ui_SettingsWindow.scrollText(Ui_SettingsWindow))
 
             msg = ''
             #QtWidgets.QApplication.processEvents()
 
-            doButtonColours()
+            # Defer button color updates to main thread
+            defer_to_main_thread(doButtonColours)
     def scrollText(self):
-
-        Ui_SettingsWindow.serialTextWindow.setHtml(appSettings.serialText)
-        QtWidgets.QApplication.processEvents()
-        Ui_SettingsWindow.serialTextWindow.verticalScrollBar().setValue(Ui_SettingsWindow.serialTextWindow.verticalScrollBar().maximum())
-        QtCore.QTimer.singleShot(0, Ui_SettingsWindow.serialTextWindow.show())
+        def _do_scroll():
+            Ui_SettingsWindow.serialTextWindow.setHtml(appSettings.serialText)
+            Ui_SettingsWindow.serialTextWindow.verticalScrollBar().setValue(Ui_SettingsWindow.serialTextWindow.verticalScrollBar().maximum())
+            Ui_SettingsWindow.serialTextWindow.show()
+        
+        defer_to_main_thread()
 
     def aliveCam1(self):
-        PTSapp.groupBox11.hide()
+        pass  # TODO: Implement camera alive indication
     
     def aliveCam2(self):
-        PTSapp.groupBox21.hide()
+        pass  # TODO: Implement camera alive indication
     
     def aliveCam3(self):
-        PTSapp.groupBox31.hide()
+        pass  # TODO: Implement camera alive indication
 
     def aliveCam4(self):
-        PTSapp.groupBox41.hide()
+        pass  # TODO: Implement camera alive indication
     
     def aliveCam5(self):
-        PTSapp.groupBox51.hide()
+        pass  # TODO: Implement camera alive indication
 
     def deadCam1(self):
         camera1.pos1Set = False
@@ -7188,14 +7445,15 @@ class repceiveMsg():
         camera1.panTiltSpeed = 0
         camera1.sliderSpeed = 0
 
-        doButtonColours()
+        defer_to_main_thread(doButtonColours)
 
-        PTSapp.setupUi.dial1p.setValue(1)
-        PTSapp.setupUi.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
-        PTSapp.setupUi.dial1s.setValue(1)
-        PTSapp.setupUi.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        defer_to_main_thread(lambda: PTSapp.dial1p.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line1p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0))
+        defer_to_main_thread(lambda: PTSapp.dial1s.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line1s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0))
 
-        PTSapp.groupBox11.show()
+        #TODO: Show/hide camera indicator
+        #defer_to_main_thread(lambda: PTSapp.pushButton1p1.show())
 
     def deadCam2(self):
         camera2.pos1Set = False
@@ -7232,14 +7490,15 @@ class repceiveMsg():
         camera2.panTiltSpeed = 0
         camera2.sliderSpeed = 0
 
-        doButtonColours()
+        defer_to_main_thread(doButtonColours)
 
-        PTSapp.setupUi.dial2p.setValue(1)
-        PTSapp.setupUi.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
-        PTSapp.setupUi.dial2s.setValue(1)
-        PTSapp.setupUi.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        defer_to_main_thread(lambda: PTSapp.dial2p.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line2p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0))
+        defer_to_main_thread(lambda: PTSapp.dial2s.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line2s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0))
 
-        PTSapp.groupBox21.show()
+        #TODO: Show/hide camera indicator
+        #defer_to_main_thread(lambda: PTSapp.pushButton2p1.show())
 
     def deadCam3(self):
         camera3.pos1Set = False
@@ -7276,14 +7535,15 @@ class repceiveMsg():
         camera3.panTiltSpeed = 0
         camera3.sliderSpeed = 0
 
-        doButtonColours()
+        defer_to_main_thread(doButtonColours)
 
-        PTSapp.setupUi.dial3p.setValue(1)
-        PTSapp.setupUi.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
-        PTSapp.setupUi.dial3s.setValue(1)
-        PTSapp.setupUi.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        defer_to_main_thread(lambda: PTSapp.dial3p.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line3p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0))
+        defer_to_main_thread(lambda: PTSapp.dial3s.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line3s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0))
 
-        PTSapp.groupBox31.show()
+        #TODO: Show/hide camera indicator
+        #defer_to_main_thread(lambda: PTSapp.pushButton3p1.show())
 
     def deadCam4(self):
         camera4.pos1Set = False
@@ -7320,14 +7580,15 @@ class repceiveMsg():
         camera4.panTiltSpeed = 0
         camera4.sliderSpeed = 0
 
-        doButtonColours()
+        defer_to_main_thread(doButtonColours)
 
-        PTSapp.setupUi.dial4p.setValue(1)
-        PTSapp.setupUi.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
-        PTSapp.setupUi.dial4s.setValue(1)
-        PTSapp.setupUi.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        defer_to_main_thread(lambda: PTSapp.dial4p.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line4p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0))
+        defer_to_main_thread(lambda: PTSapp.dial4s.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line4s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0))
 
-        PTSapp.groupBox41.show()
+        #TODO: Show/hide camera indicator
+        #defer_to_main_thread(lambda: PTSapp.pushButton4p1.show())
 
     def deadCam5(self):
         camera5.pos1Set = False
@@ -7364,14 +7625,15 @@ class repceiveMsg():
         camera5.panTiltSpeed = 0
         camera5.sliderSpeed = 0
 
-        doButtonColours()
+        defer_to_main_thread(doButtonColours)
 
-        PTSapp.setupUi.dial5p.setValue(1)
-        PTSapp.setupUi.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0)
-        PTSapp.setupUi.dial5s.setValue(1)
-        PTSapp.setupUi.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0)
+        defer_to_main_thread(lambda: PTSapp.dial5p.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line5p.setGeometry(butttonLayoutX * 73.5, butttonLayoutY * 5.75, butttonLayoutX, 0))
+        defer_to_main_thread(lambda: PTSapp.dial5s.setValue(1))
+        defer_to_main_thread(lambda: PTSapp.line5s.setGeometry(butttonLayoutX * 91, butttonLayoutY * 5.75, butttonLayoutX, 0))
 
-        PTSapp.groupBox51.show()
+        #TODO: Show/hide camera indicator
+        #defer_to_main_thread(lambda: PTSapp.pushButton5p1.show())
 
 class resetButtons():
     resetButtons = False
@@ -8212,9 +8474,10 @@ class appSettings():
     runToggle = False
     flashTick = False
     editNumber = 0
-    debug = True
+    debug = False
     message = ""
     running = False
+    enableJoystick = True
 
     previousTime = 0
     previousMillisMoveCheck = 0

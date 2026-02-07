@@ -147,16 +147,11 @@ serialPortList = serialDeviceList()
 
 class serialConnect():
     def __init__(self, parent=None,index=0):
-        super(serialConnect, self).__init__(parent)
-
-    def __new__(self):
-        serialDeviceList.serialDevice = serialDeviceList.serialDevice[0]
-
         if appSettings.debug:
             print("Selected device: ", serialDeviceList.serialDevice)
-            print(serialPortList)
+            #print(serialPortList)
 
-        self.startThread(self)
+        self.startThread()
 
     def startThread(self):
         self.thread = QThread()
@@ -166,12 +161,18 @@ class serialConnect():
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.serialMsg.connect(repceiveMsg)
+        self.thread.finished.connect(self.onThreadFinished)
+        # TODO: Fix repceiveMsg signal connection - it has blocking while True loop in __init__
+        #self.worker.serialMsg.connect(lambda msg: repceiveMsg(msg))
         self.thread.start()
 
-    def quitThread(self):
-        #print("thread")
-        appSettings.running = False
+    def onThreadFinished(self):
+        # Thread finished cleanup
+        pass
+
+    #def quitThread(self):
+    #    print("thread")
+    #    appSettings.running = False
 
 class joystickMoves():
     def doJoyMoves(self, dt):
@@ -315,7 +316,7 @@ class joystickMoves():
     def toHex(self, val, nbits):
         return hex((val + (1 << nbits)) % (1 << nbits))
 
-class Worker(QtCore.QThread): #QObject):
+class Worker(QtCore.QObject):
     finished = Signal()
     serialMsg = Signal(bytes)
 
@@ -364,49 +365,66 @@ class Worker(QtCore.QThread): #QObject):
         command = ""
 
     def run(self):
+        serial_port = None
+        
+        # Check if device is valid
+        if not serialDeviceList.serialDevice or serialDeviceList.serialDevice == '-':
+            appSettings.message = ("No serial device selected")
+            appSettings.running = False
+            self.finished.emit()
+            return
+            
         try:
             serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
             appSettings.message = (f"Connected to {serialDeviceList.serialDevice}")
-            index = PTSapp.comboBox.findText(serialDeviceList.serialDevice)
-            PTSapp.comboBox.setCurrentIndex(index)
+            #index = PTSapp.comboBox.findText(serialDeviceList.serialDevice)
+            #PTSapp.comboBox.setCurrentIndex(index)
             appSettings.running = True
-        except:
+        except Exception as e:
             appSettings.message = ("Couldn't connect")
-            #PTSapp.setMessage(self)
+            print(f"Serial connection failed: {e}")
             self.finished.emit()
             appSettings.running = False
-            #self.stop()
+            return
         
         self.sendSerial('&-') 
 
-        while appSettings.running:
-            if serial_port.in_waiting > 0:
-                received_msg = serial_port.readline()
-                msg = bytes(received_msg).decode('utf8', "ignore")
-                self.serialMsg.emit(msg)
-                msg=''
+        while appSettings.running and self.is_running:
+            try:
+                if serial_port and serial_port.in_waiting > 0:
+                    received_msg = serial_port.readline()
+                    msg = bytes(received_msg).decode('utf8', "ignore")
+                    self.serialMsg.emit(msg)
+                    msg=''
 
-            if (appSettings.axisX == appSettings.oldAxisX) and (appSettings.axisY == appSettings.oldAxisY) and (appSettings.axisZ == appSettings.oldAxisZ) and (appSettings.axisW == appSettings.oldAxisW) and ((abs(appSettings.axisX) + abs(appSettings.axisY) + abs(appSettings.axisZ) + abs(appSettings.axisW)) != 0):
-                appSettings.currentMillisMoveCheck = time.time()
-            if (appSettings.currentMillisMoveCheck - appSettings.previousMillisMoveCheck > appSettings.moveCheckInterval):
-                appSettings.previousMillisMoveCheck = appSettings.currentMillisMoveCheck
-                try:
-                    serial_port.write(appSettings.joyData)
-                    appSettings.previousMillisMoveCheck = time.time()
-                    if appSettings.debug:
-                        print("Re-sending Joystick for keep-alive")    # debugging
-                except:
-                    print("Didn't RE-send joystick :(")
-                    #self.stop()
+                if (appSettings.axisX == appSettings.oldAxisX) and (appSettings.axisY == appSettings.oldAxisY) and (appSettings.axisZ == appSettings.oldAxisZ) and (appSettings.axisW == appSettings.oldAxisW) and ((abs(appSettings.axisX) + abs(appSettings.axisY) + abs(appSettings.axisZ) + abs(appSettings.axisW)) != 0):
+                    appSettings.currentMillisMoveCheck = time.time()
+                if (appSettings.currentMillisMoveCheck - appSettings.previousMillisMoveCheck > appSettings.moveCheckInterval):
+                    appSettings.previousMillisMoveCheck = appSettings.currentMillisMoveCheck
+                    try:
+                        if serial_port:
+                            serial_port.write(appSettings.joyData)
+                        appSettings.previousMillisMoveCheck = time.time()
+                        if appSettings.debug:
+                            print("Re-sending Joystick for keep-alive")    # debugging
+                    except Exception as e:
+                        print(f"Didn't RE-send joystick: {e}")
+                        self.is_running = False
+                time.sleep(0.01)  # Prevent tight looping
+            except Exception as e:
+                print(f"Serial port error: {e}")
+                break
 
-        self.finished.emit()
+        try:
+            if serial_port:
+                serial_port.close()
+        except:
+            pass
         
-        self.stop()
+        self.finished.emit()
 
     def stop(self):
         self.is_running = False
-        Worker.exit
-        QThread.exit
         
 class PTSapp(QMainWindow):
     global agX
@@ -423,6 +441,7 @@ class PTSapp(QMainWindow):
         self.text = txt
         super(PTSapp, self).__init__()
         self.setupUi()
+        self.show()
     
     def openEditWindow(self, text):
         self.ui2 = Ui_editWindow()
@@ -1560,7 +1579,7 @@ class PTSapp(QMainWindow):
 
     def activated(self):
         serialDeviceList.serialDevice= PTSapp.comboBox.currentText()
-        serialPort = serialConnect()
+        self.serialPort = serialConnect()
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -8284,6 +8303,6 @@ class setPos():
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    app.aboutToQuit.connect(app.quit)
+    #app.aboutToQuit.connect(app.quit)
     MainWindow = PTSapp("")
     sys.exit(app.exec())

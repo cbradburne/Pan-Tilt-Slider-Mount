@@ -134,6 +134,8 @@ winSize = 1
 
 arr = []
 
+worker_instance = None
+
 class serialDeviceList():
     device_name_list = []
     usb_device_list = list_ports.comports()
@@ -145,28 +147,35 @@ class serialDeviceList():
 serialPortList = serialDeviceList()
 #print(serialPortList.device_name_list)
 
-class serialConnect():
+
+class serialConnect(QObject):
     def __init__(self, parent=None,index=0):
         super(serialConnect, self).__init__(parent)
-
-    def __new__(self):
-        serialDeviceList.serialDevice = serialDeviceList.serialDevice[0]
+        self.parent = parent
+        
+        if isinstance(serialDeviceList.serialDevice, list) and len(serialDeviceList.serialDevice) > 0:
+            serialDeviceList.serialDevice = serialDeviceList.serialDevice[0]
 
         if appSettings.debug:
             print("Selected device: ", serialDeviceList.serialDevice)
             print(serialPortList)
 
-        self.startThread(self)
+        self.startThread()
 
     def startThread(self):
+        global worker_instance
         self.thread = QThread()
         self.worker = Worker()
+        worker_instance = self.worker
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.serialMsg.connect(repceiveMsg)
+        # Connect to main window slot to ensure GUI updates happen in main thread
+        if self.parent:
+            self.worker.serialMsg.connect(self.parent.handle_serial_message)
+            self.worker.updateComboBox.connect(self.parent.update_combo_box_index)
         self.thread.start()
 
     def quitThread(self):
@@ -315,31 +324,50 @@ class joystickMoves():
     def toHex(self, val, nbits):
         return hex((val + (1 << nbits)) % (1 << nbits))
 
-class Worker(QtCore.QThread): #QObject):
+class Worker(QtCore.QObject): # Changed from QThread to QObject
     finished = Signal()
-    serialMsg = Signal(bytes)
+    serialMsg = Signal(str)
+    updateComboBox = Signal(int)  # Signal to update combo box from GUI thread
 
     def __init__(self, parent=None,index=0):
         super(Worker, self).__init__(parent)
         self.index=index
         self.is_running = True
+        self.serial_port = None  # Persistent connection
 
 
     def sendSerial(self, command):
+        # Use the persistent connection instead of opening a new one
+        # Handle case where self is not the worker instance (called from buttons)
+        port = getattr(self, 'serial_port', None)
+        if worker_instance and getattr(worker_instance, 'serial_port', None):
+            port = worker_instance.serial_port
+
+        if port is None or not port.is_open:
+            if appSettings.debug:
+                print("Warning: Serial port not available for sendSerial()")
+            return
+            
         if type(command) is str:
             data = bytes((command + '\n'), 'utf8')
             try:
-                serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
-                serial_port.write(data)
+                port.write(data)
                 #if appSettings.debug:
                 #    print("Serial Sent: ", data)
+            except PermissionError as error:
+                appSettings.message = ("COM port in use by another application")
+                print(f"Permission Error: {error} - Try closing other serial applications or run as Administrator")
+                if appSettings.running:
+                    self.finished.emit()
+                appSettings.running = False
             except Exception as error:
                 appSettings.message = ("Couldn't connect")
-                #PTSapp.setMessage(error)
                 print(error)
                 if appSettings.running:
                     self.finished.emit()
                 appSettings.running = False
+            finally:
+                pass
 
         elif type(command) is bytearray:
             appSettings.joyData = command
@@ -348,14 +376,12 @@ class Worker(QtCore.QThread): #QObject):
             appSettings.oldAxisZ = appSettings.axisZ
             appSettings.oldAxisW = appSettings.axisW
             try:
-                serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
-                serial_port.write(command)
+                port.write(command)
                 appSettings.previousMillisMoveCheck = time.time()
                 if appSettings.debug:
                     print("Serial Sent: ", command)
             except Exception as error:
                 appSettings.message = ("Couldn't connect")
-                #PTSapp.setMessage(error)
                 if appSettings.running:
                     self.finished.emit()
                 print("Didn't send joystick :(")
@@ -365,23 +391,33 @@ class Worker(QtCore.QThread): #QObject):
 
     def run(self):
         try:
-            serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
+            self.serial_port = Serial(serialDeviceList.serialDevice, 38400, 8, 'N', 1, timeout=1)
+            time.sleep(0.1)  # Small delay to ensure port is ready
             appSettings.message = (f"Connected to {serialDeviceList.serialDevice}")
             index = PTSapp.comboBox.findText(serialDeviceList.serialDevice)
-            PTSapp.comboBox.setCurrentIndex(index)
+            self.updateComboBox.emit(index)  # Emit signal instead of calling GUI directly
             appSettings.running = True
-        except:
-            appSettings.message = ("Couldn't connect")
-            #PTSapp.setMessage(self)
+        except PermissionError as error:
+            appSettings.message = ("COM port in use - Run as Administrator or close other applications")
+            print(f"Permission Error: {error}")
             self.finished.emit()
             appSettings.running = False
-            #self.stop()
+            return
+        except Exception as error:
+            appSettings.message = ("Couldn't connect")
+            print(f"Connection Error: {error}")
+            self.finished.emit()
+            appSettings.running = False
+            return
         
-        self.sendSerial('&-') 
+        try:
+            self.sendSerial('&-')
+        except:
+            pass
 
-        while appSettings.running:
-            if serial_port.in_waiting > 0:
-                received_msg = serial_port.readline()
+        while appSettings.running and self.serial_port is not None and self.serial_port.is_open:
+            if self.serial_port.in_waiting > 0:
+                received_msg = self.serial_port.readline()
                 msg = bytes(received_msg).decode('utf8', "ignore")
                 self.serialMsg.emit(msg)
                 msg=''
@@ -391,13 +427,20 @@ class Worker(QtCore.QThread): #QObject):
             if (appSettings.currentMillisMoveCheck - appSettings.previousMillisMoveCheck > appSettings.moveCheckInterval):
                 appSettings.previousMillisMoveCheck = appSettings.currentMillisMoveCheck
                 try:
-                    serial_port.write(appSettings.joyData)
+                    self.serial_port.write(appSettings.joyData)
                     appSettings.previousMillisMoveCheck = time.time()
                     if appSettings.debug:
                         print("Re-sending Joystick for keep-alive")    # debugging
                 except:
                     print("Didn't RE-send joystick :(")
                     #self.stop()
+
+        # Cleanup: close the port when loop exits
+        if self.serial_port is not None and self.serial_port.is_open:
+            try:
+                self.serial_port.close()
+            except:
+                pass
 
         self.finished.emit()
         
@@ -424,6 +467,14 @@ class PTSapp(QMainWindow):
         super(PTSapp, self).__init__()
         self.setupUi()
     
+    @QtCore.Slot(str)
+    def handle_serial_message(self, msg):
+        repceiveMsg(msg)
+
+    @QtCore.Slot(int)
+    def update_combo_box_index(self, index):
+        PTSapp.comboBox.setCurrentIndex(index)
+
     def openEditWindow(self, text):
         self.ui2 = Ui_editWindow()
         self.ui2.setupUi()
@@ -1553,14 +1604,18 @@ class PTSapp(QMainWindow):
         PTSapp.comboBox.addItems(serialPortList.device_name_list)
 
         self.retranslateUi()
-        QtCore.QMetaObject.connectSlotsByName(self)
+        # Removed connectSlotsByName as signals are already manually connected
 
         #Timers()
         self.initFlashTimer()
 
     def activated(self):
         serialDeviceList.serialDevice= PTSapp.comboBox.currentText()
-        serialPort = serialConnect()
+        self.serialPort = serialConnect(self)
+
+    @QtCore.Slot(str)
+    def handle_serial_message(self, msg):
+        repceiveMsg(msg)
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -3439,7 +3494,7 @@ class PTSapp(QMainWindow):
 
         if serialDeviceList.serialDevice != "":
             appSettings.message = ("Auto Connecting")
-            serialPort = serialConnect()
+            self.serialPort = serialConnect(self)
 
     def pushToClose(self):
         #print("pushToClose")
@@ -4621,7 +4676,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.setStatusBar(self.statusbar)
 
         self.retranslateUi()
-        QtCore.QMetaObject.connectSlotsByName(self)
+        # Removed connectSlotsByName as signals are already manually connected
 
     def retranslateUi(self):
         global whichCamSerial
@@ -5306,7 +5361,7 @@ class Ui_MoverWindow(QMainWindow):
         self.setStatusBar(self.statusbar)
 
         self.retranslateUi()
-        QtCore.QMetaObject.connectSlotsByName(self)
+        # Removed connectSlotsByName as signals are already manually connected
 
         self.showNormal()
     
@@ -5580,7 +5635,7 @@ class Ui_editWindow(QMainWindow):
         self.setStatusBar(self.statusbar)
 
         self.retranslateUi()
-        QtCore.QMetaObject.connectSlotsByName(self)
+        # Removed connectSlotsByName as signals are already manually connected
 
         self.show()
 
@@ -5684,6 +5739,10 @@ class Ui_editWindow(QMainWindow):
         if e.key() == Qt.Key_Return:
             self.editSet()
 
+    def scrollText(self):
+        # Placeholder for scrollText if needed by repceiveMsg
+        pass
+
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("editWindow", "Edit Name"))
@@ -5693,6 +5752,9 @@ class repceiveMsg():
     def __init__(self, msg):
         super().__init__()
         serialText = msg
+
+        def scrollText(self):
+            pass
 
         while True:
             if appSettings.debug:
@@ -8212,7 +8274,7 @@ class appSettings():
     runToggle = False
     flashTick = False
     editNumber = 0
-    debug = True
+    debug = False
     message = ""
     running = False
 
