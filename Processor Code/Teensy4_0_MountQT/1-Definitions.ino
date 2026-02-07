@@ -222,7 +222,7 @@ void mainLoop(void) {
 }
 
 void zoomLimitCheck() {
-  if (findingHome == false && isMoving == false){
+  if (findingHome == false && isMoving == true){
     if (zoomReversed) {
       if ((stepper_zoom.getPosition() < (zoomLimit * -1)) && (zoomRunning == true) && (zoomedIn == false)) {
         stepper_zoom.emergencyStop();
