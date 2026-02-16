@@ -4161,7 +4161,7 @@ class Ui_SettingsWindow(QMainWindow):
         return super().eventFilter(obj, event)
 
     def setupUi(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         global butttonLayoutX
         global butttonLayoutY
@@ -4689,7 +4689,7 @@ class Ui_SettingsWindow(QMainWindow):
         # Removed connectSlotsByName as signals are already manually connected
 
     def retranslateUi(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("settingsWindow", "MainWindow"))
@@ -4769,40 +4769,40 @@ class Ui_SettingsWindow(QMainWindow):
         widget = QtWidgets.QApplication.focusWidget()
 
         if widget.objectName() == "labelPTaccel":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'L' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'L' + widget.text())
             self.labelPTspeed4.setFocus()
         elif widget.objectName() == "labelSLaccel":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'l' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'l' + widget.text())
             self.labelSLspeed4.setFocus()
         elif widget.objectName() == "labelPTspeed1":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'F' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'F' + widget.text())
             self.labelZoomLimit.setFocus()
         elif widget.objectName() == "labelPTspeed2":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'f' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'f' + widget.text())
             self.labelPTspeed1.setFocus()
         elif widget.objectName() == "labelPTspeed3":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'G' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'G' + widget.text())
             self.labelPTspeed2.setFocus()
         elif widget.objectName() == "labelPTspeed4":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'g' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'g' + widget.text())
             self.labelPTspeed3.setFocus()
         elif widget.objectName() == "labelSLspeed1":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'H' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'H' + widget.text())
             self.labelSlideLimit.setFocus()
         elif widget.objectName() == "labelSLspeed2":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'h' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'h' + widget.text())
             self.labelSLspeed1.setFocus()
         elif widget.objectName() == "labelSLspeed3":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'J' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'J' + widget.text())
             self.labelSLspeed2.setFocus()
         elif widget.objectName() == "labelSLspeed4":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'j' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'j' + widget.text())
             self.labelSLspeed3.setFocus()
         elif widget.objectName() == "labelSlideLimit":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 't' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 't' + widget.text())
             self.labelPTaccel.setFocus()
         elif widget.objectName() == "labelZoomLimit":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'w' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'w' + widget.text())
             self.labelSLaccel.setFocus()
             
         QtCore.QTimer.singleShot(500,self.scrollText)
@@ -4812,7 +4812,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.serialTextWindow.verticalScrollBar().setValue(self.serialTextWindow.verticalScrollBar().maximum())
 
     def sendStoreEEPROM(self):
-        Worker.sendSerial(self, '&' + str(whichCamSerial) + 'U')
+        Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'U')
         QtCore.QTimer.singleShot(500,self.scrollText)
 
     def pushToClose(self):
@@ -5105,7 +5105,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def locateHome(self):
         global locateHomeActive
-        global whichCamSerial
+        #global whichCamSerial
 
         if locateHomeActive:
             locateHomeActive = False
@@ -5138,7 +5138,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def setHome(self):
         global locateHomeActive
-        global whichCamSerial
+        #global whichCamSerial
 
         if locateHomeActive:
             locateHomeActive = False
@@ -5158,7 +5158,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
 
     def TLSet(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
             Worker.sendSerial(self, '&1o' + self.labelTLSteps.text())
@@ -5172,7 +5172,7 @@ class Ui_SettingsWindow(QMainWindow):
             Worker.sendSerial(self, '&5o' + self.labelTLSteps.text())
 
     def TLStart(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
             Worker.sendSerial(self, '&1e')
@@ -5186,7 +5186,7 @@ class Ui_SettingsWindow(QMainWindow):
             Worker.sendSerial(self, '&5e')
 
     def TLStop(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
             Worker.sendSerial(self, '&1E')
@@ -5200,7 +5200,7 @@ class Ui_SettingsWindow(QMainWindow):
             Worker.sendSerial(self, '&5E')
 
     def TLStep(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
             Worker.sendSerial(self, '&1O')
@@ -5376,7 +5376,8 @@ class Ui_MoverWindow(QMainWindow):
         self.showNormal()
     
         if appSettings.debug:
-            ag = self.geometry
+            #ag = self.geometry()
+            ag = QtGui.QGuiApplication.primaryScreen().size()
         else:
             ag = QtGui.QGuiApplication.primaryScreen().size()
 
@@ -8284,7 +8285,7 @@ class appSettings():
     runToggle = False
     flashTick = False
     editNumber = 0
-    debug = False
+    debug = True
     message = ""
     running = False
 
