@@ -134,6 +134,8 @@ winSize = 1
 
 arr = []
 
+worker_instance = None
+
 class serialDeviceList():
     device_name_list = []
     usb_device_list = list_ports.comports()
@@ -145,28 +147,35 @@ class serialDeviceList():
 serialPortList = serialDeviceList()
 #print(serialPortList.device_name_list)
 
-class serialConnect():
+
+class serialConnect(QObject):
     def __init__(self, parent=None,index=0):
         super(serialConnect, self).__init__(parent)
-
-    def __new__(self):
-        serialDeviceList.serialDevice = serialDeviceList.serialDevice[0]
+        self.parent = parent
+        
+        if isinstance(serialDeviceList.serialDevice, list) and len(serialDeviceList.serialDevice) > 0:
+            serialDeviceList.serialDevice = serialDeviceList.serialDevice[0]
 
         if appSettings.debug:
             print("Selected device: ", serialDeviceList.serialDevice)
             print(serialPortList)
 
-        self.startThread(self)
+        self.startThread()
 
     def startThread(self):
+        global worker_instance
         self.thread = QThread()
         self.worker = Worker()
+        worker_instance = self.worker
         self.worker.moveToThread(self.thread)
         self.thread.started.connect(self.worker.run)
         self.worker.finished.connect(self.thread.quit)
         self.worker.finished.connect(self.worker.deleteLater)
         self.thread.finished.connect(self.thread.deleteLater)
-        self.worker.serialMsg.connect(repceiveMsg)
+        # Connect to main window slot to ensure GUI updates happen in main thread
+        if self.parent:
+            self.worker.serialMsg.connect(self.parent.handle_serial_message)
+            self.worker.updateComboBox.connect(self.parent.update_combo_box_index)
         self.thread.start()
 
     def quitThread(self):
@@ -315,9 +324,10 @@ class joystickMoves():
     def toHex(self, val, nbits):
         return hex((val + (1 << nbits)) % (1 << nbits))
 
-class Worker(QtCore.QThread): #QObject):
+class Worker(QtCore.QObject): # Changed from QThread to QObject
     finished = Signal()
-    serialMsg = Signal(bytes)
+    serialMsg = Signal(str)
+    updateComboBox = Signal(int)  # Signal to update combo box from GUI thread
 
     def __init__(self, parent=None,index=0):
         super(Worker, self).__init__(parent)
@@ -328,7 +338,12 @@ class Worker(QtCore.QThread): #QObject):
 
     def sendSerial(self, command):
         # Use the persistent connection instead of opening a new one
-        if self.serial_port is None or not self.serial_port.is_open:
+        # Handle case where self is not the worker instance (called from buttons)
+        port = getattr(self, 'serial_port', None)
+        if worker_instance and getattr(worker_instance, 'serial_port', None):
+            port = worker_instance.serial_port
+
+        if port is None or not port.is_open:
             if appSettings.debug:
                 print("Warning: Serial port not available for sendSerial()")
             return
@@ -336,7 +351,7 @@ class Worker(QtCore.QThread): #QObject):
         if type(command) is str:
             data = bytes((command + '\n'), 'utf8')
             try:
-                self.serial_port.write(data)
+                port.write(data)
                 #if appSettings.debug:
                 #    print("Serial Sent: ", data)
             except PermissionError as error:
@@ -352,8 +367,7 @@ class Worker(QtCore.QThread): #QObject):
                     self.finished.emit()
                 appSettings.running = False
             finally:
-                if serial_port is not None and serial_port.is_open:
-                    serial_port.close()
+                pass
 
         elif type(command) is bytearray:
             appSettings.joyData = command
@@ -362,7 +376,7 @@ class Worker(QtCore.QThread): #QObject):
             appSettings.oldAxisZ = appSettings.axisZ
             appSettings.oldAxisW = appSettings.axisW
             try:
-                self.serial_port.write(command)
+                port.write(command)
                 appSettings.previousMillisMoveCheck = time.time()
                 if appSettings.debug:
                     print("Serial Sent: ", command)
@@ -381,7 +395,7 @@ class Worker(QtCore.QThread): #QObject):
             time.sleep(0.1)  # Small delay to ensure port is ready
             appSettings.message = (f"Connected to {serialDeviceList.serialDevice}")
             index = PTSapp.comboBox.findText(serialDeviceList.serialDevice)
-            PTSapp.comboBox.setCurrentIndex(index)
+            self.updateComboBox.emit(index)  # Emit signal instead of calling GUI directly
             appSettings.running = True
         except PermissionError as error:
             appSettings.message = ("COM port in use - Run as Administrator or close other applications")
@@ -429,13 +443,9 @@ class Worker(QtCore.QThread): #QObject):
                 pass
 
         self.finished.emit()
-        
-        self.stop()
 
     def stop(self):
         self.is_running = False
-        Worker.exit
-        QThread.exit
         
 class PTSapp(QMainWindow):
     global agX
@@ -453,6 +463,14 @@ class PTSapp(QMainWindow):
         super(PTSapp, self).__init__()
         self.setupUi()
     
+    @QtCore.Slot(str)
+    def handle_serial_message(self, msg):
+        receiveMsg(msg)
+
+    @QtCore.Slot(int)
+    def update_combo_box_index(self, index):
+        PTSapp.comboBox.setCurrentIndex(index)
+
     def openEditWindow(self, text):
         self.ui2 = Ui_editWindow()
         self.ui2.setupUi()
@@ -485,6 +503,18 @@ class PTSapp(QMainWindow):
 
     def closeEvent(self, event):
         appSettings.running = False
+        # Stop joystick manager first
+        if hasattr(self, 'mngr') and self.mngr is not None:
+            try:
+                self.mngr.stop()
+            except:
+                pass
+        # Wait for worker thread to finish properly
+        if hasattr(self, 'thread') and self.thread is not None:
+            if self.thread.isRunning():
+                self.thread.quit()
+                self.thread.wait(5000)  # Wait up to 5 seconds for thread to finish
+        event.accept()
         
     def setupUi(self):
         global butttonLayoutX
@@ -653,8 +683,8 @@ class PTSapp(QMainWindow):
             joystickMoves.doJoyMoves(self, 1)
 
 
-        mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
-        mngr.start()
+        self.mngr = pyjoystick.ThreadEventManager(event_loop=run_event_loop, handle_key_event=handle_key_event)
+        self.mngr.start()
 
         borderSize = butttonLayoutX / 2
         borderRadius = butttonLayoutX * 1.8
@@ -1474,6 +1504,7 @@ class PTSapp(QMainWindow):
         PTSapp.pushButtonRun.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         PTSapp.pushButtonRun.setFlat(False)
         PTSapp.pushButtonRun.setObjectName("pushButtonRun")
+        '''
         PTSapp.pushButtonSLonly = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.slideOnlyToggle())
         PTSapp.pushButtonSLonly.setGeometry(QtCore.QRect(butttonLayoutX * 87, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
@@ -1483,6 +1514,7 @@ class PTSapp(QMainWindow):
         PTSapp.pushButtonSLonly.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #405C80; border-radius: {borderRadius2}px;")
         PTSapp.pushButtonSLonly.setFlat(False)
         PTSapp.pushButtonSLonly.setObjectName("pushButtonSLonly")
+        '''
         PTSapp.pushButtonFileLoad = QtWidgets.QPushButton(self.centralwidget,  clicked= lambda: self.fileLoad())
         PTSapp.pushButtonFileLoad.setGeometry(QtCore.QRect(butttonLayoutX * 2, butttonLayoutY * 49.5, buttonGoX, buttonCamY * 0.7183))
         font = QtGui.QFont()
@@ -1582,14 +1614,18 @@ class PTSapp(QMainWindow):
         PTSapp.comboBox.addItems(serialPortList.device_name_list)
 
         self.retranslateUi()
-        QtCore.QMetaObject.connectSlotsByName(self)
+        # Removed connectSlotsByName as signals are already manually connected
 
         #Timers()
         self.initFlashTimer()
 
     def activated(self):
         serialDeviceList.serialDevice= PTSapp.comboBox.currentText()
-        serialPort = serialConnect()
+        self.serialPort = serialConnect(self)
+
+    @QtCore.Slot(str)
+    def handle_serial_message(self, msg):
+        receiveMsg(msg)
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -1659,7 +1695,7 @@ class PTSapp(QMainWindow):
         self.pushButtonSet.setText(_translate("MainWindow", "SET"))
         self.pushButtonEdit.setText(_translate("MainWindow", "Edit"))
         self.pushButtonRun.setText(_translate("MainWindow", "Run"))
-        self.pushButtonSLonly.setText(_translate("MainWindow", "SL"))
+        #self.pushButtonSLonly.setText(_translate("MainWindow", "SL"))
         self.pushButtonFileLoad.setText(_translate("MainWindow", "Load"))
         self.pushButtonFileSave.setText(_translate("MainWindow", "Save"))
         self.pushButtonSettings.setText(_translate("MainWindow", "Settings"))
@@ -1762,7 +1798,7 @@ class PTSapp(QMainWindow):
             self.pushButtonFileSave.hide()
             self.pushButtonSettings.hide()
             self.pushButtonRun.show()
-            self.pushButtonSLonly.show()
+            #self.pushButtonSLonly.show()
             self.labelFilename.setHidden(True)
         elif (appSettings.setPosToggle == False and appSettings.setState == 3) or appSettings.setState == 1:
             appSettings.setPosToggle = True
@@ -1781,7 +1817,7 @@ class PTSapp(QMainWindow):
             self.pushButtonFileSave.show()
             self.pushButtonSettings.show()
             self.pushButtonRun.hide()
-            self.pushButtonSLonly.hide()
+            #self.pushButtonSLonly.hide()
             self.labelFilename.setHidden(False)
 
     def setEditToggle(self):
@@ -3468,7 +3504,7 @@ class PTSapp(QMainWindow):
 
         if serialDeviceList.serialDevice != "":
             appSettings.message = ("Auto Connecting")
-            serialPort = serialConnect()
+            self.serialPort = serialConnect(self)
 
     def pushToClose(self):
         #print("pushToClose")
@@ -4125,7 +4161,7 @@ class Ui_SettingsWindow(QMainWindow):
         return super().eventFilter(obj, event)
 
     def setupUi(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         global butttonLayoutX
         global butttonLayoutY
@@ -4650,10 +4686,10 @@ class Ui_SettingsWindow(QMainWindow):
         self.setStatusBar(self.statusbar)
 
         self.retranslateUi()
-        QtCore.QMetaObject.connectSlotsByName(self)
+        # Removed connectSlotsByName as signals are already manually connected
 
     def retranslateUi(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("settingsWindow", "MainWindow"))
@@ -4733,40 +4769,40 @@ class Ui_SettingsWindow(QMainWindow):
         widget = QtWidgets.QApplication.focusWidget()
 
         if widget.objectName() == "labelPTaccel":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'L' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'L' + widget.text())
             self.labelPTspeed4.setFocus()
         elif widget.objectName() == "labelSLaccel":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'l' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'l' + widget.text())
             self.labelSLspeed4.setFocus()
         elif widget.objectName() == "labelPTspeed1":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'F' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'F' + widget.text())
             self.labelZoomLimit.setFocus()
         elif widget.objectName() == "labelPTspeed2":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'f' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'f' + widget.text())
             self.labelPTspeed1.setFocus()
         elif widget.objectName() == "labelPTspeed3":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'G' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'G' + widget.text())
             self.labelPTspeed2.setFocus()
         elif widget.objectName() == "labelPTspeed4":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'g' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'g' + widget.text())
             self.labelPTspeed3.setFocus()
         elif widget.objectName() == "labelSLspeed1":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'H' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'H' + widget.text())
             self.labelSlideLimit.setFocus()
         elif widget.objectName() == "labelSLspeed2":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'h' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'h' + widget.text())
             self.labelSLspeed1.setFocus()
         elif widget.objectName() == "labelSLspeed3":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'J' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'J' + widget.text())
             self.labelSLspeed2.setFocus()
         elif widget.objectName() == "labelSLspeed4":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'j' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'j' + widget.text())
             self.labelSLspeed3.setFocus()
         elif widget.objectName() == "labelSlideLimit":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 't' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 't' + widget.text())
             self.labelPTaccel.setFocus()
         elif widget.objectName() == "labelZoomLimit":
-            Worker.sendSerial(self, '&' + str(whichCamSerial) + 'w' + widget.text())
+            Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'w' + widget.text())
             self.labelSLaccel.setFocus()
             
         QtCore.QTimer.singleShot(500,self.scrollText)
@@ -4776,7 +4812,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.serialTextWindow.verticalScrollBar().setValue(self.serialTextWindow.verticalScrollBar().maximum())
 
     def sendStoreEEPROM(self):
-        Worker.sendSerial(self, '&' + str(whichCamSerial) + 'U')
+        Worker.sendSerial(self, '&' + str(appSettings.whichCamSerial) + 'U')
         QtCore.QTimer.singleShot(500,self.scrollText)
 
     def pushToClose(self):
@@ -5069,7 +5105,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def locateHome(self):
         global locateHomeActive
-        global whichCamSerial
+        #global whichCamSerial
 
         if locateHomeActive:
             locateHomeActive = False
@@ -5102,7 +5138,7 @@ class Ui_SettingsWindow(QMainWindow):
 
     def setHome(self):
         global locateHomeActive
-        global whichCamSerial
+        #global whichCamSerial
 
         if locateHomeActive:
             locateHomeActive = False
@@ -5122,7 +5158,7 @@ class Ui_SettingsWindow(QMainWindow):
         self.pushButtonSlideSetHome.setStyleSheet(f"border: {borderSize2}px solid grey; background-color: #40805C; border-radius: {borderRadius2}px;")
 
     def TLSet(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
             Worker.sendSerial(self, '&1o' + self.labelTLSteps.text())
@@ -5136,7 +5172,7 @@ class Ui_SettingsWindow(QMainWindow):
             Worker.sendSerial(self, '&5o' + self.labelTLSteps.text())
 
     def TLStart(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
             Worker.sendSerial(self, '&1e')
@@ -5150,7 +5186,7 @@ class Ui_SettingsWindow(QMainWindow):
             Worker.sendSerial(self, '&5e')
 
     def TLStop(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
             Worker.sendSerial(self, '&1E')
@@ -5164,7 +5200,7 @@ class Ui_SettingsWindow(QMainWindow):
             Worker.sendSerial(self, '&5E')
 
     def TLStep(self):
-        global whichCamSerial
+        #global whichCamSerial
 
         if appSettings.whichCamSerial == 1:
             Worker.sendSerial(self, '&1O')
@@ -5335,12 +5371,13 @@ class Ui_MoverWindow(QMainWindow):
         self.setStatusBar(self.statusbar)
 
         self.retranslateUi()
-        QtCore.QMetaObject.connectSlotsByName(self)
+        # Removed connectSlotsByName as signals are already manually connected
 
         self.showNormal()
     
         if appSettings.debug:
-            ag = self.geometry
+            #ag = self.geometry()
+            ag = QtGui.QGuiApplication.primaryScreen().size()
         else:
             ag = QtGui.QGuiApplication.primaryScreen().size()
 
@@ -5609,7 +5646,7 @@ class Ui_editWindow(QMainWindow):
         self.setStatusBar(self.statusbar)
 
         self.retranslateUi()
-        QtCore.QMetaObject.connectSlotsByName(self)
+        # Removed connectSlotsByName as signals are already manually connected
 
         self.show()
 
@@ -5713,26 +5750,31 @@ class Ui_editWindow(QMainWindow):
         if e.key() == Qt.Key_Return:
             self.editSet()
 
+    def scrollText(self):
+        # Placeholder for scrollText if needed by receiveMsg
+        pass
+
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
         self.setWindowTitle(_translate("editWindow", "Edit Name"))
         self.pushButton.setText(_translate("editWindow", "Set"))
 
-class repceiveMsg():
+class receiveMsg():
     def __init__(self, msg):
         super().__init__()
         serialText = msg
 
-        while True:
-            if appSettings.debug:
-                print("Received msg:", msg)
+        #def scrollText(self):
+        #    pass
 
-            if msg == '':
-                return
-            if msg[0] == "":
-                msg = ''
-                return
-            elif msg[0] == "?":
+        if appSettings.debug:
+            print("Received msg:", msg)
+
+        if msg == '' or msg.strip() == '':
+            return
+
+        if True:
+            if msg[0] == "?":
                 msg = ''
                 return
             elif msg[0] == "~":
@@ -7117,7 +7159,7 @@ class repceiveMsg():
             elif msg[0:2] == "#$":
                 serialText += "</font><br>"
                 #QtWidgets.QApplication.processEvents()
-                QtCore.QTimer.singleShot(500,self.scrollText())
+                QtCore.QTimer.singleShot(500, self.scrollText)
 
             elif msg[0:4] == "Cam1":
                 whichCamRead = 1
@@ -7165,7 +7207,7 @@ class repceiveMsg():
         Ui_SettingsWindow.serialTextWindow.setHtml(appSettings.serialText)
         QtWidgets.QApplication.processEvents()
         Ui_SettingsWindow.serialTextWindow.verticalScrollBar().setValue(Ui_SettingsWindow.serialTextWindow.verticalScrollBar().maximum())
-        QtCore.QTimer.singleShot(0, Ui_SettingsWindow.serialTextWindow.show())
+        QtCore.QTimer.singleShot(0, Ui_SettingsWindow.serialTextWindow.show)
 
     def aliveCam1(self):
         PTSapp.groupBox11.hide()
@@ -8241,7 +8283,7 @@ class appSettings():
     runToggle = False
     flashTick = False
     editNumber = 0
-    debug = False
+    debug = True
     message = ""
     running = False
 
@@ -8288,7 +8330,7 @@ class setPos():
             PTSapp.pushButtonFileSave.hide()
             PTSapp.pushButtonSettings.hide()
             PTSapp.pushButtonRun.show()
-            PTSapp.pushButtonSLonly.show()
+            #PTSapp.pushButtonSLonly.show()
             PTSapp.labelFilename.setHidden(True)
         elif (appSettings.setPosToggle == False and appSettings.setState == 3) or appSettings.setState == 1:
             appSettings.setPosToggle = True
@@ -8307,12 +8349,12 @@ class setPos():
             PTSapp.pushButtonFileSave.show()
             PTSapp.pushButtonSettings.show()
             PTSapp.pushButtonRun.hide()
-            PTSapp.pushButtonSLonly.hide()
+            #PTSapp.pushButtonSLonly.hide()
             PTSapp.labelFilename.setHidden(False)
 
 if __name__ == '__main__':
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    app.aboutToQuit.connect(app.quit)
     MainWindow = PTSapp("")
+    MainWindow.show()
     sys.exit(app.exec())

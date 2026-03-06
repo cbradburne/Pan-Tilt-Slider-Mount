@@ -465,7 +465,7 @@ class PTSapp(QMainWindow):
     
     @QtCore.Slot(str)
     def handle_serial_message(self, msg):
-        repceiveMsg(msg)
+        receiveMsg(msg)
 
     @QtCore.Slot(int)
     def update_combo_box_index(self, index):
@@ -1625,7 +1625,7 @@ class PTSapp(QMainWindow):
 
     @QtCore.Slot(str)
     def handle_serial_message(self, msg):
-        repceiveMsg(msg)
+        receiveMsg(msg)
 
     def retranslateUi(self):
         _translate = QtCore.QCoreApplication.translate
@@ -5751,7 +5751,7 @@ class Ui_editWindow(QMainWindow):
             self.editSet()
 
     def scrollText(self):
-        # Placeholder for scrollText if needed by repceiveMsg
+        # Placeholder for scrollText if needed by receiveMsg
         pass
 
     def retranslateUi(self):
@@ -5759,13 +5759,13 @@ class Ui_editWindow(QMainWindow):
         self.setWindowTitle(_translate("editWindow", "Edit Name"))
         self.pushButton.setText(_translate("editWindow", "Set"))
 
-class repceiveMsg():
+class receiveMsg():
     def __init__(self, msg):
         super().__init__()
         serialText = msg
 
-        def scrollText(self):
-            pass
+        #def scrollText(self):
+        #    pass
 
         while True:
             if appSettings.debug:
