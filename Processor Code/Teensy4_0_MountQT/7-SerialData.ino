@@ -1545,8 +1545,6 @@ void SerialData(void) {
       break;
     case INSTRUCTION_SET_ZERO_POS:
       {
-        //stepper_pan.setPosition(0);
-        //stepper_tilt.setPosition(0);
         stepper_slider.setPosition(0);
         stepper_zoom.setPosition(0);
         findingHome = false;

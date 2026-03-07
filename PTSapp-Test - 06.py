@@ -8283,7 +8283,7 @@ class appSettings():
     runToggle = False
     flashTick = False
     editNumber = 0
-    debug = True
+    debug = False
     message = ""
     running = False
 
