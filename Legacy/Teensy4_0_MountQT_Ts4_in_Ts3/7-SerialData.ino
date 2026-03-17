@@ -431,6 +431,7 @@ void SerialData(void) {
 
       if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
         isManualMove = false;
+        isMoving = false;
       } else {
         isManualMove = true;
         previousMillisMoveCheck = millis();
