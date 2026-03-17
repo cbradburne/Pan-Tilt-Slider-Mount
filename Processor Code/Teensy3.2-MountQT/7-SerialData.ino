@@ -94,6 +94,7 @@ void SerialData(void) {
         if (panRunning) {
           panRunning = false;
           rotate_stepperP.stopAsync();
+          isMoving = false;
         }
       } else {
         if (!panRunning && (speedFactorP != 0)) {
@@ -101,6 +102,7 @@ void SerialData(void) {
           rotate_stepperP.rotateAsync(stepper_pan);
           rotate_stepperP.overrideAcceleration(60);  // to make accel faster when using joystick
           rotate_stepperP.overrideSpeed(0);
+          isMoving = true;
         }
         if (upsideDown) {
           speedFactorP = (speedFactorP * -1);
@@ -112,6 +114,7 @@ void SerialData(void) {
         if (tiltRunning) {
           tiltRunning = false;
           rotate_stepperT.stopAsync();
+          isMoving = false;
         }
       } else {
         if (!tiltRunning && (speedFactorT != 0)) {
@@ -119,6 +122,7 @@ void SerialData(void) {
           rotate_stepperT.rotateAsync(stepper_tilt);
           rotate_stepperT.overrideAcceleration(60);  // to make accel faster when using joystick
           rotate_stepperT.overrideSpeed(0);
+          isMoving = true;
         }
         rotate_stepperT.overrideSpeed(speedFactorT);
       }
@@ -127,6 +131,7 @@ void SerialData(void) {
         if (sliderRunning) {
           sliderRunning = false;
           rotate_stepperS.stopAsync();
+          isMoving = false;
         }
       } else {
         if (slideReverse) {
@@ -137,6 +142,7 @@ void SerialData(void) {
               rotate_stepperS.rotateAsync(stepper_slider);
               rotate_stepperS.overrideAcceleration(10);  // to make accel faster when using joystick
               rotate_stepperS.overrideSpeed(0);
+              isMoving = true;
             }
             rotate_stepperS.overrideSpeed(speedFactorS);
           }
@@ -147,12 +153,14 @@ void SerialData(void) {
               rotate_stepperS.rotateAsync(stepper_slider);
               rotate_stepperS.overrideAcceleration(10);  // to make accel faster when using joystick
               rotate_stepperS.overrideSpeed(0);
+              isMoving = true;
             }
             rotate_stepperS.overrideSpeed(speedFactorS);
           }
         }
       }
-
+      
+      /*
       if ((speedFactorZ == 0) && ((zoomIN == true) || (zoomOUT == true))) {
         zoomIN = false;
         zoomOUT = false;
@@ -162,6 +170,7 @@ void SerialData(void) {
 
         Serial1.println("STOP Zooming.\n");
         Serial1.println("#$");
+        isMoving = false;
 
       } else if (speedFactorZ >= 1) {
         zoomIN = true;
@@ -172,6 +181,8 @@ void SerialData(void) {
 
         Serial1.println("Zoom IN.");
         Serial1.println("#$");
+
+        isMoving = true;
 
       } else if (speedFactorZ <= -1) {
         zoomIN = false;
@@ -184,6 +195,8 @@ void SerialData(void) {
 
         Serial1.println("Zoom OUT.");
         Serial1.println("#$");
+
+        isMoving = true;
       }
 
 
@@ -198,17 +211,6 @@ void SerialData(void) {
       if (speedFactorS == 0.0) {
         rotate_stepperS.stopAsync();
         stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-      }
-      /*
-      if (speedFactorZ == 0) {
-        zoomIN = false;
-        zoomOUT = false;
-        
-        Serial2.println("#o");
-        Serial2.println("#o");  // Just in case, it's important!
-
-        Serial1.println("STOP Zooming.\n");
-        Serial1.println("#$");
       }
       */
 
@@ -396,7 +398,7 @@ void SerialData(void) {
       break;
     case INSTRUCTION_DIRECT_MOVE:
       {
-        if (!stepper_pan.isMoving && !stepper_tilt.isMoving && !stepper_slider.isMoving) {
+        if (!multi_stepper.isRunning() && !step_stepperP.isRunning() && !rotate_stepperP.isRunning() && !step_stepperT.isRunning() && !rotate_stepperT.isRunning() && !step_stepperS.isRunning() && !rotate_stepperS.isRunning()) {
           moveToIndex(SerialCommandValueInt);
         }
       }

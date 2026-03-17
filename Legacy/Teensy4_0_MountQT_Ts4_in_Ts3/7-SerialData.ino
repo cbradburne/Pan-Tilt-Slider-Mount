@@ -37,6 +37,7 @@ void SerialData(void) {
           panRunning = false;
           stepper_pan.overrideSpeed(0);
           stepper_pan.stopAsync();
+          isMoving = false;
         }
       } else {
         if (upsideDown) {
@@ -58,6 +59,7 @@ void SerialData(void) {
         } else {
           stepper_pan.overrideSpeed(-speedFactorP);
         }
+        isMoving = true;
       }
 
       if (speedFactorT == 0.0) {
@@ -65,6 +67,7 @@ void SerialData(void) {
           tiltRunning = false;
           stepper_tilt.overrideSpeed(0);
           stepper_tilt.stopAsync();
+          isMoving = false;
         }
       } else {
         if (!tiltRunning && (speedFactorT > 0)) {
@@ -83,6 +86,7 @@ void SerialData(void) {
         } else {
           stepper_tilt.overrideSpeed(-speedFactorT);
         }
+        isMoving = true;
       }
 
       if (speedFactorS == 0.0) {
@@ -90,6 +94,7 @@ void SerialData(void) {
           sliderRunning = false;
           stepper_slider.overrideSpeed(0);
           stepper_slider.stopAsync();
+          isMoving = false;
         }
       } else {
         if (slideReverse) {
@@ -114,6 +119,7 @@ void SerialData(void) {
             } else {
               stepper_slider.overrideSpeed(-speedFactorS);
             }
+            isMoving = true;
           }
         } else {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
@@ -136,28 +142,11 @@ void SerialData(void) {
             } else {
               stepper_slider.overrideSpeed(-speedFactorS);
             }
+            isMoving = true;
           }
         }
       }
 
-         
-      if (speedFactorP == 0.0) {
-        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
-      if (speedFactorT == 0.0) {
-        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
-      if (speedFactorS == 0.0) {
-        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-      }
-
-      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
-        isManualMove = false;
-      } else {
-        isManualMove = true;
-        previousMillisMoveCheck = millis();
-      }
-      
       if ((speedFactorZ == 0) && ((zoomIN == true) || (zoomOUT == true))) {
         zoomIN = false;
         zoomOUT = false;
@@ -189,6 +178,24 @@ void SerialData(void) {
 
         Serial1.println("Zoom OUT.");
         Serial1.println("#$");
+      }
+         
+      if (speedFactorP == 0.0) {
+        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+      if (speedFactorT == 0.0) {
+        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+      if (speedFactorS == 0.0) {
+        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+      }
+
+      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
+        isManualMove = false;
+        isMoving = false;
+      } else {
+        isManualMove = true;
+        previousMillisMoveCheck = millis();
       }
 
 
@@ -269,6 +276,7 @@ void SerialData(void) {
           panRunning = false;
           stepper_pan.overrideSpeed(0);
           stepper_pan.stopAsync();
+          isMoving = false;
         }
       } else {
         if (upsideDown) {
@@ -290,6 +298,7 @@ void SerialData(void) {
         } else {
           stepper_pan.overrideSpeed(-speedFactorP);
         }
+        isMoving = true;
       }
 
       if (speedFactorT == 0.0) {
@@ -297,6 +306,7 @@ void SerialData(void) {
           tiltRunning = false;
           stepper_tilt.overrideSpeed(0);
           stepper_tilt.stopAsync();
+          isMoving = false;
         }
       } else {
         if (!tiltRunning && (speedFactorT > 0)) {
@@ -315,6 +325,7 @@ void SerialData(void) {
         } else {
           stepper_tilt.overrideSpeed(-speedFactorT);
         }
+        isMoving = true;
       }
 
       if (speedFactorS == 0.0) {
@@ -322,6 +333,7 @@ void SerialData(void) {
           sliderRunning = false;
           stepper_slider.overrideSpeed(0);
           stepper_slider.stopAsync();
+          isMoving = false;
         }
       } else {
         if (slideReverse) {
@@ -346,6 +358,7 @@ void SerialData(void) {
             } else {
               stepper_slider.overrideSpeed(-speedFactorS);
             }
+            isMoving = true;
           }
         } else {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
@@ -368,27 +381,11 @@ void SerialData(void) {
             } else {
               stepper_slider.overrideSpeed(-speedFactorS);
             }
+            isMoving = true;
           }
         }
       }
 
-      if (speedFactorP == 0.0) {
-        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
-      if (speedFactorT == 0.0) {
-        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
-      }
-      if (speedFactorS == 0.0) {
-        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
-      }
-
-      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
-        isManualMove = false;
-      } else {
-        isManualMove = true;
-        previousMillisMoveCheck = millis();
-      }
-      
       if ((speedFactorZ == 0) && ((zoomIN == true) || (zoomOUT == true))) {
         zoomIN = false;
         zoomOUT = false;
@@ -421,6 +418,24 @@ void SerialData(void) {
         Serial1.println("Zoom OUT.");
         Serial1.println("#$");
       }
+
+      if (speedFactorP == 0.0) {
+        stepper_pan.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+      if (speedFactorT == 0.0) {
+        stepper_tilt.setAcceleration((pantilt_accel / 20) * pantilt_set_speed);
+      }
+      if (speedFactorS == 0.0) {
+        stepper_slider.setAcceleration((slider_accel / 20) * slider_set_speed);
+      }
+
+      if ((speedFactorS == 0.0) && (speedFactorP == 0.0) && (speedFactorT == 0.0)) {
+        isManualMove = false;
+      } else {
+        isManualMove = true;
+        previousMillisMoveCheck = millis();
+      }
+      
 
 /*
 

@@ -199,7 +199,7 @@ void mainLoop(void) {
 }
 
 void sliderLimitCheck() {
-  if (findingHome == false){
+  if (findingHome == false && isMoving == true){
     if (slideReverse) {
       if ((stepper_slider.getPosition() < (slideLimit * -1)) && (sliderRunning == true) && (sliderAtLimit == false)) {
         // IS reversed - position over slide limit - motor running - AtLimit not set
