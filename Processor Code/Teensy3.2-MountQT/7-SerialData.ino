@@ -102,12 +102,12 @@ void SerialData(void) {
           rotate_stepperP.rotateAsync(stepper_pan);
           rotate_stepperP.overrideAcceleration(60);  // to make accel faster when using joystick
           rotate_stepperP.overrideSpeed(0);
-          isMoving = true;
         }
         if (upsideDown) {
           speedFactorP = (speedFactorP * -1);
         }
         rotate_stepperP.overrideSpeed(speedFactorP);
+        isMoving = true;
       }
 
       if (speedFactorT == 0.0) {
@@ -122,9 +122,9 @@ void SerialData(void) {
           rotate_stepperT.rotateAsync(stepper_tilt);
           rotate_stepperT.overrideAcceleration(60);  // to make accel faster when using joystick
           rotate_stepperT.overrideSpeed(0);
-          isMoving = true;
         }
         rotate_stepperT.overrideSpeed(speedFactorT);
+        isMoving = true;
       }
 
       if (speedFactorS == 0.0) {
@@ -142,9 +142,9 @@ void SerialData(void) {
               rotate_stepperS.rotateAsync(stepper_slider);
               rotate_stepperS.overrideAcceleration(10);  // to make accel faster when using joystick
               rotate_stepperS.overrideSpeed(0);
-              isMoving = true;
             }
             rotate_stepperS.overrideSpeed(speedFactorS);
+            isMoving = true;
           }
         } else {
           if ((findingHome == true) || ((findingHome == false) && (((stepper_slider.getPosition() < (slideLimit * 0.97)) && (speedFactorS > 0)) || ((stepper_slider.getPosition() > (slideLimit * 0.03)) && (speedFactorS < 0))))) {
@@ -153,9 +153,9 @@ void SerialData(void) {
               rotate_stepperS.rotateAsync(stepper_slider);
               rotate_stepperS.overrideAcceleration(10);  // to make accel faster when using joystick
               rotate_stepperS.overrideSpeed(0);
-              isMoving = true;
             }
             rotate_stepperS.overrideSpeed(speedFactorS);
+            isMoving = true;
           }
         }
       }
